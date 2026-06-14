@@ -89,8 +89,8 @@ export default function LandingPage({ onStart }) {
 
   /* ── stats data ── */
   const stats = [
-    { value: '10K+', label: t('landing.stats.exercises') || 'Egzersiz' },
-    { value: '500+', label: t('landing.stats.recipes') || 'Tarif' },
+    { value: '100+', label: t('landing.stats.exercises') || 'Egzersiz' },
+    { value: '50+', label: t('landing.stats.recipes') || 'Tarif' },
     { value: '24', label: t('landing.stats.programs') || 'Program' },
     { value: '6', label: t('landing.stats.goals') || 'Hedef' },
     { value: '%100', label: t('landing.stats.free') || 'Ücretsiz' },

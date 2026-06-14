@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Dumbbell,
@@ -82,6 +83,7 @@ function formatVolume(v) {
 
 /* ── ExerciseCard ─────────────────────────────────────── */
 function ExerciseCard({ exercise, planExercise, exerciseIndex, onUpdate }) {
+  const { t } = useTranslation();
   const handleSetChange = (setIndex, field, value) => {
     const updated = { ...exercise };
     updated.sets = updated.sets.map((s, i) =>
@@ -131,15 +133,15 @@ function ExerciseCard({ exercise, planExercise, exerciseIndex, onUpdate }) {
           {exercise.name}
         </h4>
         <span className="text-[10px] font-medium bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">
-          {completedSets}/{exercise.sets.length} set
+          {completedSets}/{exercise.sets.length} {t('workout.sets')}
         </span>
       </div>
 
       {/* Table header */}
       <div className="grid grid-cols-[40px_1fr_1fr_40px_32px] gap-2 items-center text-[10px] uppercase tracking-wider text-slate-500 px-1 mb-2">
         <span>Set</span>
-        <span className="text-center">Ağırlık</span>
-        <span className="text-center">Tekrar</span>
+        <span className="text-center">{t('workoutLog.weight')}</span>
+        <span className="text-center">{t('workoutLog.reps')}</span>
         <span className="text-center">✓</span>
         <span />
       </div>
@@ -176,7 +178,7 @@ function ExerciseCard({ exercise, planExercise, exerciseIndex, onUpdate }) {
               inputMode="numeric"
               value={set.reps}
               onChange={(e) => handleSetChange(si, 'reps', e.target.value)}
-              placeholder={planExercise?.reps || 'tekrar'}
+              placeholder={planExercise?.reps || t('workout.reps')}
               className="bg-slate-950 border border-slate-800 rounded-lg w-full text-center text-sm text-slate-100 py-1.5 placeholder-slate-600 focus:border-orange-500/50 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
 
@@ -217,7 +219,7 @@ function ExerciseCard({ exercise, planExercise, exerciseIndex, onUpdate }) {
         className="mt-2 w-full flex items-center justify-center gap-1.5 text-xs font-medium text-slate-400 hover:text-orange-400 bg-slate-950/60 border border-dashed border-slate-800 hover:border-orange-500/30 rounded-lg py-2 cursor-pointer transition-colors"
       >
         <Plus size={14} />
-        Set Ekle
+        {t('workoutLog.addSet')}
       </motion.button>
     </motion.div>
   );
@@ -225,10 +227,11 @@ function ExerciseCard({ exercise, planExercise, exerciseIndex, onUpdate }) {
 
 /* ── HistoryView ──────────────────────────────────────── */
 function HistoryView({ logs }) {
+  const { t } = useTranslation();
   if (!logs || logs.length === 0) {
     return (
       <div className="text-center text-slate-500 text-sm py-8">
-        Henüz kayıtlı antrenman yok.
+        {t('workoutLog.noHistory')}
       </div>
     );
   }
@@ -273,12 +276,12 @@ function HistoryView({ logs }) {
                 <span className="text-slate-300 font-medium">
                   {formatVolume(volume)} kg
                 </span>{' '}
-                toplam hacim
+                {t('workoutLog.totalVolume')}
               </span>
               <span className="flex items-center gap-1">
                 <Dumbbell size={13} className="text-orange-400" />
                 <span className="text-slate-300 font-medium">{totalSets}</span>{' '}
-                set tamamlandı
+                {t('workoutLog.setsCompleted')}
               </span>
             </div>
 
@@ -302,6 +305,7 @@ function HistoryView({ logs }) {
 
 /* ── Main Component ───────────────────────────────────── */
 export default function WorkoutLog({ plan }) {
+  const { t } = useTranslation();
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [workoutData, setWorkoutData] = useState({});
   const [showHistory, setShowHistory] = useState(false);
@@ -413,10 +417,10 @@ export default function WorkoutLog({ plan }) {
           </div>
           <div>
             <h2 className="font-outfit font-bold text-lg text-slate-100 leading-tight">
-              Antrenman Günlüğü
+              {t('workoutLog.title')}
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Set, tekrar ve ağırlıklarını kaydet
+              {t('workoutLog.subtitle')}
             </p>
           </div>
         </div>
@@ -435,7 +439,7 @@ export default function WorkoutLog({ plan }) {
           ].join(' ')}
         >
           <History size={14} />
-          {showHistory ? 'Antrenman' : 'Geçmiş'}
+          {showHistory ? t('workoutLog.workout') : t('workoutLog.history')}
         </motion.button>
       </div>
 
@@ -545,12 +549,12 @@ export default function WorkoutLog({ plan }) {
                 {saveFlash ? (
                   <>
                     <CheckCircle size={18} />
-                    Kaydedildi!
+                    {t('workoutLog.saved')}
                   </>
                 ) : (
                   <>
                     <Save size={18} />
-                    Antrenmanı Kaydet
+                    {t('workoutLog.saveWorkout')}
                   </>
                 )}
               </motion.button>
@@ -563,17 +567,17 @@ export default function WorkoutLog({ plan }) {
       <div className="mt-auto pt-3 border-t border-slate-800/60 flex items-center gap-2 text-xs text-slate-500">
         <Dumbbell size={14} className="text-slate-600" />
         <span>
-          Bugün{' '}
+          {t('workoutLog.today')}{' '}
           <span className="text-slate-400 font-medium">
             {formatVolume(todayVolume)} kg
           </span>{' '}
-          toplam hacim ·{' '}
+          {t('workoutLog.totalVolume')} ·{' '}
           <span className="text-slate-400 font-medium">
             {completedExercises}
           </span>{' '}
-          egzersiz aktif ·{' '}
+          {t('workoutLog.exercisesActive')} ·{' '}
           <span className="text-slate-400 font-medium">{logs.length}</span>{' '}
-          kayıtlı antrenman
+          {t('workoutLog.savedWorkouts')}
         </span>
       </div>
     </section>

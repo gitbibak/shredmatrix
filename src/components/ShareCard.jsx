@@ -11,8 +11,8 @@ export default function ShareCard({ plan, onClose }) {
   if (!plan) return null;
 
   const {
-    userName = "Kullanıcı",
-    goal = "Kilo Verme",
+    userName = t('profile.user'),
+    goal = t('common.fatGoal'),
     dailyCalories = 0,
     macros = {},
     bmi = 0,
@@ -33,15 +33,15 @@ export default function ShareCard({ plan, onClose }) {
   const handleCopy = async () => {
     const textSummary = [
       `🔥 SHREDMATRIX — ${userName}`,
-      `🎯 Hedef: ${goal}`,
-      `⚡ Günlük Kalori: ${Math.round(dailyCalories)} kcal`,
-      `🥩 Protein: ${Math.round(protein)}g`,
-      `🍞 Karbonhidrat: ${Math.round(carbs)}g`,
-      `🧈 Yağ: ${Math.round(fat)}g`,
+      `🎯 ${t('share.goal')}: ${goal}`,
+      `⚡ ${t('share.dailyCalories')}: ${Math.round(dailyCalories)} kcal`,
+      `🥩 ${t('nutrition.protein')}: ${Math.round(protein)}g`,
+      `🍞 ${t('share.carbs')}: ${Math.round(carbs)}g`,
+      `🧈 ${t('nutrition.fat')}: ${Math.round(fat)}g`,
       `📊 BMI: ${Number(bmi).toFixed(1)}`,
-      `⚖️ Kilo: ${Number(userWeight).toFixed(1)} kg`,
+      `⚖️ ${t('share.weight')}: ${Number(userWeight).toFixed(1)} kg`,
       ``,
-      `💪 Sınırlarını Aş. Dönüşümünü Başlat.`,
+      `💪 ${t('share.tagline')}`,
     ].join("\n");
 
     try {
@@ -152,7 +152,7 @@ export default function ShareCard({ plan, onClose }) {
                   <div className="h-8 w-[1px] bg-slate-700" />
                   <div className="text-center">
                     <p className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
-                      Kilo
+                      {t('share.weight')}
                     </p>
                     <p className="font-outfit text-lg font-bold text-white">
                       {Number(userWeight).toFixed(1)}{" "}

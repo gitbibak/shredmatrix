@@ -95,6 +95,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [showWelcome, setShowWelcome] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
+  const [daysSinceJoin] = useState(() => {
+    try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch { return 0; }
+  });
 
   // ── Tabs ─────────────────────────────────────────────────
   const TABS = [
@@ -236,7 +239,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                         <div className="bg-slate-950/60 border border-slate-800/50 rounded-xl p-2.5 text-center">
                           <p className="text-[9px] text-slate-500 mb-0.5">{t('dashboard.quickStats.programAge')}</p>
                           <p className="text-xs font-bold text-amber-400 font-outfit">
-                            {(() => { try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch { return 0; } })()} {t('dashboard.quickStats.days')}
+                            {daysSinceJoin} {t('dashboard.quickStats.days')}
                           </p>
                         </div>
                       </div>

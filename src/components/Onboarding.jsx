@@ -124,9 +124,9 @@ export default function Onboarding({ onSubmit }) {
   ];
 
   const experienceLevels = [
-    { value: 'beginner', label: t('onboarding.fields.beginner'), desc: '0-6 ay', emoji: '🌱' },
-    { value: 'intermediate', label: t('onboarding.fields.intermediate'), desc: '6 ay - 2 yıl', emoji: '💪' },
-    { value: 'advanced', label: t('onboarding.fields.advanced'), desc: '2+ yıl', emoji: '🔥' },
+    { value: 'beginner', label: t('onboarding.fields.beginner'), desc: t('onboarding.fields.expBeginner'), emoji: '🌱' },
+    { value: 'intermediate', label: t('onboarding.fields.intermediate'), desc: t('onboarding.fields.expIntermediate'), emoji: '💪' },
+    { value: 'advanced', label: t('onboarding.fields.advanced'), desc: t('onboarding.fields.expAdvanced'), emoji: '🔥' },
   ];
 
   const activityLevels = [
@@ -221,10 +221,10 @@ export default function Onboarding({ onSubmit }) {
   const bmiCategory = (() => {
     const val = parseFloat(bmi);
     if (isNaN(val)) return '';
-    if (val < 18.5) return 'Zayıf';
-    if (val < 25) return 'Normal';
-    if (val < 30) return 'Fazla Kilolu';
-    return 'Obez';
+    if (val < 18.5) return t('onboarding.fields.bmiUnderweight');
+    if (val < 25) return t('onboarding.fields.bmiNormal');
+    if (val < 30) return t('onboarding.fields.bmiOverweight');
+    return t('onboarding.fields.bmiObese');
   })();
 
   return (
@@ -311,7 +311,7 @@ export default function Onboarding({ onSubmit }) {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Adınızı girin..."
+                      placeholder={t('onboarding.fields.namePlaceholder')}
                       autoComplete="name"
                       className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500/30 transition-colors font-outfit"
                     />
@@ -368,7 +368,7 @@ export default function Onboarding({ onSubmit }) {
                       <Ruler size={18} className="text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-500">Vücut Kitle İndeksi (BMI)</p>
+                      <p className="text-xs text-slate-500">{t('onboarding.fields.bmiLabel')}</p>
                       <p className="text-lg font-bold font-outfit text-white">
                         {bmi}
                         {bmiCategory && (
@@ -479,16 +479,16 @@ export default function Onboarding({ onSubmit }) {
                     <Flame size={18} className="text-orange-400 shrink-0" />
                     <p className="text-xs text-slate-400">
                       {primaryGoal === 'muscle'
-                        ? 'Kas gelişimi için kalori fazlası (+350 kcal) ve yüksek protein programı oluşturulacak.'
+                        ? t('onboarding.fields.muscleDesc')
                         : primaryGoal === 'fat_loss'
-                          ? 'Yağ yakımı için kalori açığı (-500 kcal) ve yoğun antrenman programı oluşturulacak.'
+                          ? t('onboarding.fields.fatLossDesc')
                           : primaryGoal === 'yoga'
-                            ? 'Esneklik, güç ve iç huzur için özel yoga programı oluşturulacak.'
+                            ? t('onboarding.fields.yogaGoalDesc')
                             : primaryGoal === 'pilates'
-                              ? 'Core güçlendirme ve duruş düzeltme için mat pilates programı oluşturulacak.'
+                              ? t('onboarding.fields.pilatesGoalDesc')
                               : primaryGoal === 'reformer'
-                                ? 'Reformer makine ile kontrollü direnç antrenmanı programı oluşturulacak.'
-                                : 'Zihinsel sağlık ve farkındalık için meditasyon programı oluşturulacak.'}
+                                ? t('onboarding.fields.reformerGoalDesc')
+                                : t('onboarding.fields.meditationGoalDesc')}
                     </p>
                   </div>
                 </div>
@@ -550,13 +550,13 @@ export default function Onboarding({ onSubmit }) {
 
                   {/* Summary preview */}
                   <div className="px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800/50">
-                    <p className="text-xs text-slate-500 mb-2 font-outfit font-medium">Özet</p>
+                    <p className="text-xs text-slate-500 mb-2 font-outfit font-medium">{t('onboarding.fields.summary')}</p>
                     <div className="flex flex-wrap gap-2 text-[10px]">
                       <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{name || '?'}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{age} yaş</span>
+                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{age} {t('onboarding.fields.ageUnit')}</span>
                       <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{gender === 'male' ? t('onboarding.fields.male') : t('onboarding.fields.female')}</span>
                       <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{height}cm / {weight}kg</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">%{bodyFatPercentage} yağ</span>
+                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">%{bodyFatPercentage} {t('onboarding.fields.fatUnit')}</span>
                       <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">BMI: {bmi}</span>
                       <span className="px-2 py-0.5 rounded-full bg-orange-500/15 text-orange-400">
                         {goals.find(g => g.value === primaryGoal)?.label || primaryGoal}
