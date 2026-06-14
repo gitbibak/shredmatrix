@@ -1,26 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import LandingPage from './components/LandingPage';
-import AuthScreen from './components/AuthScreen';
-import Onboarding from './components/Onboarding';
-import Dashboard from './components/Dashboard';
-import OnboardingTour from './components/OnboardingTour';
 import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan } from './data/planGenerator';
 
-const VIEWS = {
-  LANDING: 'landing',
-  AUTH: 'auth',
-  ONBOARDING: 'onboarding',
-  LOADING: 'loading',
-  DASHBOARD: 'dashboard',
-};
+// ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const AuthScreen = lazy(() => import('./components/AuthScreen'));
+const Onboarding = lazy(() => import('./components/Onboarding'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const OnboardingTour = lazy(() => import('./components/OnboardingTour'));
+
+// ── Error Boundary (P1-3) ────────────────────────────────
+class ErrorBoundary extends Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+          <div className="text-center max-w-md">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h1 className="text-2xl font-bold text-white mb-3 font-outfit">Bir hata oluştu</h1>
+            <p className="text-slate-400 mb-6 text-sm">{this.state.error?.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold font-outfit hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer"
+            >
+              Sayfayı Yenile
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // ── Loading Screen ───────────────────────────────────────
 function LoadingScreen() {
   const { t } = useTranslation();
   const steps = t('loading.steps') || [];
-
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
@@ -40,7 +64,6 @@ function LoadingScreen() {
 
   return (
     <div className="min-h-screen bg-slate-950 bg-grid flex flex-col items-center justify-center px-4">
-      {/* Pulsing logo */}
       <motion.div
         animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -51,7 +74,6 @@ function LoadingScreen() {
         </h1>
       </motion.div>
 
-      {/* Progress bar */}
       <div className="w-full max-w-sm mb-6">
         <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
           <motion.div
@@ -62,7 +84,6 @@ function LoadingScreen() {
         </div>
       </div>
 
-      {/* Step text */}
       <AnimatePresence mode="wait">
         <motion.p
           key={currentStep}
@@ -75,7 +96,6 @@ function LoadingScreen() {
         </motion.p>
       </AnimatePresence>
 
-      {/* Spinning dots */}
       <div className="flex items-center gap-1.5 mt-6">
         {[0, 1, 2].map((i) => (
           <motion.div
@@ -90,13 +110,35 @@ function LoadingScreen() {
   );
 }
 
-// ── Main App ─────────────────────────────────────────────
-export default function App() {
-  const [currentView, setCurrentView] = useState(VIEWS.LANDING);
+// ── Suspense fallback ────────────────────────────────────
+function PageLoader() {
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"
+      />
+    </div>
+  );
+}
+
+// ── Protected Route ──────────────────────────────────────
+function ProtectedRoute({ user, plan, children, requirePlan = false }) {
+  if (!user) return <Navigate to="/auth" replace />;
+  if (requirePlan && !plan) return <Navigate to="/onboarding" replace />;
+  return children;
+}
+
+// ── App Content (inside Router) ──────────────────────────
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [plan, setPlan] = useState(null);
   const [pendingFormData, setPendingFormData] = useState(null);
   const [showTour, setShowTour] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(true);
 
   // Restore session on mount
   useEffect(() => {
@@ -109,27 +151,26 @@ export default function App() {
           const savedPlan = localStorage.getItem(`shredmatrix_plan_${parsed.email}`);
           if (savedPlan) {
             setPlan(JSON.parse(savedPlan));
-            setCurrentView(VIEWS.DASHBOARD);
+            navigate('/dashboard', { replace: true });
           } else {
-            setCurrentView(VIEWS.ONBOARDING);
+            navigate('/onboarding', { replace: true });
           }
         }
       }
     } catch {
       localStorage.removeItem('shredmatrix_session');
     }
+    setIsRestoring(false);
   }, []);
 
   // Handle loading → dashboard transition
   useEffect(() => {
-    if (currentView === VIEWS.LOADING && pendingFormData) {
+    if (location.pathname === '/loading' && pendingFormData) {
       const timer = setTimeout(() => {
         const generatedPlan = generatePlan(pendingFormData);
         setPlan(generatedPlan);
 
-        // Save plan creation date
         localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
-
         if (user?.email) {
           try {
             localStorage.setItem(`shredmatrix_plan_${user.email}`, JSON.stringify(generatedPlan));
@@ -137,7 +178,7 @@ export default function App() {
         }
 
         setPendingFormData(null);
-        setCurrentView(VIEWS.DASHBOARD);
+        navigate('/dashboard', { replace: true });
 
         // Show tour for first-time users
         const tourKey = `shredmatrix_tour_seen_${user?.email || 'guest'}`;
@@ -149,7 +190,7 @@ export default function App() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentView, pendingFormData, user]);
+  }, [location.pathname, pendingFormData, user]);
 
   const handleAuth = (userData) => {
     setUser(userData);
@@ -157,33 +198,33 @@ export default function App() {
     if (savedPlan) {
       try {
         setPlan(JSON.parse(savedPlan));
-        setCurrentView(VIEWS.DASHBOARD);
+        navigate('/dashboard', { replace: true });
       } catch {
-        setCurrentView(VIEWS.ONBOARDING);
+        navigate('/onboarding', { replace: true });
       }
     } else {
-      setCurrentView(VIEWS.ONBOARDING);
+      navigate('/onboarding', { replace: true });
     }
   };
 
   const handleSubmit = (formData) => {
     setPendingFormData(formData);
-    setCurrentView(VIEWS.LOADING);
+    navigate('/loading', { replace: true });
   };
 
   const handleBack = () => {
-    setCurrentView(VIEWS.ONBOARDING);
     setPlan(null);
     if (user?.email) {
       localStorage.removeItem(`shredmatrix_plan_${user.email}`);
     }
+    navigate('/onboarding', { replace: true });
   };
 
   const handleLogout = () => {
     localStorage.removeItem('shredmatrix_session');
     setUser(null);
     setPlan(null);
-    setCurrentView(VIEWS.LANDING);
+    navigate('/', { replace: true });
   };
 
   const handlePlanUpdate = (newPlan) => {
@@ -197,46 +238,72 @@ export default function App() {
 
   const pageTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] };
 
+  if (isRestoring) return <PageLoader />;
+
   return (
     <>
       <AnimatePresence mode="wait">
-        {currentView === VIEWS.LANDING && (
-          <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-            <LandingPage onStart={() => setCurrentView(VIEWS.AUTH)} />
-          </motion.div>
-        )}
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={
+              <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <LandingPage onStart={() => navigate('/auth')} />
+              </motion.div>
+            } />
 
-        {currentView === VIEWS.AUTH && (
-          <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-            <AuthScreen onAuth={handleAuth} />
-          </motion.div>
-        )}
+            <Route path="/auth" element={
+              user && plan ? <Navigate to="/dashboard" replace /> :
+              <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <AuthScreen onAuth={handleAuth} />
+              </motion.div>
+            } />
 
-        {currentView === VIEWS.ONBOARDING && (
-          <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-            <Onboarding onSubmit={handleSubmit} />
-          </motion.div>
-        )}
+            <Route path="/onboarding" element={
+              <ProtectedRoute user={user}>
+                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                  <Onboarding onSubmit={handleSubmit} />
+                </motion.div>
+              </ProtectedRoute>
+            } />
 
-        {currentView === VIEWS.LOADING && (
-          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={pageTransition}>
-            <LoadingScreen />
-          </motion.div>
-        )}
+            <Route path="/loading" element={
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={pageTransition}>
+                <LoadingScreen />
+              </motion.div>
+            } />
 
-        {currentView === VIEWS.DASHBOARD && plan && (
-          <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-            <Dashboard plan={plan} user={user} onBack={handleBack} onLogout={handleLogout} onPlanUpdate={handlePlanUpdate} />
-          </motion.div>
-        )}
+            <Route path="/dashboard" element={
+              <ProtectedRoute user={user} plan={plan} requirePlan>
+                <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                  <Dashboard plan={plan} user={user} onBack={handleBack} onLogout={handleLogout} onPlanUpdate={handlePlanUpdate} />
+                </motion.div>
+              </ProtectedRoute>
+            } />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </AnimatePresence>
 
       {/* Onboarding Tour Overlay */}
       <AnimatePresence>
         {showTour && (
-          <OnboardingTour onClose={() => setShowTour(false)} />
+          <Suspense fallback={null}>
+            <OnboardingTour onClose={() => setShowTour(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+// ── Root App ─────────────────────────────────────────────
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
