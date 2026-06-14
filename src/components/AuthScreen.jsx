@@ -106,7 +106,7 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
 // ── Demo Account ─────────────────────────────────────────
 const DEMO_EMAIL = 'demo@shredmatrix.com';
 const DEMO_PASSWORD = '123456';
-const DEMO_NAME = 'Demo Kullanıcı';
+const DEMO_NAME = 'Demo User';
 
 function seedDemoAccount() {
   const users = getUsers();

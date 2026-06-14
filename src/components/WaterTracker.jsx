@@ -165,13 +165,13 @@ export default function WaterTracker() {
       {/* ── Stats row ──────────────────────────────── */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         <div className="bg-slate-950/60 rounded-xl px-3 py-2 text-center">
-          <p className="text-[11px] text-slate-500 mb-0.5">Tüketilen</p>
+          <p className="text-[11px] text-slate-500 mb-0.5">{t('water.consumed')}</p>
           <p className="text-sm font-bold text-white font-outfit">
             {mlConsumed} <span className="text-[10px] text-slate-500 font-normal">ml</span>
           </p>
         </div>
         <div className="bg-slate-950/60 rounded-xl px-3 py-2 text-center">
-          <p className="text-[11px] text-slate-500 mb-0.5">Tamamlanan</p>
+          <p className="text-[11px] text-slate-500 mb-0.5">{t('water.completed')}</p>
           <p className="text-sm font-bold font-outfit">
             <span className="gradient-text">%{percentage}</span>
           </p>

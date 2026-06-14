@@ -1695,7 +1695,7 @@ export function generatePlan(userMetrics, phase = 0) {
 
   return {
     // Kullanıcı profili
-    userName: name || 'Kullanıcı',
+    userName: name || 'User',
     userAge: age,
     userGender: gender,
     userHeight: height,

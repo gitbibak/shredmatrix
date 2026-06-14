@@ -202,6 +202,7 @@ export const translations = {
       mealPlan: 'Öğün Planı', dailyCost: 'Günlük',
       weeklyCost: 'Haftalık', swap: 'Değiştir', altLabel: 'Alt.',
       protein: 'Protein', carbs: 'Karb', fat: 'Yağ',
+      subtitle: 'Her antrenman gününe özel beslenme programı',
     },
 
     // ── Workout ──
@@ -232,6 +233,8 @@ export const translations = {
       emptyTitle: 'İlk ölçümünü kaydet!',
       emptyDesc: 'Kilonu ve vücut yağ oranını düzenli olarak takip ederek gelişimini gör.',
       current: 'Mevcut', start: 'Başlangıç', change: 'Değişim',
+      weightLabel: 'Kilo', bodyFatLabel: 'Yağ Oranı',
+      recordHistory: 'Kayıt Geçmişi', records: 'kayıt',
     },
 
     // ── Water ──
@@ -239,6 +242,7 @@ export const translations = {
       title: 'Su Takibi',
       glasses: 'bardak', target: 'hedef',
       add: '+1 Bardak', remove: '-1', reset: 'Sıfırla',
+      consumed: 'Tüketilen', completed: 'Tamamlanan',
       messages: {
         start: 'Hadi başla! 💧', good: 'İyi gidiyorsun! 🚰',
         half: 'Yarıyı geçtin! 💪', almost: 'Neredeyse tamam! 🔥',
@@ -267,6 +271,10 @@ export const translations = {
         consistencyKing: { title: 'Tutarlılık Kralı 👑', desc: '30 gün boyunca uygulamayı kullandın' },
         strengthGain: { title: 'Güç Artışı 📈', desc: 'Bir egzersizde 10kg ilerleme kaydettin' },
       },
+      subtitle: 'Hedeflerini tamamla, rozetlerini kazan',
+      allUnlocked: 'Tüm rozetler kazanıldı! 🏆',
+      remaining: 'rozet kaldı',
+      footerHint: 'Antrenman yap, su iç, ölçüm kaydet — rozetlerini topla!',
     },
 
     // ── Weekly Report ──
@@ -274,6 +282,8 @@ export const translations = {
       title: 'Haftalık Özet',
       workouts: 'Antrenman', volume: 'Volume', waterAvg: 'Su Ort.',
       weightChange: 'Kilo Δ', noData: 'Henüz yeterli veri yok',
+      goalComplete: 'Hedef tamamlandı! 🎉', doingWell: 'İyi gidiyorsun! 💪', keepGoing: 'Devam et! 🔥',
+      perfectWeek: 'Mükemmel Hafta! 🏆', greatWeek: 'Harika Hafta! ⭐', goodWeek: 'İyi Hafta 👍', needsImprovement: 'Geliştirilmeli 📈',
     },
 
     // ── Supplement ──
@@ -284,6 +294,8 @@ export const translations = {
       pilatesGoal: 'Pilates', reformerGoal: 'Reformer',
       important: 'Önemli', useful: 'Faydalı', optional: 'Opsiyonel',
       warning: 'Takviyeler beslenmenin yerine geçmez. Önce beslenme düzenini oluştur, sonra eksiklikleri tamamla. Kullanmadan önce doktoruna danış.',
+      warning_muscle: 'Bu takviyeler kas gelişimini desteklemek içindir. Doktoruna danışmadan kullanma.',
+      warning_fat_loss: 'Bu takviyeler yağ yakım sürecini desteklemek içindir. Doktoruna danışmadan kullanma.',
       warning_meditation: 'Bu takviyeler meditasyon pratiğini desteklemek içindir. Doktoruna danışmadan kullanma.',
       warning_yoga: 'Bu takviyeler yoga pratiğinde esneklik ve eklem sağlığını destekler. Doktoruna danışmadan kullanma.',
       warning_pilates: 'Bu takviyeler pilates pratiğinde kas ve eklem desteği sağlar. Doktoruna danışmadan kullanma.',
@@ -615,6 +627,7 @@ export const translations = {
       mealPlan: 'Meal Plan', dailyCost: 'Daily', weeklyCost: 'Weekly',
       swap: 'Swap', altLabel: 'Alt.',
       protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
+      subtitle: 'Custom nutrition plan for each training day',
     },
     workout: {
       title: 'Workout Dashboard', program: 'Program',
@@ -636,10 +649,13 @@ export const translations = {
       emptyTitle: 'Record your first measurement!',
       emptyDesc: 'Track your weight and body fat regularly to see your progress.',
       current: 'Current', start: 'Starting', change: 'Change',
+      weightLabel: 'Weight', bodyFatLabel: 'Body Fat',
+      recordHistory: 'Record History', records: 'records',
     },
     water: {
       title: 'Water Tracking', glasses: 'glasses', target: 'target',
       add: '+1 Glass', remove: '-1', reset: 'Reset',
+      consumed: 'Consumed', completed: 'Completed',
       messages: {
         start: "Let's go! 💧", good: 'Keep going! 🚰',
         half: 'Past halfway! 💪', almost: 'Almost there! 🔥',
@@ -660,10 +676,16 @@ export const translations = {
         consistencyKing: { title: 'Consistency King 👑', desc: 'Used the app for 30 days' },
         strengthGain: { title: 'Strength Gain 📈', desc: 'Gained 10kg on an exercise' },
       },
+      subtitle: 'Complete your goals, earn your badges',
+      allUnlocked: 'All badges unlocked! 🏆',
+      remaining: 'badges remaining',
+      footerHint: 'Work out, drink water, log measurements — collect your badges!',
     },
     weeklyReport: {
       title: 'Weekly Summary', workouts: 'Workouts', volume: 'Volume',
       waterAvg: 'Water Avg.', weightChange: 'Weight Δ', noData: 'Not enough data yet',
+      goalComplete: 'Goal complete! 🎉', doingWell: 'Doing well! 💪', keepGoing: 'Keep going! 🔥',
+      perfectWeek: 'Perfect Week! 🏆', greatWeek: 'Great Week! ⭐', goodWeek: 'Good Week 👍', needsImprovement: 'Needs Improvement 📈',
     },
     supplement: {
       title: 'Supplement & Support Guide', titleWellness: 'Wellness Support Guide',
@@ -672,6 +694,8 @@ export const translations = {
       pilatesGoal: 'Pilates', reformerGoal: 'Reformer',
       important: 'Important', useful: 'Useful', optional: 'Optional',
       warning: 'Supplements do not replace nutrition. Build your diet first, then fill the gaps. Consult your doctor before use.',
+      warning_muscle: 'These supplements support muscle growth. Consult your doctor before use.',
+      warning_fat_loss: 'These supplements support the fat loss process. Consult your doctor before use.',
       warning_meditation: 'These supplements support your meditation practice. Consult your doctor before use.',
       warning_yoga: 'These supplements support flexibility and joint health for yoga. Consult your doctor before use.',
       warning_pilates: 'These supplements support muscle and joint health for Pilates. Consult your doctor before use.',
@@ -969,6 +993,7 @@ export const translations = {
       mealPlan: 'Plan de Comidas', dailyCost: 'Diario', weeklyCost: 'Semanal',
       swap: 'Cambiar', altLabel: 'Alt.',
       protein: 'Proteína', carbs: 'Carbs', fat: 'Grasa',
+      subtitle: 'Plan de nutrición personalizado para cada día de entrenamiento',
     },
     workout: {
       title: 'Panel de Entrenamiento', program: 'Programa',
@@ -990,10 +1015,13 @@ export const translations = {
       emptyTitle: '¡Registra tu primera medición!',
       emptyDesc: 'Sigue tu peso y grasa corporal regularmente para ver tu progreso.',
       current: 'Actual', start: 'Inicial', change: 'Cambio',
+      weightLabel: 'Peso', bodyFatLabel: 'Grasa Corporal',
+      recordHistory: 'Historial de Registros', records: 'registros',
     },
     water: {
       title: 'Seguimiento de Agua', glasses: 'vasos', target: 'meta',
       add: '+1 Vaso', remove: '-1', reset: 'Reiniciar',
+      consumed: 'Consumido', completed: 'Completado',
       messages: {
         start: '¡Vamos! 💧', good: '¡Sigue así! 🚰',
         half: '¡Pasaste la mitad! 💪', almost: '¡Casi llegas! 🔥',
@@ -1014,10 +1042,16 @@ export const translations = {
         consistencyKing: { title: 'Rey de Consistencia 👑', desc: 'Usaste la app por 30 días' },
         strengthGain: { title: 'Ganancia de Fuerza 📈', desc: 'Ganaste 10kg en un ejercicio' },
       },
+      subtitle: 'Completa tus objetivos, gana tus insignias',
+      allUnlocked: '¡Todas las insignias desbloqueadas! 🏆',
+      remaining: 'insignias restantes',
+      footerHint: 'Entrena, bebe agua, registra medidas — ¡colecciona tus insignias!',
     },
     weeklyReport: {
       title: 'Resumen Semanal', workouts: 'Entrenamientos', volume: 'Volumen',
       waterAvg: 'Agua Prom.', weightChange: 'Peso Δ', noData: 'Datos insuficientes',
+      goalComplete: '¡Objetivo completado! 🎉', doingWell: '¡Vas bien! 💪', keepGoing: '¡Sigue así! 🔥',
+      perfectWeek: '¡Semana Perfecta! 🏆', greatWeek: '¡Gran Semana! ⭐', goodWeek: 'Buena Semana 👍', needsImprovement: 'Necesita Mejorar 📈',
     },
     supplement: {
       title: 'Guía de Suplementos & Soporte', titleWellness: 'Guía de Soporte Wellness',
@@ -1026,6 +1060,8 @@ export const translations = {
       pilatesGoal: 'Pilates', reformerGoal: 'Reformer',
       important: 'Importante', useful: 'Útil', optional: 'Opcional',
       warning: 'Los suplementos no reemplazan la nutrición. Primero arma tu dieta, luego complementa. Consulta a tu médico.',
+      warning_muscle: 'Estos suplementos apoyan el crecimiento muscular. Consulta a tu médico antes de usarlos.',
+      warning_fat_loss: 'Estos suplementos apoyan el proceso de pérdida de grasa. Consulta a tu médico antes de usarlos.',
       warning_meditation: 'Estos suplementos apoyan tu práctica de meditación. Consulta a tu médico antes de usarlos.',
       warning_yoga: 'Estos suplementos apoyan la flexibilidad y salud articular para yoga. Consulta a tu médico.',
       warning_pilates: 'Estos suplementos apoyan músculos y articulaciones para Pilates. Consulta a tu médico.',

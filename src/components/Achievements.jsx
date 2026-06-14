@@ -392,7 +392,7 @@ export default function Achievements({ plan, user }) {
                 {t('achievements.title')}
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Hedeflerini tamamla, rozetlerini kazan
+                {t('achievements.subtitle')}
               </p>
             </div>
           </div>
@@ -424,8 +424,8 @@ export default function Achievements({ plan, user }) {
           </div>
           <p className="text-[10px] text-slate-600 mt-1.5 text-right">
             {unlockedCount === totalCount
-              ? 'Tüm rozetler kazanıldı! 🏆'
-              : `${totalCount - unlockedCount} rozet kaldı`}
+              ? t('achievements.allUnlocked')
+              : `${totalCount - unlockedCount} ${t('achievements.remaining')}`}
           </p>
         </div>
       </motion.div>
@@ -447,7 +447,7 @@ export default function Achievements({ plan, user }) {
       >
         <Trophy size={12} className="text-slate-600" />
         <p className="text-[10px] text-slate-600">
-          Antrenman yap, su iç, ölçüm kaydet — rozetlerini topla!
+          {t('achievements.footerHint')}
         </p>
       </motion.div>
     </motion.section>

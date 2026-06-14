@@ -18,8 +18,8 @@ function getMondayOfWeek(date) {
   return new Date(d.setDate(diff));
 }
 
-function formatDate(d) {
-  return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+function formatDate(d, locale = 'tr-TR') {
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 }
 
 function StatRow({ icon: Icon, label, value, sub, color = '#ff6d00' }) {
@@ -38,7 +38,8 @@ function StatRow({ icon: Icon, label, value, sub, color = '#ff6d00' }) {
 }
 
 export default function WeeklyReport({ plan }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
+  const localeMap = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
   const report = useMemo(() => {
     const now = new Date();
     const monday = getMondayOfWeek(now);
@@ -94,7 +95,7 @@ export default function WeeklyReport({ plan }) {
     const completionRate = Math.min(100, Math.round((workoutCount / targetWorkouts) * 100));
 
     return {
-      weekRange: `${formatDate(monday)} — ${formatDate(sunday)}`,
+      weekRange: `${formatDate(monday, localeMap[lang] || 'tr-TR')} — ${formatDate(sunday, localeMap[lang] || 'tr-TR')}`,
       workoutCount,
       targetWorkouts,
       totalVolume,
@@ -142,7 +143,7 @@ export default function WeeklyReport({ plan }) {
             {report.workoutCount}/{report.targetWorkouts} {t('weeklyReport.workouts')}
           </p>
           <p className="text-[10px] text-slate-500">
-            {report.completionRate >= 100 ? 'Hedef tamamlandı! 🎉' : report.completionRate >= 50 ? 'İyi gidiyorsun! 💪' : 'Devam et! 🔥'}
+            {report.completionRate >= 100 ? t('weeklyReport.goalComplete') : report.completionRate >= 50 ? t('weeklyReport.doingWell') : t('weeklyReport.keepGoing')}
           </p>
         </div>
       </motion.div>
@@ -169,7 +170,7 @@ export default function WeeklyReport({ plan }) {
       <motion.div variants={itemV} className="mt-4 text-center py-3 rounded-xl bg-gradient-to-r from-orange-500/10 to-blue-500/10 border border-orange-500/10">
         <Award size={20} className="text-orange-400 mx-auto mb-1" />
         <p className="text-xs font-bold text-white font-outfit">
-          {report.completionRate >= 100 ? 'Mükemmel Hafta! 🏆' : report.completionRate >= 75 ? 'Harika Hafta! ⭐' : report.completionRate >= 50 ? 'İyi Hafta 👍' : 'Geliştirilmeli 📈'}
+          {report.completionRate >= 100 ? t('weeklyReport.perfectWeek') : report.completionRate >= 75 ? t('weeklyReport.greatWeek') : report.completionRate >= 50 ? t('weeklyReport.goodWeek') : t('weeklyReport.needsImprovement')}
         </p>
       </motion.div>
     </motion.div>

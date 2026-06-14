@@ -356,7 +356,7 @@ export default function ProgressTracker({ userName }) {
                   yAxisId="weight"
                   type="monotone"
                   dataKey="weight"
-                  name="Kilo"
+                  name={t('progress.weightLabel')}
                   stroke="#ff6d00"
                   strokeWidth={2.5}
                   dot={{ fill: '#ff6d00', r: 3, strokeWidth: 0 }}
@@ -366,7 +366,7 @@ export default function ProgressTracker({ userName }) {
                   yAxisId="bf"
                   type="monotone"
                   dataKey="bodyFat"
-                  name="Yağ Oranı"
+                  name={t('progress.bodyFatLabel')}
                   stroke="#00b0ff"
                   strokeWidth={2.5}
                   dot={{ fill: '#00b0ff', r: 3, strokeWidth: 0 }}
@@ -457,9 +457,9 @@ export default function ProgressTracker({ userName }) {
           className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
         >
           <h3 className="mb-3 font-outfit text-sm font-semibold text-slate-300">
-            Kayıt Geçmişi
+            {t('progress.recordHistory')}
             <span className="ml-2 text-xs font-normal text-slate-500">
-              ({entries.length} kayıt)
+              ({entries.length} {t('progress.records')})
             </span>
           </h3>
 

@@ -328,7 +328,7 @@ export default function NutritionPanel({ plan }) {
           <h2 className="font-outfit text-xl font-bold text-white">{t('nutrition.title')}</h2>
         </div>
         <p className="text-xs text-slate-500 mt-0.5">
-          Her antrenman gününe özel beslenme programı
+          {t('nutrition.subtitle')}
         </p>
       </motion.div>
 
