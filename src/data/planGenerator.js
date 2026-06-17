@@ -1313,6 +1313,85 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   };
 }
 
+// ── Gün Adları ve Focus Lokalizasyonu ────────────────────
+const dayNameMap = {
+  tr: { 'Pazartesi': 'Pazartesi', 'Salı': 'Salı', 'Çarşamba': 'Çarşamba', 'Perşembe': 'Perşembe', 'Cuma': 'Cuma', 'Cumartesi': 'Cumartesi', 'Pazar': 'Pazar' },
+  en: { 'Pazartesi': 'Monday', 'Salı': 'Tuesday', 'Çarşamba': 'Wednesday', 'Perşembe': 'Thursday', 'Cuma': 'Friday', 'Cumartesi': 'Saturday', 'Pazar': 'Sunday' },
+  es: { 'Pazartesi': 'Lunes', 'Salı': 'Martes', 'Çarşamba': 'Miércoles', 'Perşembe': 'Jueves', 'Cuma': 'Viernes', 'Cumartesi': 'Sábado', 'Pazar': 'Domingo' },
+};
+
+const focusMap = {
+  tr: {
+    'Göğüs & Triceps': 'Göğüs & Triceps', 'Göğüs & Ön Omuz': 'Göğüs & Ön Omuz',
+    'Sırt & Biceps': 'Sırt & Biceps', 'Sırt & Arka Omuz': 'Sırt & Arka Omuz',
+    'Omuz & Trapez': 'Omuz & Trapez', 'Omuz & Kol': 'Omuz & Kol',
+    'Bacak & Core': 'Bacak & Core', 'Bacak & Kalça': 'Bacak & Kalça',
+    'HIIT / Kardiyo': 'HIIT / Kardiyo', 'Metabolik Conditioning': 'Metabolik Conditioning',
+    'Dinlenme': 'Dinlenme', 'Tam Dinlenme': 'Tam Dinlenme',
+    'Aktif Toparlanma': 'Aktif Toparlanma',
+    'Üst Vücut (Push)': 'Üst Vücut (Push)', 'Üst Vücut (Pull)': 'Üst Vücut (Pull)',
+    'Alt Vücut + Kardiyo': 'Alt Vücut + Kardiyo',
+    'Full Body': 'Full Body', 'Full Body + Core': 'Full Body + Core',
+  },
+  en: {
+    'Göğüs & Triceps': 'Chest & Triceps', 'Göğüs & Ön Omuz': 'Chest & Front Delt',
+    'Sırt & Biceps': 'Back & Biceps', 'Sırt & Arka Omuz': 'Back & Rear Delt',
+    'Omuz & Trapez': 'Shoulders & Traps', 'Omuz & Kol': 'Shoulders & Arms',
+    'Bacak & Core': 'Legs & Core', 'Bacak & Kalça': 'Legs & Glutes',
+    'HIIT / Kardiyo': 'HIIT / Cardio', 'Metabolik Conditioning': 'Metabolic Conditioning',
+    'Dinlenme': 'Rest', 'Tam Dinlenme': 'Full Rest',
+    'Aktif Toparlanma': 'Active Recovery',
+    'Üst Vücut (Push)': 'Upper Body (Push)', 'Üst Vücut (Pull)': 'Upper Body (Pull)',
+    'Alt Vücut + Kardiyo': 'Lower Body + Cardio',
+    'Full Body': 'Full Body', 'Full Body + Core': 'Full Body + Core',
+  },
+  es: {
+    'Göğüs & Triceps': 'Pecho & Tríceps', 'Göğüs & Ön Omuz': 'Pecho & Hombro Ant.',
+    'Sırt & Biceps': 'Espalda & Bíceps', 'Sırt & Arka Omuz': 'Espalda & Hombro Post.',
+    'Omuz & Trapez': 'Hombros & Trapecios', 'Omuz & Kol': 'Hombros & Brazos',
+    'Bacak & Core': 'Piernas & Core', 'Bacak & Kalça': 'Piernas & Glúteos',
+    'HIIT / Kardiyo': 'HIIT / Cardio', 'Metabolik Conditioning': 'Acondicionamiento Metabólico',
+    'Dinlenme': 'Descanso', 'Tam Dinlenme': 'Descanso Total',
+    'Aktif Toparlanma': 'Recuperación Activa',
+    'Üst Vücut (Push)': 'Tren Superior (Push)', 'Üst Vücut (Pull)': 'Tren Superior (Pull)',
+    'Alt Vücut + Kardiyo': 'Tren Inferior + Cardio',
+    'Full Body': 'Cuerpo Completo', 'Full Body + Core': 'Cuerpo Completo + Core',
+  },
+};
+
+const restExerciseMap = {
+  tr: 'Tam Dinlenme',
+  en: 'Full Rest',
+  es: 'Descanso Total',
+};
+
+export function localizePlan(plan, lang) {
+  if (!plan || lang === 'tr') return plan; // workoutPhases are already in Turkish
+  const dMap = dayNameMap[lang] || dayNameMap.en;
+  const fMap = focusMap[lang] || focusMap.en;
+  const restName = restExerciseMap[lang] || restExerciseMap.en;
+
+  const localizeDay = (day) => ({
+    ...day,
+    day: dMap[day.day] || day.day,
+    focus: fMap[day.focus] || day.focus,
+    exercises: day.exercises?.map(ex => ({
+      ...ex,
+      name: ex.name === 'Tam Dinlenme' ? restName : ex.name,
+    })),
+  });
+
+  return {
+    ...plan,
+    workoutSplit: plan.workoutSplit?.map(localizeDay),
+    dailyNutrition: plan.dailyNutrition?.map(dn => ({
+      ...dn,
+      day: dMap[dn.day] || dn.day,
+      focus: fMap[dn.focus] || dn.focus,
+    })),
+  };
+}
+
 // ── Mevcut planı farklı fazla yeniden oluştur ────────────
 export function regeneratePlanWithPhase(existingPlan, phase) {
   const goalMap = {

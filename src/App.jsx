@@ -2,7 +2,7 @@ import { useState, useEffect, Component, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
-import { generatePlan } from './data/planGenerator';
+import { generatePlan, regeneratePlanWithPhase, localizePlan } from './data/planGenerator';
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
@@ -180,11 +180,42 @@ function AppContent() {
     return () => subscription?.unsubscribe?.();
   }, []);
 
+  // Regenerate plan when language changes
+  useEffect(() => {
+    if (plan && plan.lang !== lang) {
+      // Rebuild the plan with the new language using existing user metrics
+      const goalMap = {
+        'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation',
+        'Muscle Growth': 'muscle', 'Fat Loss': 'fat_loss', 'Meditation': 'meditation',
+        'Crecimiento Muscular': 'muscle', 'Quema de Grasa': 'fat_loss', 'Meditación': 'meditation',
+        'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer',
+      };
+      const userMetrics = {
+        name: plan.userName,
+        age: plan.userAge,
+        gender: plan.userGender,
+        height: plan.userHeight,
+        weight: plan.userWeight,
+        bodyFatPercentage: plan.userBodyFat,
+        experience: plan.userExperience,
+        activityLevel: plan.userActivityLevel,
+        primaryGoal: goalMap[plan.goal] || 'muscle',
+        workSchedule: plan.userWorkSchedule,
+        budget: plan.userBudget,
+      };
+      const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
+      const newPlan = localizePlan(rawPlan, lang);
+      setPlan(newPlan);
+      savePlan(newPlan, user?.email).catch(() => {});
+    }
+  }, [lang]);
+
   // Handle loading → dashboard transition
   useEffect(() => {
     if (location.pathname === '/loading' && pendingFormData) {
       const timer = setTimeout(() => {
-        const generatedPlan = generatePlan(pendingFormData, 0, lang);
+        const rawPlan = generatePlan(pendingFormData, 0, lang);
+        const generatedPlan = localizePlan(rawPlan, lang);
         setPlan(generatedPlan);
 
         // Save plan to Supabase/localStorage
