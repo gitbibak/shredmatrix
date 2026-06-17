@@ -131,7 +131,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       <AnimatePresence>
         {showWelcome && (
           <WelcomeOverlay
-            name={plan.userName || 'Sporcu'}
+            name={plan.userName || t('dashboard.athlete') || 'Athlete'}
             onClose={() => setShowWelcome(false)}
             t={t}
           />

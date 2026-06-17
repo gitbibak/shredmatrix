@@ -205,6 +205,7 @@ export const translations = {
       welcome: { hi: 'Hoş geldin,', subtitle: 'Programın hazır. Şimdi hedefe kilitlenme zamanı.' },
       share: 'Paylaş', logout: 'Çıkış',
       quickStats: { title: 'Hızlı Özet', goal: 'Hedef', dailyCal: 'Günlük Kalori', training: 'Antrenman', daysWeek: 'gün/hafta', programAge: 'Program Yaşı', days: 'gün' },
+      athlete: 'Sporcu',
       footer: '© 2026 ShredMatrix — Kişisel Antrenman & Beslenme Programı',
     },
 
@@ -216,6 +217,7 @@ export const translations = {
       weeklyCost: 'Haftalık', swap: 'Değiştir', altLabel: 'Alt.',
       protein: 'Protein', carbs: 'Karb', fat: 'Yağ',
       subtitle: 'Her antrenman gününe özel beslenme programı',
+      swapTooltip: 'Alternatif öğün göster',
     },
 
     // ── Workout ──
@@ -669,6 +671,7 @@ export const translations = {
       welcome: { hi: 'Welcome,', subtitle: 'Your plan is ready. Time to lock in.' },
       share: 'Share', logout: 'Logout',
       quickStats: { title: 'Quick Stats', goal: 'Goal', dailyCal: 'Daily Calories', training: 'Training', daysWeek: 'days/week', programAge: 'Program Age', days: 'days' },
+      athlete: 'Athlete',
       footer: '© 2026 ShredMatrix — Personal Workout & Nutrition Program',
     },
     nutrition: {
@@ -677,6 +680,7 @@ export const translations = {
       swap: 'Swap', altLabel: 'Alt.',
       protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
       subtitle: 'Custom nutrition plan for each training day',
+      swapTooltip: 'Show alternative meal',
     },
     workout: {
       title: 'Workout Dashboard', program: 'Program',
@@ -1071,6 +1075,7 @@ export const translations = {
       welcome: { hi: 'Bienvenido,', subtitle: 'Tu plan está listo. Es hora de enfocarte.' },
       share: 'Compartir', logout: 'Salir',
       quickStats: { title: 'Resumen Rápido', goal: 'Objetivo', dailyCal: 'Calorías Diarias', training: 'Entrenamiento', daysWeek: 'días/semana', programAge: 'Edad del Plan', days: 'días' },
+      athlete: 'Atleta',
       footer: '© 2026 ShredMatrix — Programa Personal de Entrenamiento y Nutrición',
     },
     nutrition: {
@@ -1079,6 +1084,7 @@ export const translations = {
       swap: 'Cambiar', altLabel: 'Alt.',
       protein: 'Proteína', carbs: 'Carbs', fat: 'Grasa',
       subtitle: 'Plan de nutrición personalizado para cada día de entrenamiento',
+      swapTooltip: 'Mostrar comida alternativa',
     },
     workout: {
       title: 'Panel de Entrenamiento', program: 'Programa',

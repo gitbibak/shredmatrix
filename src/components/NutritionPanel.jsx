@@ -177,7 +177,7 @@ function MealCard({ meal, index, t, lang, currency }) {
                   ? 'bg-blue-500/15 border border-blue-500/30 text-blue-400'
                   : 'bg-slate-800 border border-slate-700 text-slate-400 hover:text-white',
               ].join(' ')}
-              title="Alternatif öğün göster"
+              title={t('nutrition.swapTooltip') || 'Show alternative meal'}
             >
               <Shuffle size={9} />
               {isSwapped ? t('nutrition.altLabel') : t('nutrition.swap')}

@@ -44,7 +44,7 @@ export async function signUp(email, password, name) {
   if (!isSupabaseReady()) {
     // Fallback: localStorage auth
     const users = lsGet('shredmatrix_users', []);
-    if (users.find(u => u.email === email)) throw new Error('Bu e-posta zaten kayıtlı');
+    if (users.find(u => u.email === email)) throw new Error('Email already registered');
     users.push({ name, email, password: btoa(password) });
     lsSet('shredmatrix_users', users);
     const session = { name, email };
@@ -65,7 +65,7 @@ export async function signIn(email, password) {
   if (!isSupabaseReady()) {
     const users = lsGet('shredmatrix_users', []);
     const user = users.find(u => u.email === email && u.password === btoa(password));
-    if (!user) throw new Error('E-posta veya şifre hatalı');
+    if (!user) throw new Error('Invalid email or password');
     const session = { name: user.name, email: user.email };
     lsSet('shredmatrix_session', session);
     return { user: session, isLocal: true };

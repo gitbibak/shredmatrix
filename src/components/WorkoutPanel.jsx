@@ -43,7 +43,8 @@ function isRestDay(day) {
   return (
     focus.includes('dinlenme') ||
     focus.includes('rest') ||
-    focus.includes('off')
+    focus.includes('off') ||
+    focus.includes('descanso')
   );
 }
 

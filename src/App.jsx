@@ -26,13 +26,13 @@ class ErrorBoundary extends Component {
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
           <div className="text-center max-w-md">
             <div className="text-6xl mb-4">⚠️</div>
-            <h1 className="text-2xl font-bold text-white mb-3 font-outfit">Bir hata oluştu</h1>
+            <h1 className="text-2xl font-bold text-white mb-3 font-outfit">Something went wrong</h1>
             <p className="text-slate-400 mb-6 text-sm">{this.state.error?.message}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold font-outfit hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer"
             >
-              Sayfayı Yenile
+              Refresh Page
             </button>
           </div>
         </div>
