@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { getMeasurements, saveMeasurement } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Ruler, Plus, Trash2 } from 'lucide-react';
@@ -6,7 +7,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
 
-const STORAGE_KEY = 'shredmatrix_measurements';
+
 
 const FIELDS = [
   { key: 'chest', color: '#ff6d00' },
@@ -16,11 +17,7 @@ const FIELDS = [
   { key: 'leg',   color: '#f59e0b' },
 ];
 
-function loadEntries() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-function saveEntries(e) { localStorage.setItem(STORAGE_KEY, JSON.stringify(e)); }
+
 
 function formatDate(d) {
   const dt = new Date(d);
@@ -45,24 +42,29 @@ function ChartTooltip({ active, payload, label }) {
 
 export default function BodyMeasurements() {
   const { t } = useTranslation();
-  const [entries, setEntries] = useState(loadEntries);
+  const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ chest:'', waist:'', hip:'', arm:'', leg:'' });
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
 
-  useEffect(() => { saveEntries(entries); }, [entries]);
+  useEffect(() => {
+    getMeasurements().then(setEntries).catch(() => { /* ignore */ });
+  }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const hasValue = Object.values(form).some(v => parseFloat(v) > 0);
     if (!hasValue) return;
     const entry = { date };
     FIELDS.forEach(f => { const v = parseFloat(form[f.key]); if (v > 0) entry[f.key] = v; });
-    setEntries(prev => {
-      const idx = prev.findIndex(e => e.date === date);
-      let next;
-      if (idx >= 0) { next = [...prev]; next[idx] = entry; }
-      else { next = [...prev, entry]; }
-      return next.sort((a,b) => a.date.localeCompare(b.date));
-    });
+    try {
+      await saveMeasurement(entry);
+      setEntries(prev => {
+        const idx = prev.findIndex(e => e.date === date);
+        let next;
+        if (idx >= 0) { next = [...prev]; next[idx] = entry; }
+        else { next = [...prev, entry]; }
+        return next.sort((a,b) => a.date.localeCompare(b.date));
+      });
+    } catch { /* ignore */ }
     setForm({ chest:'', waist:'', hip:'', arm:'', leg:'' });
   }, [form, date]);
 

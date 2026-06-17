@@ -2,45 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Lock, Star, Medal } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-
-// ── localStorage keys ────────────────────────────────────
-const KEYS = {
-  workoutLog: 'shredmatrix_workout_log',
-  water: 'shredmatrix_water',
-  waterHistory: 'shredmatrix_water_history',
-  progress: 'shredmatrix_progress',
-  firstLogin: 'shredmatrix_first_login',
-};
+import { getWorkoutLogs, getWaterHistory, getWater, getProgress, getFirstLogin, getMeasurements } from '../lib/dataService';
 
 // ── helpers ──────────────────────────────────────────────
-function safeJSON(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
 
-function getWorkoutLogs() {
-  return safeJSON(KEYS.workoutLog) || [];
-}
-
-function getProgressEntries() {
-  return safeJSON(KEYS.progress) || [];
-}
-
-/** Compute the current consecutive-day water streak.
- *  Uses `shredmatrix_water_history` — an array of date strings
- *  where the daily target was met.  Falls back to checking
- *  today's `shredmatrix_water` data too. */
-function getWaterStreak() {
-  const history = safeJSON(KEYS.waterHistory) || [];
+/** Compute the current consecutive-day water streak from loaded data */
+function computeWaterStreak(waterHistory, todayWaterData) {
+  const history = [...(waterHistory || [])];
 
   // Also check today's water data
-  const todayData = safeJSON(KEYS.water);
   const todayStr = new Date().toISOString().slice(0, 10);
-  if (todayData && todayData.glasses >= 8 && !history.includes(todayStr)) {
+  if (todayWaterData && todayWaterData.glasses >= 8 && !history.includes(todayStr)) {
     history.push(todayStr);
   }
 
@@ -68,21 +40,15 @@ function getWaterStreak() {
 }
 
 /** How many days since the very first login */
-function getDaysSinceFirstLogin() {
-  const first = localStorage.getItem(KEYS.firstLogin);
-  if (!first) {
-    // Seed the first login on first check
-    localStorage.setItem(KEYS.firstLogin, new Date().toISOString());
-    return 0;
-  }
-  const diff = Date.now() - new Date(first).getTime();
+function computeDaysSinceFirstLogin(firstLoginDate) {
+  if (!firstLoginDate) return 0;
+  const diff = Date.now() - new Date(firstLoginDate).getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
 /** Count workout log entries within same ISO week */
-function getMaxWorkoutsInAWeek() {
-  const logs = getWorkoutLogs();
-  if (logs.length === 0) return 0;
+function computeMaxWorkoutsInAWeek(logs) {
+  if (!logs || logs.length === 0) return 0;
 
   // Group by ISO week (year-week)
   const weeks = {};
@@ -100,9 +66,8 @@ function getMaxWorkoutsInAWeek() {
 }
 
 /** Find max weight improvement across any same exercise */
-function getMaxWeightImprovement() {
-  const logs = getWorkoutLogs();
-  if (logs.length < 2) return 0;
+function computeMaxWeightImprovement(logs) {
+  if (!logs || logs.length < 2) return 0;
 
   // Group by exercise name
   const exercises = {};
@@ -132,13 +97,7 @@ function getMaxWeightImprovement() {
 }
 
 // ── Achievement definitions ─────────────────────────────
-function buildAchievements(plan) {
-  const workoutLogs = getWorkoutLogs();
-  const progressEntries = getProgressEntries();
-  const waterStreak = getWaterStreak();
-  const daysSinceFirst = getDaysSinceFirstLogin();
-  const maxWorkoutsWeek = getMaxWorkoutsInAWeek();
-  const maxWeightGain = getMaxWeightImprovement();
+function buildAchievements(plan, { workoutLogs, progressEntries, waterStreak, daysSinceFirst, maxWorkoutsWeek, maxWeightGain }) {
 
   return [
     {
@@ -350,18 +309,49 @@ export default function Achievements({ plan, user }) {
 
   const badgeKeys = ['firstStep', 'ironFist', 'waterMonster', 'scaleTracker', 'macroMaster', 'weekWarrior', 'consistencyKing', 'strengthGain'];
 
-  // Check all conditions from localStorage on mount
+  // Load data from dataService and compute achievements
   useEffect(() => {
-    const raw = buildAchievements(plan);
-    // Attach translated titles/descriptions
-    raw.forEach((a, i) => {
-      const key = badgeKeys[i];
-      if (key) {
-        a.title = t(`achievements.badges.${key}.title`);
-        a.description = t(`achievements.badges.${key}.desc`);
+    let cancelled = false;
+    async function loadAchievements() {
+      try {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const [workoutLogs, waterHistory, todayWaterData, progressEntries, firstLoginDate] = await Promise.all([
+          getWorkoutLogs(),
+          getWaterHistory(),
+          getWater(todayStr),
+          getProgress(),
+          getFirstLogin(),
+        ]);
+        if (cancelled) return;
+
+        const waterStreak = computeWaterStreak(waterHistory, todayWaterData);
+        const daysSinceFirst = computeDaysSinceFirstLogin(firstLoginDate);
+        const maxWorkoutsWeek = computeMaxWorkoutsInAWeek(workoutLogs);
+        const maxWeightGain = computeMaxWeightImprovement(workoutLogs);
+
+        const raw = buildAchievements(plan, {
+          workoutLogs,
+          progressEntries,
+          waterStreak,
+          daysSinceFirst,
+          maxWorkoutsWeek,
+          maxWeightGain,
+        });
+        // Attach translated titles/descriptions
+        raw.forEach((a, i) => {
+          const key = badgeKeys[i];
+          if (key) {
+            a.title = t(`achievements.badges.${key}.title`);
+            a.description = t(`achievements.badges.${key}.desc`);
+          }
+        });
+        setAchievements(raw);
+      } catch (err) {
+        console.error('Failed to load achievement data:', err);
       }
-    });
-    setAchievements(raw);
+    }
+    loadAchievements();
+    return () => { cancelled = true; };
   }, [plan, t]);
 
   const unlockedCount = useMemo(

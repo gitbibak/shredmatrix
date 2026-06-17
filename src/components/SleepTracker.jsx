@@ -2,36 +2,36 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion } from 'framer-motion';
 import { Moon, Save } from 'lucide-react';
+import { getSleep, saveSleep as saveSleepEntry } from '../lib/dataService';
 
-const STORAGE_KEY = 'shredmatrix_sleep';
 
-function loadSleep() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-function saveSleep(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
 
 function todayISO() { return new Date().toISOString().split('T')[0]; }
 
 export default function SleepTracker() {
   const { t } = useTranslation();
-  const [entries, setEntries] = useState(loadSleep);
+  const [entries, setEntries] = useState([]);
   const [hours, setHours] = useState('');
 
-  useEffect(() => { saveSleep(entries); }, [entries]);
+  useEffect(() => {
+    getSleep().then(setEntries).catch(() => { /* ignore */ });
+  }, []);
 
   const todayEntry = entries.find(e => e.date === todayISO());
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const h = parseFloat(hours);
     if (!h || h <= 0 || h > 24) return;
     const today = todayISO();
-    setEntries(prev => {
-      const idx = prev.findIndex(e => e.date === today);
-      const entry = { date: today, hours: h };
-      if (idx >= 0) { const next = [...prev]; next[idx] = entry; return next; }
-      return [...prev, entry].sort((a,b) => a.date.localeCompare(b.date));
-    });
+    try {
+      await saveSleepEntry(today, h);
+      setEntries(prev => {
+        const idx = prev.findIndex(e => e.date === today);
+        const entry = { date: today, hours: h };
+        if (idx >= 0) { const next = [...prev]; next[idx] = entry; return next; }
+        return [...prev, entry].sort((a,b) => a.date.localeCompare(b.date));
+      });
+    } catch { /* ignore */ }
     setHours('');
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { getProgress, saveProgress } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, Scale, Target, Plus, Trash2 } from 'lucide-react';
@@ -11,7 +12,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const STORAGE_KEY = 'shredmatrix_progress';
+
 const MAX_CHART_ENTRIES = 30;
 
 /* ─── animation variants ─── */
@@ -34,18 +35,7 @@ const itemVariants = {
 };
 
 /* ─── helpers ─── */
-function loadEntries() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
 
-function saveEntries(entries) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-}
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -107,18 +97,18 @@ function StatCard({ icon: Icon, label, value, unit, color, delay = 0 }) {
    ═══════════════════════════════════════════ */
 export default function ProgressTracker({ userName }) {
   const { t } = useTranslation();
-  const [entries, setEntries] = useState(() => loadEntries());
+  const [entries, setEntries] = useState([]);
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
   const [date, setDate] = useState(todayISO);
   const [period, setPeriod] = useState('all'); // '7' | '30' | 'all'
 
-  /* persist to localStorage whenever entries change */
+  /* load entries from dataService on mount */
   useEffect(() => {
-    saveEntries(entries);
-  }, [entries]);
+    getProgress().then(setEntries).catch(() => { /* ignore */ });
+  }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const w = parseFloat(weight);
     const bf = parseFloat(bodyFat);
     if (!w || w <= 0) return;
@@ -129,18 +119,21 @@ export default function ProgressTracker({ userName }) {
       bodyFat: bf > 0 ? bf : null,
     };
 
-    setEntries((prev) => {
-      /* replace if same date exists, otherwise append */
-      const exists = prev.findIndex((e) => e.date === date);
-      let next;
-      if (exists >= 0) {
-        next = [...prev];
-        next[exists] = newEntry;
-      } else {
-        next = [...prev, newEntry];
-      }
-      return next.sort((a, b) => a.date.localeCompare(b.date));
-    });
+    try {
+      await saveProgress(newEntry);
+      setEntries((prev) => {
+        /* replace if same date exists, otherwise append */
+        const exists = prev.findIndex((e) => e.date === date);
+        let next;
+        if (exists >= 0) {
+          next = [...prev];
+          next[exists] = newEntry;
+        } else {
+          next = [...prev, newEntry];
+        }
+        return next.sort((a, b) => a.date.localeCompare(b.date));
+      });
+    } catch { /* ignore */ }
 
     setWeight('');
     setBodyFat('');

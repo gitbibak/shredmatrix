@@ -2,28 +2,34 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, BellOff, Clock } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { getReminder, saveReminder } from '../lib/dataService';
 
-const STORAGE_KEY = 'shredmatrix_reminder';
 const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 07:00–22:00
-
-function loadReminder() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { enabled: false, hour: 18, lastNotified: '' };
-  } catch {
-    return { enabled: false, hour: 18, lastNotified: '' };
-  }
-}
-
-function saveReminder(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
-}
 
 export default function WorkoutReminder() {
   const { t } = useTranslation();
-  const [config, setConfig] = useState(loadReminder);
+  const [config, setConfig] = useState({ enabled: false, hour: 18, lastNotified: '' });
+  const [loaded, setLoaded] = useState(false);
   const [permStatus, setPermStatus] = useState('default');
   const intervalRef = useRef(null);
+
+  // Load reminder settings from dataService on mount
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const data = await getReminder();
+        if (cancelled) return;
+        setConfig({ enabled: false, hour: 18, lastNotified: '', ...data });
+      } catch (err) {
+        console.error('Failed to load reminder:', err);
+      } finally {
+        if (!cancelled) setLoaded(true);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Check notification permission
   useEffect(() => {
@@ -34,7 +40,7 @@ export default function WorkoutReminder() {
 
   // Tick every 30 seconds when enabled
   useEffect(() => {
-    if (!config.enabled) {
+    if (!loaded || !config.enabled) {
       if (intervalRef.current) clearInterval(intervalRef.current);
       return;
     }
@@ -61,7 +67,7 @@ export default function WorkoutReminder() {
     check();
     intervalRef.current = setInterval(check, 30000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [config.enabled, config.hour, config.lastNotified, t]);
+  }, [loaded, config.enabled, config.hour, config.lastNotified, t]);
 
   const toggleReminder = async () => {
     if (!config.enabled) {
@@ -77,18 +83,18 @@ export default function WorkoutReminder() {
       }
       const updated = { ...config, enabled: true };
       setConfig(updated);
-      saveReminder(updated);
+      await saveReminder(updated);
     } else {
       const updated = { ...config, enabled: false };
       setConfig(updated);
-      saveReminder(updated);
+      await saveReminder(updated);
     }
   };
 
-  const setHour = (h) => {
+  const setHour = async (h) => {
     const updated = { ...config, hour: h };
     setConfig(updated);
-    saveReminder(updated);
+    await saveReminder(updated);
   };
 
   return (

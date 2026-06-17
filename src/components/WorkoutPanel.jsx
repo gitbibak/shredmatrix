@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getWorkoutLogs, saveWorkoutLog } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -239,19 +240,18 @@ export default function WorkoutPanel({ plan }) {
   const [openIndex, setOpenIndex] = useState(0);
   const [completedDays, setCompletedDays] = useState({});
 
-  // Load completed workouts from localStorage
+  // Load completed workouts from dataService
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('shredmatrix_workout_log') || '[]');
+    getWorkoutLogs().then((saved) => {
       const today = new Date().toISOString().split('T')[0];
       const todayMap = {};
       saved.forEach((entry) => {
         if (entry.date === today) {
-          todayMap[entry.dayFocus] = true;
+          todayMap[entry.dayFocus || entry.day_focus] = true;
         }
       });
       setCompletedDays(todayMap);
-    } catch { /* ignore */ }
+    }).catch(() => { /* ignore */ });
   }, []);
 
   if (!plan) return null;
@@ -262,32 +262,29 @@ export default function WorkoutPanel({ plan }) {
     setOpenIndex((prev) => (prev === index ? -1 : index));
   };
 
-  const handleCompleteWorkout = (day) => {
+  const handleCompleteWorkout = async (day) => {
     const today = new Date().toISOString().split('T')[0];
     const focus = day.focus;
 
-    // Save to localStorage
-    try {
-      const saved = JSON.parse(localStorage.getItem('shredmatrix_workout_log') || '[]');
-      // Check if already completed today
-      const alreadyDone = saved.some((e) => e.date === today && e.dayFocus === focus);
-      if (alreadyDone) return;
+    // Check if already completed today
+    if (completedDays[focus]) return;
 
-      const entry = {
-        date: today,
-        dayFocus: focus,
-        exercises: (day.exercises || []).map((ex) => ({
-          name: ex.name,
-          sets: Array.from({ length: parseInt(ex.sets) || 4 }, () => ({
-            weight: 0,
-            reps: parseInt(ex.reps) || 10,
-            completed: true,
-          })),
+    const entry = {
+      date: today,
+      dayFocus: focus,
+      day_focus: focus,
+      exercises: (day.exercises || []).map((ex) => ({
+        name: ex.name,
+        sets: Array.from({ length: parseInt(ex.sets) || 4 }, () => ({
+          weight: 0,
+          reps: parseInt(ex.reps) || 10,
+          completed: true,
         })),
-      };
+      })),
+    };
 
-      saved.push(entry);
-      localStorage.setItem('shredmatrix_workout_log', JSON.stringify(saved));
+    try {
+      await saveWorkoutLog(entry);
       setCompletedDays((prev) => ({ ...prev, [focus]: true }));
     } catch { /* ignore */ }
   };

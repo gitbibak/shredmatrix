@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar, Dumbbell, Droplets, Scale, TrendingUp,
   TrendingDown, Flame, Award, Minus,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { getWorkoutLogs, getWaterHistory, getProgress } from '../lib/dataService';
 
 const itemV = {
   hidden: { opacity: 0, y: 16 },
@@ -40,6 +41,33 @@ function StatRow({ icon: Icon, label, value, sub, color = '#ff6d00' }) {
 export default function WeeklyReport({ plan }) {
   const { t, lang } = useTranslation();
   const localeMap = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
+
+  // State for async-loaded data
+  const [workoutData, setWorkoutData] = useState([]);
+  const [waterData, setWaterData] = useState([]);
+  const [progressData, setProgressData] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadData() {
+      try {
+        const [logs, water, progress] = await Promise.all([
+          getWorkoutLogs(),
+          getWaterHistory(),
+          getProgress(),
+        ]);
+        if (cancelled) return;
+        setWorkoutData(logs || []);
+        setWaterData(water || []);
+        setProgressData(progress || []);
+      } catch (err) {
+        console.error('Failed to load weekly report data:', err);
+      }
+    }
+    loadData();
+    return () => { cancelled = true; };
+  }, [plan]);
+
   const report = useMemo(() => {
     const now = new Date();
     const monday = getMondayOfWeek(now);
@@ -50,8 +78,7 @@ export default function WeeklyReport({ plan }) {
     let workoutCount = 0;
     let totalVolume = 0;
     try {
-      const logs = JSON.parse(localStorage.getItem('shredmatrix_workout_log') || '[]');
-      const weekLogs = logs.filter((l) => {
+      const weekLogs = workoutData.filter((l) => {
         const d = new Date(l.date);
         return d >= monday && d <= now;
       });
@@ -68,8 +95,7 @@ export default function WeeklyReport({ plan }) {
     // Water average this week
     let waterAvg = 0;
     try {
-      const water = JSON.parse(localStorage.getItem('shredmatrix_water_history') || '[]');
-      const weekWater = water.filter((w) => {
+      const weekWater = waterData.filter((w) => {
         const d = new Date(w.date);
         return d >= monday && d <= now;
       });
@@ -81,8 +107,7 @@ export default function WeeklyReport({ plan }) {
     // Progress entries this week
     let weightChange = null;
     try {
-      const progress = JSON.parse(localStorage.getItem('shredmatrix_progress') || '[]');
-      const sorted = [...progress].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const sorted = [...progressData].sort((a, b) => new Date(a.date) - new Date(b.date));
       if (sorted.length >= 2) {
         const first = sorted[0];
         const last = sorted[sorted.length - 1];
@@ -103,7 +128,7 @@ export default function WeeklyReport({ plan }) {
       weightChange,
       completionRate,
     };
-  }, [plan, lang]);
+  }, [workoutData, waterData, progressData, plan, lang]);
 
   return (
     <motion.div

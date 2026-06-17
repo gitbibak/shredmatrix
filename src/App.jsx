@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan } from './data/planGenerator';
+import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -142,25 +143,40 @@ function AppContent() {
 
   // Restore session on mount
   useEffect(() => {
-    try {
-      const session = localStorage.getItem('shredmatrix_session');
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed && parsed.email) {
-          setUser(parsed);
-          const savedPlan = localStorage.getItem(`shredmatrix_plan_${parsed.email}`);
+    const restoreSession = async () => {
+      try {
+        const sessionData = await getSession();
+        if (sessionData?.user) {
+          const u = sessionData.user;
+          setUser({ name: u.name, email: u.email, id: u.id });
+          const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
-            setPlan(JSON.parse(savedPlan));
+            setPlan(savedPlan);
             navigate('/dashboard', { replace: true });
           } else {
             navigate('/onboarding', { replace: true });
           }
         }
+      } catch {
+        // session restore failed, stay on landing
       }
-    } catch {
-      localStorage.removeItem('shredmatrix_session');
-    }
-    setIsRestoring(false);
+      setIsRestoring(false);
+    };
+
+    restoreSession();
+
+    // Listen for auth state changes
+    const subscription = onAuthStateChange((event, userData) => {
+      if (event === 'SIGNED_IN' && userData) {
+        setUser({ name: userData.name, email: userData.email, id: userData.id });
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setPlan(null);
+        navigate('/', { replace: true });
+      }
+    });
+
+    return () => subscription?.unsubscribe?.();
   }, []);
 
   // Handle loading → dashboard transition
@@ -170,12 +186,8 @@ function AppContent() {
         const generatedPlan = generatePlan(pendingFormData);
         setPlan(generatedPlan);
 
-        localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
-        if (user?.email) {
-          try {
-            localStorage.setItem(`shredmatrix_plan_${user.email}`, JSON.stringify(generatedPlan));
-          } catch { /* quota */ }
-        }
+        // Save plan to Supabase/localStorage
+        savePlan(generatedPlan, user?.email).catch(() => {});
 
         setPendingFormData(null);
         navigate('/dashboard', { replace: true });
@@ -192,17 +204,17 @@ function AppContent() {
     }
   }, [location.pathname, pendingFormData, user]);
 
-  const handleAuth = (userData) => {
+  const handleAuth = async (userData) => {
     setUser(userData);
-    const savedPlan = localStorage.getItem(`shredmatrix_plan_${userData.email}`);
-    if (savedPlan) {
-      try {
-        setPlan(JSON.parse(savedPlan));
+    try {
+      const savedPlan = await loadPlan(userData.email);
+      if (savedPlan) {
+        setPlan(savedPlan);
         navigate('/dashboard', { replace: true });
-      } catch {
+      } else {
         navigate('/onboarding', { replace: true });
       }
-    } else {
+    } catch {
       navigate('/onboarding', { replace: true });
     }
   };
@@ -214,14 +226,11 @@ function AppContent() {
 
   const handleBack = () => {
     setPlan(null);
-    if (user?.email) {
-      localStorage.removeItem(`shredmatrix_plan_${user.email}`);
-    }
     navigate('/onboarding', { replace: true });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('shredmatrix_session');
+  const handleLogout = async () => {
+    await authSignOut();
     setUser(null);
     setPlan(null);
     navigate('/', { replace: true });
@@ -229,11 +238,7 @@ function AppContent() {
 
   const handlePlanUpdate = (newPlan) => {
     setPlan(newPlan);
-    if (user?.email) {
-      try {
-        localStorage.setItem(`shredmatrix_plan_${user.email}`, JSON.stringify(newPlan));
-      } catch { /* quota */ }
-    }
+    savePlan(newPlan, user?.email).catch(() => {});
   };
 
   const pageTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] };

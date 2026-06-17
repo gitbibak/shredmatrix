@@ -2,27 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Eye, EyeOff, Zap, Shield, ArrowRight } from 'lucide-react';
-
-// ── Helpers ──────────────────────────────────────────────
-const USERS_KEY = 'shredmatrix_users';
-const SESSION_KEY = 'shredmatrix_session';
-
-/** Simple base64 encode for mock password "hashing" */
-const hashPassword = (pw) => btoa(pw);
-
-const getUsers = () => {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-  } catch {
-    return [];
-  }
-};
-
-const saveUsers = (users) =>
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-
-const saveSession = (user) =>
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ name: user.name, email: user.email }));
+import { signUp, signIn } from '../lib/dataService';
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -105,15 +85,8 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
 
 // ── Demo Account ─────────────────────────────────────────
 const DEMO_EMAIL = 'demo@shredmatrix.com';
-const DEMO_PASSWORD = '123456';
+const DEMO_PASSWORD = 'demo123456';
 const DEMO_NAME = 'Demo User';
-
-function seedDemoAccount() {
-  const users = getUsers();
-  if (!users.some((u) => u.email === DEMO_EMAIL)) {
-    saveUsers([...users, { name: DEMO_NAME, email: DEMO_EMAIL, password: hashPassword(DEMO_PASSWORD) }]);
-  }
-}
 
 // ═════════════════════════════════════════════════════════
 // AuthScreen Component
@@ -134,16 +107,25 @@ export default function AuthScreen({ onAuth }) {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Seed demo account on mount
-  useEffect(() => {
-    seedDemoAccount();
-  }, []);
-
-  const handleDemoLogin = () => {
-    seedDemoAccount();
-    const user = { name: DEMO_NAME, email: DEMO_EMAIL };
-    saveSession(user);
-    onAuth(user);
+  const handleDemoLogin = async () => {
+    setIsSubmitting(true);
+    try {
+      // Try to sign in demo user first
+      const result = await signIn(DEMO_EMAIL, DEMO_PASSWORD);
+      const user = result.user;
+      onAuth({ name: user.user_metadata?.name || DEMO_NAME, email: user.email, id: user.id });
+    } catch {
+      // If demo user doesn't exist, create it
+      try {
+        const result = await signUp(DEMO_EMAIL, DEMO_PASSWORD, DEMO_NAME);
+        const user = result.user;
+        onAuth({ name: user.user_metadata?.name || DEMO_NAME, email: user.email, id: user.id });
+      } catch (err) {
+        // If signup also fails (already exists but wrong password), show error
+        setFormError(err.message || 'Demo login failed');
+      }
+    }
+    setIsSubmitting(false);
   };
 
   const toggleMode = useCallback(() => {
@@ -187,7 +169,7 @@ export default function AuthScreen({ onAuth }) {
 
   // ── Submit ───────────────────────────────────────────
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       setFormError('');
 
@@ -195,46 +177,28 @@ export default function AuthScreen({ onAuth }) {
 
       setIsSubmitting(true);
 
-      // Simulate network delay for UX polish
-      setTimeout(() => {
-        const users = getUsers();
-        const hashed = hashPassword(password);
-
+      try {
         if (mode === 'register') {
-          // Check if email already exists
-          if (users.some((u) => u.email === email.toLowerCase().trim())) {
-            setFormError(t('auth.errors.emailTaken'));
-            setIsSubmitting(false);
-            return;
-          }
-
-          const newUser = {
-            name: name.trim(),
-            email: email.toLowerCase().trim(),
-            password: hashed,
-          };
-
-          saveUsers([...users, newUser]);
-          saveSession(newUser);
-          onAuth({ name: newUser.name, email: newUser.email });
+          const result = await signUp(email.toLowerCase().trim(), password, name.trim());
+          const user = result.user;
+          onAuth({ name: user.user_metadata?.name || name.trim(), email: user.email, id: user.id });
         } else {
-          // Login
-          const found = users.find(
-            (u) => u.email === email.toLowerCase().trim() && u.password === hashed
-          );
-
-          if (!found) {
-            setFormError(t('auth.errors.invalidCredentials'));
-            setIsSubmitting(false);
-            return;
-          }
-
-          saveSession(found);
-          onAuth({ name: found.name, email: found.email });
+          const result = await signIn(email.toLowerCase().trim(), password);
+          const user = result.user;
+          onAuth({ name: user.user_metadata?.name || 'User', email: user.email, id: user.id });
         }
+      } catch (err) {
+        const msg = err.message || '';
+        if (msg.includes('already registered') || msg.includes('already exists')) {
+          setFormError(t('auth.errors.emailTaken'));
+        } else if (msg.includes('Invalid login') || msg.includes('invalid')) {
+          setFormError(t('auth.errors.invalidCredentials'));
+        } else {
+          setFormError(msg || t('auth.errors.invalidCredentials'));
+        }
+      }
 
-        setIsSubmitting(false);
-      }, 600);
+      setIsSubmitting(false);
     },
     [mode, name, email, password, confirmPassword, validate, onAuth]
   );

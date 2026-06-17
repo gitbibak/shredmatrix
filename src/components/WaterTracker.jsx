@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Droplets, Plus, Minus, RotateCcw } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { saveWater, getWater } from '../lib/dataService';
 
-const STORAGE_KEY = 'shredmatrix_water';
+
 const TARGET_GLASSES = 8;
 const ML_PER_GLASS = 250;
 const TARGET_ML = TARGET_GLASSES * ML_PER_GLASS;
@@ -12,24 +13,7 @@ function getTodayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { date: getTodayStr(), glasses: 0 };
-    const parsed = JSON.parse(raw);
-    // Auto-reset if stored date is not today
-    if (parsed.date !== getTodayStr()) {
-      return { date: getTodayStr(), glasses: 0 };
-    }
-    return parsed;
-  } catch {
-    return { date: getTodayStr(), glasses: 0 };
-  }
-}
 
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
 
 // getMessage is now inside the component to use t()
 
@@ -42,7 +26,7 @@ const CENTER = VIEW_SIZE / 2;
 
 export default function WaterTracker() {
   const { t } = useTranslation();
-  const [glasses, setGlasses] = useState(() => loadData().glasses);
+  const [glasses, setGlasses] = useState(0);
 
   const getMessage = (pct) => {
     if (pct >= 100) return t('water.messages.done');
@@ -52,28 +36,21 @@ export default function WaterTracker() {
     return t('water.messages.start');
   };
 
+  // Load today's water on mount
+  useEffect(() => {
+    getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch(() => { /* ignore */ });
+  }, []);
+
   // Persist on every change
   useEffect(() => {
-    saveData({ date: getTodayStr(), glasses });
-
-    // Bug fix: write to water_history when target met (used by Achievements + WeeklyReport)
-    if (glasses >= TARGET_GLASSES) {
-      try {
-        const history = JSON.parse(localStorage.getItem('shredmatrix_water_history') || '[]');
-        const today = getTodayStr();
-        if (!history.includes(today)) {
-          history.push(today);
-          localStorage.setItem('shredmatrix_water_history', JSON.stringify(history));
-        }
-      } catch { /* ignore */ }
-    }
+    if (glasses === 0) return; // skip initial default
+    saveWater(getTodayStr(), glasses, glasses >= TARGET_GLASSES).catch(() => { /* ignore */ });
   }, [glasses]);
 
-  // Auto-reset check on mount & when tab regains focus
+  // Auto-reset check when tab regains focus
   useEffect(() => {
     const check = () => {
-      const data = loadData();
-      setGlasses(data.glasses);
+      getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch(() => { /* ignore */ });
     };
     window.addEventListener('focus', check);
     return () => window.removeEventListener('focus', check);
