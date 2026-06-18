@@ -70,11 +70,13 @@ export default function WeeklyReport({ plan }) {
     try {
       const water = JSON.parse(localStorage.getItem('shredmatrix_water_history') || '[]');
       const weekWater = water.filter((w) => {
-        const d = new Date(w.date);
+        const d = new Date(typeof w === 'string' ? w : w.date);
         return d >= monday && d <= now;
       });
       if (weekWater.length > 0) {
-        waterAvg = Math.round(weekWater.reduce((sum, w) => sum + (w.glasses || 0), 0) / weekWater.length);
+        waterAvg = Math.round(
+          weekWater.reduce((sum, w) => sum + (typeof w === 'string' ? 8 : (w.glasses || 0)), 0) / weekWater.length
+        );
       }
     } catch { /* ignore */ }
 

@@ -7,6 +7,16 @@ import { supabase, isSupabaseReady } from './supabase';
 
 // ── Helpers ──────────────────────────────────
 
+const LOCAL_AUTH_ALLOWED = import.meta.env.DEV;
+const MAX_PHOTO_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const PHOTO_EXTENSION_BY_TYPE = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+};
+let currentUserId = null;
+
 function lsGet(key, fallback = null) {
   try {
     const raw = localStorage.getItem(key);
@@ -24,16 +34,52 @@ function lsRemove(key) {
 }
 
 function getUserId() {
+  if (currentUserId) return currentUserId;
   if (!isSupabaseReady()) return null;
   // Supabase stores session, we can read it synchronously from localStorage cache
   try {
     const sessionStr = localStorage.getItem('sb-' + import.meta.env.VITE_SUPABASE_URL?.split('//')[1]?.split('.')[0] + '-auth-token');
     if (sessionStr) {
       const session = JSON.parse(sessionStr);
-      return session?.user?.id || null;
+      return session?.user?.id || session?.currentSession?.user?.id || null;
     }
   } catch { /* ignore */ }
   return null;
+}
+
+function normalizeUser(user, fallbackName = 'User') {
+  if (!user) return null;
+  return {
+    id: user.id,
+    name: user.user_metadata?.name || fallbackName,
+    email: user.email,
+  };
+}
+
+function getLocalSession() {
+  const session = lsGet('shredmatrix_session');
+  if (!session) return null;
+  if (!LOCAL_AUTH_ALLOWED && session.isLocalTest) {
+    lsRemove('shredmatrix_session');
+    return null;
+  }
+  return session;
+}
+
+function assertLocalAuthAllowed() {
+  if (!LOCAL_AUTH_ALLOWED) {
+    throw new Error('auth.errors.supabaseRequired');
+  }
+}
+
+function validatePhoto(file) {
+  if (!file) throw new Error('profile.errors.photoRequired');
+  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+    throw new Error('profile.errors.photoType');
+  }
+  if (file.size > MAX_PHOTO_SIZE_BYTES) {
+    throw new Error('profile.errors.photoSize');
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -42,14 +88,7 @@ function getUserId() {
 
 export async function signUp(email, password, name) {
   if (!isSupabaseReady()) {
-    // Fallback: localStorage auth
-    const users = lsGet('shredmatrix_users', []);
-    if (users.find(u => u.email === email)) throw new Error('Bu e-posta zaten kayıtlı');
-    users.push({ name, email, password: btoa(password) });
-    lsSet('shredmatrix_users', users);
-    const session = { name, email };
-    lsSet('shredmatrix_session', session);
-    return { user: session, isLocal: true };
+    throw new Error('auth.errors.supabaseRequired');
   }
 
   const { data, error } = await supabase.auth.signUp({
@@ -58,45 +97,45 @@ export async function signUp(email, password, name) {
     options: { data: { name } },
   });
   if (error) throw error;
-  return { user: data.user, session: data.session };
+  if (!data.session) throw new Error('auth.errors.emailConfirmationRequired');
+  currentUserId = data.user?.id || null;
+  return { user: normalizeUser(data.user, name), session: data.session };
 }
 
 export async function signIn(email, password) {
   if (!isSupabaseReady()) {
-    const users = lsGet('shredmatrix_users', []);
-    const user = users.find(u => u.email === email && u.password === btoa(password));
-    if (!user) throw new Error('E-posta veya şifre hatalı');
-    const session = { name: user.name, email: user.email };
-    lsSet('shredmatrix_session', session);
-    return { user: session, isLocal: true };
+    throw new Error('auth.errors.supabaseRequired');
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
-  return { user: data.user, session: data.session };
+  currentUserId = data.user?.id || null;
+  return { user: normalizeUser(data.user), session: data.session };
 }
 
 export async function signOut() {
   if (isSupabaseReady()) {
     await supabase.auth.signOut();
   }
+  currentUserId = null;
   lsRemove('shredmatrix_session');
 }
 
 export async function getSession() {
+  const localSession = getLocalSession();
+  if (localSession?.isLocalTest || (!isSupabaseReady() && localSession)) {
+    return { user: localSession, isLocal: true };
+  }
+
   if (!isSupabaseReady()) {
-    const session = lsGet('shredmatrix_session');
-    return session ? { user: session, isLocal: true } : null;
+    return null;
   }
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return null;
+  currentUserId = session.user.id;
   return {
-    user: {
-      id: session.user.id,
-      name: session.user.user_metadata?.name || 'User',
-      email: session.user.email,
-    },
+    user: normalizeUser(session.user),
     session,
   };
 }
@@ -106,12 +145,10 @@ export function onAuthStateChange(callback) {
 
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
-      callback('SIGNED_IN', {
-        id: session.user.id,
-        name: session.user.user_metadata?.name || 'User',
-        email: session.user.email,
-      });
+      currentUserId = session.user.id;
+      callback('SIGNED_IN', normalizeUser(session.user));
     } else {
+      currentUserId = null;
       callback('SIGNED_OUT', null);
     }
   });
@@ -401,6 +438,7 @@ export async function getProfile() {
 // ══════════════════════════════════════════════
 
 export async function uploadPhoto(file, type = 'profile') {
+  validatePhoto(file);
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
@@ -422,7 +460,7 @@ export async function uploadPhoto(file, type = 'profile') {
     });
   }
 
-  const ext = file.name?.split('.').pop() || 'jpg';
+  const ext = PHOTO_EXTENSION_BY_TYPE[file.type] || 'jpg';
   const path = `${userId}/${type}/${Date.now()}.${ext}`;
 
   const { error } = await supabase.storage
@@ -435,10 +473,14 @@ export async function uploadPhoto(file, type = 'profile') {
     .getPublicUrl(path);
 
   if (type === 'profile') {
-    await updateProfile({ avatar_url: data.publicUrl });
+    await updateProfile({ avatar_url: path });
   }
 
-  return data.publicUrl;
+  const { data: signed } = await supabase.storage
+    .from('user-photos')
+    .createSignedUrl(path, 60 * 60);
+
+  return signed?.signedUrl || data.publicUrl;
 }
 
 export async function getProfilePhoto() {
@@ -449,7 +491,13 @@ export async function getProfilePhoto() {
   }
 
   const profile = await getProfile();
-  return profile?.avatar_url || null;
+  if (!profile?.avatar_url) return null;
+  if (profile.avatar_url.startsWith('http')) return profile.avatar_url;
+
+  const { data } = await supabase.storage
+    .from('user-photos')
+    .createSignedUrl(profile.avatar_url, 60 * 60);
+  return data?.signedUrl || null;
 }
 
 export async function getProgressPhotos() {
@@ -464,11 +512,17 @@ export async function getProgressPhotos() {
     .list(`${userId}/progress`, { sortBy: { column: 'created_at', order: 'desc' } });
   if (error) return [];
 
-  return (data || []).map(f => ({
-    id: f.id,
-    name: f.name,
-    date: f.created_at,
-    src: supabase.storage.from('user-photos').getPublicUrl(`${userId}/progress/${f.name}`).data.publicUrl,
+  return Promise.all((data || []).map(async (f) => {
+    const path = `${userId}/progress/${f.name}`;
+    const { data: signed } = await supabase.storage
+      .from('user-photos')
+      .createSignedUrl(path, 60 * 60);
+    return {
+      id: f.id || path,
+      name: f.name,
+      date: f.created_at,
+      src: signed?.signedUrl || '',
+    };
   }));
 }
 
@@ -557,14 +611,9 @@ export async function deleteAllUserData(email) {
     'shredmatrix_profile_photo', 'shredmatrix_progress_photos',
     'shredmatrix_reminder', 'shredmatrix_current_phase', 'shredmatrix_plan_created',
     'shredmatrix_first_login', `shredmatrix_tour_seen_${email}`,
-    'shredmatrix_install_dismissed',
+    'shredmatrix_install_dismissed', 'shredmatrix_users',
   ];
   allKeys.forEach(k => lsRemove(k));
-
-  // Remove from users list
-  const users = lsGet('shredmatrix_users', []);
-  const filtered = users.filter(u => u.email !== email);
-  lsSet('shredmatrix_users', filtered);
 
   if (!isSupabaseReady() || !userId) return;
 
@@ -577,14 +626,19 @@ export async function deleteAllUserData(email) {
 
   // Delete storage files
   try {
-    const { data: files } = await supabase.storage.from('user-photos').list(userId, { limit: 100 });
-    if (files?.length) {
-      await supabase.storage.from('user-photos').remove(files.map(f => `${userId}/${f.name}`));
+    const prefixes = [`${userId}/profile`, `${userId}/progress`];
+    for (const prefix of prefixes) {
+      const { data: files } = await supabase.storage.from('user-photos').list(prefix, { limit: 100 });
+      const paths = (files || []).map(f => `${prefix}/${f.name}`);
+      if (paths.length) await supabase.storage.from('user-photos').remove(paths);
     }
   } catch { /* ignore storage errors */ }
 
-  // Delete profile (cascade will handle auth)
-  await supabase.from('profiles').delete().eq('id', userId);
+  // Delete auth user when the hardening RPC is installed; fall back to profile delete.
+  const { error: rpcError } = await supabase.rpc('delete_current_user');
+  if (rpcError) {
+    await supabase.from('profiles').delete().eq('id', userId);
+  }
 }
 
 // ══════════════════════════════════════════════

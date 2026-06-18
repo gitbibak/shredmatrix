@@ -8,34 +8,35 @@ const PRESETS = [
   { label: '45s', seconds: 45 },
   { label: '60s', seconds: 60 },
   { label: '90s', seconds: 90 },
-  { label: '2dk', seconds: 120 },
+  { labelKey: 'timer.twoMinutes', seconds: 120 },
 ];
 
-function playBeep() {
+function createBeep(ctx, frequency, duration) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = frequency;
+  osc.type = 'square';
+  gain.gain.value = 0.3;
+  osc.start();
+  osc.stop(ctx.currentTime + duration);
+}
+
+async function playBeep() {
+  let ctx;
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    osc.type = 'square';
-    gain.gain.value = 0.3;
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    createBeep(ctx, 880, 0.15);
     // Double beep
     setTimeout(() => {
-      const osc2 = ctx.createOscillator();
-      const gain2 = ctx.createGain();
-      osc2.connect(gain2);
-      gain2.connect(ctx.destination);
-      osc2.frequency.value = 1100;
-      osc2.type = 'square';
-      gain2.gain.value = 0.3;
-      osc2.start();
-      osc2.stop(ctx.currentTime + 0.2);
+      createBeep(ctx, 1100, 0.2);
     }, 200);
+    setTimeout(() => {
+      ctx.close().catch(() => {});
+    }, 500);
   } catch {
+    if (ctx) ctx.close().catch(() => {});
     // Audio not supported
   }
 }
@@ -125,7 +126,7 @@ export default function WorkoutTimer() {
                   : 'bg-slate-800 text-slate-400 border border-slate-700 hover:text-white hover:border-slate-600',
               ].join(' ')}
             >
-              {p.label}
+              {p.labelKey ? t(p.labelKey) : p.label}
             </button>
           );
         })}

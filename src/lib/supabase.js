@@ -4,7 +4,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn('[ShredMatrix] Supabase credentials missing — falling back to localStorage mode.');
+  console.warn('[ShredMatrix] Supabase credentials missing. Configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for auth and sync.');
 }
 
 export const supabase = (supabaseUrl && supabaseKey)

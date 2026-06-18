@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan } from './data/planGenerator';
+import { getSession, loadPlan, onAuthStateChange, savePlan, signOut } from './lib/dataService';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -142,39 +143,63 @@ function AppContent() {
 
   // Restore session on mount
   useEffect(() => {
-    try {
-      const session = localStorage.getItem('shredmatrix_session');
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed && parsed.email) {
-          setUser(parsed);
-          const savedPlan = localStorage.getItem(`shredmatrix_plan_${parsed.email}`);
-          if (savedPlan) {
-            setPlan(JSON.parse(savedPlan));
-            navigate('/dashboard', { replace: true });
-          } else {
-            navigate('/onboarding', { replace: true });
-          }
+    let cancelled = false;
+
+    async function restoreSession() {
+      try {
+        const restored = await getSession();
+        if (!restored?.user || cancelled) return;
+
+        setUser(restored.user);
+        const savedPlan = await loadPlan(restored.user.email);
+        if (cancelled) return;
+
+        if (savedPlan) {
+          setPlan(savedPlan);
+          navigate('/dashboard', { replace: true });
+        } else {
+          navigate('/onboarding', { replace: true });
         }
+      } catch {
+        if (!cancelled) {
+          setUser(null);
+          setPlan(null);
+        }
+      } finally {
+        if (!cancelled) setIsRestoring(false);
       }
-    } catch {
-      localStorage.removeItem('shredmatrix_session');
     }
-    setIsRestoring(false);
-  }, []);
+
+    restoreSession();
+
+    const subscription = onAuthStateChange((event, nextUser) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setPlan(null);
+      } else if (nextUser) {
+        setUser(nextUser);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      subscription?.unsubscribe?.();
+    };
+  }, [navigate]);
 
   // Handle loading → dashboard transition
   useEffect(() => {
     if (location.pathname === '/loading' && pendingFormData) {
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         const generatedPlan = generatePlan(pendingFormData);
         setPlan(generatedPlan);
 
-        localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
         if (user?.email) {
           try {
-            localStorage.setItem(`shredmatrix_plan_${user.email}`, JSON.stringify(generatedPlan));
-          } catch { /* quota */ }
+            await savePlan(generatedPlan, user.email);
+          } catch {
+            // Keep the generated plan in memory even if remote persistence fails.
+          }
         }
 
         setPendingFormData(null);
@@ -192,17 +217,17 @@ function AppContent() {
     }
   }, [location.pathname, pendingFormData, user]);
 
-  const handleAuth = (userData) => {
+  const handleAuth = async (userData) => {
     setUser(userData);
-    const savedPlan = localStorage.getItem(`shredmatrix_plan_${userData.email}`);
-    if (savedPlan) {
-      try {
-        setPlan(JSON.parse(savedPlan));
+    try {
+      const savedPlan = await loadPlan(userData.email);
+      if (savedPlan) {
+        setPlan(savedPlan);
         navigate('/dashboard', { replace: true });
-      } catch {
+      } else {
         navigate('/onboarding', { replace: true });
       }
-    } else {
+    } catch {
       navigate('/onboarding', { replace: true });
     }
   };
@@ -214,25 +239,24 @@ function AppContent() {
 
   const handleBack = () => {
     setPlan(null);
-    if (user?.email) {
-      localStorage.removeItem(`shredmatrix_plan_${user.email}`);
-    }
     navigate('/onboarding', { replace: true });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('shredmatrix_session');
+  const handleLogout = async () => {
+    await signOut();
     setUser(null);
     setPlan(null);
     navigate('/', { replace: true });
   };
 
-  const handlePlanUpdate = (newPlan) => {
+  const handlePlanUpdate = async (newPlan) => {
     setPlan(newPlan);
     if (user?.email) {
       try {
-        localStorage.setItem(`shredmatrix_plan_${user.email}`, JSON.stringify(newPlan));
-      } catch { /* quota */ }
+        await savePlan(newPlan, user.email);
+      } catch {
+        // Keep UI responsive; persistence failures surface through future load attempts.
+      }
     }
   };
 

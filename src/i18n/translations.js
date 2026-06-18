@@ -124,7 +124,7 @@ export const translations = {
       password: 'Şifre', confirmPassword: 'Şifreyi tekrar girin',
       submitLogin: 'GİRİŞ YAP', submitRegister: 'HESAP OLUŞTUR',
       noAccount: 'Hesabın yok mu?', hasAccount: 'Zaten hesabın var mı?',
-      demoLogin: 'Demo Hesapla Hızlı Giriş',
+      localTestLogin: 'Yerel Test Girişi',
       tagline: 'NO EXCUSES. JUST RESULTS. 💪',
       errors: {
         nameRequired: 'İsim gerekli',
@@ -132,6 +132,8 @@ export const translations = {
         passwordRequired: 'Şifre gerekli', passwordShort: 'Şifre en az 6 karakter olmalı',
         confirmRequired: 'Şifreyi tekrar girin', confirmMismatch: 'Şifreler eşleşmiyor',
         emailExists: 'Bu e-posta zaten kayıtlı', invalidCredentials: 'E-posta veya şifre hatalı',
+        supabaseRequired: 'Canlı ortamda Supabase yapılandırması gerekli',
+        emailConfirmationRequired: 'Lütfen e-postanı doğrulayıp tekrar giriş yap',
       },
     },
 
@@ -265,6 +267,7 @@ export const translations = {
 
     timer: {
       title: 'Dinlenme Zamanlayıcı',
+      twoMinutes: '2 dk',
       finished: 'DİNLENME BİTTİ!',
       pause: 'Duraklat', resume: 'Devam', start: 'Başlat', reset: 'Sıfırla',
     },
@@ -363,6 +366,13 @@ export const translations = {
       kcalDay: 'kcal/gün',
       male: 'Erkek ♂️', female: 'Kadın ♀️',
       age: 'yaş',
+      errors: {
+        photoRequired: 'Fotoğraf seçilemedi',
+        photoType: 'Sadece JPG, PNG veya WebP fotoğraf yükleyebilirsin',
+        photoSize: 'Fotoğraf 5 MB sınırını aşmamalı',
+        photoUpload: 'Fotoğraf yüklenemedi',
+        deleteFailed: 'Hesap silinirken bir hata oluştu',
+      },
     },
 
     // ── Tour ──
@@ -597,7 +607,7 @@ export const translations = {
       password: 'Password', confirmPassword: 'Confirm password',
       submitLogin: 'LOG IN', submitRegister: 'CREATE ACCOUNT',
       noAccount: "Don't have an account?", hasAccount: 'Already have an account?',
-      demoLogin: 'Quick Login with Demo Account',
+      localTestLogin: 'Local Test Login',
       tagline: 'NO EXCUSES. JUST RESULTS. 💪',
       errors: {
         nameRequired: 'Name is required',
@@ -605,6 +615,8 @@ export const translations = {
         passwordRequired: 'Password is required', passwordShort: 'Password must be at least 6 characters',
         confirmRequired: 'Please confirm password', confirmMismatch: 'Passwords do not match',
         emailExists: 'This email is already registered', invalidCredentials: 'Invalid email or password',
+        supabaseRequired: 'Supabase configuration is required in production',
+        emailConfirmationRequired: 'Please confirm your email, then log in again',
       },
     },
     onboarding: {
@@ -711,7 +723,7 @@ export const translations = {
         done: 'Target reached! 🎉',
       },
     },
-    timer: { title: 'Rest Timer', finished: 'REST OVER!', pause: 'Pause', resume: 'Resume', start: 'Start', reset: 'Reset' },
+    timer: { title: 'Rest Timer', twoMinutes: '2 min', finished: 'REST OVER!', pause: 'Pause', resume: 'Resume', start: 'Start', reset: 'Reset' },
     achievements: {
       title: 'Achievements', unlocked: 'Unlocked', locked: 'Locked',
       progressLabel: '{{current}} / {{total}} badges unlocked',
@@ -792,6 +804,13 @@ export const translations = {
       kcalDay: 'kcal/day',
       male: 'Male ♂️', female: 'Female ♀️',
       age: 'years',
+      errors: {
+        photoRequired: 'No photo was selected',
+        photoType: 'Only JPG, PNG, or WebP photos are allowed',
+        photoSize: 'Photo size must be 5 MB or less',
+        photoUpload: 'Photo could not be uploaded',
+        deleteFailed: 'Account could not be deleted',
+      },
     },
     tour: {
       skip: 'Skip', next: 'Next', start: "Let's go!",
@@ -999,7 +1018,7 @@ export const translations = {
       password: 'Contraseña', confirmPassword: 'Confirmar contraseña',
       submitLogin: 'INICIAR SESIÓN', submitRegister: 'CREAR CUENTA',
       noAccount: '¿No tienes cuenta?', hasAccount: '¿Ya tienes cuenta?',
-      demoLogin: 'Acceso Rápido con Cuenta Demo',
+      localTestLogin: 'Acceso Local de Prueba',
       tagline: 'SIN EXCUSAS. SOLO RESULTADOS. 💪',
       errors: {
         nameRequired: 'El nombre es obligatorio',
@@ -1007,6 +1026,8 @@ export const translations = {
         passwordRequired: 'La contraseña es obligatoria', passwordShort: 'La contraseña debe tener al menos 6 caracteres',
         confirmRequired: 'Confirma la contraseña', confirmMismatch: 'Las contraseñas no coinciden',
         emailExists: 'Este email ya está registrado', invalidCredentials: 'Email o contraseña inválidos',
+        supabaseRequired: 'La configuración de Supabase es obligatoria en producción',
+        emailConfirmationRequired: 'Confirma tu email y vuelve a iniciar sesión',
       },
     },
     onboarding: {
@@ -1113,7 +1134,7 @@ export const translations = {
         done: '¡Meta alcanzada! 🎉',
       },
     },
-    timer: { title: 'Temporizador de Descanso', finished: '¡DESCANSO TERMINADO!', pause: 'Pausar', resume: 'Continuar', start: 'Iniciar', reset: 'Reiniciar' },
+    timer: { title: 'Temporizador de Descanso', twoMinutes: '2 min', finished: '¡DESCANSO TERMINADO!', pause: 'Pausar', resume: 'Continuar', start: 'Iniciar', reset: 'Reiniciar' },
     achievements: {
       title: 'Logros', unlocked: 'Desbloqueado', locked: 'Bloqueado',
       progressLabel: '{{current}} / {{total}} insignias desbloqueadas',
@@ -1194,6 +1215,13 @@ export const translations = {
       kcalDay: 'kcal/día',
       male: 'Masculino ♂️', female: 'Femenino ♀️',
       age: 'años',
+      errors: {
+        photoRequired: 'No se seleccionó ninguna foto',
+        photoType: 'Solo se permiten fotos JPG, PNG o WebP',
+        photoSize: 'La foto no debe superar los 5 MB',
+        photoUpload: 'No se pudo subir la foto',
+        deleteFailed: 'No se pudo eliminar la cuenta',
+      },
     },
     tour: {
       skip: 'Saltar', next: 'Siguiente', start: '¡Vamos!',

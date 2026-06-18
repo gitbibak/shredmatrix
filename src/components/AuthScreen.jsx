@@ -1,28 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Eye, EyeOff, Zap, Shield, ArrowRight } from 'lucide-react';
+import { signIn, signUp } from '../lib/dataService';
 
 // ── Helpers ──────────────────────────────────────────────
-const USERS_KEY = 'shredmatrix_users';
-const SESSION_KEY = 'shredmatrix_session';
-
-/** Simple base64 encode for mock password "hashing" */
-const hashPassword = (pw) => btoa(pw);
-
-const getUsers = () => {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-  } catch {
-    return [];
-  }
-};
-
-const saveUsers = (users) =>
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-
-const saveSession = (user) =>
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ name: user.name, email: user.email }));
+const LOCAL_TEST_AUTH_ENABLED = import.meta.env.DEV;
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -103,18 +86,6 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
   );
 }
 
-// ── Demo Account ─────────────────────────────────────────
-const DEMO_EMAIL = 'demo@shredmatrix.com';
-const DEMO_PASSWORD = '123456';
-const DEMO_NAME = 'Demo User';
-
-function seedDemoAccount() {
-  const users = getUsers();
-  if (!users.some((u) => u.email === DEMO_EMAIL)) {
-    saveUsers([...users, { name: DEMO_NAME, email: DEMO_EMAIL, password: hashPassword(DEMO_PASSWORD) }]);
-  }
-}
-
 // ═════════════════════════════════════════════════════════
 // AuthScreen Component
 // ═════════════════════════════════════════════════════════
@@ -134,16 +105,20 @@ export default function AuthScreen({ onAuth }) {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Seed demo account on mount
-  useEffect(() => {
-    seedDemoAccount();
-  }, []);
-
-  const handleDemoLogin = () => {
-    seedDemoAccount();
-    const user = { name: DEMO_NAME, email: DEMO_EMAIL };
-    saveSession(user);
-    onAuth(user);
+  const handleLocalTestLogin = async () => {
+    if (!LOCAL_TEST_AUTH_ENABLED) return;
+    setIsSubmitting(true);
+    setFormError('');
+    try {
+      const { signInLocalTest } = await import(/* @vite-ignore */ '/src/lib/localTestAuth.js');
+      const { user } = await signInLocalTest();
+      onAuth(user);
+    } catch (err) {
+      const key = err?.message || 'auth.errors.invalidCredentials';
+      setFormError(key.startsWith('auth.') ? t(key) : key);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleMode = useCallback(() => {
@@ -170,7 +145,7 @@ export default function AuthScreen({ onAuth }) {
     if (!password) {
       newErrors.password = t('auth.errors.passwordRequired');
     } else if (password.length < 6) {
-      newErrors.password = t('auth.errors.passwordMin');
+      newErrors.password = t('auth.errors.passwordShort');
     }
 
     if (mode === 'register') {
@@ -183,11 +158,11 @@ export default function AuthScreen({ onAuth }) {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [mode, name, email, password, confirmPassword]);
+  }, [mode, name, email, password, confirmPassword, t]);
 
   // ── Submit ───────────────────────────────────────────
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       setFormError('');
 
@@ -195,48 +170,20 @@ export default function AuthScreen({ onAuth }) {
 
       setIsSubmitting(true);
 
-      // Simulate network delay for UX polish
-      setTimeout(() => {
-        const users = getUsers();
-        const hashed = hashPassword(password);
-
-        if (mode === 'register') {
-          // Check if email already exists
-          if (users.some((u) => u.email === email.toLowerCase().trim())) {
-            setFormError(t('auth.errors.emailTaken'));
-            setIsSubmitting(false);
-            return;
-          }
-
-          const newUser = {
-            name: name.trim(),
-            email: email.toLowerCase().trim(),
-            password: hashed,
-          };
-
-          saveUsers([...users, newUser]);
-          saveSession(newUser);
-          onAuth({ name: newUser.name, email: newUser.email });
-        } else {
-          // Login
-          const found = users.find(
-            (u) => u.email === email.toLowerCase().trim() && u.password === hashed
-          );
-
-          if (!found) {
-            setFormError(t('auth.errors.invalidCredentials'));
-            setIsSubmitting(false);
-            return;
-          }
-
-          saveSession(found);
-          onAuth({ name: found.name, email: found.email });
-        }
-
+      try {
+        const cleanEmail = email.toLowerCase().trim();
+        const result = mode === 'register'
+          ? await signUp(cleanEmail, password, name.trim())
+          : await signIn(cleanEmail, password);
+        onAuth(result.user);
+      } catch (err) {
+        const key = err?.message || 'auth.errors.invalidCredentials';
+        setFormError(key.startsWith('auth.') ? t(key) : key);
+      } finally {
         setIsSubmitting(false);
-      }, 600);
+      }
     },
-    [mode, name, email, password, confirmPassword, validate, onAuth]
+    [mode, name, email, password, validate, onAuth, t]
   );
 
   const isLogin = mode === 'login';
@@ -432,17 +379,20 @@ export default function AuthScreen({ onAuth }) {
             </p>
           </div>
 
-          {/* ─── Demo Login ─── */}
-          <motion.button
-            type="button"
-            onClick={handleDemoLogin}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-400 text-xs font-medium hover:text-white hover:border-slate-600 transition-all cursor-pointer font-outfit"
-          >
-            <Zap size={14} className="text-orange-400" />
-            {t('auth.demoLogin')}
-          </motion.button>
+          {/* ─── Local Test Login (dev only) ─── */}
+          {LOCAL_TEST_AUTH_ENABLED && (
+            <motion.button
+              type="button"
+              onClick={handleLocalTestLogin}
+              disabled={isSubmitting}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-400 text-xs font-medium hover:text-white hover:border-slate-600 transition-all cursor-pointer font-outfit disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <Zap size={14} className="text-orange-400" />
+              {t('auth.localTestLogin')}
+            </motion.button>
+          )}
         </motion.div>
 
         {/* ── Footer tagline ── */}
