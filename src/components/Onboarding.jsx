@@ -238,7 +238,7 @@ export default function Onboarding({ onSubmit }) {
           className="text-center mb-8"
         >
           <h1 className="text-4xl md:text-6xl font-extrabold font-outfit tracking-tighter bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent mb-2">
-            SHRED MATRIX
+            FULL BALANCE
           </h1>
           <p className="text-slate-500 text-sm font-outfit">
             {t('onboarding.step1.subtitle')}

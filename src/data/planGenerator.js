@@ -1,5 +1,5 @@
 /**
- * ShredMatrix — Plan Generator (Mock)
+ * Full Balance — Plan Generator (Mock)
  * Her antrenman gününe özel beslenme programı + fiyat bilgisi.
  * İş programı: Değişken (bazen 14:00-18:00), Haftalık 4 gün antrenman.
  */

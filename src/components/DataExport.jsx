@@ -55,7 +55,7 @@ export default function DataExport() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `shredmatrix_data_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `fullbalance_data_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -83,7 +83,7 @@ export default function DataExport() {
       </tr>`;
     }).join('');
 
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>ShredMatrix Data</title>
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Full Balance Data</title>
     <style>
       body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #fff; padding: 40px; }
       h1 { color: #ff6d00; font-size: 24px; margin-bottom: 4px; }
@@ -94,7 +94,7 @@ export default function DataExport() {
       tr:hover { background: #1e293b40; }
       @media print { body { background: #fff; color: #000; } th { background: #f1f5f9; color: #333; } td { border-color: #e2e8f0; } h1 { color: #ff6d00; } }
     </style></head><body>
-    <h1>🔥 ShredMatrix</h1>
+    <h1>⚖️ Full Balance</h1>
     <h2>${escapeHtml(t('dataExport.desc'))} — ${escapeHtml(new Date().toLocaleDateString())}</h2>
     <table>
       <thead><tr>

@@ -71,7 +71,7 @@ function LoadingScreen() {
         className="mb-8"
       >
         <h1 className="text-4xl md:text-5xl font-extrabold font-outfit tracking-tighter bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-          SHRED MATRIX
+          FULL BALANCE
         </h1>
       </motion.div>
 

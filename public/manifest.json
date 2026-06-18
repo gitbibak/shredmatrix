@@ -1,15 +1,15 @@
 {
   "id": "/",
-  "name": "ShredMatrix",
-  "short_name": "ShredMatrix",
-  "description": "Kişisel Antrenman & Beslenme Programı",
+  "name": "Full Balance",
+  "short_name": "Full Balance",
+  "description": "Body. Mind. Nutrition. — Personal Wellness Platform",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#ff6d00",
   "orientation": "portrait",
-  "categories": ["fitness", "health", "lifestyle"],
+  "categories": ["fitness", "health", "lifestyle", "wellness"],
   "icons": [
     {
       "src": "/favicon.svg",

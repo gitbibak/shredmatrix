@@ -236,7 +236,7 @@ export default function LandingPage({ onStart }) {
           <div className="flex items-center gap-2">
             <Zap className="text-[#ff6d00]" size={20} />
             <span className="font-outfit font-bold text-base tracking-tight bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-              SHREDMATRIX
+              FULL BALANCE
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -787,10 +787,10 @@ export default function LandingPage({ onStart }) {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Zap size={14} className="text-orange-500" />
-            <span className="font-outfit font-bold text-xs text-slate-600">SHREDMATRIX</span>
+            <span className="font-outfit font-bold text-xs text-slate-600">FULL BALANCE</span>
           </div>
           <p className="text-[10px] text-slate-700">
-            {t('landing.footer') || '© 2025 ShredMatrix. Tüm hakları saklıdır.'}
+            {t('landing.footer') || '© 2025 Full Balance. Tüm hakları saklıdır.'}
           </p>
         </div>
       </footer>

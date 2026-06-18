@@ -19,7 +19,7 @@ export const translations = {
       readyDesc: 'Profesyonel antrenman programları, kişisel beslenme planları ve akıllı takip araçları — hepsi ücretsiz.',
       readyQuote: '"PT\'lere verdiğin parayı artık kendin için kullan."',
       stepsTitle1: 'Nasıl', stepsTitle2: 'Çalışır?',
-      footer: '© 2026 ShredMatrix. Tüm hakları saklıdır.',
+      footer: '© 2026 Full Balance. Tüm hakları saklıdır.',
       stats: {
         exercises: 'Egzersiz', recipes: 'Tarif',
         programs: 'Program', goals: 'Hedef',
@@ -115,7 +115,7 @@ export const translations = {
 
     // ── Auth ──
     auth: {
-      title: 'SHRED MATRIX',
+      title: 'FULL BALANCE',
       subtitle: 'Sınırlarını Aş. Dönüşümünü Başlat.',
       login: 'Giriş Yap', register: 'Kayıt Ol',
       loginMsg: 'Hesabına giriş yap ve kaldığın yerden devam et.',
@@ -205,7 +205,7 @@ export const translations = {
       share: 'Paylaş', logout: 'Çıkış',
       quickStats: { title: 'Hızlı Özet', goal: 'Hedef', dailyCal: 'Günlük Kalori', training: 'Antrenman', daysWeek: 'gün/hafta', programAge: 'Program Yaşı', days: 'gün' },
       athlete: 'Sporcu',
-      footer: '© 2026 ShredMatrix — Kişisel Antrenman & Beslenme Programı',
+      footer: '© 2026 Full Balance — Kişisel Antrenman & Beslenme Programı',
     },
 
     // ── Nutrition ──
@@ -321,7 +321,7 @@ export const translations = {
       quotes: [
         { text: 'Acı geçicidir. Vazgeçmek sonsuzdur.', author: 'Lance Armstrong' },
         { text: 'Vücudun, aklının bırakmak istediği yerde başlar.', author: 'Arnold Schwarzenegger' },
-        { text: 'Bugün yapamadığını yarın da yapamazsın. BUGÜN yap.', author: 'ShredMatrix' },
+        { text: 'Bugün yapamadığını yarın da yapamazsın. BUGÜN yap.', author: 'Full Balance' },
         { text: 'Tek kötü antrenman, yapılmayan antremandır.', author: 'Anonim' },
         { text: 'Yüzde yüz vermezsen, yüzde sıfır alırsın.', author: 'Anonim' },
       ],
@@ -520,7 +520,7 @@ export const translations = {
       readyDesc: 'Professional workout programs, personalized meal plans and smart tracking tools — all free.',
       readyQuote: '"Stop paying trainers — get the same quality for free."',
       stepsTitle1: 'How It', stepsTitle2: 'Works',
-      footer: '© 2026 ShredMatrix. All rights reserved.',
+      footer: '© 2026 Full Balance. All rights reserved.',
       stats: { exercises: 'Exercises', recipes: 'Recipes', programs: 'Programs', goals: 'Goals', access: 'Access', free: 'Free' },
       goals: {
         tag: '6 Goal Categories', title: 'Choose Your Goal,', titleAccent: 'Start Your Journey',
@@ -590,7 +590,7 @@ export const translations = {
       },
     },
     auth: {
-      title: 'SHRED MATRIX', subtitle: 'Break Your Limits. Start Your Transformation.',
+      title: 'FULL BALANCE', subtitle: 'Break Your Limits. Start Your Transformation.',
       login: 'Log In', register: 'Sign Up',
       loginMsg: 'Log in to your account and continue where you left off.',
       registerMsg: 'Create a free account, start your transformation journey.',
@@ -670,7 +670,7 @@ export const translations = {
       share: 'Share', logout: 'Logout',
       quickStats: { title: 'Quick Stats', goal: 'Goal', dailyCal: 'Daily Calories', training: 'Training', daysWeek: 'days/week', programAge: 'Program Age', days: 'days' },
       athlete: 'Athlete',
-      footer: '© 2026 ShredMatrix — Personal Workout & Nutrition Program',
+      footer: '© 2026 Full Balance — Personal Workout & Nutrition Program',
     },
     nutrition: {
       title: 'Nutrition Plan', macroDistribution: 'Macro Distribution',
@@ -756,7 +756,7 @@ export const translations = {
       quotes: [
         { text: 'Pain is temporary. Quitting lasts forever.', author: 'Lance Armstrong' },
         { text: 'Your body starts where your mind wants to quit.', author: 'Arnold Schwarzenegger' },
-        { text: "What you can't do today, you won't do tomorrow. DO IT TODAY.", author: 'ShredMatrix' },
+        { text: "What you can't do today, you won't do tomorrow. DO IT TODAY.", author: 'Full Balance' },
         { text: 'The only bad workout is the one that didn\'t happen.', author: 'Anonymous' },
         { text: "If you don't give 100%, you get 0%.", author: 'Anonymous' },
       ],
@@ -923,7 +923,7 @@ export const translations = {
       readyDesc: 'Programas de entrenamiento profesionales, planes de comida personalizados y herramientas de seguimiento — todo gratis.',
       readyQuote: '"Deja de pagar entrenadores — obtén la misma calidad gratis."',
       stepsTitle1: 'Cómo', stepsTitle2: 'Funciona',
-      footer: '© 2026 ShredMatrix. Todos los derechos reservados.',
+      footer: '© 2026 Full Balance. Todos los derechos reservados.',
       stats: { exercises: 'Ejercicios', recipes: 'Recetas', programs: 'Programas', goals: 'Objetivos', access: 'Acceso', free: 'Gratis' },
       goals: {
         tag: '6 Categorías de Objetivos', title: 'Elige Tu Objetivo,', titleAccent: 'Inicia Tu Viaje',
@@ -993,7 +993,7 @@ export const translations = {
       },
     },
     auth: {
-      title: 'SHRED MATRIX', subtitle: 'Supera Tus Límites. Inicia Tu Transformación.',
+      title: 'FULL BALANCE', subtitle: 'Supera Tus Límites. Inicia Tu Transformación.',
       login: 'Iniciar Sesión', register: 'Registrarse',
       loginMsg: 'Inicia sesión y continúa donde lo dejaste.',
       registerMsg: 'Crea una cuenta gratuita, comienza tu transformación.',
@@ -1073,7 +1073,7 @@ export const translations = {
       share: 'Compartir', logout: 'Salir',
       quickStats: { title: 'Resumen Rápido', goal: 'Objetivo', dailyCal: 'Calorías Diarias', training: 'Entrenamiento', daysWeek: 'días/semana', programAge: 'Edad del Plan', days: 'días' },
       athlete: 'Atleta',
-      footer: '© 2026 ShredMatrix — Programa Personal de Entrenamiento y Nutrición',
+      footer: '© 2026 Full Balance — Programa Personal de Entrenamiento y Nutrición',
     },
     nutrition: {
       title: 'Plan Nutricional', macroDistribution: 'Distribución de Macros',
@@ -1159,7 +1159,7 @@ export const translations = {
       quotes: [
         { text: 'El dolor es temporal. Rendirse es para siempre.', author: 'Lance Armstrong' },
         { text: 'Tu cuerpo empieza donde tu mente quiere parar.', author: 'Arnold Schwarzenegger' },
-        { text: 'Lo que no puedes hoy, tampoco mañana. HAZLO HOY.', author: 'ShredMatrix' },
+        { text: 'Lo que no puedes hoy, tampoco mañana. HAZLO HOY.', author: 'Full Balance' },
         { text: 'El único mal entrenamiento es el que no se hizo.', author: 'Anónimo' },
         { text: 'Si no das el 100%, recibes el 0%.', author: 'Anónimo' },
       ],

@@ -554,7 +554,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
 
       {/* ── App Info ── */}
       <motion.div variants={itemV} className="text-center pt-4 border-t border-slate-800/50">
-        <p className="text-[10px] text-slate-600">ShredMatrix v1.0.0 — 2026</p>
+        <p className="text-[10px] text-slate-600">Full Balance v1.0.0 — 2026</p>
       </motion.div>
     </motion.div>
   );

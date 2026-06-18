@@ -1,7 +1,7 @@
 import { supabase, isSupabaseReady } from './supabase';
 
 // ══════════════════════════════════════════════
-// ShredMatrix — Data Service Layer
+// Full Balance — Data Service Layer
 // Hybrid: Supabase (primary) + localStorage (fallback)
 // ══════════════════════════════════════════════
 

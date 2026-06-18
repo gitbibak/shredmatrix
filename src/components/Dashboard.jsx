@@ -150,7 +150,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           <div className="flex items-center gap-2">
             <Zap className="text-[#ff6d00]" size={18} />
             <h1 className="text-base font-outfit font-bold gradient-text tracking-tight">
-              SHREDMATRIX
+              FULL BALANCE
             </h1>
           </div>
 

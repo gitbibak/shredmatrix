@@ -32,7 +32,7 @@ export default function ShareCard({ plan, onClose }) {
 
   const handleCopy = async () => {
     const textSummary = [
-      `🔥 SHREDMATRIX — ${userName}`,
+      `⚖️ FULL BALANCE — ${userName}`,
       `🎯 ${t('share.goal')}: ${goal}`,
       `⚡ ${t('share.dailyCalories')}: ${Math.round(dailyCalories)} kcal`,
       `🥩 ${t('nutrition.protein')}: ${Math.round(protein)}g`,
@@ -104,7 +104,7 @@ export default function ShareCard({ plan, onClose }) {
                 {/* Logo */}
                 <div className="text-center">
                   <h2 className="font-outfit text-2xl font-bold gradient-text tracking-tight">
-                    SHREDMATRIX
+                    FULL BALANCE
                   </h2>
                   <div className="mt-1 h-[1px] w-16 mx-auto bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
                 </div>

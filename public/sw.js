@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shredmatrix-v2';
+const CACHE_NAME = 'fullbalance-v3';
 const ASSETS = [
   '/',
   '/index.html',
