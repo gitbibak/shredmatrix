@@ -124,7 +124,6 @@ export const translations = {
       password: 'Şifre', confirmPassword: 'Şifreyi tekrar girin',
       submitLogin: 'GİRİŞ YAP', submitRegister: 'HESAP OLUŞTUR',
       noAccount: 'Hesabın yok mu?', hasAccount: 'Zaten hesabın var mı?',
-      demoLogin: 'Demo Hesapla Hızlı Giriş',
       tagline: 'NO EXCUSES. JUST RESULTS. 💪',
       errors: {
         nameRequired: 'İsim gerekli',
@@ -599,7 +598,6 @@ export const translations = {
       password: 'Password', confirmPassword: 'Confirm password',
       submitLogin: 'LOG IN', submitRegister: 'CREATE ACCOUNT',
       noAccount: "Don't have an account?", hasAccount: 'Already have an account?',
-      demoLogin: 'Quick Login with Demo Account',
       tagline: 'NO EXCUSES. JUST RESULTS. 💪',
       errors: {
         nameRequired: 'Name is required',
@@ -1003,7 +1001,6 @@ export const translations = {
       password: 'Contraseña', confirmPassword: 'Confirmar contraseña',
       submitLogin: 'INICIAR SESIÓN', submitRegister: 'CREAR CUENTA',
       noAccount: '¿No tienes cuenta?', hasAccount: '¿Ya tienes cuenta?',
-      demoLogin: 'Acceso Rápido con Cuenta Demo',
       tagline: 'SIN EXCUSAS. SOLO RESULTADOS. 💪',
       errors: {
         nameRequired: 'El nombre es obligatorio',

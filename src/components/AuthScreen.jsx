@@ -83,10 +83,7 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
   );
 }
 
-// ── Demo Account ─────────────────────────────────────────
-const DEMO_EMAIL = 'demo@shredmatrix.com';
-const DEMO_PASSWORD = 'demo123456';
-const DEMO_NAME = 'Demo User';
+
 
 // ═════════════════════════════════════════════════════════
 // AuthScreen Component
@@ -107,26 +104,7 @@ export default function AuthScreen({ onAuth }) {
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDemoLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      // Try to sign in demo user first
-      const result = await signIn(DEMO_EMAIL, DEMO_PASSWORD);
-      const user = result.user;
-      onAuth({ name: user.user_metadata?.name || DEMO_NAME, email: user.email, id: user.id });
-    } catch {
-      // If demo user doesn't exist, create it
-      try {
-        const result = await signUp(DEMO_EMAIL, DEMO_PASSWORD, DEMO_NAME);
-        const user = result.user;
-        onAuth({ name: user.user_metadata?.name || DEMO_NAME, email: user.email, id: user.id });
-      } catch (err) {
-        // If signup also fails (already exists but wrong password), show error
-        setFormError(err.message || 'Demo login failed');
-      }
-    }
-    setIsSubmitting(false);
-  };
+
 
   const toggleMode = useCallback(() => {
     setDirection(mode === 'login' ? 1 : -1);
@@ -396,17 +374,7 @@ export default function AuthScreen({ onAuth }) {
             </p>
           </div>
 
-          {/* ─── Demo Login ─── */}
-          <motion.button
-            type="button"
-            onClick={handleDemoLogin}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-400 text-xs font-medium hover:text-white hover:border-slate-600 transition-all cursor-pointer font-outfit"
-          >
-            <Zap size={14} className="text-orange-400" />
-            {t('auth.demoLogin')}
-          </motion.button>
+
         </motion.div>
 
         {/* ── Footer tagline ── */}

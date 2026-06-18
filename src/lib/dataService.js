@@ -42,14 +42,7 @@ function getUserId() {
 
 export async function signUp(email, password, name) {
   if (!isSupabaseReady()) {
-    // Fallback: localStorage auth
-    const users = lsGet('shredmatrix_users', []);
-    if (users.find(u => u.email === email)) throw new Error('Email already registered');
-    users.push({ name, email, password: btoa(password) });
-    lsSet('shredmatrix_users', users);
-    const session = { name, email };
-    lsSet('shredmatrix_session', session);
-    return { user: session, isLocal: true };
+    throw new Error('Authentication service unavailable. Please try again later.');
   }
 
   const { data, error } = await supabase.auth.signUp({
@@ -63,12 +56,7 @@ export async function signUp(email, password, name) {
 
 export async function signIn(email, password) {
   if (!isSupabaseReady()) {
-    const users = lsGet('shredmatrix_users', []);
-    const user = users.find(u => u.email === email && u.password === btoa(password));
-    if (!user) throw new Error('Invalid email or password');
-    const session = { name: user.name, email: user.email };
-    lsSet('shredmatrix_session', session);
-    return { user: session, isLocal: true };
+    throw new Error('Authentication service unavailable. Please try again later.');
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -84,10 +72,7 @@ export async function signOut() {
 }
 
 export async function getSession() {
-  if (!isSupabaseReady()) {
-    const session = lsGet('shredmatrix_session');
-    return session ? { user: session, isLocal: true } : null;
-  }
+  if (!isSupabaseReady()) return null;
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return null;
@@ -401,6 +386,17 @@ export async function getProfile() {
 // ══════════════════════════════════════════════
 
 export async function uploadPhoto(file, type = 'profile') {
+  // Validate file
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error('Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.');
+  }
+  if (file.size > MAX_SIZE) {
+    throw new Error('File too large. Maximum size is 5MB.');
+  }
+
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
@@ -430,15 +426,16 @@ export async function uploadPhoto(file, type = 'profile') {
     .upload(path, file, { cacheControl: '3600', upsert: type === 'profile' });
   if (error) throw error;
 
-  const { data } = supabase.storage
+  const { data, error: urlError } = await supabase.storage
     .from('user-photos')
-    .getPublicUrl(path);
+    .createSignedUrl(path, 3600); // 1 hour expiry
+  if (urlError) throw urlError;
 
   if (type === 'profile') {
-    await updateProfile({ avatar_url: data.publicUrl });
+    await updateProfile({ avatar_url: path }); // store path, not URL
   }
 
-  return data.publicUrl;
+  return data.signedUrl;
 }
 
 export async function getProfilePhoto() {
@@ -449,7 +446,12 @@ export async function getProfilePhoto() {
   }
 
   const profile = await getProfile();
-  return profile?.avatar_url || null;
+  if (!profile?.avatar_url) return null;
+  // If avatar_url is a storage path, create signed URL
+  const { data } = await supabase.storage
+    .from('user-photos')
+    .createSignedUrl(profile.avatar_url, 3600);
+  return data?.signedUrl || profile.avatar_url;
 }
 
 export async function getProgressPhotos() {
@@ -464,11 +466,16 @@ export async function getProgressPhotos() {
     .list(`${userId}/progress`, { sortBy: { column: 'created_at', order: 'desc' } });
   if (error) return [];
 
-  return (data || []).map(f => ({
-    id: f.id,
-    name: f.name,
-    date: f.created_at,
-    src: supabase.storage.from('user-photos').getPublicUrl(`${userId}/progress/${f.name}`).data.publicUrl,
+  return await Promise.all((data || []).map(async (f) => {
+    const { data: urlData } = await supabase.storage
+      .from('user-photos')
+      .createSignedUrl(`${userId}/progress/${f.name}`, 3600);
+    return {
+      id: f.id,
+      name: f.name,
+      date: f.created_at,
+      src: urlData?.signedUrl || '',
+    };
   }));
 }
 
@@ -585,6 +592,11 @@ export async function deleteAllUserData(email) {
 
   // Delete profile (cascade will handle auth)
   await supabase.from('profiles').delete().eq('id', userId);
+
+  // Delete auth user via RPC
+  try {
+    await supabase.rpc('delete_current_user');
+  } catch { /* RPC may not exist yet */ }
 }
 
 // ══════════════════════════════════════════════

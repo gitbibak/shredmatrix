@@ -122,7 +122,7 @@ CREATE INDEX idx_measurements_user ON measurements(user_id, date);
 -- Storage Bucket (Fotoğraflar)
 -- ============================================
 
-INSERT INTO storage.buckets (id, name, public) VALUES ('user-photos', 'user-photos', true);
+INSERT INTO storage.buckets (id, name, public) VALUES ('user-photos', 'user-photos', false);
 
 CREATE POLICY "users_own_photos" ON storage.objects FOR ALL
   USING (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text);

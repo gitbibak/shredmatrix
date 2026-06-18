@@ -11,6 +11,16 @@ function loadJSON(key) {
   catch { return []; }
 }
 
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export default function DataExport() {
   const { t } = useTranslation();
 
@@ -66,10 +76,10 @@ export default function DataExport() {
       const m = measures.find(e => e.date === date) || {};
       const s = sleep.find(e => e.date === date) || {};
       return `<tr>
-        <td>${date}</td>
-        <td>${p.weight || '–'}</td><td>${p.bodyFat || '–'}</td>
-        <td>${m.chest || '–'}</td><td>${m.waist || '–'}</td><td>${m.hip || '–'}</td>
-        <td>${m.arm || '–'}</td><td>${m.leg || '–'}</td><td>${s.hours || '–'}</td>
+        <td>${escapeHtml(date)}</td>
+        <td>${escapeHtml(p.weight || '–')}</td><td>${escapeHtml(p.bodyFat || '–')}</td>
+        <td>${escapeHtml(m.chest || '–')}</td><td>${escapeHtml(m.waist || '–')}</td><td>${escapeHtml(m.hip || '–')}</td>
+        <td>${escapeHtml(m.arm || '–')}</td><td>${escapeHtml(m.leg || '–')}</td><td>${escapeHtml(s.hours || '–')}</td>
       </tr>`;
     }).join('');
 
@@ -85,12 +95,12 @@ export default function DataExport() {
       @media print { body { background: #fff; color: #000; } th { background: #f1f5f9; color: #333; } td { border-color: #e2e8f0; } h1 { color: #ff6d00; } }
     </style></head><body>
     <h1>🔥 ShredMatrix</h1>
-    <h2>${t('dataExport.desc')} — ${new Date().toLocaleDateString()}</h2>
+    <h2>${escapeHtml(t('dataExport.desc'))} — ${escapeHtml(new Date().toLocaleDateString())}</h2>
     <table>
       <thead><tr>
-        <th>${t('dataExport.date')}</th><th>${t('dataExport.weight')}</th><th>${t('dataExport.bodyFat')}</th>
-        <th>${t('measurements.chest')}</th><th>${t('measurements.waist')}</th><th>${t('measurements.hip')}</th>
-        <th>${t('measurements.arm')}</th><th>${t('measurements.leg')}</th><th>${t('sleep.title')}</th>
+        <th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(t('dataExport.weight'))}</th><th>${escapeHtml(t('dataExport.bodyFat'))}</th>
+        <th>${escapeHtml(t('measurements.chest'))}</th><th>${escapeHtml(t('measurements.waist'))}</th><th>${escapeHtml(t('measurements.hip'))}</th>
+        <th>${escapeHtml(t('measurements.arm'))}</th><th>${escapeHtml(t('measurements.leg'))}</th><th>${escapeHtml(t('sleep.title'))}</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table></body></html>`;
