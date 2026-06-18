@@ -122,7 +122,7 @@ export const translations = {
     auth: {
       title: 'FULL BALANCE',
       backToHome: 'Ana Sayfa',
-      subtitle: 'Sınırlarını Aş. Dönüşümünü Başlat.',
+      subtitle: 'Bedenin, zihnin ve beslenmen — hepsi dengede.',
       login: 'Giriş Yap', register: 'Kayıt Ol',
       loginMsg: 'Hesabına giriş yap ve kaldığın yerden devam et.',
       registerMsg: 'Ücretsiz hesap oluştur, dönüşüm yolculuğuna başla.',
@@ -130,7 +130,7 @@ export const translations = {
       password: 'Şifre', confirmPassword: 'Şifreyi tekrar girin',
       submitLogin: 'GİRİŞ YAP', submitRegister: 'HESAP OLUŞTUR',
       noAccount: 'Hesabın yok mu?', hasAccount: 'Zaten hesabın var mı?',
-      tagline: 'NO EXCUSES. JUST RESULTS. 💪',
+      tagline: 'Bedenin. Zihnin. Dengen. ✨',
       errors: {
         nameRequired: 'İsim gerekli',
         emailRequired: 'E-posta gerekli', emailInvalid: 'Geçerli bir e-posta girin',
@@ -389,7 +389,7 @@ export const translations = {
       title: 'Programını Paylaş',
       copy: 'Kopyala', copied: '✓ Kopyalandı',
       save: 'Kaydet', saveHint: '📸 Ekran görüntüsü alarak kartını kaydet!',
-      tagline: 'Sınırlarını Aş. Dönüşümünü Başlat.',
+      tagline: 'Bedenin. Zihnin. Dengen.',
       calories: 'Kalori',
       goal: 'Hedef',
       dailyCalories: 'Günlük Kalori',
@@ -604,7 +604,7 @@ export const translations = {
     auth: {
       title: 'FULL BALANCE',
       backToHome: 'Home',
-      subtitle: 'Break Your Limits. Start Your Transformation.',
+      subtitle: 'Your body, mind and nutrition — all in balance.',
       login: 'Log In', register: 'Sign Up',
       loginMsg: 'Log in to your account and continue where you left off.',
       registerMsg: 'Create a free account, start your transformation journey.',
@@ -612,7 +612,7 @@ export const translations = {
       password: 'Password', confirmPassword: 'Confirm password',
       submitLogin: 'LOG IN', submitRegister: 'CREATE ACCOUNT',
       noAccount: "Don't have an account?", hasAccount: 'Already have an account?',
-      tagline: 'NO EXCUSES. JUST RESULTS. 💪',
+      tagline: 'Body. Mind. Balance. ✨',
       errors: {
         nameRequired: 'Name is required',
         emailRequired: 'Email is required', emailInvalid: 'Enter a valid email',
@@ -822,7 +822,7 @@ export const translations = {
     share: {
       title: 'Share Your Plan', copy: 'Copy', copied: '✓ Copied',
       save: 'Save', saveHint: '📸 Take a screenshot to save your card!',
-      tagline: 'Break Your Limits. Start Your Transformation.',
+      tagline: 'Body. Mind. Balance.',
       calories: 'Calories',
       goal: 'Goal',
       dailyCalories: 'Daily Calories',
@@ -1015,7 +1015,7 @@ export const translations = {
     auth: {
       title: 'FULL BALANCE',
       backToHome: 'Inicio',
-      subtitle: 'Supera Tus Límites. Inicia Tu Transformación.',
+      subtitle: 'Tu cuerpo, mente y nutrición — todo en equilibrio.',
       login: 'Iniciar Sesión', register: 'Registrarse',
       loginMsg: 'Inicia sesión y continúa donde lo dejaste.',
       registerMsg: 'Crea una cuenta gratuita, comienza tu transformación.',
@@ -1023,7 +1023,7 @@ export const translations = {
       password: 'Contraseña', confirmPassword: 'Confirmar contraseña',
       submitLogin: 'INICIAR SESIÓN', submitRegister: 'CREAR CUENTA',
       noAccount: '¿No tienes cuenta?', hasAccount: '¿Ya tienes cuenta?',
-      tagline: 'SIN EXCUSAS. SOLO RESULTADOS. 💪',
+      tagline: 'Cuerpo. Mente. Equilibrio. ✨',
       errors: {
         nameRequired: 'El nombre es obligatorio',
         emailRequired: 'El email es obligatorio', emailInvalid: 'Ingresa un email válido',
@@ -1233,7 +1233,7 @@ export const translations = {
     share: {
       title: 'Comparte Tu Plan', copy: 'Copiar', copied: '✓ Copiado',
       save: 'Guardar', saveHint: '📸 ¡Toma una captura para guardar tu tarjeta!',
-      tagline: 'Supera Tus Límites. Inicia Tu Transformación.',
+      tagline: 'Cuerpo. Mente. Equilibrio.',
       calories: 'Calorías',
       goal: 'Objetivo',
       dailyCalories: 'Calorías Diarias',

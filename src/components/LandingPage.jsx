@@ -222,7 +222,7 @@ export default function LandingPage({ onStart }) {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="text-[#ff6d00]" size={20} />
+            <Sparkles className="text-[#ff6d00]" size={20} />
             <span className="font-outfit font-bold text-base tracking-tight bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
               FULL BALANCE
             </span>
@@ -752,7 +752,7 @@ export default function LandingPage({ onStart }) {
           className="relative max-w-3xl mx-auto text-center"
         >
           <motion.div custom={0} variants={fadeUp}>
-            <Zap size={32} className="mx-auto text-orange-500 mb-6" />
+            <Sparkles size={32} className="mx-auto text-orange-500 mb-6" />
           </motion.div>
 
           <motion.h2 custom={1} variants={fadeUp}
@@ -803,7 +803,7 @@ export default function LandingPage({ onStart }) {
       <footer className="border-t border-slate-800/40 py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Zap size={14} className="text-orange-500" />
+            <Sparkles size={14} className="text-orange-500" />
             <span className="font-outfit font-bold text-xs text-slate-600">FULL BALANCE</span>
           </div>
           <p className="text-[10px] text-slate-700">

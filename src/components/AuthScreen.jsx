@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, User, Eye, EyeOff, Zap, Shield, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft } from 'lucide-react';
 import { signUp, signIn } from '../lib/dataService';
 
 // ── Validation ───────────────────────────────────────────
@@ -370,7 +370,7 @@ export default function AuthScreen({ onAuth, onBack }) {
                 ) : (
                   <>
                     {isLogin ? t('auth.submitLogin') : t('auth.submitRegister')}
-                    {isLogin ? <ArrowRight size={16} /> : <Zap size={16} />}
+                    {isLogin ? <ArrowRight size={16} /> : <Sparkles size={16} />}
                   </>
                 )}
               </motion.button>

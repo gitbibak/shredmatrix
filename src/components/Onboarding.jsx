@@ -21,6 +21,7 @@ import {
   Flower2,
   Circle,
   Wrench,
+  Sparkles,
 } from 'lucide-react';
 
 // ── Step Configuration ───────────────────────────────────
@@ -616,7 +617,7 @@ export default function Onboarding({ onSubmit }) {
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-blue-500 text-white text-sm font-bold font-outfit tracking-wide cursor-pointer shadow-lg shadow-orange-500/20"
               >
                 {t('onboarding.generate')}
-                <Zap size={16} />
+                <Sparkles size={16} />
               </motion.button>
             )}
           </div>

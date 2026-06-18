@@ -20,7 +20,7 @@ import CalorieCalc from './CalorieCalc';
 import DataExport from './DataExport';
 import ProgramAdvisor from './ProgramAdvisor';
 import {
-  Zap, UtensilsCrossed, Dumbbell, TrendingUp, User,
+  Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
   LogOut, Target, Award, Share2, ChevronDown,
 } from 'lucide-react';
 
@@ -148,7 +148,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Zap className="text-[#ff6d00]" size={18} />
+            <Sparkles className="text-[#ff6d00]" size={18} />
             <h1 className="text-base font-outfit font-bold gradient-text tracking-tight">
               FULL BALANCE
             </h1>
@@ -210,7 +210,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                       className="absolute right-0 top-full mt-2 z-50 w-64 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-2xl shadow-black/40"
                     >
                       <h4 className="text-xs font-bold font-outfit text-white mb-3 flex items-center gap-2">
-                        <Zap size={12} className="text-orange-400" />
+                        <Sparkles size={12} className="text-orange-400" />
                         {t('dashboard.quickStats.title')}
                       </h4>
                       <div className="grid grid-cols-2 gap-2">
