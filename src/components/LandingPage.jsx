@@ -200,26 +200,14 @@ export default function LandingPage({ onStart }) {
   const stepKeys = ['s1', 's2', 's3'];
   const stepIcons = [UserCheck, BarChart3, Zap];
 
-  /* ── testimonials ── */
-  const testimonials = [
-    {
-      name: t('landing.testimonials.t1.name') || 'Ahmet Y.',
-      text: t('landing.testimonials.t1.text') || '3 ayda 12 kilo verdim. PT\'ye binlerce lira veriyordum, şimdi aynı kalitede programı ücretsiz alıyorum!',
-      goal: t('landing.testimonials.t1.goal') || 'Yağ Yakımı',
-      stars: 5,
-    },
-    {
-      name: t('landing.testimonials.t2.name') || 'Elif K.',
-      text: t('landing.testimonials.t2.text') || 'Yoga ve meditasyon programları harika. Sabah rutinime 20 dakika ekledim, hayatım değişti.',
-      goal: t('landing.testimonials.t2.goal') || 'Yoga & Meditasyon',
-      stars: 5,
-    },
-    {
-      name: t('landing.testimonials.t3.name') || 'Carlos M.',
-      text: t('landing.testimonials.t3.text') || 'The meal plans saved me so much time. I follow the budget option and still hit my macros perfectly.',
-      goal: t('landing.testimonials.t3.goal') || 'Muscle Growth',
-      stars: 5,
-    },
+  /* ── comparison: PT vs Full Balance ── */
+  const comparisons = [
+    { icon: CreditCard, pt: t('landing.compare.c1.pt') || '₺2.000-5.000/ay', fb: t('landing.compare.c1.fb') || '%100 Ücretsiz', label: t('landing.compare.c1.label') || 'Maliyet' },
+    { icon: Target, pt: t('landing.compare.c2.pt') || 'Tek odak (fitness)', fb: t('landing.compare.c2.fb') || 'Fitness + Yoga + Meditasyon + Beslenme', label: t('landing.compare.c2.label') || 'Kapsam' },
+    { icon: Clock, pt: t('landing.compare.c3.pt') || 'Randevuya bağlı', fb: t('landing.compare.c3.fb') || '7/24 her yerden erişim', label: t('landing.compare.c3.label') || 'Erişim' },
+    { icon: RefreshCw, pt: t('landing.compare.c4.pt') || 'Standart program', fb: t('landing.compare.c4.fb') || 'AI destekli adaptif planlar', label: t('landing.compare.c4.label') || 'Program' },
+    { icon: BarChart3, pt: t('landing.compare.c5.pt') || 'Kağıt/WhatsApp takip', fb: t('landing.compare.c5.fb') || 'Akıllı ilerleme analizi', label: t('landing.compare.c5.label') || 'Takip' },
+    { icon: Globe, pt: t('landing.compare.c6.pt') || 'Tek dil', fb: t('landing.compare.c6.fb') || '3 dil desteği (TR/EN/ES)', label: t('landing.compare.c6.label') || 'Dil' },
   ];
 
   return (
@@ -682,17 +670,36 @@ export default function LandingPage({ onStart }) {
         </div>
       </Section>
 
-      {/* ═══════════════════ SECTION 9: TESTIMONIALS ═══════════════════ */}
-      <Section dark id="testimonials">
-        <div className="max-w-5xl mx-auto">
+      {/* ═══════════════════ SECTION 9: PT vs FULL BALANCE ═══════════════════ */}
+      <Section dark id="compare">
+        <div className="max-w-4xl mx-auto">
           <SectionHeader
-            tag={t('landing.testimonials.tag') || 'Kullanıcı Yorumları'}
-            title={t('landing.testimonials.title') || 'Binlerce Kişi'}
-            titleAccent={t('landing.testimonials.titleAccent') || 'Dönüşümünü Yaşadı'}
+            tag={t('landing.compare.tag') || 'Neden Full Balance?'}
+            title={t('landing.compare.title') || 'Personal Trainer vs'}
+            titleAccent={t('landing.compare.titleAccent') || 'Full Balance'}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {testimonials.map((tm, i) => (
+          {/* comparison table */}
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="rounded-2xl border border-slate-700/30 overflow-hidden"
+          >
+            {/* table header */}
+            <div className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.2fr_1fr_1fr] text-center">
+              <div className="p-3 sm:p-4 bg-slate-800/60 border-b border-r border-slate-700/30" />
+              <div className="p-3 sm:p-4 bg-slate-800/60 border-b border-r border-slate-700/30">
+                <p className="font-outfit font-bold text-slate-400 text-xs sm:text-sm">🏋️ PT</p>
+              </div>
+              <div className="p-3 sm:p-4 bg-gradient-to-r from-orange-500/10 to-blue-500/10 border-b border-slate-700/30">
+                <p className="font-outfit font-bold text-transparent bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-xs sm:text-sm">⚡ Full Balance</p>
+              </div>
+            </div>
+
+            {/* table rows */}
+            {comparisons.map((c, i) => (
               <motion.div
                 key={i}
                 custom={i}
@@ -700,27 +707,37 @@ export default function LandingPage({ onStart }) {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                whileHover={{ y: -4 }}
-                className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/30 transition-all flex flex-col"
+                className={`grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.2fr_1fr_1fr] items-center ${i < comparisons.length - 1 ? 'border-b border-slate-700/20' : ''}`}
               >
-                <Quote size={24} className="text-orange-500/30 mb-3" />
-                <p className="text-slate-300 text-sm leading-relaxed mb-4 flex-1">
-                  &ldquo;{tm.text}&rdquo;
-                </p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-outfit font-bold text-white text-sm">{tm.name}</p>
-                    <p className="text-xs text-orange-400">{tm.goal}</p>
-                  </div>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: tm.stars }).map((_, si) => (
-                      <Star key={si} size={12} className="fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
+                {/* label */}
+                <div className="flex items-center gap-2 p-3 sm:p-4 border-r border-slate-700/20">
+                  <c.icon size={16} className="text-orange-400 shrink-0 hidden sm:block" />
+                  <span className="text-xs sm:text-sm font-outfit font-medium text-white">{c.label}</span>
+                </div>
+                {/* PT */}
+                <div className="p-3 sm:p-4 text-center border-r border-slate-700/20">
+                  <span className="text-xs sm:text-sm text-slate-500">{c.pt}</span>
+                </div>
+                {/* Full Balance */}
+                <div className="p-3 sm:p-4 text-center bg-gradient-to-r from-orange-500/5 to-blue-500/5">
+                  <span className="text-xs sm:text-sm text-emerald-400 font-medium">{c.fb}</span>
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
+
+          {/* bottom highlight */}
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mt-6 text-center"
+          >
+            <p className="text-sm text-slate-500 font-inter">
+              {t('landing.compare.bottomText') || 'Aynı kalite, sıfır maliyet. Hemen başla.'}
+            </p>
+          </motion.div>
         </div>
       </Section>
 

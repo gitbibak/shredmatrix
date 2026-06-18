@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, User, Eye, EyeOff, Zap, Shield, ArrowRight } from 'lucide-react';
+import { Lock, Mail, User, Eye, EyeOff, Zap, Shield, ArrowRight, ArrowLeft } from 'lucide-react';
 import { signUp, signIn } from '../lib/dataService';
 
 // ── Validation ───────────────────────────────────────────
@@ -88,7 +88,7 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
 // ═════════════════════════════════════════════════════════
 // AuthScreen Component
 // ═════════════════════════════════════════════════════════
-export default function AuthScreen({ onAuth }) {
+export default function AuthScreen({ onAuth, onBack }) {
   const { t } = useTranslation();
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [direction, setDirection] = useState(1);
@@ -184,8 +184,25 @@ export default function AuthScreen({ onAuth }) {
   const isLogin = mode === 'login';
 
   return (
-    <div className="min-h-screen bg-slate-950 bg-grid text-white flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div
+      className="min-h-screen bg-slate-950 bg-grid text-white flex flex-col items-center justify-center px-4 py-8"
+      onClick={(e) => { if (e.target === e.currentTarget && onBack) onBack(); }}
+    >
+      <div className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+
+        {/* ── Back Button ── */}
+        {onBack && (
+          <motion.button
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+            onClick={onBack}
+            className="flex items-center gap-1.5 text-slate-500 hover:text-orange-400 text-sm font-outfit mb-6 transition-colors cursor-pointer group"
+          >
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            {t('auth.backToHome') || 'Ana Sayfa'}
+          </motion.button>
+        )}
 
         {/* ── Header ── */}
         <motion.div

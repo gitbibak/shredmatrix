@@ -88,19 +88,24 @@ export const translations = {
         switch: 'Profil ve hedef değiştirme her zaman',
         export: 'Veri dışa aktarma',
       },
+      // ── Compare ──
+      compare: {
+        tag: 'Neden Full Balance?',
+        title: 'Personal Trainer vs',
+        titleAccent: 'Full Balance',
+        c1: { label: 'Maliyet', pt: '₺2.000-5.000/ay', fb: '%100 Ücretsiz' },
+        c2: { label: 'Kapsam', pt: 'Tek odak (fitness)', fb: 'Fitness + Yoga + Meditasyon + Beslenme' },
+        c3: { label: 'Erişim', pt: 'Randevuya bağlı', fb: '7/24 her yerden erişim' },
+        c4: { label: 'Program', pt: 'Standart program', fb: 'AI destekli adaptif planlar' },
+        c5: { label: 'Takip', pt: 'Kağıt/WhatsApp takip', fb: 'Akıllı ilerleme analizi' },
+        c6: { label: 'Dil', pt: 'Tek dil', fb: '3 dil desteği (TR/EN/ES)' },
+        bottomText: 'Aynı kalite, sıfır maliyet. Hemen başla.',
+      },
       // ── Nasıl Çalışır ──
       steps: {
         s1: { title: 'Kayıt Ol', desc: 'Hızlı ve ücretsiz — sadece e-posta ve şifre.' },
         s2: { title: 'Bilgilerini Gir', desc: 'Boy, kilo, hedef ve deneyim seviyeni paylaş.' },
         s3: { title: 'Planını Al', desc: 'AI destekli algoritma anında programını oluşturur.' },
-      },
-      // ── Testimonials ──
-      testimonials: {
-        tag: 'Kullanıcı Yorumları',
-        title: 'Binlerce Kişi', titleAccent: 'Dönüşümünü Yaşadı',
-        t1: { name: 'Ahmet Y.', text: '3 ayda 12 kilo verdim. PT\'ye binlerce lira veriyordum, şimdi aynı kalitede programı ücretsiz alıyorum!', goal: 'Yağ Yakımı' },
-        t2: { name: 'Elif K.', text: 'Yoga ve meditasyon programları harika. Sabah rutinime 20 dakika ekledim, hayatım değişti.', goal: 'Yoga & Meditasyon' },
-        t3: { name: 'Mehmet D.', text: 'Reformer programı sayesinde duruşum düzeldi, sırt ağrılarım geçti. Ücretsiz olması inanılmaz.', goal: 'Reformer' },
       },
       // ── Legacy ──
       features: {
@@ -116,6 +121,7 @@ export const translations = {
     // ── Auth ──
     auth: {
       title: 'FULL BALANCE',
+      backToHome: 'Ana Sayfa',
       subtitle: 'Sınırlarını Aş. Dönüşümünü Başlat.',
       login: 'Giriş Yap', register: 'Kayıt Ol',
       loginMsg: 'Hesabına giriş yap ve kaldığın yerden devam et.',
@@ -574,11 +580,17 @@ export const translations = {
         s2: { title: 'Enter Your Info', desc: 'Share height, weight, goals and experience.' },
         s3: { title: 'Get Your Plan', desc: 'AI-powered algorithm creates your plan instantly.' },
       },
-      testimonials: {
-        tag: 'User Reviews', title: 'Thousands Have', titleAccent: 'Transformed',
-        t1: { name: 'Ahmet Y.', text: 'Lost 12kg in 3 months. I was paying thousands for PT, now I get the same quality for free!', goal: 'Fat Loss' },
-        t2: { name: 'Elif K.', text: 'Yoga and meditation programs are amazing. Added 20 minutes to my morning routine, life changed.', goal: 'Yoga & Meditation' },
-        t3: { name: 'Carlos M.', text: 'The meal plans saved me so much time. I follow the budget option and still hit my macros perfectly.', goal: 'Muscle Growth' },
+      compare: {
+        tag: 'Why Full Balance?',
+        title: 'Personal Trainer vs',
+        titleAccent: 'Full Balance',
+        c1: { label: 'Cost', pt: '$100-300/month', fb: '100% Free' },
+        c2: { label: 'Scope', pt: 'Single focus (fitness)', fb: 'Fitness + Yoga + Meditation + Nutrition' },
+        c3: { label: 'Access', pt: 'Appointment-based', fb: '24/7 access anywhere' },
+        c4: { label: 'Program', pt: 'Standard program', fb: 'AI-powered adaptive plans' },
+        c5: { label: 'Tracking', pt: 'Paper/WhatsApp tracking', fb: 'Smart progress analytics' },
+        c6: { label: 'Language', pt: 'Single language', fb: '3 language support (TR/EN/ES)' },
+        bottomText: 'Same quality, zero cost. Start now.',
       },
       features: {
         nutrition: { title: 'Personal Nutrition', desc: 'Calorie and macro calculations.' },
@@ -590,7 +602,9 @@ export const translations = {
       },
     },
     auth: {
-      title: 'FULL BALANCE', subtitle: 'Break Your Limits. Start Your Transformation.',
+      title: 'FULL BALANCE',
+      backToHome: 'Home',
+      subtitle: 'Break Your Limits. Start Your Transformation.',
       login: 'Log In', register: 'Sign Up',
       loginMsg: 'Log in to your account and continue where you left off.',
       registerMsg: 'Create a free account, start your transformation journey.',
@@ -977,11 +991,17 @@ export const translations = {
         s2: { title: 'Ingresa Tu Info', desc: 'Comparte altura, peso, metas y experiencia.' },
         s3: { title: 'Obtén Tu Plan', desc: 'El algoritmo con IA crea tu plan al instante.' },
       },
-      testimonials: {
-        tag: 'Opiniones de Usuarios', title: 'Miles Han', titleAccent: 'Transformado Su Vida',
-        t1: { name: 'Ahmet Y.', text: 'Perdí 12kg en 3 meses. Pagaba miles por PT, ahora obtengo la misma calidad gratis.', goal: 'Quema de Grasa' },
-        t2: { name: 'Elif K.', text: 'Los programas de yoga y meditación son increíbles. Añadí 20 minutos a mi rutina matutina.', goal: 'Yoga & Meditación' },
-        t3: { name: 'Carlos M.', text: 'Los planes de comida me ahorraron mucho tiempo. Sigo la opción económica y alcanzo mis macros.', goal: 'Desarrollo Muscular' },
+      compare: {
+        tag: '¿Por qué Full Balance?',
+        title: 'Personal Trainer vs',
+        titleAccent: 'Full Balance',
+        c1: { label: 'Costo', pt: '$100-300/mes', fb: '100% Gratis' },
+        c2: { label: 'Alcance', pt: 'Enfoque único (fitness)', fb: 'Fitness + Yoga + Meditación + Nutrición' },
+        c3: { label: 'Acceso', pt: 'Solo con cita', fb: 'Acceso 24/7 desde cualquier lugar' },
+        c4: { label: 'Programa', pt: 'Programa estándar', fb: 'Planes adaptativos con IA' },
+        c5: { label: 'Seguimiento', pt: 'Papel/WhatsApp', fb: 'Análisis inteligente de progreso' },
+        c6: { label: 'Idioma', pt: 'Un solo idioma', fb: '3 idiomas (TR/EN/ES)' },
+        bottomText: 'Misma calidad, cero costo. Empieza ahora.',
       },
       features: {
         nutrition: { title: 'Nutrición Personal', desc: 'Cálculo de calorías y macros.' },
@@ -993,7 +1013,9 @@ export const translations = {
       },
     },
     auth: {
-      title: 'FULL BALANCE', subtitle: 'Supera Tus Límites. Inicia Tu Transformación.',
+      title: 'FULL BALANCE',
+      backToHome: 'Inicio',
+      subtitle: 'Supera Tus Límites. Inicia Tu Transformación.',
       login: 'Iniciar Sesión', register: 'Registrarse',
       loginMsg: 'Inicia sesión y continúa donde lo dejaste.',
       registerMsg: 'Crea una cuenta gratuita, comienza tu transformación.',

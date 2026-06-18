@@ -291,7 +291,7 @@ function AppContent() {
             <Route path="/auth" element={
               user && plan ? <Navigate to="/dashboard" replace /> :
               <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-                <AuthScreen onAuth={handleAuth} />
+                <AuthScreen onAuth={handleAuth} onBack={() => navigate('/')} />
               </motion.div>
             } />
 
