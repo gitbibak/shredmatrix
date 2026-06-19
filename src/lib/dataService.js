@@ -171,10 +171,16 @@ export async function saveWorkoutLog(log) {
     return;
   }
 
-  const { error } = await supabase
-    .from('workout_logs')
-    .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes });
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('workout_logs')
+      .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes });
+    if (error) throw error;
+  } catch {
+    const logs = lsGet('shredmatrix_workout_log', []);
+    logs.push(log);
+    lsSet('shredmatrix_workout_log', logs);
+  }
 }
 
 export async function getWorkoutLogs() {
@@ -184,13 +190,17 @@ export async function getWorkoutLogs() {
     return lsGet('shredmatrix_workout_log', []);
   }
 
-  const { data, error } = await supabase
-    .from('workout_logs')
-    .select('*')
-    .eq('user_id', userId)
-    .order('date', { ascending: false });
-  if (error) throw error;
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('workout_logs')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch {
+    return lsGet('shredmatrix_workout_log', []);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -207,10 +217,16 @@ export async function saveProgress(entry) {
     return;
   }
 
-  const { error } = await supabase
-    .from('progress_entries')
-    .insert({ user_id: userId, date: entry.date, weight: entry.weight, body_fat: entry.bodyFat || entry.body_fat });
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('progress_entries')
+      .insert({ user_id: userId, date: entry.date, weight: entry.weight, body_fat: entry.bodyFat || entry.body_fat });
+    if (error) throw error;
+  } catch {
+    const entries = lsGet('shredmatrix_progress', []);
+    entries.push(entry);
+    lsSet('shredmatrix_progress', entries);
+  }
 }
 
 export async function getProgress() {
@@ -220,13 +236,17 @@ export async function getProgress() {
     return lsGet('shredmatrix_progress', []);
   }
 
-  const { data, error } = await supabase
-    .from('progress_entries')
-    .select('*')
-    .eq('user_id', userId)
-    .order('date', { ascending: true });
-  if (error) throw error;
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('progress_entries')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  } catch {
+    return lsGet('shredmatrix_progress', []);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -243,10 +263,16 @@ export async function saveMeasurement(entry) {
     return;
   }
 
-  const { error } = await supabase
-    .from('measurements')
-    .insert({ user_id: userId, ...entry });
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('measurements')
+      .insert({ user_id: userId, ...entry });
+    if (error) throw error;
+  } catch {
+    const entries = lsGet('shredmatrix_measurements', []);
+    entries.push(entry);
+    lsSet('shredmatrix_measurements', entries);
+  }
 }
 
 export async function getMeasurements() {
@@ -256,13 +282,17 @@ export async function getMeasurements() {
     return lsGet('shredmatrix_measurements', []);
   }
 
-  const { data, error } = await supabase
-    .from('measurements')
-    .select('*')
-    .eq('user_id', userId)
-    .order('date', { ascending: true });
-  if (error) throw error;
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('measurements')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  } catch {
+    return lsGet('shredmatrix_measurements', []);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -366,10 +396,18 @@ export async function saveSleep(date, hours) {
     return;
   }
 
-  const { error } = await supabase
-    .from('sleep_logs')
-    .upsert({ user_id: userId, date, hours }, { onConflict: 'user_id,date' });
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('sleep_logs')
+      .upsert({ user_id: userId, date, hours }, { onConflict: 'user_id,date' });
+    if (error) throw error;
+  } catch {
+    const entries = lsGet('shredmatrix_sleep', []);
+    const idx = entries.findIndex(e => e.date === date);
+    if (idx >= 0) entries[idx].hours = hours;
+    else entries.push({ date, hours });
+    lsSet('shredmatrix_sleep', entries);
+  }
 }
 
 export async function getSleep(limit = 30) {
@@ -379,14 +417,18 @@ export async function getSleep(limit = 30) {
     return lsGet('shredmatrix_sleep', []);
   }
 
-  const { data, error } = await supabase
-    .from('sleep_logs')
-    .select('*')
-    .eq('user_id', userId)
-    .order('date', { ascending: false })
-    .limit(limit);
-  if (error) throw error;
-  return data || [];
+  try {
+    const { data, error } = await supabase
+      .from('sleep_logs')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return data || [];
+  } catch {
+    return lsGet('shredmatrix_sleep', []);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -397,24 +439,32 @@ export async function updateProfile(updates) {
   const userId = getUserId();
   if (!isSupabaseReady() || !userId) return;
 
-  const { error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', userId);
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId);
+    if (error) throw error;
+  } catch {
+    // Profile update failed silently
+  }
 }
 
 export async function getProfile() {
   const userId = getUserId();
   if (!isSupabaseReady() || !userId) return null;
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
-  if (error && error.code !== 'PGRST116') throw error;
-  return data;
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 // ══════════════════════════════════════════════

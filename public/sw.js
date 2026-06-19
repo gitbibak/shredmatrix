@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fullbalance-v3';
+const CACHE_NAME = 'fullbalance-v4';
 const ASSETS = [
   '/',
   '/index.html',
@@ -24,7 +24,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch — NETWORK FIRST for everything (fixes stale cache issues)
+// Fetch — NETWORK FIRST with SPA navigation fallback
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -32,12 +32,24 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET and external requests
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // Network first for ALL requests — fallback to cache
+  // For navigation requests (SPA routes like /dashboard, /auth, etc.)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .catch(() => caches.match('/index.html'))
+        .then((res) => res || caches.match('/index.html'))
+    );
+    return;
+  }
+
+  // For other assets — network first, fallback to cache
   event.respondWith(
     fetch(request)
       .then((res) => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
         return res;
       })
       .catch(() => caches.match(request))
