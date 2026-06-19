@@ -130,15 +130,21 @@ export async function savePlan(planData, email) {
     return;
   }
 
-  const { error } = await supabase
-    .from('plans')
-    .upsert({ user_id: userId, plan_data: planData }, { onConflict: 'user_id' });
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('plans')
+      .upsert({ user_id: userId, plan_data: planData }, { onConflict: 'user_id' });
+    if (error) throw error;
 
-  // Update profile
-  await supabase.from('profiles').update({
-    plan_created_at: new Date().toISOString(),
-  }).eq('id', userId);
+    // Update profile
+    await supabase.from('profiles').update({
+      plan_created_at: new Date().toISOString(),
+    }).eq('id', userId);
+  } catch {
+    // Fallback to localStorage
+    lsSet(`shredmatrix_plan_${email}`, planData);
+    lsSet('shredmatrix_plan_created', new Date().toISOString());
+  }
 }
 
 export async function loadPlan(email) {
@@ -148,13 +154,17 @@ export async function loadPlan(email) {
     return lsGet(`shredmatrix_plan_${email}`);
   }
 
-  const { data, error } = await supabase
-    .from('plans')
-    .select('plan_data')
-    .eq('user_id', userId)
-    .single();
-  if (error && error.code !== 'PGRST116') throw error;
-  return data?.plan_data || null;
+  try {
+    const { data, error } = await supabase
+      .from('plans')
+      .select('plan_data')
+      .eq('user_id', userId)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data?.plan_data || lsGet(`shredmatrix_plan_${email}`) || null;
+  } catch {
+    return lsGet(`shredmatrix_plan_${email}`) || null;
+  }
 }
 
 // ══════════════════════════════════════════════
