@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft } from 'lucide-react';
-import { signUp, signIn } from '../lib/dataService';
+import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { signUp, signIn, resetPassword } from '../lib/dataService';
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -90,7 +91,7 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
 // ═════════════════════════════════════════════════════════
 export default function AuthScreen({ onAuth, onBack }) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'forgot'
   const [direction, setDirection] = useState(1);
 
   // Form fields
@@ -106,11 +107,14 @@ export default function AuthScreen({ onAuth, onBack }) {
 
 
 
+  const [resetSent, setResetSent] = useState(false);
+
   const toggleMode = useCallback(() => {
     setDirection(mode === 'login' ? 1 : -1);
     setMode((m) => (m === 'login' ? 'register' : 'login'));
     setErrors({});
     setFormError('');
+    setResetSent(false);
   }, [mode]);
 
   // ── Validate ─────────────────────────────────────────
@@ -181,7 +185,26 @@ export default function AuthScreen({ onAuth, onBack }) {
     [mode, name, email, password, confirmPassword, validate, onAuth]
   );
 
+  // ── Forgot Password Submit ──────────────────────────
+  const handleForgotSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setFormError('');
+    if (!email.trim() || !validateEmail(email)) {
+      setErrors({ email: t('auth.errors.emailInvalid') });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await resetPassword(email.toLowerCase().trim());
+      setResetSent(true);
+    } catch (err) {
+      setFormError(err.message || t('auth.errors.resetFailed'));
+    }
+    setIsSubmitting(false);
+  }, [email, t]);
+
   const isLogin = mode === 'login';
+  const isForgot = mode === 'forgot';
 
   return (
     <div
@@ -266,127 +289,238 @@ export default function AuthScreen({ onAuth, onBack }) {
           <div className="flex items-center gap-2 mb-6 px-3 py-2 rounded-lg bg-orange-500/5 border border-orange-500/10">
             <Shield size={14} className="text-orange-400 shrink-0" />
             <p className="text-xs text-slate-400 font-inter">
-              {isLogin
+              {isForgot
+                ? t('auth.forgotMsg') || 'E-posta adresinize şifre sıfırlama bağlantısı gönderilecek.'
+                : isLogin
                 ? t('auth.loginMsg')
                 : t('auth.registerMsg')}
             </p>
           </div>
 
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.form
-              key={mode}
-              custom={direction}
-              variants={formVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              onSubmit={handleSubmit}
-              className="space-y-4"
-              noValidate
-            >
-              {/* ─── Register: Name Field ─── */}
-              {!isLogin && (
+            {isForgot ? (
+              /* ─── Forgot Password Form ─── */
+              <motion.form
+                key="forgot"
+                custom={direction}
+                variants={formVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                onSubmit={handleForgotSubmit}
+                className="space-y-4"
+                noValidate
+              >
+                {resetSent ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-4"
+                  >
+                    <CheckCircle size={40} className="text-emerald-400 mx-auto mb-3" />
+                    <p className="text-sm text-white font-outfit font-bold mb-1">
+                      {t('auth.resetSentTitle') || 'Bağlantı Gönderildi!'}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {t('auth.resetSentDesc') || 'E-posta kutunuzu kontrol edin. Şifre sıfırlama bağlantınız gönderildi.'}
+                    </p>
+                  </motion.div>
+                ) : (
+                  <>
+                    <AuthInput
+                      icon={Mail}
+                      type="email"
+                      placeholder={t('auth.email')}
+                      value={email}
+                      onChange={setEmail}
+                      error={errors.email}
+                      index={0}
+                    />
+
+                    <AnimatePresence mode="wait">
+                      {formError && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.25 }}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                          <p className="text-red-500 text-xs font-inter">{formError}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-blue-500 text-white text-sm font-bold font-outfit tracking-wide shadow-lg shadow-orange-500/20 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                          className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                        />
+                      ) : (
+                        <>
+                          {t('auth.sendResetLink') || 'Sıfırlama Bağlantısı Gönder'}
+                          <ArrowRight size={16} />
+                        </>
+                      )}
+                    </motion.button>
+                  </>
+                )}
+              </motion.form>
+            ) : (
+              /* ─── Login / Register Form ─── */
+              <motion.form
+                key={mode}
+                custom={direction}
+                variants={formVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                onSubmit={handleSubmit}
+                className="space-y-4"
+                noValidate
+              >
+                {!isLogin && (
+                  <AuthInput
+                    icon={User}
+                    placeholder={t('auth.name')}
+                    value={name}
+                    onChange={setName}
+                    error={errors.name}
+                    index={0}
+                  />
+                )}
+
                 <AuthInput
-                  icon={User}
-                  placeholder={t('auth.name')}
-                  value={name}
-                  onChange={setName}
-                  error={errors.name}
-                  index={0}
+                  icon={Mail}
+                  type="email"
+                  placeholder={t('auth.email')}
+                  value={email}
+                  onChange={setEmail}
+                  error={errors.email}
+                  index={isLogin ? 0 : 1}
                 />
-              )}
 
-              {/* ─── Email Field ─── */}
-              <AuthInput
-                icon={Mail}
-                type="email"
-                placeholder={t('auth.email')}
-                value={email}
-                onChange={setEmail}
-                error={errors.email}
-                index={isLogin ? 0 : 1}
-              />
-
-              {/* ─── Password Field ─── */}
-              <AuthInput
-                icon={Lock}
-                type="password"
-                placeholder={t('auth.password')}
-                value={password}
-                onChange={setPassword}
-                error={errors.password}
-                index={isLogin ? 1 : 2}
-              />
-
-              {/* ─── Register: Confirm Password ─── */}
-              {!isLogin && (
                 <AuthInput
                   icon={Lock}
                   type="password"
-                  placeholder={t('auth.confirmPassword')}
-                  value={confirmPassword}
-                  onChange={setConfirmPassword}
-                  error={errors.confirmPassword}
-                  index={3}
+                  placeholder={t('auth.password')}
+                  value={password}
+                  onChange={setPassword}
+                  error={errors.password}
+                  index={isLogin ? 1 : 2}
                 />
-              )}
 
-              {/* ─── Form-level Error ─── */}
-              <AnimatePresence mode="wait">
-                {formError && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.25 }}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20"
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                    <p className="text-red-500 text-xs font-inter">{formError}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* ─── Submit Button ─── */}
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(249,115,22,0.3)' }}
-                whileTap={{ scale: 0.97 }}
-                className={[
-                  'w-full flex items-center justify-center gap-2 py-3.5 rounded-xl',
-                  'bg-gradient-to-r from-orange-500 to-blue-500 text-white text-sm font-bold font-outfit tracking-wide',
-                  'shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all duration-200 cursor-pointer',
-                  'disabled:opacity-60 disabled:cursor-not-allowed',
-                ].join(' ')}
-              >
-                {isSubmitting ? (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                {!isLogin && (
+                  <AuthInput
+                    icon={Lock}
+                    type="password"
+                    placeholder={t('auth.confirmPassword')}
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    error={errors.confirmPassword}
+                    index={3}
                   />
-                ) : (
-                  <>
-                    {isLogin ? t('auth.submitLogin') : t('auth.submitRegister')}
-                    {isLogin ? <ArrowRight size={16} /> : <Sparkles size={16} />}
-                  </>
                 )}
-              </motion.button>
-            </motion.form>
+
+                {/* Forgot password link */}
+                {isLogin && (
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => { setDirection(1); setMode('forgot'); setErrors({}); setFormError(''); setResetSent(false); }}
+                      className="text-xs text-slate-500 hover:text-orange-400 transition-colors cursor-pointer font-inter"
+                    >
+                      {t('auth.forgotPassword') || 'Şifremi Unuttum'}
+                    </button>
+                  </div>
+                )}
+
+                <AnimatePresence mode="wait">
+                  {formError && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.25 }}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                      <p className="text-red-500 text-xs font-inter">{formError}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(249,115,22,0.3)' }}
+                  whileTap={{ scale: 0.97 }}
+                  className={[
+                    'w-full flex items-center justify-center gap-2 py-3.5 rounded-xl',
+                    'bg-gradient-to-r from-orange-500 to-blue-500 text-white text-sm font-bold font-outfit tracking-wide',
+                    'shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all duration-200 cursor-pointer',
+                    'disabled:opacity-60 disabled:cursor-not-allowed',
+                  ].join(' ')}
+                >
+                  {isSubmitting ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                    />
+                  ) : (
+                    <>
+                      {isLogin ? t('auth.submitLogin') : t('auth.submitRegister')}
+                      {isLogin ? <ArrowRight size={16} /> : <Sparkles size={16} />}
+                    </>
+                  )}
+                </motion.button>
+
+                {/* Register: Privacy + Terms notice */}
+                {!isLogin && (
+                  <p className="text-[10px] text-slate-600 text-center leading-relaxed">
+                    {t('auth.agreeText') || 'Kayıt olarak'}{' '}
+                    <Link to="/privacy" className="text-orange-400/70 hover:text-orange-400 underline transition-colors">
+                      {t('auth.privacyLink') || 'Gizlilik Politikası'}
+                    </Link>
+                    {' '}{t('auth.and') || 've'}{' '}
+                    <Link to="/terms" className="text-orange-400/70 hover:text-orange-400 underline transition-colors">
+                      {t('auth.termsLink') || 'Kullanım Şartları'}
+                    </Link>
+                    {t('auth.agreeEnd') || "'nı kabul etmiş olursunuz."}
+                  </p>
+                )}
+              </motion.form>
+            )}
           </AnimatePresence>
 
           {/* ─── Toggle Link ─── */}
           <div className="mt-6 pt-4 border-t border-slate-800/50 text-center">
             <p className="text-sm text-slate-500 font-inter">
-              {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
+              {isForgot ? (t('auth.rememberPassword') || 'Şifreni hatırlıyor musun?') : (isLogin ? t('auth.noAccount') : t('auth.hasAccount'))}{' '}
               <button
                 type="button"
-                onClick={toggleMode}
+                onClick={() => {
+                  setDirection(isForgot || !isLogin ? -1 : 1);
+                  setMode(isForgot ? 'login' : (isLogin ? 'register' : 'login'));
+                  setErrors({});
+                  setFormError('');
+                  setResetSent(false);
+                }}
                 className="text-orange-400 hover:text-orange-300 font-semibold transition-colors cursor-pointer"
               >
-                {isLogin ? t('auth.register') : t('auth.login')}
+                {isForgot ? (t('auth.login') || 'Giriş Yap') : (isLogin ? t('auth.register') : t('auth.login'))}
               </button>
             </p>
           </div>

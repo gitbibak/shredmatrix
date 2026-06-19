@@ -64,6 +64,17 @@ export async function signIn(email, password) {
   return { user: data.user, session: data.session };
 }
 
+export async function resetPassword(email) {
+  if (!isSupabaseReady()) {
+    throw new Error('Authentication service unavailable. Please try again later.');
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin,
+  });
+  if (error) throw error;
+}
+
 export async function signOut() {
   if (isSupabaseReady()) {
     await supabase.auth.signOut();

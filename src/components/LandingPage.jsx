@@ -8,6 +8,7 @@ import {
   RefreshCw, FileDown, Apple, Calculator, ShoppingBag, Image,
   Activity, Clock, Volume2, BookOpen, UserCheck,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 
 /* ── animation presets ── */
@@ -816,6 +817,15 @@ export default function LandingPage({ onStart }) {
             <p className="text-[9px] text-slate-700">
               {t('landing.footerPrivacy') || 'Verileriniz cihazınızda ve şifreli bulut sunucusunda güvende saklanır. Üçüncü taraflarla paylaşılmaz.'}
             </p>
+          </div>
+          <div className="flex items-center justify-center gap-3 pt-3">
+            <Link to="/privacy" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
+              {t('auth.privacyLink') || 'Gizlilik Politikası'}
+            </Link>
+            <span className="text-slate-800">•</span>
+            <Link to="/terms" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
+              {t('auth.termsLink') || 'Kullanım Şartları'}
+            </Link>
           </div>
         </div>
       </footer>
