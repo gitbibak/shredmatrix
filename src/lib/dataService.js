@@ -517,21 +517,40 @@ export async function uploadPhoto(file, type = 'profile') {
   const ext = file.name?.split('.').pop() || 'jpg';
   const path = `${userId}/${type}/${Date.now()}.${ext}`;
 
-  const { error } = await supabase.storage
-    .from('user-photos')
-    .upload(path, file, { cacheControl: '3600', upsert: type === 'profile' });
-  if (error) throw error;
+  try {
+    const { error } = await supabase.storage
+      .from('user-photos')
+      .upload(path, file, { cacheControl: '3600', upsert: type === 'profile' });
+    if (error) throw error;
 
-  const { data, error: urlError } = await supabase.storage
-    .from('user-photos')
-    .createSignedUrl(path, 3600); // 1 hour expiry
-  if (urlError) throw urlError;
+    const { data, error: urlError } = await supabase.storage
+      .from('user-photos')
+      .createSignedUrl(path, 3600);
+    if (urlError) throw urlError;
 
-  if (type === 'profile') {
-    await updateProfile({ avatar_url: path }); // store path, not URL
+    if (type === 'profile') {
+      await updateProfile({ avatar_url: path });
+    }
+
+    return data.signedUrl;
+  } catch {
+    // Fallback: store as base64 in localStorage
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (type === 'profile') {
+          lsSet('shredmatrix_profile_photo', reader.result);
+        } else {
+          const photos = lsGet('shredmatrix_progress_photos', []);
+          photos.push({ id: Date.now(), date: new Date().toISOString(), src: reader.result });
+          lsSet('shredmatrix_progress_photos', photos);
+        }
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
-
-  return data.signedUrl;
 }
 
 export async function getProfilePhoto() {
@@ -541,13 +560,16 @@ export async function getProfilePhoto() {
     return lsGet('shredmatrix_profile_photo', null);
   }
 
-  const profile = await getProfile();
-  if (!profile?.avatar_url) return null;
-  // If avatar_url is a storage path, create signed URL
-  const { data } = await supabase.storage
-    .from('user-photos')
-    .createSignedUrl(profile.avatar_url, 3600);
-  return data?.signedUrl || profile.avatar_url;
+  try {
+    const profile = await getProfile();
+    if (!profile?.avatar_url) return null;
+    const { data } = await supabase.storage
+      .from('user-photos')
+      .createSignedUrl(profile.avatar_url, 3600);
+    return data?.signedUrl || profile.avatar_url;
+  } catch {
+    return lsGet('shredmatrix_profile_photo', null);
+  }
 }
 
 export async function getProgressPhotos() {
@@ -588,10 +610,15 @@ export async function updatePhase(newPhase) {
     return;
   }
 
-  await supabase.from('profiles').update({
-    current_phase: newPhase,
-    plan_created_at: new Date().toISOString(),
-  }).eq('id', userId);
+  try {
+    await supabase.from('profiles').update({
+      current_phase: newPhase,
+      plan_created_at: new Date().toISOString(),
+    }).eq('id', userId);
+  } catch {
+    localStorage.setItem('shredmatrix_current_phase', String(newPhase));
+    localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
+  }
 }
 
 export async function getCurrentPhase() {
@@ -671,11 +698,11 @@ export async function deleteAllUserData(email) {
 
   if (!isSupabaseReady() || !userId) return;
 
-  // Delete from all Supabase tables
+  // Delete from all Supabase tables (ignore errors for missing tables)
   const tables = ['plans', 'workout_logs', 'progress_entries',
     'measurements', 'water_logs', 'sleep_logs', 'reminders'];
   for (const table of tables) {
-    await supabase.from(table).delete().eq('user_id', userId);
+    try { await supabase.from(table).delete().eq('user_id', userId); } catch {}
   }
 
   // Delete storage files
@@ -687,7 +714,7 @@ export async function deleteAllUserData(email) {
   } catch { /* ignore storage errors */ }
 
   // Delete profile (cascade will handle auth)
-  await supabase.from('profiles').delete().eq('id', userId);
+  try { await supabase.from('profiles').delete().eq('id', userId); } catch {}
 
   // Delete auth user via RPC
   try {
