@@ -159,8 +159,8 @@ export async function loadPlan(email) {
       .from('plans')
       .select('plan_data')
       .eq('user_id', userId)
-      .single();
-    if (error && error.code !== 'PGRST116') throw error;
+      .maybeSingle();
+    if (error) throw error;
     return data?.plan_data || lsGet(`shredmatrix_plan_${email}`) || null;
   } catch {
     return lsGet(`shredmatrix_plan_${email}`) || null;
@@ -358,8 +358,8 @@ export async function getWater(date) {
       .select('*')
       .eq('user_id', userId)
       .eq('date', date)
-      .single();
-    if (error && error.code !== 'PGRST116') throw error;
+      .maybeSingle();
+    if (error) throw error;
     return data || { date, glasses: 0 };
   } catch {
     // Table may not exist — fallback to localStorage
@@ -469,8 +469,8 @@ export async function getProfile() {
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
-    if (error && error.code !== 'PGRST116') throw error;
+      .maybeSingle();
+    if (error) throw error;
     return data;
   } catch {
     return null;
@@ -723,3 +723,35 @@ export async function deleteAllUserData(email) {
 }
 
 // ══════════════════════════════════════════════
+// REMINDER
+// ══════════════════════════════════════════════
+
+export async function saveReminder(settings) {
+  const userId = getUserId();
+
+  if (!isSupabaseReady() || !userId) {
+    lsSet('shredmatrix_reminder', settings);
+    return;
+  }
+
+  const { error } = await supabase
+    .from('reminders')
+    .upsert({ user_id: userId, ...settings }, { onConflict: 'user_id' });
+  if (error) throw error;
+}
+
+export async function getReminder() {
+  const userId = getUserId();
+
+  if (!isSupabaseReady() || !userId) {
+    return lsGet('shredmatrix_reminder', { enabled: false, hour: 9 });
+  }
+
+  const { data, error } = await supabase
+    .from('reminders')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data || { enabled: false, hour: 9 };
+}
