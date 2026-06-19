@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import {
-  Zap, Dumbbell, UtensilsCrossed, TrendingUp, Timer, Award,
+  Dumbbell, UtensilsCrossed, TrendingUp, Timer, Award,
   Droplets, Target, ChevronRight, Shield, Smartphone, BarChart3,
   Heart, Flame, Brain, Sun, CircleDot, Cog, Users, Star,
   Camera, Scale, Trophy, Globe, CreditCard, Download, ArrowRight,
@@ -198,7 +198,7 @@ export default function LandingPage({ onStart }) {
 
   /* ── steps ── */
   const stepKeys = ['s1', 's2', 's3'];
-  const stepIcons = [UserCheck, BarChart3, Zap];
+  const stepIcons = [UserCheck, BarChart3, Sparkles];
 
   /* ── comparison: PT vs Full Balance ── */
   const comparisons = [
@@ -266,7 +266,7 @@ export default function LandingPage({ onStart }) {
         <div className="relative max-w-5xl mx-auto text-center">
           <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-6">
-              <Zap size={12} />
+              <Sparkles size={12} />
               {t('landing.badge') || 'AI-Powered Fitness & Wellness'}
             </span>
           </motion.div>
@@ -694,7 +694,7 @@ export default function LandingPage({ onStart }) {
                 <p className="font-outfit font-bold text-slate-400 text-xs sm:text-sm">🏋️ PT</p>
               </div>
               <div className="p-3 sm:p-4 bg-gradient-to-r from-orange-500/10 to-blue-500/10 border-b border-slate-700/30">
-                <p className="font-outfit font-bold text-transparent bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-xs sm:text-sm">⚡ Full Balance</p>
+                <p className="font-outfit font-bold text-transparent bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-xs sm:text-sm">✨ Full Balance</p>
               </div>
             </div>
 
@@ -801,14 +801,22 @@ export default function LandingPage({ onStart }) {
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
       <footer className="border-t border-slate-800/40 py-8 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-orange-500" />
-            <span className="font-outfit font-bold text-xs text-slate-600">FULL BALANCE</span>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} className="text-orange-500" />
+              <span className="font-outfit font-bold text-xs text-slate-600">FULL BALANCE</span>
+            </div>
+            <p className="text-[10px] text-slate-700">
+              {t('landing.footer') || '© 2025 Full Balance. Tüm hakları saklıdır.'}
+            </p>
           </div>
-          <p className="text-[10px] text-slate-700">
-            {t('landing.footer') || '© 2025 Full Balance. Tüm hakları saklıdır.'}
-          </p>
+          <div className="flex items-center justify-center gap-1.5 pt-3 border-t border-slate-800/20">
+            <Lock size={10} className="text-slate-700" />
+            <p className="text-[9px] text-slate-700">
+              {t('landing.footerPrivacy') || 'Verileriniz cihazınızda ve şifreli bulut sunucusunda güvende saklanır. Üçüncü taraflarla paylaşılmaz.'}
+            </p>
+          </div>
         </div>
       </footer>
     </div>

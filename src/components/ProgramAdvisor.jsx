@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, ChevronRight, Sparkles, AlertTriangle, Check, Zap } from 'lucide-react';
+import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, ChevronRight, Sparkles, AlertTriangle, Check } from 'lucide-react';
 import { analyzeProgress, advancePhase } from '../data/adaptiveEngine';
 import { regeneratePlanWithPhase } from '../data/planGenerator';
 
@@ -190,7 +190,7 @@ export default function ProgramAdvisor({ plan, onPlanUpdate }) {
             onClick={() => handleUpgrade(analysis.suggestedPhase)}
             className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs font-bold cursor-pointer hover:from-purple-500 hover:to-blue-500 transition-all"
           >
-            <Zap size={12} />
+            <Sparkles size={12} />
             {t('advisor.upgrade')} → {phaseNames[analysis.suggestedPhase]}
           </motion.button>
         )}

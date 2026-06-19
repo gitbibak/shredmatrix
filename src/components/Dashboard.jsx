@@ -313,10 +313,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <NutritionPanel plan={plan} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
-                    <DailyMotivation />
+                    <CalorieCalc />
                     <WaterTracker />
                     <SleepTracker />
-                    <CalorieCalc />
+                    <DailyMotivation />
                   </motion.div>
                 </div>
               </motion.div>

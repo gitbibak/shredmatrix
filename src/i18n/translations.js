@@ -20,6 +20,7 @@ export const translations = {
       readyQuote: '"PT\'lere verdiğin parayı artık kendin için kullan."',
       stepsTitle1: 'Nasıl', stepsTitle2: 'Çalışır?',
       footer: '© 2026 Full Balance. Tüm hakları saklıdır.',
+      footerPrivacy: 'Verileriniz cihazınızda ve şifreli bulut sunucusunda güvende saklanır. Üçüncü taraflarla paylaşılmaz.',
       stats: {
         exercises: 'Egzersiz', recipes: 'Tarif',
         programs: 'Program', goals: 'Hedef',
@@ -521,6 +522,7 @@ export const translations = {
       readyQuote: '"Stop paying trainers — get the same quality for free."',
       stepsTitle1: 'How It', stepsTitle2: 'Works',
       footer: '© 2026 Full Balance. All rights reserved.',
+      footerPrivacy: 'Your data is securely stored on your device and encrypted cloud servers. Never shared with third parties.',
       stats: { exercises: 'Exercises', recipes: 'Recipes', programs: 'Programs', goals: 'Goals', access: 'Access', free: 'Free' },
       goals: {
         tag: '6 Goal Categories', title: 'Choose Your Goal,', titleAccent: 'Start Your Journey',
@@ -926,6 +928,7 @@ export const translations = {
       readyQuote: '"Deja de pagar entrenadores — obtén la misma calidad gratis."',
       stepsTitle1: 'Cómo', stepsTitle2: 'Funciona',
       footer: '© 2026 Full Balance. Todos los derechos reservados.',
+      footerPrivacy: 'Tus datos se almacenan de forma segura en tu dispositivo y servidores encriptados. Nunca se comparten con terceros.',
       stats: { exercises: 'Ejercicios', recipes: 'Recetas', programs: 'Programas', goals: 'Objetivos', access: 'Acceso', free: 'Gratis' },
       goals: {
         tag: '6 Categorías de Objetivos', title: 'Elige Tu Objetivo,', titleAccent: 'Inicia Tu Viaje',

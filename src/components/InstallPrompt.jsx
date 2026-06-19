@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, X, Zap } from 'lucide-react';
+import { Download, X, Sparkles } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 
 const DISMISS_KEY = 'shredmatrix_install_dismissed';
@@ -64,7 +64,7 @@ export default function InstallPrompt() {
 
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center shrink-0">
-              <Zap size={18} className="text-white" />
+              <Sparkles size={18} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="text-sm font-bold font-outfit text-white mb-0.5">{t('install.title')}</h4>

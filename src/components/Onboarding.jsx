@@ -8,7 +8,6 @@ import {
   Dumbbell,
   Flame,
   TrendingUp,
-  Zap,
   User,
   Ruler,
   ChevronRight,
@@ -140,7 +139,7 @@ export default function Onboarding({ onSubmit }) {
 
   const goals = [
     { value: 'muscle', icon: TrendingUp, label: t('onboarding.fields.muscle'), desc: '', color: '#ff6d00' },
-    { value: 'fat_loss', icon: Zap, label: t('onboarding.fields.fatLoss'), desc: '', color: '#00b0ff' },
+    { value: 'fat_loss', icon: Flame, label: t('onboarding.fields.fatLoss'), desc: '', color: '#00b0ff' },
     { value: 'yoga', icon: Flower2, label: t('onboarding.fields.yoga'), desc: t('onboarding.fields.yogaDesc'), color: '#a855f7' },
     { value: 'pilates', icon: Circle, label: t('onboarding.fields.pilates'), desc: t('onboarding.fields.pilatesDesc'), color: '#ec4899' },
     { value: 'reformer', icon: Wrench, label: t('onboarding.fields.reformer'), desc: t('onboarding.fields.reformerDesc'), color: '#14b8a6' },

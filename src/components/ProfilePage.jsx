@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Mail, Ruler, Dumbbell, Flame, Wallet, Clock,
-  LogOut, Trash2, RefreshCw, Heart, Zap, Scale, Activity,
+  LogOut, Trash2, RefreshCw, Heart, Sparkles, Scale, Activity,
   Camera, ImagePlus, X, ChevronLeft, ChevronRight,
   TrendingUp, Brain, Flower2, Circle, Wrench, Target, BadgeCheck,
 } from 'lucide-react';
@@ -71,7 +71,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
 
   const goalOptions = [
     { value: 'muscle', icon: TrendingUp, label: t('onboarding.fields.muscle'), color: '#ff6d00' },
-    { value: 'fat_loss', icon: Zap, label: t('onboarding.fields.fatLoss'), color: '#00b0ff' },
+    { value: 'fat_loss', icon: Flame, label: t('onboarding.fields.fatLoss'), color: '#00b0ff' },
     { value: 'yoga', icon: Flower2, label: t('onboarding.fields.yoga'), color: '#a855f7' },
     { value: 'pilates', icon: Circle, label: t('onboarding.fields.pilates'), color: '#ec4899' },
     { value: 'reformer', icon: Wrench, label: t('onboarding.fields.reformer'), color: '#14b8a6' },
@@ -475,7 +475,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           <StatCard icon={Scale} label={t('profile.weight')} value={plan.userWeight} unit="kg" color="#ff6d00" />
           <StatCard icon={Heart} label={t('profile.bmi')} value={plan.bmi} color="#f472b6" />
           <StatCard icon={Flame} label={t('profile.bodyFat')} value={`%${plan.userBodyFat}`} color="#ef4444" />
-          <StatCard icon={Zap} label={t('profile.bmr')} value={plan.bmr} unit="kcal" color="#22c55e" />
+          <StatCard icon={Sparkles} label={t('profile.bmr')} value={plan.bmr} unit="kcal" color="#22c55e" />
           <StatCard icon={Activity} label={t('profile.tdee')} value={plan.tdee} unit="kcal" color="#a855f7" />
           <StatCard icon={Dumbbell} label={t('profile.dailyCal')} value={plan.dailyCalories} unit="kcal" color="#ff6d00" />
         </motion.div>
