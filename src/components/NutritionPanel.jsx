@@ -230,7 +230,7 @@ export default function NutritionPanel({ plan }) {
   const {
     bmr,
     tdee,
-    macroPercentages,
+    macroPercentages = { protein: 30, carbs: 40, fat: 30 },
     dailyNutrition,
     goal,
   } = plan;

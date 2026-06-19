@@ -99,14 +99,14 @@ ALTER TABLE water_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sleep_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reminders ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "users_own_data" ON profiles FOR ALL USING (id = auth.uid());
-CREATE POLICY "users_own_data" ON plans FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON workout_logs FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON progress_entries FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON measurements FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON water_logs FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON sleep_logs FOR ALL USING (user_id = auth.uid());
-CREATE POLICY "users_own_data" ON reminders FOR ALL USING (user_id = auth.uid());
+CREATE POLICY "profiles_own_data" ON profiles FOR ALL USING (id = auth.uid()) WITH CHECK (id = auth.uid());
+CREATE POLICY "plans_own_data" ON plans FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "workout_logs_own_data" ON workout_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "progress_entries_own_data" ON progress_entries FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "measurements_own_data" ON measurements FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "water_logs_own_data" ON water_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "sleep_logs_own_data" ON sleep_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+CREATE POLICY "reminders_own_data" ON reminders FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 
 -- ============================================
 -- Performance Indexes
@@ -125,7 +125,8 @@ CREATE INDEX idx_measurements_user ON measurements(user_id, date);
 INSERT INTO storage.buckets (id, name, public) VALUES ('user-photos', 'user-photos', false);
 
 CREATE POLICY "users_own_photos" ON storage.objects FOR ALL
-  USING (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text);
+  USING (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text)
+  WITH CHECK (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text);
 
 -- ============================================
 -- Auto-create profile on signup (trigger)
@@ -143,3 +144,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================
+-- Account deletion helper
+-- Auth kullanıcı kaydını sadece kullanıcı kendisi silebilir
+-- ============================================
+
+CREATE OR REPLACE FUNCTION public.delete_current_user()
+RETURNS void AS $$
+BEGIN
+  DELETE FROM auth.users WHERE id = auth.uid();
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, auth;
+
+REVOKE ALL ON FUNCTION public.delete_current_user() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.delete_current_user() TO authenticated;

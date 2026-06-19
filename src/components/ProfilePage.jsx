@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { generatePlan } from '../data/planGenerator';
+import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto } from '../lib/dataService';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const GALLERY_KEY = 'shredmatrix_progress_photos';
@@ -69,6 +70,24 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const [showGoalChange, setShowGoalChange] = useState(false);
   const [changingGoal, setChangingGoal] = useState(null);
 
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPhotos() {
+      try {
+        const [photo, photos] = await Promise.all([getProfilePhoto(), getProgressPhotos()]);
+        if (cancelled) return;
+        if (photo) setProfilePhoto(photo);
+        setGallery(photos || []);
+      } catch {
+        // Keep local fallback state.
+      }
+    }
+    loadPhotos();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const goalOptions = [
     { value: 'muscle', icon: TrendingUp, label: t('onboarding.fields.muscle'), color: '#ff6d00' },
     { value: 'fat_loss', icon: Flame, label: t('onboarding.fields.fatLoss'), color: '#00b0ff' },
@@ -78,8 +97,35 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     { value: 'meditation', icon: Brain, label: t('onboarding.fields.meditation'), color: '#8b5cf6' },
   ];
 
+  if (!plan) return null;
+
   const goalMap = { 'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation', 'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer' };
   const currentGoalKey = goalMap[plan.goal] || 'muscle';
+  const experienceLabel = {
+    beginner: t('onboarding.fields.beginner'),
+    intermediate: t('onboarding.fields.intermediate'),
+    advanced: t('onboarding.fields.advanced'),
+  }[plan.userExperience] || plan.userExperience;
+  const activityLabel = {
+    sedentary: t('onboarding.fields.sedentary'),
+    light: t('onboarding.fields.light'),
+    moderate: t('onboarding.fields.moderate'),
+    active: t('onboarding.fields.active'),
+    athlete: t('onboarding.fields.veryActive'),
+    veryActive: t('onboarding.fields.veryActive'),
+  }[plan.userActivityLevel] || plan.userActivityLevel;
+  const budgetLabel = {
+    economy: t('onboarding.fields.low'),
+    moderate: t('onboarding.fields.mid'),
+    premium: t('onboarding.fields.high'),
+  }[plan.userBudget] || plan.userBudget;
+  const scheduleLabel = {
+    morning: t('onboarding.fields.morning'),
+    afternoon: t('onboarding.fields.afternoon'),
+    evening: t('onboarding.fields.evening'),
+    flexible: t('onboarding.fields.flexible'),
+    none: t('onboarding.fields.flexible'),
+  }[plan.userWorkSchedule] || plan.userWorkSchedule;
 
   const handleGoalChange = (newGoal) => {
     if (newGoal === currentGoalKey) return;
@@ -108,8 +154,6 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     }, 800);
   };
 
-  if (!plan) return null;
-
   const initials = (plan.userName || user?.name || '?')
     .split(' ')
     .map((w) => w[0])
@@ -118,54 +162,35 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     .slice(0, 2);
 
   // ── Photo handlers ──
-  const handleProfilePhoto = (e) => {
+  const handleProfilePhoto = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const size = 200;
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext('2d');
-        const minDim = Math.min(img.width, img.height);
-        const sx = (img.width - minDim) / 2;
-        const sy = (img.height - minDim) / 2;
-        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        setProfilePhoto(dataUrl);
-        savePhoto(dataUrl);
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    try {
+      const url = await uploadPhoto(file, 'profile');
+      setProfilePhoto(url);
+      savePhoto(url);
+    } catch (err) {
+      const key = err?.message || 'profile.errors.photoUpload';
+      window.alert(key.startsWith('profile.') ? t(key) : key);
+    } finally {
+      e.target.value = '';
+    }
   };
 
-  const handleGalleryPhoto = (e) => {
+  const handleGalleryPhoto = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxW = 600;
-        const scale = Math.min(1, maxW / img.width);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
-        const newEntry = { id: Date.now(), date: new Date().toLocaleDateString(), src: dataUrl };
-        const updated = [newEntry, ...gallery];
-        setGallery(updated);
-        saveGallery(updated);
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    try {
+      await uploadPhoto(file, 'progress');
+      const updated = await getProgressPhotos();
+      setGallery(updated || []);
+      saveGallery(updated || []);
+    } catch (err) {
+      const key = err?.message || 'profile.errors.photoUpload';
+      window.alert(key.startsWith('profile.') ? t(key) : key);
+    } finally {
+      e.target.value = '';
+    }
   };
 
   const deleteGalleryPhoto = (id) => {
@@ -176,32 +201,14 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     if (lightboxIdx !== null) setLightboxIdx(null);
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (!window.confirm(t('profile.deleteConfirm'))) return;
-    if (user?.email) localStorage.removeItem(`shredmatrix_plan_${user.email}`);
-    localStorage.removeItem('shredmatrix_session');
-    localStorage.removeItem('shredmatrix_progress');
-    localStorage.removeItem('shredmatrix_water');
-    localStorage.removeItem(PHOTO_KEY);
-    localStorage.removeItem(GALLERY_KEY);
-    localStorage.removeItem('shredmatrix_workout_log');
-    localStorage.removeItem('shredmatrix_measurements');
-    localStorage.removeItem('shredmatrix_sleep');
-    localStorage.removeItem('shredmatrix_reminder');
-    localStorage.removeItem('shredmatrix_first_login');
-    localStorage.removeItem('shredmatrix_install_dismissed');
-    localStorage.removeItem('shredmatrix_water_history');
-    localStorage.removeItem('shredmatrix_current_phase');
-    localStorage.removeItem('shredmatrix_plan_created');
-    if (user?.email) localStorage.removeItem(`shredmatrix_tour_seen_${user.email}`);
     try {
-      const usersRaw = localStorage.getItem('shredmatrix_users');
-      if (usersRaw && user?.email) {
-        const users = JSON.parse(usersRaw);
-        const filtered = users.filter((u) => u.email !== user.email);
-        localStorage.setItem('shredmatrix_users', JSON.stringify(filtered));
-      }
-    } catch {}
+      await deleteAllUserData(user?.email);
+    } catch {
+      window.alert(t('profile.errors.deleteFailed'));
+      return;
+    }
     onLogout();
   };
 
@@ -488,10 +495,10 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           {t('profile.preferences')}
         </h3>
         <div className="flex flex-wrap gap-2">
-          <Badge>{plan.userExperience}</Badge>
-          <Badge>{plan.userActivityLevel}</Badge>
-          <Badge>{plan.userBudget}</Badge>
-          <Badge>{plan.userWorkSchedule}</Badge>
+          <Badge>{experienceLabel}</Badge>
+          <Badge>{activityLabel}</Badge>
+          <Badge>{budgetLabel}</Badge>
+          <Badge>{scheduleLabel}</Badge>
           <Badge>{plan.userGender === 'female' ? t('profile.female') : t('profile.male')}</Badge>
           <Badge>{plan.userAge} {t('profile.age')}</Badge>
         </div>

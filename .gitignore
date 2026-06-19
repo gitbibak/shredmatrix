@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+audit-*/
+src/lib/localTestAuth.js
 *.local
 .env
 .env.*
