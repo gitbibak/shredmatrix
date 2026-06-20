@@ -70,14 +70,24 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const [showGoalChange, setShowGoalChange] = useState(false);
   const [changingGoal, setChangingGoal] = useState(null);
 
-  // Lock body scroll when lightbox is open
+  // Lock body scroll when lightbox is open (iOS Safari compatible)
   useEffect(() => {
     if (lightboxIdx !== null) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      return () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => { document.body.style.overflow = ''; };
   }, [lightboxIdx]);
 
   useEffect(() => {
@@ -327,7 +337,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4"
+            style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
             onClick={() => setLightboxIdx(null)}
           >
             <button
