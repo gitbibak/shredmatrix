@@ -14,3 +14,18 @@
 
 /manifest.json
   Cache-Control: no-cache
+
+/favicon.svg
+  Cache-Control: no-cache, must-revalidate
+
+/favicon-32.png
+  Cache-Control: no-cache, must-revalidate
+
+/icon-192.png
+  Cache-Control: no-cache, must-revalidate
+
+/icon-512.png
+  Cache-Control: no-cache, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: no-cache, must-revalidate
