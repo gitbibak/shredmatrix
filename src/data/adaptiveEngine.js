@@ -5,6 +5,14 @@
 // Pure JS — no React imports needed.
 // ─────────────────────────────────────────────────────────
 
+import {
+  getProgress,
+  getMeasurements,
+  getCurrentPhase,
+  getPlanCreatedAt,
+  updatePhase,
+} from '../lib/dataService';
+
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 const PHASE_DURATION_WEEKS = 8;
 const WEIGHT_THRESHOLD_KG = 0.5; // ±0.5 kg to count as gaining/losing
@@ -13,21 +21,6 @@ const PLATEAU_WEEKS = 3;
 const STAGNATION_WEEKS = 4;
 
 // ─── Helpers ─────────────────────────────────────────────
-
-/**
- * Safely read and parse a JSON array from localStorage.
- * Returns an empty array if key is missing or invalid.
- */
-function readArray(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 /**
  * Calculate the arithmetic mean of an array of numbers.
@@ -101,12 +94,12 @@ function countStableWeeks(entries, valueExtractor, threshold = WEIGHT_THRESHOLD_
  * @param {string} plan.goal - 'Kas Gelişimi' (muscle) or 'Yağ Yakımı' (fat loss).
  * @returns {Object} Analysis result with change recommendation.
  */
-export function analyzeProgress(plan) {
-  // --- Read localStorage data ---
-  const progressEntries = readArray('shredmatrix_progress');       // {date, weight, bodyFat}
-  const measureEntries = readArray('shredmatrix_measurements');    // {date, chest, waist, hip, arm, leg}
-  const planCreated = localStorage.getItem('shredmatrix_plan_created');
-  const currentPhase = parseInt(localStorage.getItem('shredmatrix_current_phase') || '0', 10);
+export async function analyzeProgress(plan) {
+  // --- Read data via dataService (Supabase + localStorage fallback) ---
+  const progressEntries = await getProgress();                    // {date, weight, bodyFat}
+  const measureEntries = await getMeasurements();                 // {date, chest, waist, hip, arm, leg}
+  const planCreated = await getPlanCreatedAt();
+  const currentPhase = await getCurrentPhase();
 
   // --- Calculate program age in weeks ---
   const startDate = planCreated ? new Date(planCreated) : new Date();
@@ -251,7 +244,6 @@ export function analyzeProgress(plan) {
  *
  * @param {number} newPhase - The phase number to advance to (0-3).
  */
-export function advancePhase(newPhase) {
-  localStorage.setItem('shredmatrix_current_phase', String(newPhase));
-  localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
+export async function advancePhase(newPhase) {
+  await updatePhase(newPhase);
 }

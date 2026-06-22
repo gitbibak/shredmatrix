@@ -3,6 +3,7 @@ import { getMeasurements, saveMeasurement, deleteMeasurement } from '../lib/data
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Ruler, Plus, Trash2 } from 'lucide-react';
+import { useToast } from './ToastProvider';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -46,8 +47,12 @@ export default function BodyMeasurements() {
   const [form, setForm] = useState({ chest:'', waist:'', hip:'', arm:'', leg:'' });
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
 
+  const toast = useToast();
+
   useEffect(() => {
-    getMeasurements().then(setEntries).catch(() => { /* ignore */ });
+    getMeasurements().then(setEntries).catch(() => {
+      toast.error(t('errors.loadFailed') || 'Veriler yüklenemedi');
+    });
   }, []);
 
   const handleSave = useCallback(async () => {
@@ -64,13 +69,18 @@ export default function BodyMeasurements() {
         else { next = [...prev, entry]; }
         return next.sort((a,b) => a.date.localeCompare(b.date));
       });
-    } catch { /* ignore */ }
+      toast.success(t('errors.saveSuccess') || 'Kaydedildi');
+    } catch {
+      toast.error(t('errors.saveFailed') || 'Kayıt başarısız');
+    }
     setForm({ chest:'', waist:'', hip:'', arm:'', leg:'' });
   }, [form, date]);
 
   const handleDelete = useCallback(async (d) => {
     setEntries(prev => prev.filter(e => e.date !== d));
-    try { await deleteMeasurement(d); } catch { /* fallback already in state */ }
+    try { await deleteMeasurement(d); } catch {
+      toast.error(t('errors.deleteFailed') || 'Silme başarısız');
+    }
   }, []);
 
   const chartData = entries.slice(-30).map(e => ({

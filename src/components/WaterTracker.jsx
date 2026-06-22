@@ -27,6 +27,7 @@ const CENTER = VIEW_SIZE / 2;
 export default function WaterTracker() {
   const { t } = useTranslation();
   const [glasses, setGlasses] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   const getMessage = (pct) => {
     if (pct >= 100) return t('water.messages.done');
@@ -38,14 +39,17 @@ export default function WaterTracker() {
 
   // Load today's water on mount
   useEffect(() => {
-    getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch(() => { /* ignore */ });
+    getWater(getTodayStr()).then(d => {
+      setGlasses(d.glasses || 0);
+      setLoaded(true);
+    }).catch(() => { setLoaded(true); });
   }, []);
 
   // Persist on every change
   useEffect(() => {
-    if (glasses === 0) return; // skip initial default
+    if (!loaded) return; // skip until initial data is loaded
     saveWater(getTodayStr(), glasses, glasses >= TARGET_GLASSES).catch(() => { /* ignore */ });
-  }, [glasses]);
+  }, [glasses, loaded]);
 
   // Auto-reset check when tab regains focus
   useEffect(() => {

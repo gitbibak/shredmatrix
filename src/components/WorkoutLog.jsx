@@ -454,7 +454,24 @@ export default function WorkoutLog({ plan }) {
     setTimeout(() => setSaveFlash(false), 1500);
   };
 
-  if (!plan) return null;
+  if (!plan) return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-2xl border border-slate-800 bg-slate-900 p-10 flex flex-col items-center justify-center gap-4"
+    >
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/15 to-blue-500/15 border border-slate-800">
+        <Dumbbell size={28} className="text-orange-400" />
+      </div>
+      <p className="font-outfit text-lg font-bold gradient-text">
+        {t('workoutLog.noPlanTitle')}
+      </p>
+      <p className="text-xs text-slate-500 text-center max-w-xs">
+        {t('workoutLog.noPlan')}
+      </p>
+    </motion.div>
+  );
 
   return (
     <section className="flex flex-col gap-5 h-full">

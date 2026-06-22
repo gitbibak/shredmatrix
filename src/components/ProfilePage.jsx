@@ -9,6 +9,7 @@ import {
 import { useTranslation } from '../i18n/LanguageContext';
 import { generatePlan } from '../data/planGenerator';
 import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, deleteProgressPhoto } from '../lib/dataService';
+import { useToast } from './ToastProvider';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const GALLERY_KEY = 'shredmatrix_progress_photos';
@@ -69,6 +70,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [showGoalChange, setShowGoalChange] = useState(false);
   const [changingGoal, setChangingGoal] = useState(null);
+  const toast = useToast();
 
   // Lock body scroll when lightbox is open (iOS Safari compatible)
   useEffect(() => {
@@ -189,9 +191,9 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       const url = await uploadPhoto(file, 'profile');
       setProfilePhoto(url);
       savePhoto(url);
+      toast.success(t('errors.saveSuccess'));
     } catch (err) {
-      const key = err?.message || 'profile.errors.photoUpload';
-      window.alert(key.startsWith('profile.') ? t(key) : key);
+      toast.error(t('errors.uploadFailed'));
     } finally {
       e.target.value = '';
     }
@@ -205,9 +207,9 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       const updated = await getProgressPhotos();
       setGallery(updated || []);
       saveGallery(updated || []);
+      toast.success(t('errors.saveSuccess'));
     } catch (err) {
-      const key = err?.message || 'profile.errors.photoUpload';
-      window.alert(key.startsWith('profile.') ? t(key) : key);
+      toast.error(t('errors.uploadFailed'));
     } finally {
       e.target.value = '';
     }
@@ -241,7 +243,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     try {
       await deleteAllUserData(user?.email);
     } catch {
-      window.alert(t('profile.errors.deleteFailed'));
+      toast.error(t('errors.deleteFailed'));
       return;
     }
     onLogout();
