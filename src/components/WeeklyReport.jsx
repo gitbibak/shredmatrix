@@ -46,6 +46,7 @@ export default function WeeklyReport({ plan }) {
   const [workoutData, setWorkoutData] = useState([]);
   const [waterData, setWaterData] = useState([]);
   const [progressData, setProgressData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,6 +63,8 @@ export default function WeeklyReport({ plan }) {
         setProgressData(progress || []);
       } catch (err) {
         console.error('Failed to load weekly report data:', err);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     loadData();
@@ -146,6 +149,17 @@ export default function WeeklyReport({ plan }) {
         <span className="text-[10px] text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">{report.weekRange}</span>
       </motion.div>
 
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"
+          />
+        </div>
+      ) : (
+        <>
+
       {/* Completion ring */}
       <motion.div variants={itemV} className="flex items-center gap-4 mb-4 px-3 py-3 rounded-xl bg-slate-950/50 border border-slate-800/50">
         <div className="relative w-14 h-14">
@@ -198,6 +212,8 @@ export default function WeeklyReport({ plan }) {
           {report.completionRate >= 100 ? t('weeklyReport.perfectWeek') : report.completionRate >= 75 ? t('weeklyReport.greatWeek') : report.completionRate >= 50 ? t('weeklyReport.goodWeek') : t('weeklyReport.needsImprovement')}
         </p>
       </motion.div>
+        </>)
+      }
     </motion.div>
   );
 }

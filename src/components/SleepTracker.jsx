@@ -3,6 +3,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { motion } from 'framer-motion';
 import { Moon, Save } from 'lucide-react';
 import { getSleep, saveSleep as saveSleepEntry } from '../lib/dataService';
+import { useToast } from './ToastProvider';
 
 
 
@@ -12,6 +13,7 @@ export default function SleepTracker() {
   const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
   const [hours, setHours] = useState('');
+  const toast = useToast();
 
   useEffect(() => {
     getSleep().then(setEntries).catch(() => { /* ignore */ });
@@ -31,7 +33,10 @@ export default function SleepTracker() {
         if (idx >= 0) { const next = [...prev]; next[idx] = entry; return next; }
         return [...prev, entry].sort((a,b) => a.date.localeCompare(b.date));
       });
-    } catch { /* ignore */ }
+      toast.success(t('errors.saveSuccess'));
+    } catch {
+      toast.error(t('errors.saveFailed'));
+    }
     setHours('');
   };
 

@@ -5,6 +5,7 @@ import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan, regeneratePlanWithPhase, localizePlan } from './data/planGenerator';
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
+import { ToastProvider } from './components/ToastProvider';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -581,7 +582,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

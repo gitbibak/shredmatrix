@@ -14,8 +14,10 @@ export default function ProgramAdvisor({ plan, onPlanUpdate }) {
 
   useEffect(() => {
     if (plan) {
-      const result = analyzeProgress(plan);
-      setAnalysis(result);
+      (async () => {
+        const result = await analyzeProgress(plan);
+        setAnalysis(result);
+      })();
     }
   }, [plan]);
 
@@ -23,8 +25,8 @@ export default function ProgramAdvisor({ plan, onPlanUpdate }) {
 
   const phaseNames = t('advisor.phaseNames') || ['Temel', 'İleri', 'Yoğun', 'Elit'];
 
-  const handleUpgrade = (phase) => {
-    advancePhase(phase);
+  const handleUpgrade = async (phase) => {
+    await advancePhase(phase);
     if (onPlanUpdate) {
       const newPlan = regeneratePlanWithPhase(plan, phase);
       onPlanUpdate(newPlan);

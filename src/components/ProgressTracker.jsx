@@ -3,6 +3,7 @@ import { getProgress, saveProgress, deleteProgress } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, Scale, Target, Plus, Trash2 } from 'lucide-react';
+import { useToast } from './ToastProvider';
 import {
   LineChart,
   Line,
@@ -98,14 +99,15 @@ function StatCard({ icon: Icon, label, value, unit, color, delay = 0 }) {
 export default function ProgressTracker({ userName }) {
   const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
   const [date, setDate] = useState(todayISO);
   const [period, setPeriod] = useState('all'); // '7' | '30' | 'all'
-
+  const toast = useToast();
   /* load entries from dataService on mount */
   useEffect(() => {
-    getProgress().then(setEntries).catch(() => { /* ignore */ });
+    getProgress().then(setEntries).catch(() => { /* ignore */ }).finally(() => setLoading(false));
   }, []);
 
   const handleSave = useCallback(async () => {
@@ -133,7 +135,10 @@ export default function ProgressTracker({ userName }) {
         }
         return next.sort((a, b) => a.date.localeCompare(b.date));
       });
-    } catch { /* ignore */ }
+      toast.success(t('errors.saveSuccess'));
+    } catch {
+      toast.error(t('errors.saveFailed'));
+    }
 
     setWeight('');
     setBodyFat('');
@@ -142,7 +147,9 @@ export default function ProgressTracker({ userName }) {
 
   const handleDelete = useCallback(async (dateToDelete) => {
     setEntries((prev) => prev.filter((e) => e.date !== dateToDelete));
-    try { await deleteProgress(dateToDelete); } catch { /* fallback already in state */ }
+    try { await deleteProgress(dateToDelete); } catch {
+      toast.error(t('errors.deleteFailed'));
+    }
   }, []);
 
   /* derived stats */
@@ -266,7 +273,22 @@ export default function ProgressTracker({ userName }) {
 
       {/* ── Chart or Empty State ─── */}
       <AnimatePresence mode="wait">
-        {!hasData ? (
+        {loading ? (
+          <motion.div
+            key="loading"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="flex items-center justify-center py-12"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"
+            />
+          </motion.div>
+        ) : !hasData ? (
           <motion.div
             key="empty"
             variants={cardVariants}

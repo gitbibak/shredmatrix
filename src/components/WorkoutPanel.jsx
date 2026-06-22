@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { getWorkoutLogs, saveWorkoutLog } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from './ToastProvider';
 import {
   Calendar,
   ChevronDown,
@@ -291,6 +292,7 @@ export default function WorkoutPanel({ plan }) {
     return idx >= 0 ? idx : 0;
   });
   const [completedDays, setCompletedDays] = useState({});
+  const toast = useToast();
 
   // Load completed workouts from dataService
   useEffect(() => {
@@ -348,7 +350,10 @@ export default function WorkoutPanel({ plan }) {
     try {
       await saveWorkoutLog(entry);
       setCompletedDays((prev) => ({ ...prev, [focus]: true }));
-    } catch { /* ignore */ }
+      toast.success(t('errors.saveSuccess'));
+    } catch {
+      toast.error(t('errors.saveFailed'));
+    }
   };
 
   const trainingDays = workoutSplit.filter((d) => !isRestDay(d));

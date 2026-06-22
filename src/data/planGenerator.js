@@ -1318,11 +1318,17 @@ function applyBudgetToMeals(meals, budget) {
 // ── Ana Fonksiyon ────────────────────────────────────────
 export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   const {
-    name, age, gender, height, weight,
-    bodyFatPercentage, experience, activityLevel,
+    name, age: rawAge, gender, height: rawHeight, weight: rawWeight,
+    bodyFatPercentage: rawBF, experience, activityLevel,
     primaryGoal, workSchedule, budget,
     healthConditions = [], allergies = [],
   } = userMetrics;
+
+  // ── Input Validation — NaN/Infinity koruması ──
+  const age = Math.max(14, Math.min(80, Number(rawAge) || 25));
+  const height = Math.max(100, Math.min(250, Number(rawHeight) || 175));
+  const weight = Math.max(30, Math.min(300, Number(rawWeight) || 75));
+  const bodyFatPercentage = Math.max(3, Math.min(60, Number(rawBF) || 20));
 
   // Faz sınırlarını kontrol et
   const maxPhase = (workoutPhases[primaryGoal] || workoutPhases.muscle).length - 1;

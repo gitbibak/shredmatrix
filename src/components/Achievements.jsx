@@ -306,6 +306,7 @@ function BadgeCard({ achievement }) {
 export default function Achievements({ plan, user }) {
   const { t } = useTranslation();
   const [achievements, setAchievements] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const badgeKeys = ['firstStep', 'ironFist', 'waterMonster', 'scaleTracker', 'macroMaster', 'weekWarrior', 'consistencyKing', 'strengthGain'];
 
@@ -348,6 +349,8 @@ export default function Achievements({ plan, user }) {
         setAchievements(raw);
       } catch (err) {
         console.error('Failed to load achievement data:', err);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     loadAchievements();
@@ -421,14 +424,24 @@ export default function Achievements({ plan, user }) {
       </motion.div>
 
       {/* ── Badge Grid ───────────────────────────────── */}
-      <motion.div
-        variants={containerVariants}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
-      >
-        {achievements.map((achievement) => (
-          <BadgeCard key={achievement.id} achievement={achievement} />
-        ))}
-      </motion.div>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"
+          />
+        </div>
+      ) : (
+        <motion.div
+          variants={containerVariants}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        >
+          {achievements.map((achievement) => (
+            <BadgeCard key={achievement.id} achievement={achievement} />
+          ))}
+        </motion.div>
+      )}
 
       {/* ── Footer hint ──────────────────────────────── */}
       <motion.div
