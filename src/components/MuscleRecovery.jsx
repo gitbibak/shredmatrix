@@ -4,19 +4,62 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { Activity, ChevronDown } from 'lucide-react';
 import { getWorkoutLogs } from '../lib/dataService';
 
-// ── Muscle group definitions ────────────────────────────
-const MUSCLE_GROUPS = [
-  { id: 'chest',      icon: '🫁', keywords: ['göğüs', 'chest', 'bench', 'pec', 'push'] },
-  { id: 'back',       icon: '🔙', keywords: ['sırt', 'back', 'lat', 'row', 'pull', 'deadlift', 'çekiş'] },
-  { id: 'shoulders',  icon: '💪', keywords: ['omuz', 'shoulder', 'delt', 'press', 'lateral'] },
-  { id: 'biceps',     icon: '💪', keywords: ['biceps', 'biseps', 'curl', 'kol'] },
-  { id: 'triceps',    icon: '💪', keywords: ['triceps', 'triseps', 'dip', 'pushdown', 'extension'] },
-  { id: 'abs',        icon: '🔥', keywords: ['karın', 'abs', 'core', 'plank', 'crunch'] },
-  { id: 'quads',      icon: '🦵', keywords: ['bacak', 'quad', 'squat', 'leg press', 'lunge', 'ön bacak'] },
-  { id: 'hamstrings', icon: '🦵', keywords: ['hamstring', 'arka bacak', 'leg curl', 'romanian'] },
-  { id: 'glutes',     icon: '🍑', keywords: ['kalça', 'glute', 'hip thrust', 'bridge'] },
-  { id: 'calves',     icon: '🦶', keywords: ['baldır', 'calf', 'calves', 'raise'] },
-];
+// ── Goal-specific recovery group definitions ────────────
+const GOAL_GROUPS = {
+  muscle: [
+    { id: 'chest',      icon: '🫁', keywords: ['göğüs', 'chest', 'bench', 'pec', 'push'] },
+    { id: 'back',       icon: '🔙', keywords: ['sırt', 'back', 'lat', 'row', 'pull', 'deadlift', 'çekiş'] },
+    { id: 'shoulders',  icon: '💪', keywords: ['omuz', 'shoulder', 'delt', 'press', 'lateral'] },
+    { id: 'biceps',     icon: '💪', keywords: ['biceps', 'biseps', 'curl', 'kol'] },
+    { id: 'triceps',    icon: '💪', keywords: ['triceps', 'triseps', 'dip', 'pushdown', 'extension'] },
+    { id: 'abs',        icon: '🔥', keywords: ['karın', 'abs', 'core', 'plank', 'crunch'] },
+    { id: 'quads',      icon: '🦵', keywords: ['bacak', 'quad', 'squat', 'leg press', 'lunge', 'ön bacak'] },
+    { id: 'hamstrings', icon: '🦵', keywords: ['hamstring', 'arka bacak', 'leg curl', 'romanian'] },
+    { id: 'glutes',     icon: '🍑', keywords: ['kalça', 'glute', 'hip thrust', 'bridge'] },
+    { id: 'calves',     icon: '🦶', keywords: ['baldır', 'calf', 'calves', 'raise'] },
+  ],
+  fat_loss: [
+    { id: 'cardio',     icon: '❤️‍🔥', keywords: ['kardio', 'cardio', 'koşu', 'run', 'hiit', 'jump', 'cycling', 'burpee'] },
+    { id: 'upper',      icon: '💪', keywords: ['üst', 'upper', 'göğüs', 'chest', 'sırt', 'back', 'omuz', 'shoulder', 'kol', 'arm'] },
+    { id: 'lower',      icon: '🦵', keywords: ['alt', 'lower', 'bacak', 'leg', 'squat', 'lunge', 'kalça', 'glute'] },
+    { id: 'abs',        icon: '🔥', keywords: ['karın', 'abs', 'core', 'plank', 'crunch'] },
+    { id: 'flexibility', icon: '🧘', keywords: ['esneklik', 'stretch', 'flexibility', 'germe', 'cool'] },
+    { id: 'energy',     icon: '⚡', keywords: ['enerji', 'energy', 'tabata', 'circuit', 'metabolic'] },
+  ],
+  yoga: [
+    { id: 'flexibility', icon: '🧘', keywords: ['esneklik', 'flexibility', 'stretch', 'germe', 'forward fold', 'split'] },
+    { id: 'balance',     icon: '⚖️', keywords: ['denge', 'balance', 'tree', 'warrior', 'ağaç', 'savaşçı'] },
+    { id: 'breathing',   icon: '🌬️', keywords: ['nefes', 'breath', 'pranayama', 'meditation', 'mindful'] },
+    { id: 'core_str',    icon: '🔥', keywords: ['core', 'karın', 'plank', 'boat', 'abs'] },
+    { id: 'upper',       icon: '💪', keywords: ['üst', 'upper', 'arm', 'kol', 'chaturanga', 'push'] },
+    { id: 'lower',       icon: '🦵', keywords: ['alt', 'lower', 'bacak', 'leg', 'warrior', 'lunge', 'chair'] },
+    { id: 'mindfulness', icon: '🧠', keywords: ['farkındalık', 'mindfulness', 'meditation', 'savasana', 'relax'] },
+  ],
+  pilates: [
+    { id: 'core_str',   icon: '🔥', keywords: ['core', 'karın', 'abs', 'plank', 'hundred', 'teaser'] },
+    { id: 'flexibility', icon: '🧘', keywords: ['esneklik', 'flexibility', 'stretch', 'germe', 'roll'] },
+    { id: 'posture',    icon: '🧍', keywords: ['postür', 'posture', 'alignment', 'spine', 'hizalama'] },
+    { id: 'upper',      icon: '💪', keywords: ['üst', 'upper', 'arm', 'kol', 'shoulder', 'omuz'] },
+    { id: 'lower',      icon: '🦵', keywords: ['alt', 'lower', 'bacak', 'leg', 'glute', 'kalça'] },
+    { id: 'balance',    icon: '⚖️', keywords: ['denge', 'balance', 'stabilite', 'stability', 'control'] },
+  ],
+  reformer: [
+    { id: 'core_str',   icon: '🔥', keywords: ['core', 'karın', 'abs', 'plank', 'hundred'] },
+    { id: 'lower',      icon: '🦵', keywords: ['bacak', 'leg', 'footwork', 'lunge', 'squat', 'alt'] },
+    { id: 'upper',      icon: '💪', keywords: ['kol', 'arm', 'üst', 'upper', 'pull', 'push'] },
+    { id: 'flexibility', icon: '🧘', keywords: ['esneklik', 'flexibility', 'stretch', 'germe'] },
+    { id: 'balance',    icon: '⚖️', keywords: ['denge', 'balance', 'stabilite', 'stability'] },
+    { id: 'posture',    icon: '🧍', keywords: ['postür', 'posture', 'alignment', 'spine', 'hizalama'] },
+  ],
+  meditation: [
+    { id: 'focus',       icon: '🎯', keywords: ['odak', 'focus', 'concentration', 'mindful', 'dikkat'] },
+    { id: 'breathing',   icon: '🌬️', keywords: ['nefes', 'breath', 'pranayama', 'breathwork'] },
+    { id: 'stress',      icon: '🧘', keywords: ['stres', 'stress', 'relax', 'calm', 'rahatlama'] },
+    { id: 'sleep',       icon: '🌙', keywords: ['uyku', 'sleep', 'rest', 'dinlenme', 'night'] },
+    { id: 'mindfulness', icon: '🧠', keywords: ['farkındalık', 'mindfulness', 'awareness', 'bilinç'] },
+    { id: 'energy',      icon: '⚡', keywords: ['enerji', 'energy', 'vitality', 'morning', 'sabah'] },
+  ],
+};
 
 // ── Recovery logic ──────────────────────────────────────
 function getRecovery(lastTrainedDate) {
@@ -47,13 +90,17 @@ export default function MuscleRecovery({ plan }) {
   const [workoutLogs, setWorkoutLogs] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
+  // Get goal-specific groups
+  const goal = plan?.primaryGoal || 'muscle';
+  const GROUPS = GOAL_GROUPS[goal] || GOAL_GROUPS.muscle;
+
   useEffect(() => {
     getWorkoutLogs().then(setWorkoutLogs).catch(() => []);
   }, []);
 
-  // Calculate recovery data for each muscle
+  // Calculate recovery data for each area
   const muscles = useMemo(() => {
-    return MUSCLE_GROUPS.map(group => {
+    return GROUPS.map(group => {
       let lastDate = null;
       let totalSessions = 0;
 
@@ -90,7 +137,7 @@ export default function MuscleRecovery({ plan }) {
       const order = { neglected: 0, recovering: 1, ready: 2 };
       return (order[a.status] ?? 1) - (order[b.status] ?? 1);
     });
-  }, [workoutLogs, plan]);
+  }, [workoutLogs, plan, GROUPS]);
 
   // Show top 5, expand for all
   const visible = expanded ? muscles : muscles.slice(0, 5);
@@ -108,7 +155,7 @@ export default function MuscleRecovery({ plan }) {
         <div className="flex items-center gap-2">
           <Activity size={16} className="text-emerald-400" />
           <h3 className="text-sm font-bold font-outfit text-white">
-            {t('recovery.title')}
+            {t(`recovery.goalTitle.${goal}`) || t('recovery.title')}
           </h3>
         </div>
         <div className="flex items-center gap-2">
