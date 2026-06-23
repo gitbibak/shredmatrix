@@ -7,11 +7,13 @@ import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignO
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 
-// ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
+// ── Eager-loaded core pages (no spinner) ──────────────────
+import Dashboard from './components/Dashboard';
+import AuthScreen from './components/AuthScreen';
+import Onboarding from './components/Onboarding';
+
+// ── Lazy-loaded pages (rarely visited) ────────────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
-const AuthScreen = lazy(() => import('./components/AuthScreen'));
-const Onboarding = lazy(() => import('./components/Onboarding'));
-const Dashboard = lazy(() => import('./components/Dashboard'));
 const OnboardingTour = lazy(() => import('./components/OnboardingTour'));
 const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./components/TermsOfService'));
