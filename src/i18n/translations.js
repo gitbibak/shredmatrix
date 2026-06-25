@@ -198,10 +198,10 @@ export const translations = {
     },
     // ── Landing ──
     landing: {
-      badge: '%100 Ücretsiz · AI-Powered Fitness & Wellness',
-      heroTitle1: 'Sınırlarını Aş.',
+      badge: '🎯 Sonsuza Kadar Ücretsiz · Günlük Denge Paneli',
+      heroTitle1: 'Dengeni Kur.',
       heroTitle2: 'Dönüşümünü Başlat.',
-      heroDesc: 'Kas gelişimi, yağ yakımı, yoga, pilates, meditasyon ve reformer — 6 hedef kategorisi, 24 program, 500+ tarif ve 10.000+ egzersiz. Tamamen ücretsiz, kişisel antrenörün cebinde.',
+      heroDesc: 'Antrenman, beslenme, su, uyku ve ilerleme — hepsi tek panelde, sonsuza kadar ücretsiz. Abonelik yok, kredi kartı yok, premium duvarı yok.',
       ctaStart: 'Ücretsiz Başla',
       ctaGenerate: 'Ücretsiz Başla — Hemen',
       noCard: 'Kredi kartı gerekmez',
@@ -210,7 +210,7 @@ export const translations = {
       readyTitle: 'Dönüşümün',
       readySuffix: 'Bugün Başlasın',
       readyDesc: 'Profesyonel antrenman programları, kişisel beslenme planları ve akıllı takip araçları — hepsi ücretsiz.',
-      readyQuote: '"PT\'lere verdiğin parayı artık kendin için kullan."',
+      readyQuote: '"Sonsuza kadar ücretsiz. Abonelik yok. Premium duvarı yok."',
       stepsTitle1: 'Nasıl', stepsTitle2: 'Çalışır?',
       footer: '© 2026 Full Balance. Tüm hakları saklıdır.',
       footerPrivacy: 'Verileriniz cihazınızda ve şifreli bulut sunucusunda güvende saklanır. Üçüncü taraflarla paylaşılmaz.',
@@ -310,6 +310,13 @@ export const translations = {
         timer: { title: 'Antrenman Zamanlayıcı', desc: 'Set arası dinlenme süreleri.' },
         water: { title: 'Su Takibi', desc: 'Günlük su hedefini takip et.' },
       },
+    },
+    // ── Disclaimer ──
+    disclaimer: {
+      medical: 'Bu uygulama tıbbi tavsiye sunmaz. Sağlık kararlarınız için mutlaka doktorunuza danışın.',
+      short: 'Tıbbi tavsiye değildir',
+      full: 'Full Balance bir sağlık takip aracıdır, tıbbi teşhis veya tedavi aracı değildir. Herhangi bir egzersiz veya beslenme programına başlamadan önce doktorunuza danışın. Uygulamadaki bilgiler genel bilgilendirme amaçlıdır.',
+      dataPrivacy: 'Verileriniz şifreli olarak saklanır ve üçüncü taraflarla paylaşılmaz.',
     },
 
     // ── Auth ──
@@ -1009,16 +1016,16 @@ export const translations = {
       days: { mon: 'Mon', wed: 'Wed', fri: 'Fri' },
     },
     landing: {
-      badge: '100% Free · AI-Powered Fitness & Wellness',
-      heroTitle1: 'Break Your Limits.',
-      heroTitle2: 'Start Your Transformation.',
-      heroDesc: 'Muscle growth, fat loss, yoga, pilates, meditation & reformer — 6 goal categories, 24 programs, 500+ recipes and 10,000+ exercises. Completely free, your personal trainer in your pocket.',
+      badge: '🎯 Free Forever · Daily Balance Dashboard',
+      heroTitle1: 'Find Your Balance.',
+      heroTitle2: 'Start Your Journey.',
+      heroDesc: 'Workouts, meals, water, sleep and progress — all in one dashboard, free forever. No subscription. No credit card. No premium wall.',
       ctaStart: 'Get Started Free', ctaGenerate: 'Get Started — Free',
       noCard: 'No credit card required', startNow: 'Start Now',
       safe: 'Secure', fast: 'Fast', accurate: 'Accurate', global: '3 Languages',
       readyTitle: 'Your Transformation', readySuffix: 'Starts Today',
       readyDesc: 'Professional workout programs, personalized meal plans and smart tracking tools — all free.',
-      readyQuote: '"Stop paying trainers — get the same quality for free."',
+      readyQuote: '"Free forever. No subscription. No premium wall."',
       stepsTitle1: 'How It', stepsTitle2: 'Works',
       footer: '© 2026 Full Balance. All rights reserved.',
       footerPrivacy: 'Your data is securely stored on your device and encrypted cloud servers. Never shared with third parties.',
@@ -1095,6 +1102,13 @@ export const translations = {
         timer: { title: 'Workout Timer', desc: 'Rest periods between sets.' },
         water: { title: 'Water Tracking', desc: 'Track daily water intake.' },
       },
+    },
+    // ── Disclaimer ──
+    disclaimer: {
+      medical: 'This app does not provide medical advice. Always consult your doctor for health decisions.',
+      short: 'Not medical advice',
+      full: 'Full Balance is a health tracking tool, not a medical diagnosis or treatment tool. Consult your doctor before starting any exercise or nutrition program. Information in this app is for general informational purposes only.',
+      dataPrivacy: 'Your data is encrypted and never shared with third parties.',
     },
     auth: {
       title: 'FULL BALANCE',
@@ -1716,16 +1730,16 @@ export const translations = {
       days: { mon: 'Lun', wed: 'Mié', fri: 'Vie' },
     },
     landing: {
-      badge: '100% Gratis · Fitness & Wellness con IA',
-      heroTitle1: 'Supera Tus Límites.',
-      heroTitle2: 'Inicia Tu Transformación.',
-      heroDesc: 'Desarrollo muscular, quema de grasa, yoga, pilates, meditación y reformer — 6 categorías, 24 programas, 500+ recetas y 10.000+ ejercicios. Completamente gratis.',
+      badge: '🎯 Gratis Para Siempre · Panel de Equilibrio Diario',
+      heroTitle1: 'Encuentra Tu Equilibrio.',
+      heroTitle2: 'Comienza Tu Viaje.',
+      heroDesc: 'Entrenamientos, comidas, agua, sueño y progreso — todo en un panel, gratis para siempre. Sin suscripción. Sin tarjeta de crédito. Sin muro premium.',
       ctaStart: 'Empieza Gratis', ctaGenerate: 'Empieza — Gratis',
       noCard: 'Sin tarjeta de crédito', startNow: 'Comenzar Ahora',
       safe: 'Seguro', fast: 'Rápido', accurate: 'Preciso', global: '3 Idiomas',
       readyTitle: 'Tu Transformación', readySuffix: 'Empieza Hoy',
       readyDesc: 'Programas de entrenamiento profesionales, planes de comida personalizados y herramientas de seguimiento — todo gratis.',
-      readyQuote: '"Deja de pagar entrenadores — obtén la misma calidad gratis."',
+      readyQuote: '"Gratis para siempre. Sin suscripción. Sin muro premium."',
       stepsTitle1: 'Cómo', stepsTitle2: 'Funciona',
       footer: '© 2026 Full Balance. Todos los derechos reservados.',
       footerPrivacy: 'Tus datos se almacenan de forma segura en tu dispositivo y servidores encriptados. Nunca se comparten con terceros.',
@@ -1802,6 +1816,13 @@ export const translations = {
         timer: { title: 'Temporizador', desc: 'Descanso entre series.' },
         water: { title: 'Seguimiento de Agua', desc: 'Controla tu ingesta diaria.' },
       },
+    },
+    // ── Disclaimer ──
+    disclaimer: {
+      medical: 'Esta aplicación no proporciona asesoramiento médico. Consulte siempre a su médico para decisiones de salud.',
+      short: 'No es consejo médico',
+      full: 'Full Balance es una herramienta de seguimiento de salud, no una herramienta de diagnóstico o tratamiento médico. Consulte a su médico antes de comenzar cualquier programa de ejercicio o nutrición. La información en esta aplicación es solo con fines informativos generales.',
+      dataPrivacy: 'Sus datos están cifrados y nunca se comparten con terceros.',
     },
     auth: {
       title: 'FULL BALANCE',

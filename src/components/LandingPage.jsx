@@ -803,6 +803,12 @@ export default function LandingPage({ onStart }) {
       {/* ═══════════════════ FOOTER ═══════════════════ */}
       <footer className="border-t border-slate-800/40 py-8 px-4">
         <div className="max-w-6xl mx-auto">
+          {/* Medical Disclaimer */}
+          <div className="max-w-2xl mx-auto mb-4">
+            <p className="text-[9px] text-slate-600 text-center leading-relaxed">
+              ⚕️ {t('disclaimer.medical')}
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
             <div className="flex items-center gap-2">
               <Sparkles size={14} className="text-orange-500" />
