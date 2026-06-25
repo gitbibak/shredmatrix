@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Full Balance",
   "short_name": "Full Balance",
-  "description": "Body. Mind. Nutrition. — Personal Wellness Platform",
+  "description": "Free forever daily balance dashboard for workouts, meals, water, sleep & progress",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -22,6 +22,7 @@ import HeroCard from './HeroCard';
 import NudgeCards from './NudgeCards';
 import MuscleRecovery from './MuscleRecovery';
 import StreakCalendar from './StreakCalendar';
+import RetentionBanner from './RetentionBanner';
 import { StravaConnectCard, StravaActivitiesPanel } from './StravaPanel';
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
@@ -294,6 +295,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
         {/* ── Nudge Cards — Akıllı Hatırlatmalar ── */}
         <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
 
+        {/* ── Retention Banner — Day-based motivational messages ── */}
+        <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
+
         <AnimatePresence mode="wait">
 
           {/* ─── Beslenme Tab ─── */}
@@ -407,6 +411,13 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Medical Disclaimer */}
+        <div className="mt-8 mb-4 text-center">
+          <p className="text-[8px] text-slate-700">
+            ⚕️ {t('disclaimer.short')} · {t('disclaimer.dataPrivacy')}
+          </p>
+        </div>
       </main>
 
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
