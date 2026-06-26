@@ -24,7 +24,7 @@ import MuscleRecovery from './MuscleRecovery';
 import StreakCalendar from './StreakCalendar';
 import RetentionBanner from './RetentionBanner';
 import DailyChallenge from './DailyChallenge';
-import ReferralSystem from './ReferralSystem';
+
 import { StravaConnectCard, StravaActivitiesPanel } from './StravaPanel';
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
@@ -302,10 +302,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
         {/* ── Retention Banner — Day-based motivational messages ── */}
         <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
 
-        {/* ── Referral System — Viral Growth ── */}
-        <div className="mb-4">
-          <ReferralSystem />
-        </div>
+
+
 
         <AnimatePresence mode="wait">
 

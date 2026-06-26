@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Copy, X, Check, Camera, Download, Image } from "lucide-react";
+import { Share2, Copy, X, Check, Camera, Download, Image, MessageCircle, Users, Gift } from "lucide-react";
 import { useTranslation } from '../i18n/LanguageContext';
+import { trackShare, trackReferral } from '../lib/analytics';
 
 /* ── Canvas helper: rounded rectangle ── */
 function roundRect(ctx, x, y, w, h, r) {
@@ -23,6 +24,28 @@ export default function ShareCard({ plan, onClose }) {
   const [copied, setCopied] = useState(false);
   const [showScreenshotHint, setShowScreenshotHint] = useState(false);
   const [generating, setGenerating] = useState(false);
+
+  /* ── Referral system state ── */
+  const [refCode, setRefCode] = useState('');
+  const [refCopied, setRefCopied] = useState(false);
+  const [refCount, setRefCount] = useState(0);
+
+  useEffect(() => {
+    const REFERRAL_KEY = 'fb_referral_code';
+    const REFERRAL_COUNT_KEY = 'fb_referral_count';
+    let c = localStorage.getItem(REFERRAL_KEY);
+    if (!c) {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      c = 'FB';
+      for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
+      localStorage.setItem(REFERRAL_KEY, c);
+    }
+    setRefCode(c);
+    setRefCount(parseInt(localStorage.getItem(REFERRAL_COUNT_KEY) || '0'));
+  }, []);
+
+  const refShareUrl = `https://fullbalance.app/?ref=${refCode}`;
+  const refShareText = t('share.tagline');
 
   if (!plan) return null;
 
@@ -359,6 +382,44 @@ export default function ShareCard({ plan, onClose }) {
                 <p className="text-center font-outfit text-sm font-medium text-slate-400 italic">
                   "{t('share.tagline')}"
                 </p>
+
+                {/* ── Invite Friends (compact) ── */}
+                <div className="pt-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Gift size={12} className="text-orange-400" />
+                      <span className="text-[10px] font-bold font-outfit text-white">{t('referral.invite')}</span>
+                    </div>
+                    <span className="text-[9px] text-slate-500">{refCount}/3</span>
+                  </div>
+                  {/* Code + Copy */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-slate-800/80 border border-slate-700/40 rounded-lg px-2.5 py-1.5 text-center">
+                      <span className="text-[11px] font-mono font-bold text-orange-400 tracking-wider">{refCode}</span>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(refShareUrl).catch(() => {});
+                        setRefCopied(true);
+                        trackShare('copy_link');
+                        setTimeout(() => setRefCopied(false), 2000);
+                      }}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/30 text-slate-300 hover:text-white hover:border-orange-500/30 transition-colors text-[9px] font-medium cursor-pointer"
+                    >
+                      {refCopied ? <Check size={10} className="text-green-400" /> : <Copy size={10} />}
+                      {refCopied ? '✓' : t('share.copy')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        trackShare('whatsapp');
+                        window.open(`https://wa.me/?text=${encodeURIComponent(refShareText + '\n' + refShareUrl)}`, '_blank');
+                      }}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-green-500/15 border border-green-500/25 text-green-400 hover:bg-green-500/25 transition-colors text-[9px] font-medium cursor-pointer"
+                    >
+                      <MessageCircle size={10} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
