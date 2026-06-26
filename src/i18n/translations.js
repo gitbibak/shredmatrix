@@ -741,10 +741,16 @@ export const translations = {
     push: {
       title: 'Bildirimleri Aç',
       desc: 'Antrenman hatırlatmaları ve motivasyon mesajları almak ister misin?',
-      allow: 'İzin Ver',
+      allow: '🔔 İzin Ver',
       later: 'Sonra',
       enabled: 'Bildirimler Açık ✅',
       enabledDesc: 'Artık antrenman hatırlatmaları alacaksın!',
+      feature: {
+        workout: 'Antrenman hatırlatma',
+        water: 'Su içme bildirimi',
+        sleep: 'Uyku takibi',
+        streak: 'Seri motivasyonu',
+      },
     },
     leaderboard: {
       title: 'Sıralama Tablosu',
@@ -1538,10 +1544,16 @@ export const translations = {
     push: {
       title: 'Enable Notifications',
       desc: 'Want to receive workout reminders and motivational messages?',
-      allow: 'Allow',
+      allow: '🔔 Allow',
       later: 'Later',
       enabled: 'Notifications On ✅',
       enabledDesc: 'You will now receive workout reminders!',
+      feature: {
+        workout: 'Workout reminders',
+        water: 'Water reminders',
+        sleep: 'Sleep tracking',
+        streak: 'Streak motivation',
+      },
     },
     install: {
       title: 'Add to Home Screen',
@@ -2312,10 +2324,16 @@ export const translations = {
     push: {
       title: 'Activar Notificaciones',
       desc: '¿Quieres recibir recordatorios de entrenamiento y mensajes motivacionales?',
-      allow: 'Permitir',
+      allow: '🔔 Permitir',
       later: 'Más tarde',
       enabled: 'Notificaciones Activadas ✅',
       enabledDesc: '¡Ahora recibirás recordatorios de entrenamiento!',
+      feature: {
+        workout: 'Recordatorio de ejercicio',
+        water: 'Recordatorio de agua',
+        sleep: 'Seguimiento del sueño',
+        streak: 'Motivación de racha',
+      },
     },
     install: {
       title: 'Añadir a Pantalla de Inicio',
