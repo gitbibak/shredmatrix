@@ -13,6 +13,7 @@ import { useToast } from './ToastProvider';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const GALLERY_KEY = 'shredmatrix_progress_photos';
+const LOCALE_MAP = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
 
 const containerV = {
   hidden: { opacity: 0 },
@@ -273,6 +274,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
+            aria-label="Fotoğraf değiştir"
             className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-orange-500 border-2 border-slate-900 flex items-center justify-center text-white cursor-pointer hover:bg-orange-400 transition-colors shadow-lg"
           >
             <Camera size={12} />
@@ -345,9 +347,9 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 className="relative aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-800 cursor-pointer"
                 onClick={() => setLightboxIdx(idx)}
               >
-                <img src={photo.src} alt="" className="w-full h-full object-cover" />
+                <img src={photo.src} alt="Fotoğraf" className="w-full h-full object-cover" />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
-                  <span className="text-[10px] text-white/80 font-medium">{new Date(photo.date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' })}</span>
+                  <span className="text-[10px] text-white/80 font-medium">{new Date(photo.date).toLocaleDateString(LOCALE_MAP[lang] || 'tr-TR', { day: '2-digit', month: 'short' })}</span>
                 </div>
               </motion.div>
             ))}
@@ -368,6 +370,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           >
             <button
               onClick={() => setLightboxIdx(null)}
+              aria-label="Kapat"
               className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-white/20 z-10"
             >
               <X size={20} />
@@ -375,6 +378,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             {lightboxIdx > 0 && (
               <button
                 onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx - 1); }}
+                aria-label="Önceki"
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-white/20 z-10"
               >
                 <ChevronLeft size={20} />
@@ -383,6 +387,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             {lightboxIdx < gallery.length - 1 && (
               <button
                 onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx + 1); }}
+                aria-label="Sonraki"
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-white/20 z-10"
               >
                 <ChevronRight size={20} />
@@ -394,13 +399,13 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               src={gallery[lightboxIdx].src}
-              alt=""
+              alt="Fotoğraf"
               className="max-w-full max-h-[75vh] rounded-2xl object-contain"
               onClick={(e) => e.stopPropagation()}
             />
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3">
               <p className="text-white text-sm font-outfit bg-black/50 px-4 py-1.5 rounded-full">
-                {new Date(gallery[lightboxIdx].date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                {new Date(gallery[lightboxIdx].date).toLocaleDateString(LOCALE_MAP[lang] || 'tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })}
               </p>
               <button
                 onClick={(e) => { e.stopPropagation(); deleteGalleryPhoto(gallery[lightboxIdx].id); setLightboxIdx(null); }}

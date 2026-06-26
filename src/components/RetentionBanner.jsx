@@ -230,10 +230,10 @@ export default function RetentionBanner({ onNavigate }) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0 pr-6">
+            <div className="flex-1 min-w-0 pr-8">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg leading-none">{msg.emoji}</span>
-                <h3 className="text-sm font-bold font-outfit text-white truncate">
+                <h3 className="text-sm font-bold font-outfit text-white leading-snug">
                   {msg.title}
                 </h3>
               </div>

@@ -332,10 +332,7 @@ function LoadingScreen({ goal = 'muscle', userName = '' }) {
 function PageLoader() {
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
-        <span className="text-xs text-slate-500 font-outfit">Yükleniyor...</span>
-      </div>
+      <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
     </div>
   );
 }

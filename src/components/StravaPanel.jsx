@@ -106,8 +106,10 @@ export function StravaConnectCard() {
 }
 
 // ── Strava Activities Panel (for Progress tab) ──────────
+const LOCALE_MAP = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
+
 export function StravaActivitiesPanel() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [activities, setActivities] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -225,7 +227,7 @@ export function StravaActivitiesPanel() {
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-white truncate">{act.name}</p>
                 <p className="text-[9px] text-slate-500">
-                  {new Date(act.start_date_local).toLocaleDateString('tr-TR', {
+                  {new Date(act.start_date_local).toLocaleDateString(LOCALE_MAP[lang] || 'tr-TR', {
                     day: 'numeric', month: 'short', year: 'numeric',
                   })}
                 </p>
