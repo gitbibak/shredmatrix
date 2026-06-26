@@ -1,4 +1,4 @@
-const CACHE = 'fb-v3';
+const CACHE = 'fb-v4';
 const PRE_CACHE = [
   '/',
   '/index.html',
@@ -73,8 +73,33 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
+        .then((res) => {
+          // Cache fresh index.html on every navigation
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then((cache) => cache.put('/index.html', clone));
+          }
+          return res;
+        })
         .catch(() => caches.match('/index.html'))
-        .then((res) => res || caches.match('/index.html'))
+        .then((res) => res || new Response('Offline', { status: 503, statusText: 'Offline' }))
+    );
+    return;
+  }
+
+  // For JS/CSS assets with hashed names — network only, don't serve stale
+  if (url.pathname.match(/\/assets\/.*-[a-zA-Z0-9]{8}\./)) {
+    event.respondWith(
+      fetch(request)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(request))
+        .then((res) => res || fetch(request))
     );
     return;
   }
