@@ -280,14 +280,27 @@ export default function ShareCard({ plan, onClose }) {
 
   /* ── Lock body scroll ── */
   useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, scrollY);
+    };
   }, []);
 
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4 overflow-hidden"
+        className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4"
+        style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -295,7 +308,7 @@ export default function ShareCard({ plan, onClose }) {
         onTouchMove={(e) => e.preventDefault()}
       >
         <motion.div
-          className="relative w-full max-w-xs max-h-[90vh] overflow-y-auto scrollbar-hide"
+          className="relative w-full max-w-xs max-h-[85vh] overflow-y-auto scrollbar-hide overscroll-contain"
           initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 20 }}

@@ -509,7 +509,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       {/* ── Share Card Modal ── */}
       <AnimatePresence>
         {showShare && (
-          <ShareCard plan={plan} onClose={() => setShowShare(false)} />
+          <Suspense fallback={<div className="fixed inset-0 z-[90] bg-slate-950/90 flex items-center justify-center"><div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
+            <ShareCard plan={plan} onClose={() => setShowShare(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
 
