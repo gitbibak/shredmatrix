@@ -490,6 +490,11 @@ export const translations = {
       protein: 'Protein', carbs: 'Karb', fat: 'Yağ',
       subtitle: 'Her antrenman gününe özel beslenme programı',
       swapTooltip: 'Alternatif öğün göster',
+      shoppingList: 'Alışveriş Listesi',
+      copyList: 'Kopyala',
+      copiedList: '✓ Kopyalandı!',
+      emptyList: 'Bu gün için öğün bulunamadı',
+      clearChecked: 'Seçimleri Temizle',
     },
 
     // ── Workout ──
@@ -707,6 +712,10 @@ export const translations = {
       dailyCalories: 'Günlük Kalori',
       carbs: 'Karbonhidrat',
       weight: 'Kilo',
+      downloadImage: '📸 Görsel Kaydet',
+      shareImage: '📤 Paylaş',
+      dailyGoals: 'Günlük Hedeflerim',
+      watermark: 'fullbalance.app — Sonsuza Kadar Ücretsiz',
     },
 
     // ── Reminder ──
@@ -1264,6 +1273,11 @@ export const translations = {
       protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
       subtitle: 'Custom nutrition plan for each training day',
       swapTooltip: 'Show alternative meal',
+      shoppingList: 'Shopping List',
+      copyList: 'Copy',
+      copiedList: '✓ Copied!',
+      emptyList: 'No meals found for this day',
+      clearChecked: 'Clear Checked',
     },
     workout: {
       title: 'Workout Dashboard', program: 'Program',
@@ -1443,6 +1457,10 @@ export const translations = {
       dailyCalories: 'Daily Calories',
       carbs: 'Carbohydrates',
       weight: 'Weight',
+      downloadImage: '📸 Save Image',
+      shareImage: '📤 Share',
+      dailyGoals: 'My Daily Goals',
+      watermark: 'fullbalance.app — Free Forever',
     },
     install: {
       title: 'Add to Home Screen',
@@ -1978,6 +1996,11 @@ export const translations = {
       protein: 'Proteína', carbs: 'Carbs', fat: 'Grasa',
       subtitle: 'Plan de nutrición personalizado para cada día de entrenamiento',
       swapTooltip: 'Mostrar comida alternativa',
+      shoppingList: 'Lista de Compras',
+      copyList: 'Copiar',
+      copiedList: '✓ ¡Copiado!',
+      emptyList: 'No se encontraron comidas para este día',
+      clearChecked: 'Limpiar Marcados',
     },
     workout: {
       title: 'Panel de Entrenamiento', program: 'Programa',
@@ -2157,6 +2180,10 @@ export const translations = {
       dailyCalories: 'Calorías Diarias',
       carbs: 'Carbohidratos',
       weight: 'Peso',
+      downloadImage: '📸 Guardar Imagen',
+      shareImage: '📤 Compartir',
+      dailyGoals: 'Mis Metas Diarias',
+      watermark: 'fullbalance.app — Gratis Para Siempre',
     },
     install: {
       title: 'Añadir a Pantalla de Inicio',
