@@ -6,6 +6,7 @@ import { generatePlan, regeneratePlanWithPhase, localizePlan } from './data/plan
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
+import { initAnalytics } from './lib/analytics';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -351,6 +352,7 @@ function AppContent() {
 
   // Restore session on mount
   useEffect(() => {
+    initAnalytics();
     const restoreSession = async () => {
       const currentPath = window.location.pathname;
       try {
