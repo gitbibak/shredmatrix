@@ -17,6 +17,12 @@ import {
   Flame,
   Shuffle,
   Play,
+  ShoppingCart,
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Trash2,
 } from 'lucide-react';
 import {
   PieChart,
@@ -253,6 +259,42 @@ export default function NutritionPanel({ plan }) {
   if (!dayData) return null;
   const { calories: dayCalories, macros, meals, totalPrice, mealLabel, day: dayName, emoji, focus } = dayData;
 
+  /* ── Shopping List State ── */
+  const [showShoppingList, setShowShoppingList] = useState(false);
+  const [checkedItems, setCheckedItems] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fb_shopping_checked') || '{}'); } catch { return {}; }
+  });
+  const [copied, setCopied] = useState(false);
+
+  const shoppingItems = useMemo(() => {
+    if (!meals?.length) return [];
+    const items = new Set();
+    meals.forEach(meal => {
+      meal.items?.forEach(item => items.add(item));
+    });
+    return [...items];
+  }, [meals]);
+
+  const toggleItem = (item) => {
+    const next = { ...checkedItems, [item]: !checkedItems[item] };
+    setCheckedItems(next);
+    localStorage.setItem('fb_shopping_checked', JSON.stringify(next));
+  };
+
+  const clearChecked = () => {
+    setCheckedItems({});
+    localStorage.removeItem('fb_shopping_checked');
+  };
+
+  const copyList = () => {
+    const text = shoppingItems.map(i => `${checkedItems[i] ? '✅' : '⬜'} ${i}`).join('\n');
+    navigator.clipboard.writeText(`🛒 ${t('nutrition.shoppingList')}:\n${text}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const checkedCount = shoppingItems.filter(i => checkedItems[i]).length;
+
   const donutData = [
     { name: t('nutrition.protein'), value: macros.protein },
     { name: t('nutrition.carbs'), value: macros.carbs },
@@ -476,6 +518,95 @@ export default function NutritionPanel({ plan }) {
             ))}
           </motion.div>
         </AnimatePresence>
+
+        {/* ── Shopping List ── */}
+        <motion.div variants={cardVariants} className="mt-4">
+          <button
+            onClick={() => setShowShoppingList(prev => !prev)}
+            className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-900/80 px-4 py-3 text-left transition-colors hover:bg-slate-800/80 cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <ShoppingCart size={16} className="text-orange-400" />
+              <span className="font-outfit text-sm font-semibold text-white">
+                {t('nutrition.shoppingList')}
+              </span>
+              {shoppingItems.length > 0 && (
+                <span className="rounded-full bg-orange-500/15 border border-orange-500/30 px-2 py-0.5 text-[10px] font-medium text-orange-400">
+                  {checkedCount}/{shoppingItems.length}
+                </span>
+              )}
+            </div>
+            {showShoppingList ? (
+              <ChevronUp size={16} className="text-slate-400" />
+            ) : (
+              <ChevronDown size={16} className="text-slate-400" />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showShoppingList && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="mt-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+                  {shoppingItems.length === 0 ? (
+                    <p className="text-xs text-slate-500 text-center py-2">{t('nutrition.emptyList')}</p>
+                  ) : (
+                    <>
+                      <ul className="space-y-1.5 mb-3">
+                        {shoppingItems.map((item, i) => (
+                          <li
+                            key={i}
+                            onClick={() => toggleItem(item)}
+                            className={[
+                              'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm cursor-pointer transition-all',
+                              checkedItems[item]
+                                ? 'bg-green-500/8 text-slate-500 line-through'
+                                : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800',
+                            ].join(' ')}
+                          >
+                            <span className={[
+                              'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors',
+                              checkedItems[item]
+                                ? 'border-green-500/50 bg-green-500/20 text-green-400'
+                                : 'border-slate-600 bg-slate-800',
+                            ].join(' ')}>
+                              {checkedItems[item] && <Check size={10} />}
+                            </span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={copyList}
+                          className="flex items-center gap-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 px-3 py-1.5 text-xs font-medium text-orange-400 hover:bg-orange-500/20 transition-colors cursor-pointer"
+                        >
+                          <Copy size={12} />
+                          {copied ? t('nutrition.copiedList') : t('nutrition.copyList')}
+                        </button>
+                        {checkedCount > 0 && (
+                          <button
+                            onClick={clearChecked}
+                            className="flex items-center gap-1.5 rounded-lg bg-slate-800 border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-white transition-colors cursor-pointer"
+                          >
+                            <Trash2 size={12} />
+                            {t('nutrition.clearChecked')}
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </motion.section>
   );
