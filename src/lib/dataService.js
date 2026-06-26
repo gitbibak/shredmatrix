@@ -12,15 +12,15 @@ function lsGet(key, fallback = null) {
     const raw = localStorage.getItem(key);
     if (!raw) return fallback;
     return JSON.parse(raw);
-  } catch { return fallback; }
+  } catch (err) { console.warn('[DataService]', err?.message || err); return fallback; }
 }
 
 function lsSet(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* quota */ }
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) { console.warn('[DataService]', err?.message || err); }
 }
 
 function lsRemove(key) {
-  try { localStorage.removeItem(key); } catch { /* ignore */ }
+  try { localStorage.removeItem(key); } catch (err) { console.warn('[DataService]', err?.message || err); }
 }
 
 function getUserId() {
@@ -32,7 +32,7 @@ function getUserId() {
       const session = JSON.parse(sessionStr);
       return session?.user?.id || null;
     }
-  } catch { /* ignore */ }
+  } catch (err) { console.warn('[DataService]', err?.message || err); }
   return null;
 }
 
@@ -154,7 +154,8 @@ export async function savePlan(planData, email) {
     await supabase.from('profiles').update({
       plan_created_at: new Date().toISOString(),
     }).eq('id', userId);
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     // Fallback to localStorage
     lsSet(`shredmatrix_plan_${email}`, planData);
     lsSet('shredmatrix_plan_created', new Date().toISOString());
@@ -176,7 +177,8 @@ export async function loadPlan(email) {
       .single();
     if (error && error.code !== 'PGRST116') throw error;
     return data?.plan_data || lsGet(`shredmatrix_plan_${email}`) || null;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet(`shredmatrix_plan_${email}`) || null;
   }
 }
@@ -200,7 +202,8 @@ export async function saveWorkoutLog(log) {
       .from('workout_logs')
       .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes });
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const logs = lsGet('shredmatrix_workout_log', []);
     logs.push(log);
     lsSet('shredmatrix_workout_log', logs);
@@ -222,7 +225,8 @@ export async function getWorkoutLogs() {
       .order('date', { ascending: false });
     if (error) throw error;
     return data || [];
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_workout_log', []);
   }
 }
@@ -246,7 +250,8 @@ export async function saveProgress(entry) {
       .from('progress_entries')
       .insert({ user_id: userId, date: entry.date, weight: entry.weight, body_fat: entry.bodyFat || entry.body_fat });
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const entries = lsGet('shredmatrix_progress', []);
     entries.push(entry);
     lsSet('shredmatrix_progress', entries);
@@ -268,7 +273,8 @@ export async function getProgress() {
       .order('date', { ascending: true });
     if (error) throw error;
     return data || [];
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_progress', []);
   }
 }
@@ -289,7 +295,8 @@ export async function deleteProgress(dateToDelete) {
       .eq('user_id', userId)
       .eq('date', dateToDelete);
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const entries = lsGet('shredmatrix_progress', []);
     lsSet('shredmatrix_progress', entries.filter(e => e.date !== dateToDelete));
   }
@@ -314,7 +321,8 @@ export async function saveMeasurement(entry) {
       .from('measurements')
       .insert({ user_id: userId, ...entry });
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const entries = lsGet('shredmatrix_measurements', []);
     entries.push(entry);
     lsSet('shredmatrix_measurements', entries);
@@ -336,7 +344,8 @@ export async function getMeasurements() {
       .order('date', { ascending: true });
     if (error) throw error;
     return data || [];
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_measurements', []);
   }
 }
@@ -357,7 +366,8 @@ export async function deleteMeasurement(dateToDelete) {
       .eq('user_id', userId)
       .eq('date', dateToDelete);
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const entries = lsGet('shredmatrix_measurements', []);
     lsSet('shredmatrix_measurements', entries.filter(e => e.date !== dateToDelete));
   }
@@ -388,7 +398,8 @@ export async function saveWater(date, glasses, targetMet = false) {
       .from('water_logs')
       .upsert({ user_id: userId, date, glasses, target_met: targetMet }, { onConflict: 'user_id,date' });
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     // Fallback to localStorage if table doesn't exist
     lsSet('shredmatrix_water', { date, glasses });
     if (targetMet) {
@@ -419,7 +430,8 @@ export async function getWater(date) {
       .single();
     if (error && error.code !== 'PGRST116') throw error;
     return data || { date, glasses: 0 };
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     // Table may not exist — fallback to localStorage
     const data = lsGet('shredmatrix_water');
     if (data?.date === date) return data;
@@ -443,7 +455,8 @@ export async function getWaterHistory(limit = 30) {
       .limit(limit);
     if (error) throw error;
     return data || [];
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_water_history', []);
   }
 }
@@ -469,7 +482,8 @@ export async function saveSleep(date, hours) {
       .from('sleep_logs')
       .upsert({ user_id: userId, date, hours }, { onConflict: 'user_id,date' });
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     const entries = lsGet('shredmatrix_sleep', []);
     const idx = entries.findIndex(e => e.date === date);
     if (idx >= 0) entries[idx].hours = hours;
@@ -494,7 +508,8 @@ export async function getSleep(limit = 30) {
       .limit(limit);
     if (error) throw error;
     return data || [];
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_sleep', []);
   }
 }
@@ -513,8 +528,8 @@ export async function updateProfile(updates) {
       .update(updates)
       .eq('id', userId);
     if (error) throw error;
-  } catch {
-    // Profile update failed silently
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
   }
 }
 
@@ -530,7 +545,8 @@ export async function getProfile() {
       .single();
     if (error && error.code !== 'PGRST116') throw error;
     return data;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return null;
   }
 }
@@ -591,7 +607,8 @@ export async function uploadPhoto(file, type = 'profile') {
     }
 
     return data.signedUrl;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     // Fallback: store as base64 in localStorage
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -625,7 +642,8 @@ export async function getProfilePhoto() {
       .from('user-photos')
       .createSignedUrl(profile.avatar_url, 3600);
     return data?.signedUrl || profile.avatar_url;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_profile_photo', null);
   }
 }
@@ -672,7 +690,8 @@ export async function deleteProgressPhoto(photoName) {
       .from('user-photos')
       .remove([path]);
     if (error) throw error;
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     // If supabase delete fails, still update localStorage
     const photos = lsGet('shredmatrix_progress_photos', []);
     const filtered = photos.filter((p) => p.name !== photoName);
@@ -700,7 +719,8 @@ export async function updatePhase(newPhase) {
       current_phase: newPhase,
       plan_created_at: new Date().toISOString(),
     }).eq('id', userId);
-  } catch {
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
     localStorage.setItem('shredmatrix_current_phase', String(newPhase));
     localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());
   }
@@ -787,7 +807,7 @@ export async function deleteAllUserData(email) {
   const tables = ['plans', 'workout_logs', 'progress_entries',
     'measurements', 'water_logs', 'sleep_logs', 'reminders'];
   for (const table of tables) {
-    try { await supabase.from(table).delete().eq('user_id', userId); } catch {}
+    try { await supabase.from(table).delete().eq('user_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
   }
 
   // Delete storage files
@@ -796,15 +816,15 @@ export async function deleteAllUserData(email) {
     if (files?.length) {
       await supabase.storage.from('user-photos').remove(files.map(f => `${userId}/${f.name}`));
     }
-  } catch { /* ignore storage errors */ }
+  } catch (err) { console.warn('[DataService]', err?.message || err); }
 
   // Delete profile (cascade will handle auth)
-  try { await supabase.from('profiles').delete().eq('id', userId); } catch {}
+  try { await supabase.from('profiles').delete().eq('id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
 
   // Delete auth user via RPC
   try {
     await supabase.rpc('delete_current_user');
-  } catch { /* RPC may not exist yet */ }
+  } catch (err) { console.warn('[DataService]', err?.message || err); }
 }
 
 // ══════════════════════════════════════════════

@@ -48,8 +48,8 @@ export default function ShareCard({ plan, onClose }) {
       await navigator.clipboard.writeText(textSummary);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback: silently fail
+    } catch (err) {
+      console.warn('[ShareCard]', err?.message || err);
     }
   };
 

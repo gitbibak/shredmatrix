@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import EmptyState from './EmptyState';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -60,7 +61,8 @@ function loadLogs() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
-  } catch {
+  } catch (err) {
+    console.warn('[WorkoutLog]', err);
     return [];
   }
 }
@@ -233,9 +235,11 @@ function HistoryView({ logs }) {
   const { t } = useTranslation();
   if (!logs || logs.length === 0) {
     return (
-      <div className="text-center text-slate-500 text-sm py-8">
-        {t('workoutLog.noHistory')}
-      </div>
+      <EmptyState
+        type="workout"
+        title="Henüz antrenman kaydı yok"
+        subtitle="İlk antrenmanını tamamla ve burada takip et. Her set, her tekrar seni hedefe yaklaştırır."
+      />
     );
   }
 

@@ -307,7 +307,7 @@ export default function WorkoutPanel({ plan }) {
         }
       });
       setCompletedDays(todayMap);
-    }).catch(() => { /* ignore */ });
+    }).catch((err) => { console.warn('[WorkoutPanel]', err?.message || err); });
   }, []);
 
   if (!plan) return null;

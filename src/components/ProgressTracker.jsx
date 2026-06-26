@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import EmptyState from './EmptyState';
 import { getProgress, saveProgress, deleteProgress } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -107,7 +108,7 @@ export default function ProgressTracker({ userName }) {
   const toast = useToast();
   /* load entries from dataService on mount */
   useEffect(() => {
-    getProgress().then(setEntries).catch(() => { /* ignore */ }).finally(() => setLoading(false));
+    getProgress().then(setEntries).catch((err) => { console.warn('[ProgressTracker]', err); }).finally(() => setLoading(false));
   }, []);
 
   const handleSave = useCallback(async () => {
@@ -136,7 +137,8 @@ export default function ProgressTracker({ userName }) {
         return next.sort((a, b) => a.date.localeCompare(b.date));
       });
       toast.success(t('errors.saveSuccess'));
-    } catch {
+    } catch (err) {
+      console.warn('[ProgressTracker]', err);
       toast.error(t('errors.saveFailed'));
     }
 
@@ -147,7 +149,8 @@ export default function ProgressTracker({ userName }) {
 
   const handleDelete = useCallback(async (dateToDelete) => {
     setEntries((prev) => prev.filter((e) => e.date !== dateToDelete));
-    try { await deleteProgress(dateToDelete); } catch {
+    try { await deleteProgress(dateToDelete); } catch (err) {
+      console.warn('[ProgressTracker]', err);
       toast.error(t('errors.deleteFailed'));
     }
   }, []);
@@ -295,17 +298,12 @@ export default function ProgressTracker({ userName }) {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="rounded-2xl border border-slate-800 bg-slate-900 p-10 flex flex-col items-center justify-center gap-4"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/15 to-blue-500/15 border border-slate-800">
-              <Scale size={28} className="text-orange-400" />
-            </div>
-            <p className="font-outfit text-lg font-bold gradient-text">
-              {t('progress.emptyTitle')}
-            </p>
-            <p className="text-xs text-slate-500 text-center max-w-xs">
-              {t('progress.emptyDesc')}
-            </p>
+            <EmptyState
+              type="progress"
+              title="Henüz ilerleme verisi yok"
+              subtitle="Kilonu ve vücut ölçülerini kaydet, gelişimini grafiklerle takip et."
+            />
           </motion.div>
         ) : (
           <motion.div

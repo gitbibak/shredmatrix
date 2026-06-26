@@ -329,7 +329,14 @@ function LoadingScreen({ goal = 'muscle', userName = '' }) {
 
 // ── Suspense fallback ────────────────────────────────────
 function PageLoader() {
-  return <div className="min-h-screen bg-slate-950" />;
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+        <span className="text-xs text-slate-500 font-outfit">Yükleniyor...</span>
+      </div>
+    </div>
+  );
 }
 
 // ── Protected Route ──────────────────────────────────────
@@ -361,7 +368,7 @@ function AppContent() {
           const u = sessionData.user;
           const userData = { name: u.name, email: u.email, id: u.id };
           setUser(userData);
-          try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch {}
+          try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
           const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
             setPlan(savedPlan);
@@ -383,10 +390,10 @@ function AppContent() {
                 if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
               }
             }
-          } catch {}
+          } catch (err) { console.warn('[App]', err?.message || err); }
         }
-      } catch {
-        // session restore failed, stay on landing
+      } catch (err) {
+        console.warn('[App]', err?.message || err);
       }
       setIsRestoring(false);
     };
@@ -398,11 +405,11 @@ function AppContent() {
       if (event === 'SIGNED_IN' && userData) {
         const u = { name: userData.name, email: userData.email, id: userData.id };
         setUser(u);
-        try { localStorage.setItem('shredmatrix_user', JSON.stringify(u)); } catch {}
+        try { localStorage.setItem('shredmatrix_user', JSON.stringify(u)); } catch (err) { console.warn('[App]', err?.message || err); }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setPlan(null);
-        try { localStorage.removeItem('shredmatrix_user'); } catch {}
+        try { localStorage.removeItem('shredmatrix_user'); } catch (err) { console.warn('[App]', err?.message || err); }
         navigate('/', { replace: true });
       }
     });
@@ -469,7 +476,7 @@ function AppContent() {
   const handleAuth = async (userData) => {
     setUser(userData);
     // Persist user info as fallback (in case Supabase session isn't ready)
-    try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch {}
+    try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
     try {
       const savedPlan = await loadPlan(userData.email);
       if (savedPlan) {
@@ -478,7 +485,7 @@ function AppContent() {
       } else {
         if (location.pathname !== '/onboarding') navigate('/onboarding', { replace: true });
       }
-    } catch {
+    } catch (err) { console.warn('[App]', err?.message || err);
       if (location.pathname !== '/onboarding') navigate('/onboarding', { replace: true });
     }
   };
@@ -497,7 +504,7 @@ function AppContent() {
     await authSignOut();
     setUser(null);
     setPlan(null);
-    try { localStorage.removeItem('shredmatrix_user'); } catch {}
+    try { localStorage.removeItem('shredmatrix_user'); } catch (err) { console.warn('[App]', err?.message || err); }
     navigate('/', { replace: true });
   };
 

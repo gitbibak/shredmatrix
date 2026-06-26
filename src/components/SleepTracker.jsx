@@ -16,7 +16,7 @@ export default function SleepTracker() {
   const toast = useToast();
 
   useEffect(() => {
-    getSleep().then(setEntries).catch(() => { /* ignore */ });
+    getSleep().then(setEntries).catch((err) => { console.warn('[SleepTracker]', err); });
   }, []);
 
   const todayEntry = entries.find(e => e.date === todayISO());
@@ -34,7 +34,8 @@ export default function SleepTracker() {
         return [...prev, entry].sort((a,b) => a.date.localeCompare(b.date));
       });
       toast.success(t('errors.saveSuccess'));
-    } catch {
+    } catch (err) {
+      console.warn('[SleepTracker]', err);
       toast.error(t('errors.saveFailed'));
     }
     setHours('');

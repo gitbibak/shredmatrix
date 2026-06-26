@@ -42,19 +42,19 @@ export default function WaterTracker() {
     getWater(getTodayStr()).then(d => {
       setGlasses(d.glasses || 0);
       setLoaded(true);
-    }).catch(() => { setLoaded(true); });
+    }).catch((err) => { console.warn('[WaterTracker]', err); setLoaded(true); });
   }, []);
 
   // Persist on every change
   useEffect(() => {
     if (!loaded) return; // skip until initial data is loaded
-    saveWater(getTodayStr(), glasses, glasses >= TARGET_GLASSES).catch(() => { /* ignore */ });
+    saveWater(getTodayStr(), glasses, glasses >= TARGET_GLASSES).catch((err) => { console.warn('[WaterTracker]', err); });
   }, [glasses, loaded]);
 
   // Auto-reset check when tab regains focus
   useEffect(() => {
     const check = () => {
-      getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch(() => { /* ignore */ });
+      getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch((err) => { console.warn('[WaterTracker]', err); });
     };
     window.addEventListener('focus', check);
     return () => window.removeEventListener('focus', check);

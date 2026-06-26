@@ -93,7 +93,7 @@ export default function WeeklyReport({ plan }) {
           });
         });
       });
-    } catch { /* ignore */ }
+    } catch (err) { console.warn('[WeeklyReport]', err); }
 
     // Water average this week
     let waterAvg = 0;
@@ -105,7 +105,7 @@ export default function WeeklyReport({ plan }) {
       if (weekWater.length > 0) {
         waterAvg = Math.round(weekWater.reduce((sum, w) => sum + (w.glasses || 0), 0) / weekWater.length);
       }
-    } catch { /* ignore */ }
+    } catch (err) { console.warn('[WeeklyReport]', err); }
 
     // Progress entries this week
     let weightChange = null;
@@ -116,7 +116,7 @@ export default function WeeklyReport({ plan }) {
         const last = sorted[sorted.length - 1];
         weightChange = +(last.weight - first.weight).toFixed(1);
       }
-    } catch { /* ignore */ }
+    } catch (err) { console.warn('[WeeklyReport]', err); }
 
     // Workout completion rate
     const targetWorkouts = 4; // 4 days per week from plan
