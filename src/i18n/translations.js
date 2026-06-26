@@ -717,6 +717,9 @@ export const translations = {
       dailyGoals: 'Günlük Hedeflerim',
       watermark: 'fullbalance.app — Sonsuza Kadar Ücretsiz',
     },
+    referral: {
+      invite: 'Arkadaşlarını Davet Et',
+    },
 
     // ── Reminder ──
 
@@ -1462,6 +1465,9 @@ export const translations = {
       dailyGoals: 'My Daily Goals',
       watermark: 'fullbalance.app — Free Forever',
     },
+    referral: {
+      invite: 'Invite Your Friends',
+    },
     install: {
       title: 'Add to Home Screen',
       desc: 'Install the app on your phone for quick access',
@@ -2184,6 +2190,9 @@ export const translations = {
       shareImage: '📤 Compartir',
       dailyGoals: 'Mis Metas Diarias',
       watermark: 'fullbalance.app — Gratis Para Siempre',
+    },
+    referral: {
+      invite: 'Invita a Tus Amigos',
     },
     install: {
       title: 'Añadir a Pantalla de Inicio',
