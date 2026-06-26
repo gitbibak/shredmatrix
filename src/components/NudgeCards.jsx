@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
 import {
-  Droplets, Moon, Ruler, Camera, Dumbbell, X, ChevronRight,
+  Droplets, Moon, Ruler, Scale, Dumbbell, X, ChevronRight,
   Flame, Trophy, Sparkles, Target,
 } from 'lucide-react';
 import {
@@ -41,7 +41,7 @@ const CARD_CONFIGS = {
     priority: 4,
   },
   progress: {
-    icon: Camera,
+    icon: Scale,
     gradient: 'from-pink-500/15 to-rose-500/15',
     border: 'border-pink-500/25',
     iconColor: 'text-pink-400',
