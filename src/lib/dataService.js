@@ -202,6 +202,8 @@ export async function saveWorkoutLog(log) {
       .from('workout_logs')
       .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes });
     if (error) throw error;
+    // Fire-and-forget: update leaderboard in background
+    updateLeaderboardScore().catch(() => {});
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
     const logs = lsGet('shredmatrix_workout_log', []);
@@ -825,6 +827,105 @@ export async function deleteAllUserData(email) {
   try {
     await supabase.rpc('delete_current_user');
   } catch (err) { console.warn('[DataService]', err?.message || err); }
+}
+
+// ══════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════
+
+/**
+ * Update the user's leaderboard score for the current week.
+ * Called automatically after saving a workout log.
+ */
+export async function updateLeaderboardScore() {
+  if (!isSupabaseReady()) return;
+
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Get current week start (Monday)
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+    monday.setHours(0, 0, 0, 0);
+    const weekStart = monday.toISOString().split('T')[0];
+    const weekEnd = new Date(monday);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    // Count workouts this week
+    const { data: logs } = await supabase
+      .from('workout_logs')
+      .select('id')
+      .eq('user_id', user.id)
+      .gte('date', weekStart)
+      .lt('date', weekEnd.toISOString().split('T')[0]);
+
+    const workouts = logs?.length || 0;
+
+    // Get display name from profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('name')
+      .eq('id', user.id)
+      .single();
+
+    // Anonymize: first name + last initial
+    const fullName = profile?.name || 'User';
+    const parts = fullName.trim().split(' ');
+    const displayName = parts.length > 1
+      ? `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`
+      : parts[0];
+
+    // Calculate streak (consecutive days with workouts)
+    const { data: allLogs } = await supabase
+      .from('workout_logs')
+      .select('date')
+      .eq('user_id', user.id)
+      .order('date', { ascending: false })
+      .limit(60);
+
+    let streak = 0;
+    if (allLogs?.length) {
+      const dates = [...new Set(allLogs.map(l => l.date))].sort().reverse();
+      const today = new Date().toISOString().split('T')[0];
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+      if (dates[0] === today || dates[0] === yesterday) {
+        streak = 1;
+        for (let i = 1; i < dates.length; i++) {
+          const prev = new Date(dates[i - 1]);
+          const curr = new Date(dates[i]);
+          const diff = (prev - curr) / 86400000;
+          if (diff <= 1) streak++;
+          else break;
+        }
+      }
+    }
+
+    // Simple balance score (0-100)
+    const score = Math.min(100, Math.round(workouts * 12 + streak * 2));
+
+    // Upsert to leaderboard
+    await supabase
+      .from('leaderboard_scores')
+      .upsert({
+        user_id: user.id,
+        display_name: displayName,
+        week_start: weekStart,
+        workouts,
+        streak,
+        score,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id,week_start',
+      });
+
+  } catch (err) {
+    // Silent fail — leaderboard is not critical
+    console.warn('[Leaderboard]', err?.message || err);
+  }
 }
 
 // ══════════════════════════════════════════════
