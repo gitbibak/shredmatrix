@@ -278,22 +278,30 @@ export default function ShareCard({ plan, onClose }) {
     }
   };
 
+  /* ── Lock body scroll ── */
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
+        onTouchMove={(e) => e.preventDefault()}
       >
         <motion.div
-          className="relative w-full max-w-xs"
+          className="relative w-full max-w-xs max-h-[90vh] overflow-y-auto scrollbar-hide"
           initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
           <motion.button
@@ -307,26 +315,26 @@ export default function ShareCard({ plan, onClose }) {
 
           {/* Card Preview */}
           <div className="relative rounded-2xl p-[1px] bg-gradient-to-br from-orange-500 via-orange-500/30 to-blue-500">
-            <div className="rounded-2xl bg-slate-900 p-6 overflow-hidden relative">
+            <div className="rounded-2xl bg-slate-900 p-5 overflow-hidden relative">
               {/* Subtle background pattern */}
               <div className="absolute inset-0 bg-grid opacity-5 pointer-events-none" />
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="relative space-y-5">
+              <div className="relative space-y-4">
                 {/* Logo */}
                 <div className="text-center">
-                  <h2 className="font-outfit text-2xl font-bold gradient-text tracking-tight">
+                  <h2 className="font-outfit text-xl font-bold gradient-text tracking-tight">
                     FULL BALANCE
                   </h2>
                   <div className="mt-1 h-[1px] w-16 mx-auto bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
                 </div>
 
                 {/* User + Goal */}
-                <div className="text-center space-y-2">
-                  <p className="font-outfit text-lg font-semibold text-white truncate">
+                <div className="text-center space-y-1.5">
+                  <p className="font-outfit text-base font-semibold text-white">
                     {userName}
                   </p>
-                  <span className="inline-block rounded-full bg-gradient-to-r from-orange-500/20 to-blue-500/20 border border-orange-500/30 px-3 py-1 text-xs font-medium text-orange-400">
+                  <span className="inline-block rounded-full bg-gradient-to-r from-orange-500/20 to-blue-500/20 border border-orange-500/30 px-2.5 py-0.5 text-[10px] font-medium text-orange-400">
                     🎯 {goal}
                   </span>
                 </div>
@@ -336,15 +344,15 @@ export default function ShareCard({ plan, onClose }) {
                   {statsGrid.map((stat) => (
                     <div
                       key={stat.label}
-                      className="rounded-xl bg-slate-800/70 border border-slate-700/50 p-3 text-center"
+                      className="rounded-xl bg-slate-800/70 border border-slate-700/50 p-2.5 text-center"
                     >
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                      <p className="text-[9px] uppercase tracking-wider text-slate-500 font-medium">
                         {stat.label}
                       </p>
-                      <p className="font-outfit text-xl font-bold text-white mt-0.5">
+                      <p className="font-outfit text-lg font-bold text-white mt-0.5">
                         {stat.value}
                       </p>
-                      <p className="text-[10px] text-slate-500">{stat.unit}</p>
+                      <p className="text-[9px] text-slate-500">{stat.unit}</p>
                     </div>
                   ))}
                 </div>
@@ -352,25 +360,21 @@ export default function ShareCard({ plan, onClose }) {
                 {/* BMI + Weight */}
                 <div className="flex items-center justify-center gap-4">
                   <div className="text-center">
-                    <p className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                    <p className="text-[9px] uppercase tracking-wider text-slate-500 font-medium">
                       BMI
                     </p>
-                    <p
-                      className={`font-outfit text-lg font-bold ${getBmiColor(bmi)}`}
-                    >
+                    <p className={`font-outfit text-base font-bold ${getBmiColor(bmi)}`}>
                       {Number(bmi).toFixed(1)}
                     </p>
                   </div>
-                  <div className="h-8 w-[1px] bg-slate-700" />
+                  <div className="h-7 w-[1px] bg-slate-700" />
                   <div className="text-center">
-                    <p className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                    <p className="text-[9px] uppercase tracking-wider text-slate-500 font-medium">
                       {t('share.weight')}
                     </p>
-                    <p className="font-outfit text-lg font-bold text-white">
+                    <p className="font-outfit text-base font-bold text-white">
                       {Number(userWeight).toFixed(1)}{" "}
-                      <span className="text-xs text-slate-500 font-normal">
-                        kg
-                      </span>
+                      <span className="text-[10px] text-slate-500 font-normal">kg</span>
                     </p>
                   </div>
                 </div>
@@ -378,25 +382,23 @@ export default function ShareCard({ plan, onClose }) {
                 {/* Divider */}
                 <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
 
-                {/* Tagline */}
-                <p className="text-center font-outfit text-sm font-medium text-slate-400 italic">
-                  "{t('share.tagline')}"
-                </p>
-
-                {/* ── Invite Friends (compact) ── */}
-                <div className="pt-1">
+                {/* ── Invite Friends Section ── */}
+                <div className="bg-gradient-to-r from-orange-500/8 to-amber-500/8 border border-orange-500/15 rounded-xl p-3">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-1.5">
-                      <Gift size={12} className="text-orange-400" />
-                      <span className="text-[10px] font-bold font-outfit text-white">{t('referral.invite')}</span>
+                      <Gift size={13} className="text-orange-400" />
+                      <span className="text-[11px] font-bold font-outfit text-white">{t('referral.invite')}</span>
                     </div>
-                    <span className="text-[9px] text-slate-500">{refCount}/3</span>
+                    <span className="text-[9px] text-slate-500 bg-slate-800/60 px-2 py-0.5 rounded-full">{refCount}/3</span>
                   </div>
-                  {/* Code + Copy */}
+
+                  {/* Referral code */}
+                  <div className="bg-slate-900/60 border border-slate-700/30 rounded-lg px-3 py-2 text-center mb-2.5">
+                    <span className="text-sm font-mono font-bold text-orange-400 tracking-[0.2em]">{refCode}</span>
+                  </div>
+
+                  {/* Share buttons row */}
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 bg-slate-800/80 border border-slate-700/40 rounded-lg px-2.5 py-1.5 text-center">
-                      <span className="text-[11px] font-mono font-bold text-orange-400 tracking-wider">{refCode}</span>
-                    </div>
                     <button
                       onClick={async () => {
                         await navigator.clipboard.writeText(refShareUrl).catch(() => {});
@@ -404,19 +406,35 @@ export default function ShareCard({ plan, onClose }) {
                         trackShare('copy_link');
                         setTimeout(() => setRefCopied(false), 2000);
                       }}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/30 text-slate-300 hover:text-white hover:border-orange-500/30 transition-colors text-[9px] font-medium cursor-pointer"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-slate-800/60 border border-slate-700/30 text-slate-300 hover:text-white hover:border-orange-500/30 transition-colors text-[10px] font-medium cursor-pointer"
                     >
-                      {refCopied ? <Check size={10} className="text-green-400" /> : <Copy size={10} />}
-                      {refCopied ? '✓' : t('share.copy')}
+                      {refCopied ? <Check size={11} className="text-green-400" /> : <Copy size={11} />}
+                      {refCopied ? '✓ Kopyalandı' : 'Link Kopyala'}
                     </button>
                     <button
                       onClick={() => {
                         trackShare('whatsapp');
                         window.open(`https://wa.me/?text=${encodeURIComponent(refShareText + '\n' + refShareUrl)}`, '_blank');
                       }}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-green-500/15 border border-green-500/25 text-green-400 hover:bg-green-500/25 transition-colors text-[9px] font-medium cursor-pointer"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-green-500/15 border border-green-500/25 text-green-400 hover:bg-green-500/25 transition-colors text-[10px] font-medium cursor-pointer"
                     >
-                      <MessageCircle size={10} />
+                      <MessageCircle size={11} />
+                      WhatsApp
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (navigator.share) {
+                          trackShare('native');
+                          await navigator.share({ title: 'Full Balance', text: refShareText, url: refShareUrl }).catch(() => {});
+                        } else {
+                          await navigator.clipboard.writeText(refShareUrl).catch(() => {});
+                          setRefCopied(true);
+                          setTimeout(() => setRefCopied(false), 2000);
+                        }
+                      }}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-blue-500/15 border border-blue-500/25 text-blue-400 hover:bg-blue-500/25 transition-colors text-[10px] font-medium cursor-pointer"
+                    >
+                      <Share2 size={11} />
                     </button>
                   </div>
                 </div>
@@ -424,81 +442,31 @@ export default function ShareCard({ plan, onClose }) {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-4 flex flex-col gap-3">
-            {/* Row 1: Copy + Screenshot hint */}
-            <div className="flex items-center justify-center gap-3">
-              <motion.button
-                className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-800 border border-slate-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-700 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleCopy}
-              >
-                {copied ? (
-                  <>
-                    <Check size={16} className="text-emerald-400" />
-                    <span className="text-emerald-400">{t('share.copied')}</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy size={16} />
-                    <span>{t('share.copy')}</span>
-                  </>
-                )}
-              </motion.button>
+          {/* Bottom action buttons — compact */}
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <motion.button
+              className="flex-1 flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-xs font-medium text-white hover:bg-slate-700 transition-colors disabled:opacity-50"
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDownloadImage}
+              disabled={generating}
+            >
+              <Download size={13} />
+              <span>{generating ? '...' : t('share.downloadImage')}</span>
+            </motion.button>
 
-              <motion.button
-                className="flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:from-orange-600 hover:to-orange-700 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleSave}
-              >
-                <Camera size={16} />
-                <span>{t('share.save')}</span>
-              </motion.button>
-            </div>
-
-            {/* Row 2: Download Image + Share */}
-            <div className="flex items-center justify-center gap-3">
-              <motion.button
-                className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-800 border border-emerald-500/40 px-5 py-2.5 text-sm font-medium text-emerald-400 hover:bg-slate-700 transition-colors disabled:opacity-50"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleDownloadImage}
-                disabled={generating}
-              >
-                <Download size={16} />
-                <span>{generating ? '...' : t('share.downloadImage')}</span>
-              </motion.button>
-
-              <motion.button
-                className="flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:from-blue-600 hover:to-blue-700 transition-colors disabled:opacity-50"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleShareImage}
-                disabled={generating}
-              >
-                <Share2 size={16} />
-                <span>{generating ? '...' : t('share.shareImage')}</span>
-              </motion.button>
-            </div>
+            <motion.button
+              className="flex-1 flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 px-3 py-2 text-xs font-medium text-white hover:from-blue-600 hover:to-blue-700 transition-colors disabled:opacity-50"
+              whileTap={{ scale: 0.95 }}
+              onClick={handleShareImage}
+              disabled={generating}
+            >
+              <Share2 size={13} />
+              <span>{generating ? '...' : t('share.shareImage')}</span>
+            </motion.button>
           </div>
-
-          {/* Screenshot Hint */}
-          <AnimatePresence>
-            {showScreenshotHint && (
-              <motion.p
-                className="mt-3 text-center text-xs text-slate-500"
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-              >
-                {t('share.saveHint')}
-              </motion.p>
-            )}
-          </AnimatePresence>
         </motion.div>
       </motion.div>
     </AnimatePresence>
   );
 }
+
