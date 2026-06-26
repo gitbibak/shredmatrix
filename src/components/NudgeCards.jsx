@@ -104,6 +104,7 @@ function NudgeCard({ nudge, onDismiss, onAction }) {
       {/* Dismiss button */}
       <button
         onClick={(e) => { e.stopPropagation(); onDismiss(nudge.id); }}
+        aria-label="Kapat"
         className="absolute top-2 right-2 p-1 rounded-full bg-slate-800/60 text-slate-500 hover:text-slate-300 hover:bg-slate-700/60 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
       >
         <X size={10} />
@@ -152,6 +153,7 @@ function MilestoneCard({ nudge, onDismiss }) {
     >
       <button
         onClick={() => onDismiss(nudge.id)}
+        aria-label="Kapat"
         className="absolute top-2 right-2 p-1 rounded-full bg-slate-800/60 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
       >
         <X size={10} />
@@ -199,9 +201,9 @@ export default function NudgeCards({ plan, onNavigate }) {
         const result = [];
 
         // ── 1. Bugün antrenman var mı, yapıldı mı? ──
-        const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-        const todayName = dayNames[new Date().getDay()];
-        const todayPlan = plan?.workoutSplit?.find(d => d.day === todayName);
+        // Map JS getDay() (0=Sun) to plan array index (0=Mon)
+        const todayIdx = (new Date().getDay() + 6) % 7;
+        const todayPlan = plan?.workoutSplit?.[todayIdx];
         const isTrainingDay = todayPlan && !todayPlan.isRest && !todayPlan.focus?.toLowerCase().includes('dinlenme');
         const todayLogged = logs.some(l => (l.date || l.createdAt || '').startsWith(today));
 

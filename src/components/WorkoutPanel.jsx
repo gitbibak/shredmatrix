@@ -185,6 +185,7 @@ function DayCard({ day, index, isOpen, onToggle, t }) {
               <img
                 src={day.image}
                 alt={day.focus}
+                loading="lazy"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
@@ -349,10 +350,10 @@ function DayCard({ day, index, isOpen, onToggle, t }) {
 export default function WorkoutPanel({ plan }) {
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState(() => {
-    const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-    const todayName = dayNames[new Date().getDay()];
-    const idx = plan?.workoutSplit?.findIndex(d => d.day === todayName);
-    return idx >= 0 ? idx : 0;
+    // Map JS getDay() (0=Sun) to plan array index (0=Mon)
+    const idx = (new Date().getDay() + 6) % 7;
+    const len = plan?.workoutSplit?.length || 7;
+    return idx < len ? idx : 0;
   });
   const [completedDays, setCompletedDays] = useState({});
   const [celebration, setCelebration] = useState(null);

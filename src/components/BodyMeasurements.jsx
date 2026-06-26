@@ -184,6 +184,7 @@ export default function BodyMeasurements() {
                   ))}
                 </div>
                 <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} onClick={() => handleDelete(entry.date)}
+                  aria-label="Sil"
                   className="p-1.5 rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
                   <Trash2 size={13} />
                 </motion.button>
