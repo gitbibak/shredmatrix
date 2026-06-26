@@ -6,6 +6,7 @@ import { generatePlan, regeneratePlanWithPhase, localizePlan } from './data/plan
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
+import OfflineBanner from './components/OfflineBanner';
 import { initAnalytics } from './lib/analytics';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
@@ -519,6 +520,7 @@ function AppContent() {
 
   return (
     <>
+      <OfflineBanner />
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>

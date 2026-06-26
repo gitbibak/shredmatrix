@@ -162,13 +162,15 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           </div>
 
           {/* Desktop tabs */}
-          <div className="hidden lg:flex items-center gap-0.5 bg-slate-900/80 border border-slate-800 rounded-full p-1">
+          <div role="tablist" className="hidden lg:flex items-center gap-0.5 bg-slate-900/80 border border-slate-800 rounded-full p-1">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
+                  role="tab"
+                  aria-selected={active}
                   onClick={() => setActiveTab(tab.id)}
                   className={[
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer',
@@ -311,6 +313,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           {activeTab === 'nutrition' && (
             <motion.div
               key="nutrition"
+              role="tabpanel"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -337,6 +340,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           {activeTab === 'workout' && (
             <motion.div
               key="workout"
+              role="tabpanel"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -362,6 +366,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           {activeTab === 'progress' && (
             <motion.div
               key="progress"
+              role="tabpanel"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -387,6 +392,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           {activeTab === 'achievements' && (
             <motion.div
               key="achievements"
+              role="tabpanel"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -400,6 +406,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           {activeTab === 'profile' && (
             <motion.div
               key="profile"
+              role="tabpanel"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -430,13 +437,15 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">
-        <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
+        <div role="tablist" className="flex items-center justify-around h-16 max-w-lg mx-auto">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={active}
                 onClick={() => setActiveTab(tab.id)}
                 className={[
                   'flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all cursor-pointer min-w-0',

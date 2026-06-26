@@ -112,6 +112,7 @@ function ExerciseRow({ exercise, index, t }) {
                 showTip ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' : 'bg-slate-800/60 border-slate-700/30 text-slate-500 hover:text-cyan-400'
               }`}
               title="Form İpucu"
+              aria-label="Form ipucu"
             >
               <Info size={11} />
             </button>
@@ -121,6 +122,7 @@ function ExerciseRow({ exercise, index, t }) {
             target="_blank"
             rel="noopener noreferrer"
             title={t('video.watch')}
+            aria-label="Video izle"
             className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
             onClick={(e) => e.stopPropagation()}
           >
@@ -202,6 +204,7 @@ function DayCard({ day, index, isOpen, onToggle, t }) {
         <button
           type="button"
           onClick={() => onToggle(index)}
+          aria-expanded={isOpen}
           className="w-full flex items-center gap-3 px-4 py-3 text-left cursor-pointer focus:outline-none"
         >
           <span className="text-xl leading-none">{day.emoji}</span>
