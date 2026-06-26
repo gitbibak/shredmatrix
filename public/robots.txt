@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+
+Sitemap: https://fullbalance.app/sitemap.xml
