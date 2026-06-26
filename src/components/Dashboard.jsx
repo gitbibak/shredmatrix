@@ -103,7 +103,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
   const [daysSinceJoin] = useState(() => {
-    try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch { return 0; }
+    try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch (err) { console.warn('[Dashboard]', err?.message || err); return 0; }
   });
 
   // ── Tabs ─────────────────────────────────────────────────

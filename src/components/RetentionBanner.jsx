@@ -145,7 +145,7 @@ function getLang() {
   try {
     const saved = localStorage.getItem('shredmatrix_lang');
     if (saved && ['tr', 'en', 'es'].includes(saved)) return saved;
-  } catch {}
+  } catch (err) { console.warn('[RetentionBanner]', err?.message || err); }
   return 'tr';
 }
 
@@ -153,7 +153,7 @@ function getDaysSinceJoin() {
   try {
     const d = localStorage.getItem('shredmatrix_first_login');
     return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0;
-  } catch {
+  } catch (err) { console.warn('[RetentionBanner]', err?.message || err);
     return 0;
   }
 }
@@ -174,7 +174,7 @@ export default function RetentionBanner({ onNavigate }) {
     if (matchingDay === undefined) return true;
     try {
       return localStorage.getItem(getDismissedKey(matchingDay)) === '1';
-    } catch {
+    } catch (err) { console.warn('[RetentionBanner]', err?.message || err);
       return false;
     }
   });
@@ -191,7 +191,7 @@ export default function RetentionBanner({ onNavigate }) {
     setDismissed(true);
     try {
       localStorage.setItem(getDismissedKey(matchingDay), '1');
-    } catch {}
+    } catch (err) { console.warn('[RetentionBanner]', err?.message || err); }
   };
 
   const handleCta = () => {

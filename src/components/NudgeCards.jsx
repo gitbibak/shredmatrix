@@ -69,7 +69,7 @@ const DISMISS_KEY = 'fb_nudge_dismissed';
 function getDismissed() {
   try {
     return JSON.parse(localStorage.getItem(DISMISS_KEY) || '{}');
-  } catch { return {}; }
+  } catch (err) { console.warn('[NudgeCards]', err?.message || err); return {}; }
 }
 
 function dismissNudge(id) {
@@ -77,7 +77,7 @@ function dismissNudge(id) {
     const dismissed = getDismissed();
     dismissed[id] = Date.now();
     localStorage.setItem(DISMISS_KEY, JSON.stringify(dismissed));
-  } catch { /* ignore */ }
+  } catch (err) { console.warn('[NudgeCards]', err?.message || err); }
 }
 
 function isRecentlyDismissed(id, hours = 12) {
@@ -313,7 +313,7 @@ export default function NudgeCards({ plan, onNavigate }) {
 
         // Max 3 nudges at a time
         setNudges(filtered.slice(0, 3));
-      } catch {
+      } catch (err) { console.warn('[NudgeCards]', err?.message || err);
         setNudges([]);
       }
     }

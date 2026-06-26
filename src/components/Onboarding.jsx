@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -212,6 +212,43 @@ export default function Onboarding({ onSubmit }) {
   const [workSchedule, setWorkSchedule] = useState([]);
   const [budget, setBudget] = useState('moderate');
 
+  // ── Persist & restore onboarding data ───────────────────
+  const STORAGE_KEY = 'fb_onboarding_draft';
+
+  // Restore on mount
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved) {
+        if (saved.name) setName(saved.name);
+        if (saved.age) setAge(saved.age);
+        if (saved.gender) setGender(saved.gender);
+        if (saved.height) setHeight(saved.height);
+        if (saved.weight) setWeight(saved.weight);
+        if (saved.bodyFatPercentage) setBodyFatPercentage(saved.bodyFatPercentage);
+        if (saved.experience) setExperience(saved.experience);
+        if (saved.activityLevel) setActivityLevel(saved.activityLevel);
+        if (saved.primaryGoal) setPrimaryGoal(saved.primaryGoal);
+        if (saved.healthConditions?.length) setHealthConditions(saved.healthConditions);
+        if (saved.allergies?.length) setAllergies(saved.allergies);
+        if (saved.workSchedule?.length) setWorkSchedule(saved.workSchedule);
+        if (saved.budget) setBudget(saved.budget);
+        if (typeof saved.step === 'number') setStep(saved.step);
+      }
+    } catch (err) { console.warn('[Onboarding] restore:', err); }
+  }, []);
+
+  // Save on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        name, age, gender, height, weight, bodyFatPercentage,
+        experience, activityLevel, primaryGoal,
+        healthConditions, allergies, workSchedule, budget, step,
+      }));
+    } catch (err) { console.warn('[Onboarding] save:', err); }
+  }, [name, age, gender, height, weight, bodyFatPercentage, experience, activityLevel, primaryGoal, healthConditions, allergies, workSchedule, budget, step]);
+
   const canNext = () => {
     switch (step) {
       case 0: return name.trim().length > 0 && gender;
@@ -250,6 +287,8 @@ export default function Onboarding({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!canNext()) return;
+    // Clear draft on successful submit
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
       name, age, gender, height, weight,
       bodyFatPercentage, experience, activityLevel,

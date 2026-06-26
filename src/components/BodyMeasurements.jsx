@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import EmptyState from './EmptyState';
 import { getMeasurements, saveMeasurement, deleteMeasurement } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -70,7 +71,8 @@ export default function BodyMeasurements() {
         return next.sort((a,b) => a.date.localeCompare(b.date));
       });
       toast.success(t('errors.saveSuccess') || 'Kaydedildi');
-    } catch {
+    } catch (err) {
+      console.warn('[BodyMeasurements]', err);
       toast.error(t('errors.saveFailed') || 'Kayıt başarısız');
     }
     setForm({ chest:'', waist:'', hip:'', arm:'', leg:'' });
@@ -78,7 +80,8 @@ export default function BodyMeasurements() {
 
   const handleDelete = useCallback(async (d) => {
     setEntries(prev => prev.filter(e => e.date !== d));
-    try { await deleteMeasurement(d); } catch {
+    try { await deleteMeasurement(d); } catch (err) {
+      console.warn('[BodyMeasurements]', err);
       toast.error(t('errors.deleteFailed') || 'Silme başarısız');
     }
   }, []);
@@ -156,11 +159,11 @@ export default function BodyMeasurements() {
 
       {/* Empty */}
       {!hasData && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-10 flex flex-col items-center gap-3">
-          <Ruler size={28} className="text-purple-400" />
-          <p className="font-outfit text-lg font-bold gradient-text">{t('measurements.emptyTitle')}</p>
-          <p className="text-xs text-slate-500 text-center">{t('measurements.emptyDesc')}</p>
-        </div>
+        <EmptyState
+          type="measurements"
+          title="Henüz ölçüm kaydı yok"
+          subtitle="Göğüs, bel, kol ve bacak ölçülerini kaydet. Değişimi santim santim gör."
+        />
       )}
 
       {/* History */}

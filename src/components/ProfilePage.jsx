@@ -44,20 +44,20 @@ function Badge({ children }) {
 }
 
 function loadPhoto() {
-  try { return localStorage.getItem(PHOTO_KEY) || null; } catch { return null; }
+  try { return localStorage.getItem(PHOTO_KEY) || null; } catch (err) { console.warn('[Profile]', err?.message || err); return null; }
 }
 function savePhoto(dataUrl) {
-  try { localStorage.setItem(PHOTO_KEY, dataUrl); } catch {}
+  try { localStorage.setItem(PHOTO_KEY, dataUrl); } catch (err) { console.warn('[Profile]', err?.message || err); }
 }
 
 function loadGallery() {
   try {
     const raw = localStorage.getItem(GALLERY_KEY);
     return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+  } catch (err) { console.warn('[Profile]', err?.message || err); return []; }
 }
 function saveGallery(arr) {
-  try { localStorage.setItem(GALLERY_KEY, JSON.stringify(arr)); } catch {}
+  try { localStorage.setItem(GALLERY_KEY, JSON.stringify(arr)); } catch (err) { console.warn('[Profile]', err?.message || err); }
 }
 
 export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlanUpdate }) {
@@ -100,8 +100,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
         if (cancelled) return;
         if (photo) setProfilePhoto(photo);
         setGallery(photos || []);
-      } catch {
-        // Keep local fallback state.
+      } catch (err) {
+        console.warn('[Profile]', err?.message || err);
       }
     }
     loadPhotos();
@@ -232,8 +232,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           setGallery(refreshed);
           saveGallery(refreshed);
         }
-      } catch {
-        // Optimistic update already applied
+      } catch (err) {
+        console.warn('[Profile]', err?.message || err);
       }
     }
   };
@@ -242,7 +242,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     if (!window.confirm(t('profile.deleteConfirm'))) return;
     try {
       await deleteAllUserData(user?.email);
-    } catch {
+    } catch (err) { console.warn('[Profile]', err?.message || err);
       toast.error(t('errors.deleteFailed'));
       return;
     }
