@@ -4,6 +4,7 @@ import { getExerciseInfo, getDifficultyLabel } from '../data/exerciseDatabase';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
+import ExerciseDemo from './ExerciseDemo';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -16,6 +17,7 @@ import {
   Target,
   Activity,
   Info,
+  BookOpen,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -54,7 +56,7 @@ function isRestDay(day) {
   );
 }
 
-function ExerciseRow({ exercise, index, t }) {
+function ExerciseRow({ exercise, index, t, onShowDemo }) {
   const [showTip, setShowTip] = useState(false);
   const info = getExerciseInfo(exercise.name);
   const diff = info ? getDifficultyLabel(info.difficulty) : null;
@@ -105,6 +107,16 @@ function ExerciseRow({ exercise, index, t }) {
             <Timer size={13} className="text-emerald-400" />
             <span className="text-slate-300">{exercise.rest}</span>
           </span>
+          {info?.formSteps && info.formSteps.length > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onShowDemo?.({ name: exercise.name, ...info }); }}
+              className="flex items-center justify-center w-7 h-7 rounded-full border bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20 hover:scale-110 transition-all cursor-pointer"
+              title={t('exerciseDemo.title')}
+              aria-label={t('exerciseDemo.title')}
+            >
+              <BookOpen size={11} />
+            </button>
+          )}
           {info?.tip && (
             <button
               onClick={() => setShowTip(!showTip)}
@@ -156,7 +168,7 @@ function ExerciseRow({ exercise, index, t }) {
   );
 }
 
-function DayCard({ day, index, isOpen, onToggle, t }) {
+function DayCard({ day, index, isOpen, onToggle, t, onShowDemo }) {
   const rest = isRestDay(day);
   const exerciseCount = day.exercises?.length ?? 0;
 
@@ -275,6 +287,7 @@ function DayCard({ day, index, isOpen, onToggle, t }) {
                     exercise={exercise}
                     index={i}
                     t={t}
+                    onShowDemo={onShowDemo}
                   />
                 ))}
 
@@ -299,6 +312,7 @@ function DayCard({ day, index, isOpen, onToggle, t }) {
                         exercise={exercise}
                         index={i}
                         t={t}
+                        onShowDemo={onShowDemo}
                       />
                     ))}
                   </div>
@@ -357,6 +371,7 @@ export default function WorkoutPanel({ plan }) {
   });
   const [completedDays, setCompletedDays] = useState({});
   const [celebration, setCelebration] = useState(null);
+  const [demoExercise, setDemoExercise] = useState(null);
   const toast = useToast();
 
   // Load completed workouts from dataService
@@ -504,6 +519,7 @@ export default function WorkoutPanel({ plan }) {
                 isOpen={openIndex === index}
                 onToggle={handleToggle}
                 t={t}
+                onShowDemo={setDemoExercise}
               />
               {/* Complete workout button — only for training days when card is open */}
               {openIndex === index && !rest && (
@@ -643,6 +659,16 @@ export default function WorkoutPanel({ plan }) {
               </motion.button>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 🎓 Exercise Demo Modal */}
+      <AnimatePresence>
+        {demoExercise && (
+          <ExerciseDemo
+            exercise={demoExercise}
+            onClose={() => setDemoExercise(null)}
+          />
         )}
       </AnimatePresence>
     </section>
