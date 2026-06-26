@@ -75,7 +75,7 @@ export const translations = {
         message: 'Dün gece kaç saat uyudun? Uyku takibi skorunu +8 yükseltir.',
       },
       progress: {
-        title: '📸 Kilonu güncelle',
+        title: '⚖️ Kilonu güncelle',
         message: '2 haftadır kilo girişi yok. Gelişimini takip et!',
       },
       measurement: {
@@ -955,7 +955,7 @@ export const translations = {
         message: 'How many hours did you sleep? Sleep tracking adds +8 to your score.',
       },
       progress: {
-        title: '📸 Update your weight',
+        title: '⚖️ Update your weight',
         message: "No weight entry in 2 weeks. Track your progress!",
       },
       measurement: {
@@ -1729,7 +1729,7 @@ export const translations = {
         message: '¿Cuántas horas dormiste? El seguimiento del sueño suma +8.',
       },
       progress: {
-        title: '📸 Actualiza tu peso',
+        title: '⚖️ Actualiza tu peso',
         message: 'Sin registro de peso en 2 semanas. ¡Sigue tu progreso!',
       },
       measurement: {
