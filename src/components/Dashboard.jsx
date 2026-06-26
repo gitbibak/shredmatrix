@@ -298,19 +298,26 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       </motion.nav>
 
       {/* ── Main Content ─────────────────────────────── */}
-      <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
         {/* ── Hero Card — Full Balance Score + Today ── */}
-        <HeroCard plan={plan} />
+        <Suspense fallback={null}>
+          <HeroCard plan={plan} />
+        </Suspense>
 
         {/* ── Nudge Cards — Akıllı Hatırlatmalar ── */}
-        <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+        <Suspense fallback={null}>
+          <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+        </Suspense>
 
         {/* ── Retention Banner — Day-based motivational messages ── */}
-        <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
+        <Suspense fallback={null}>
+          <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
+        </Suspense>
 
         {/* ── Push Notification Permission Request ── */}
-        <PushPermission />
+        <Suspense fallback={null}>
+          <PushPermission />
+        </Suspense>
 
         <AnimatePresence mode="wait">
 
@@ -324,6 +331,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2">
@@ -338,6 +346,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   </motion.div>
                 </div>
               </motion.div>
+              </Suspense>
             </motion.div>
           )}
 
@@ -351,6 +360,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2">
@@ -364,6 +374,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   </motion.div>
                 </div>
               </motion.div>
+              </Suspense>
             </motion.div>
           )}
 
@@ -377,6 +388,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2">
@@ -391,6 +403,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   </motion.div>
                 </div>
               </motion.div>
+              </Suspense>
             </motion.div>
           )}
 
@@ -404,10 +417,12 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <Achievements plan={plan} user={user} />
               <div className="mt-4">
                 <Leaderboard plan={plan} />
               </div>
+              </Suspense>
             </motion.div>
           )}
 
@@ -421,6 +436,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <ProfilePage
                 plan={plan}
                 user={user}
@@ -432,6 +448,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 <StravaConnectCard />
                 <DataExport />
               </div>
+              </Suspense>
             </motion.div>
           )}
         </AnimatePresence>
@@ -443,7 +460,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           </p>
         </div>
       </main>
-      </Suspense>
 
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">
