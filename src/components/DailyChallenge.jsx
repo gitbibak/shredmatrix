@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, Check, Share2, Flame } from 'lucide-react';
+import { Target, Check, Share2, Flame, Trophy } from 'lucide-react';
 import { trackChallengeComplete } from '../lib/analytics';
+import confetti from 'canvas-confetti';
 
 const CHALLENGES = [
   { id: 'water_8', emoji: '💧', target: 8, unit: 'bardak su iç' },
@@ -29,6 +30,7 @@ function getDayIndex() {
 export default function DailyChallenge() {
   const [completed, setCompleted] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [justCompleted, setJustCompleted] = useState(false);
 
   const challenge = useMemo(() => CHALLENGES[getDayIndex() % CHALLENGES.length], []);
 
@@ -48,14 +50,27 @@ export default function DailyChallenge() {
   }, []);
 
   const handleComplete = () => {
+    if (completed) return;
     try {
       const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       const today = new Date().toISOString().split('T')[0];
       data[today] = { challenge: challenge.id, completedAt: Date.now() };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       setCompleted(true);
+      setJustCompleted(true);
       setStreak(s => s + 1);
       trackChallengeComplete(challenge.id);
+
+      // 🎉 Confetti celebration
+      confetti({
+        particleCount: 60,
+        spread: 55,
+        origin: { y: 0.8 },
+        colors: ['#ff6d00', '#22c55e', '#3b82f6', '#f59e0b'],
+      });
+
+      // Reset "just completed" animation after 3s
+      setTimeout(() => setJustCompleted(false), 3000);
     } catch {}
   };
 
@@ -100,7 +115,23 @@ export default function DailyChallenge() {
 
         <AnimatePresence mode="wait">
           {completed ? (
-            <motion.div key="done" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2">
+            <motion.div
+              key="done"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="flex items-center gap-2"
+            >
+              {/* Success feedback */}
+              {justCompleted && (
+                <motion.span
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="text-[9px] font-bold text-emerald-400"
+                >
+                  Tamamlandı! 🎉
+                </motion.span>
+              )}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={handleShare}
@@ -108,9 +139,13 @@ export default function DailyChallenge() {
               >
                 <Share2 size={14} />
               </motion.button>
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+              <motion.div
+                className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center"
+                animate={justCompleted ? { scale: [1, 1.3, 1] } : {}}
+                transition={{ duration: 0.4 }}
+              >
                 <Check size={16} className="text-emerald-400" />
-              </div>
+              </motion.div>
             </motion.div>
           ) : (
             <motion.button
