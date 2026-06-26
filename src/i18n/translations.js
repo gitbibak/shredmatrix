@@ -581,6 +581,24 @@ export const translations = {
       goalComplete: 'Hedef tamamlandı! 🎉', doingWell: 'İyi gidiyorsun! 💪', keepGoing: 'Devam et! 🔥',
       perfectWeek: 'Mükemmel Hafta! 🏆', greatWeek: 'Harika Hafta! ⭐', goodWeek: 'İyi Hafta 👍', needsImprovement: 'Geliştirilmeli 📈',
     },
+    report: {
+      weeklyTitle: 'Haftalık Rapor',
+      monthlyTitle: 'Aylık Rapor',
+      workouts: 'Antrenman',
+      avgCalories: 'Ort. Kalori',
+      waterConsistency: 'Su Tutarlılığı',
+      avgSleep: 'Ort. Uyku',
+      weightTrend: 'Kilo Trendi',
+      topExercises: 'En Çok Yapılan',
+      longestStreak: 'En Uzun Seri',
+      vsLastWeek: 'geçen haftaya göre',
+      vsLastMonth: 'geçen aya göre',
+      improving: 'Harika gidiyorsun! 🚀',
+      stable: 'Tutarlılığını koruyorsun 💪',
+      declining: 'Bu ay biraz yavaşladın, gel güçlenelim! 🔥',
+      noData: 'Henüz yeterli veri yok',
+      share: 'Raporu Paylaş',
+    },
 
     // ── Supplement ──
     supplement: {
@@ -720,6 +738,23 @@ export const translations = {
     referral: {
       invite: 'Arkadaşlarını Davet Et',
     },
+    push: {
+      title: 'Bildirimleri Aç',
+      desc: 'Antrenman hatırlatmaları ve motivasyon mesajları almak ister misin?',
+      allow: 'İzin Ver',
+      later: 'Sonra',
+      enabled: 'Bildirimler Açık ✅',
+      enabledDesc: 'Artık antrenman hatırlatmaları alacaksın!',
+    },
+    leaderboard: {
+      title: 'Sıralama Tablosu',
+      subtitle: 'Bu haftanın en iyileri',
+      workouts: 'Antrenman',
+      streak: 'Seri',
+      score: 'Puan',
+      yourRank: 'Senin sıran',
+      weekReset: 'Her Pazartesi sıfırlanır',
+    },
 
     // ── Reminder ──
 
@@ -740,6 +775,20 @@ export const translations = {
     // ── Video ──
     video: {
       watch: 'Videoyu İzle',
+    },
+
+    // ── Exercise Demo ──
+    exerciseDemo: {
+      title: 'Nasıl Yapılır',
+      steps: 'Adımlar',
+      muscles: 'Hedef Kaslar',
+      difficulty: 'Zorluk',
+      proTip: 'Pro İpucu',
+      close: 'Kapat',
+      easy: 'Kolay',
+      medium: 'Orta',
+      hard: 'Zor',
+      mistakes: 'Sık Yapılan Hatalar',
     },
 
     // ── Measurements ──
@@ -1343,6 +1392,24 @@ export const translations = {
       goalComplete: 'Goal complete! 🎉', doingWell: 'Doing well! 💪', keepGoing: 'Keep going! 🔥',
       perfectWeek: 'Perfect Week! 🏆', greatWeek: 'Great Week! ⭐', goodWeek: 'Good Week 👍', needsImprovement: 'Needs Improvement 📈',
     },
+    report: {
+      weeklyTitle: 'Weekly Report',
+      monthlyTitle: 'Monthly Report',
+      workouts: 'Workouts',
+      avgCalories: 'Avg. Calories',
+      waterConsistency: 'Water Consistency',
+      avgSleep: 'Avg. Sleep',
+      weightTrend: 'Weight Trend',
+      topExercises: 'Top Exercises',
+      longestStreak: 'Longest Streak',
+      vsLastWeek: 'vs last week',
+      vsLastMonth: 'vs last month',
+      improving: 'You\'re doing amazing! 🚀',
+      stable: 'You\'re staying consistent 💪',
+      declining: 'Slow month — let\'s get back on track! 🔥',
+      noData: 'Not enough data yet',
+      share: 'Share Report',
+    },
     supplement: {
       title: 'Supplement & Support Guide', titleWellness: 'Wellness Support Guide',
       muscleGoal: 'Muscle Growth', fatGoal: 'Fat Loss',
@@ -1468,17 +1535,47 @@ export const translations = {
     referral: {
       invite: 'Invite Your Friends',
     },
+    push: {
+      title: 'Enable Notifications',
+      desc: 'Want to receive workout reminders and motivational messages?',
+      allow: 'Allow',
+      later: 'Later',
+      enabled: 'Notifications On ✅',
+      enabledDesc: 'You will now receive workout reminders!',
+    },
     install: {
       title: 'Add to Home Screen',
       desc: 'Install the app on your phone for quick access',
       btn: 'Install',
       dismiss: 'Later',
     },
+    leaderboard: {
+      title: 'Leaderboard',
+      subtitle: 'This week\'s best',
+      workouts: 'Workouts',
+      streak: 'Streak',
+      score: 'Score',
+      yourRank: 'Your rank',
+      weekReset: 'Resets every Monday',
+    },
     progressPeriod: {
       days7: '7 Days', days30: '30 Days', all: 'All',
       min: 'Min', max: 'Max', avg: 'Avg',
     },
     video: { watch: 'Watch Video' },
+    // ── Exercise Demo ──
+    exerciseDemo: {
+      title: 'How To Do It',
+      steps: 'Steps',
+      muscles: 'Target Muscles',
+      difficulty: 'Difficulty',
+      proTip: 'Pro Tip',
+      close: 'Close',
+      easy: 'Easy',
+      medium: 'Medium',
+      hard: 'Hard',
+      mistakes: 'Common Mistakes',
+    },
     measurements: {
       title: 'Body Measurements', add: 'Add Measurement', save: 'Save',
       chest: 'Chest', waist: 'Waist', hip: 'Hip', arm: 'Arm', leg: 'Leg',
@@ -2069,6 +2166,24 @@ export const translations = {
       goalComplete: '¡Objetivo completado! 🎉', doingWell: '¡Vas bien! 💪', keepGoing: '¡Sigue así! 🔥',
       perfectWeek: '¡Semana Perfecta! 🏆', greatWeek: '¡Gran Semana! ⭐', goodWeek: 'Buena Semana 👍', needsImprovement: 'Necesita Mejorar 📈',
     },
+    report: {
+      weeklyTitle: 'Informe Semanal',
+      monthlyTitle: 'Informe Mensual',
+      workouts: 'Entrenamientos',
+      avgCalories: 'Cal. Promedio',
+      waterConsistency: 'Consistencia de Agua',
+      avgSleep: 'Sueño Prom.',
+      weightTrend: 'Tendencia de Peso',
+      topExercises: 'Más Realizados',
+      longestStreak: 'Racha Más Larga',
+      vsLastWeek: 'vs semana pasada',
+      vsLastMonth: 'vs mes pasado',
+      improving: '¡Vas increíble! 🚀',
+      stable: 'Mantienes la consistencia 💪',
+      declining: 'Mes tranquilo — ¡vamos a recuperarnos! 🔥',
+      noData: 'Datos insuficientes',
+      share: 'Compartir Informe',
+    },
     supplement: {
       title: 'Guía de Suplementos & Soporte', titleWellness: 'Guía de Soporte Wellness',
       muscleGoal: 'Crecimiento Muscular', fatGoal: 'Pérdida de Grasa',
@@ -2194,17 +2309,47 @@ export const translations = {
     referral: {
       invite: 'Invita a Tus Amigos',
     },
+    push: {
+      title: 'Activar Notificaciones',
+      desc: '¿Quieres recibir recordatorios de entrenamiento y mensajes motivacionales?',
+      allow: 'Permitir',
+      later: 'Más tarde',
+      enabled: 'Notificaciones Activadas ✅',
+      enabledDesc: '¡Ahora recibirás recordatorios de entrenamiento!',
+    },
     install: {
       title: 'Añadir a Pantalla de Inicio',
       desc: 'Instala la app en tu teléfono para acceso rápido',
       btn: 'Instalar',
       dismiss: 'Más tarde',
     },
+    leaderboard: {
+      title: 'Tabla de Clasificación',
+      subtitle: 'Los mejores de esta semana',
+      workouts: 'Entrenamientos',
+      streak: 'Racha',
+      score: 'Puntuación',
+      yourRank: 'Tu posición',
+      weekReset: 'Se reinicia cada lunes',
+    },
     progressPeriod: {
       days7: '7 Días', days30: '30 Días', all: 'Todo',
       min: 'Mín', max: 'Máx', avg: 'Prom',
     },
     video: { watch: 'Ver Video' },
+    // ── Exercise Demo ──
+    exerciseDemo: {
+      title: 'Cómo Hacerlo',
+      steps: 'Pasos',
+      muscles: 'Músculos Objetivo',
+      difficulty: 'Dificultad',
+      proTip: 'Consejo Pro',
+      close: 'Cerrar',
+      easy: 'Fácil',
+      medium: 'Medio',
+      hard: 'Difícil',
+      mistakes: 'Errores Comunes',
+    },
     measurements: {
       title: 'Medidas Corporales', add: 'Añadir Medida', save: 'Guardar',
       chest: 'Pecho', waist: 'Cintura', hip: 'Cadera', arm: 'Brazo', leg: 'Pierna',

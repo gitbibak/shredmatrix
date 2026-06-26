@@ -1,31 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
-import NutritionPanel from './NutritionPanel';
-import WorkoutPanel from './WorkoutPanel';
-import ProgressTracker from './ProgressTracker';
-import ProfilePage from './ProfilePage';
-import WaterTracker from './WaterTracker';
-import WorkoutTimer from './WorkoutTimer';
-import WeeklyReport from './WeeklyReport';
-import Achievements from './Achievements';
-import SupplementGuide from './SupplementGuide';
-import DailyMotivation from './DailyMotivation';
-import ShareCard from './ShareCard';
-import InstallPrompt from './InstallPrompt';
-import BodyMeasurements from './BodyMeasurements';
-import SleepTracker from './SleepTracker';
-import CalorieCalc from './CalorieCalc';
-import DataExport from './DataExport';
-import ProgramAdvisor from './ProgramAdvisor';
-import HeroCard from './HeroCard';
-import NudgeCards from './NudgeCards';
-import MuscleRecovery from './MuscleRecovery';
-import StreakCalendar from './StreakCalendar';
-import RetentionBanner from './RetentionBanner';
-import DailyChallenge from './DailyChallenge';
 
-import { StravaConnectCard, StravaActivitiesPanel } from './StravaPanel';
+// ── Lazy-loaded Dashboard sub-components ──
+const NutritionPanel = lazy(() => import('./NutritionPanel'));
+const WorkoutPanel = lazy(() => import('./WorkoutPanel'));
+const ProgressTracker = lazy(() => import('./ProgressTracker'));
+const ProfilePage = lazy(() => import('./ProfilePage'));
+const WaterTracker = lazy(() => import('./WaterTracker'));
+const WorkoutTimer = lazy(() => import('./WorkoutTimer'));
+const WeeklyReport = lazy(() => import('./WeeklyReport'));
+const MonthlyReport = lazy(() => import('./MonthlyReport'));
+const Achievements = lazy(() => import('./Achievements'));
+const SupplementGuide = lazy(() => import('./SupplementGuide'));
+const DailyMotivation = lazy(() => import('./DailyMotivation'));
+const ShareCard = lazy(() => import('./ShareCard'));
+const InstallPrompt = lazy(() => import('./InstallPrompt'));
+const BodyMeasurements = lazy(() => import('./BodyMeasurements'));
+const SleepTracker = lazy(() => import('./SleepTracker'));
+const CalorieCalc = lazy(() => import('./CalorieCalc'));
+const DataExport = lazy(() => import('./DataExport'));
+const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
+const HeroCard = lazy(() => import('./HeroCard'));
+const NudgeCards = lazy(() => import('./NudgeCards'));
+const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
+const StreakCalendar = lazy(() => import('./StreakCalendar'));
+const RetentionBanner = lazy(() => import('./RetentionBanner'));
+const DailyChallenge = lazy(() => import('./DailyChallenge'));
+const PushPermission = lazy(() => import('./PushPermission'));
+const Leaderboard = lazy(() => import('./Leaderboard'));
+const StravaConnectCard = lazy(() => import('./StravaPanel').then(m => ({ default: m.StravaConnectCard })));
+const StravaActivitiesPanel = lazy(() => import('./StravaPanel').then(m => ({ default: m.StravaActivitiesPanel })));
+
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
   LogOut, Target, Award, Share2, ChevronDown,
@@ -292,6 +298,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       </motion.nav>
 
       {/* ── Main Content ─────────────────────────────── */}
+      <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
         {/* ── Hero Card — Full Balance Score + Today ── */}
         <HeroCard plan={plan} />
@@ -302,8 +309,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
         {/* ── Retention Banner — Day-based motivational messages ── */}
         <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
 
-
-
+        {/* ── Push Notification Permission Request ── */}
+        <PushPermission />
 
         <AnimatePresence mode="wait">
 
@@ -379,6 +386,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <StreakCalendar />
                     <StravaActivitiesPanel />
                     <WeeklyReport plan={plan} />
+                    <MonthlyReport plan={plan} />
                     <BodyMeasurements />
                   </motion.div>
                 </div>
@@ -397,6 +405,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               transition={{ duration: 0.25 }}
             >
               <Achievements plan={plan} user={user} />
+              <div className="mt-4">
+                <Leaderboard plan={plan} />
+              </div>
             </motion.div>
           )}
 
@@ -432,6 +443,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           </p>
         </div>
       </main>
+      </Suspense>
 
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">

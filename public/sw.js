@@ -120,3 +120,52 @@ self.addEventListener('fetch', (event) => {
       .catch(() => caches.match(request))
   );
 });
+
+// ── Push Notification ──────────────────────────
+self.addEventListener('push', (event) => {
+  let data = { title: 'Full Balance', body: 'Antrenmanını unutma! 💪', tag: 'fb-push' };
+  try {
+    if (event.data) data = { ...data, ...event.data.json() };
+  } catch (e) { /* use defaults */ }
+
+  const options = {
+    body: data.body,
+    icon: '/icon-192.png',
+    badge: '/favicon-32.png',
+    vibrate: [100, 50, 100],
+    tag: data.tag || 'fb-push',
+    renotify: true,
+    data: { url: data.url || '/dashboard' },
+    actions: data.actions || [
+      { action: 'open', title: 'Aç' },
+      { action: 'dismiss', title: 'Kapat' },
+    ],
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// ── Notification Click ─────────────────────────
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'dismiss') return;
+
+  const targetUrl = event.notification.data?.url || '/dashboard';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      // Focus existing window if found
+      for (const client of windowClients) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.navigate(targetUrl);
+          return client.focus();
+        }
+      }
+      // Open new window
+      return clients.openWindow(targetUrl);
+    })
+  );
+});
