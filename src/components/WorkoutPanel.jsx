@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getWorkoutLogs, saveWorkoutLog } from '../lib/dataService';
+import { getExerciseInfo, getDifficultyLabel } from '../data/exerciseDatabase';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
@@ -14,6 +15,7 @@ import {
   Play,
   Target,
   Activity,
+  Info,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -53,6 +55,9 @@ function isRestDay(day) {
 }
 
 function ExerciseRow({ exercise, index, t }) {
+  const [showTip, setShowTip] = useState(false);
+  const info = getExerciseInfo(exercise.name);
+  const diff = info ? getDifficultyLabel(info.difficulty) : null;
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' form technique')}`;
   return (
     <motion.div
@@ -61,36 +66,90 @@ function ExerciseRow({ exercise, index, t }) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="bg-slate-950 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3"
+      className="bg-slate-950 rounded-lg overflow-hidden"
     >
-      <span className="font-semibold text-slate-100 text-sm flex-1 min-w-0 truncate">
-        {exercise.name}
-      </span>
+      <div className="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {info?.emoji && <span className="text-base shrink-0">{info.emoji}</span>}
+          <div className="min-w-0">
+            <span className="font-semibold text-slate-100 text-sm block truncate">
+              {exercise.name}
+            </span>
+            {info?.muscles && (
+              <div className="flex flex-wrap gap-1 mt-0.5">
+                {info.muscles.map(m => (
+                  <span key={m} className="text-[8px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-medium">
+                    {m}
+                  </span>
+                ))}
+                {diff && (
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded ${diff.bg} ${diff.color} font-medium`}>
+                    {diff.text}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
 
-      <div className="flex items-center gap-3 shrink-0 text-xs text-slate-400">
-        <span className="flex items-center gap-1">
-          <Repeat size={13} className="text-orange-400" />
-          <span className="text-slate-300">{exercise.sets}</span>
-        </span>
-        <span className="flex items-center gap-1">
-          <Hash size={13} className="text-blue-400" />
-          <span className="text-slate-300">{exercise.reps}</span>
-        </span>
-        <span className="flex items-center gap-1">
-          <Timer size={13} className="text-emerald-400" />
-          <span className="text-slate-300">{exercise.rest}</span>
-        </span>
-        <a
-          href={videoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={t('video.watch')}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Play size={10} fill="currentColor" />
-        </a>
+        <div className="flex items-center gap-3 shrink-0 text-xs text-slate-400">
+          <span className="flex items-center gap-1">
+            <Repeat size={13} className="text-orange-400" />
+            <span className="text-slate-300">{exercise.sets}</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <Hash size={13} className="text-blue-400" />
+            <span className="text-slate-300">{exercise.reps}</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <Timer size={13} className="text-emerald-400" />
+            <span className="text-slate-300">{exercise.rest}</span>
+          </span>
+          {info?.tip && (
+            <button
+              onClick={() => setShowTip(!showTip)}
+              className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all cursor-pointer ${
+                showTip ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' : 'bg-slate-800/60 border-slate-700/30 text-slate-500 hover:text-cyan-400'
+              }`}
+              title="Form İpucu"
+            >
+              <Info size={11} />
+            </button>
+          )}
+          <a
+            href={videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={t('video.watch')}
+            className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Play size={9} fill="currentColor" />
+          </a>
+        </div>
       </div>
+
+      {/* Form tip expandable */}
+      <AnimatePresence>
+        {showTip && info?.tip && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-3 pt-0">
+              <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+                <Info size={12} className="text-cyan-400 shrink-0 mt-0.5" />
+                <p className="text-[11px] text-cyan-300/80 leading-relaxed">
+                  💡 {info.tip}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
