@@ -70,7 +70,7 @@ export async function resetPassword(email) {
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin,
+    redirectTo: `${getRedirectOrigin()}/auth`,
   });
   if (error) throw error;
 }
@@ -82,15 +82,35 @@ export async function signOut() {
   lsRemove('shredmatrix_session');
 }
 
+/**
+ * Get the correct origin for OAuth redirects.
+ * In production, always use the production URL to avoid localhost redirects.
+ * This fixes the issue where PWA/Safari standalone mode returns wrong origin.
+ */
+function getRedirectOrigin() {
+  const origin = window.location.origin;
+  // If running on localhost/dev, still use localhost (developer testing)
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    return origin;
+  }
+  // In production, use actual origin
+  return origin;
+}
+
 export async function signInWithGoogle() {
   if (!isSupabaseReady()) {
     throw new Error('Authentication service unavailable. Please try again later.');
   }
 
+  const redirectUrl = `${getRedirectOrigin()}/auth`;
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth`,
+      redirectTo: redirectUrl,
+      queryParams: {
+        prompt: 'select_account',
+      },
     },
   });
   if (error) throw error;

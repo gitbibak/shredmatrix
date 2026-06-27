@@ -360,6 +360,16 @@ function AppContent() {
     initAnalytics();
     const restoreSession = async () => {
       const currentPath = window.location.pathname;
+      const urlHash = window.location.hash;
+
+      // ── Handle OAuth callback: if we landed on /auth with hash tokens ──
+      // Supabase implicit flow returns tokens in URL hash (#access_token=...)
+      // detectSessionInUrl should handle this, but we ensure it by calling getSession after a small delay
+      if (currentPath === '/auth' && (urlHash.includes('access_token') || urlHash.includes('refresh_token'))) {
+        // Give Supabase client time to detect and parse the URL hash
+        await new Promise(r => setTimeout(r, 500));
+      }
+
       try {
         const sessionData = await getSession();
         if (sessionData?.user) {
