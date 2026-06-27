@@ -12,6 +12,7 @@ export const supabase = (supabaseUrl && supabaseKey)
       auth: {
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
       },
     })
   : null;
