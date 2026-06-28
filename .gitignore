@@ -29,3 +29,6 @@ src/lib/localTestAuth.js
 
 # Local test auth
 src/lib/localTestAuth.js
+
+# Local downloaded CLI tools
+output/marketing-kit/tools/

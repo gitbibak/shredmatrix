@@ -1,0 +1,23 @@
+{
+  "baseUrl": "http://127.0.0.1:5173",
+  "generatedAt": "2026-06-25T13:08:51.669Z",
+  "screenshots": [
+    "dashboard-achievements-desktop.png",
+    "dashboard-nutrition-desktop.png",
+    "dashboard-nutrition-mobile.png",
+    "dashboard-profile-desktop.png",
+    "dashboard-progress-desktop.png",
+    "dashboard-progress-mobile.png",
+    "dashboard-workout-desktop.png",
+    "dashboard-workout-mobile.png",
+    "landing-desktop.png",
+    "landing-mobile.png",
+    "onboarding-mobile.png",
+    "share-card-modal.png"
+  ],
+  "verification": {
+    "bodyTextLength": 5182,
+    "overlayState": "OK",
+    "consoleErrors": []
+  }
+}

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { translations } from './translations';
 
 const LanguageContext = createContext();
@@ -13,22 +13,33 @@ function detectLanguage() {
     if (saved && SUPPORTED.includes(saved)) return saved;
   } catch {}
 
-  // 2. Browser language
-  const browserLang = (navigator.language || navigator.userLanguage || 'tr').slice(0, 2).toLowerCase();
-  if (SUPPORTED.includes(browserLang)) return browserLang;
+  // 2. Browser/device language preferences
+  const browserLanguages = [
+    ...(navigator.languages || []),
+    navigator.language,
+    navigator.userLanguage,
+  ].filter(Boolean);
+
+  for (const candidate of browserLanguages) {
+    const language = candidate.slice(0, 2).toLowerCase();
+    if (SUPPORTED.includes(language)) return language;
+  }
 
   // 3. Fallback
-  return 'tr';
+  return 'en';
 }
 
 export function LanguageProvider({ children }) {
   const [lang, setLangState] = useState(detectLanguage);
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const setLang = useCallback((newLang) => {
     if (SUPPORTED.includes(newLang)) {
       setLangState(newLang);
       try { localStorage.setItem(STORAGE_KEY, newLang); } catch {}
-      document.documentElement.lang = newLang;
     }
   }, []);
 
