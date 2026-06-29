@@ -5,8 +5,8 @@
 
 import { supabase, isSupabaseReady } from './supabase';
 
-// VAPID public key
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || '';
+// VAPID public key (safe to hardcode — this is a PUBLIC key, like SSH public keys)
+const VAPID_PUBLIC_KEY = 'BJVmYnFzWEc13jZMmuuRvE8EcjSfJ-5km9zgkEqqKE-K3v9wkwFg5JLsAmEePDfJYMta6M6Ne_qSDCBBftpK8wo';
 
 const PUSH_PREF_KEY = 'fb_push_permission';
 const PUSH_SUB_KEY = 'fb_push_subscription';
