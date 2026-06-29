@@ -745,6 +745,8 @@ export const translations = {
       later: 'Sonra',
       enabled: 'Bildirimler Açık ✅',
       enabledDesc: 'Artık antrenman hatırlatmaları alacaksın!',
+      error: 'Bildirim açılamadı. Lütfen tekrar dene.',
+      deniedError: 'Bildirim izni reddedildi. Telefon Ayarları → Safari/Chrome → Bildirimler bölümünden açabilirsin.',
       feature: {
         workout: 'Antrenman hatırlatma',
         water: 'Su içme bildirimi',
@@ -1548,6 +1550,8 @@ export const translations = {
       later: 'Later',
       enabled: 'Notifications On ✅',
       enabledDesc: 'You will now receive workout reminders!',
+      error: 'Could not enable notifications. Please try again.',
+      deniedError: 'Notification permission denied. You can enable it in Settings → Safari/Chrome → Notifications.',
       feature: {
         workout: 'Workout reminders',
         water: 'Water reminders',
@@ -2328,6 +2332,8 @@ export const translations = {
       later: 'Más tarde',
       enabled: 'Notificaciones Activadas ✅',
       enabledDesc: '¡Ahora recibirás recordatorios de entrenamiento!',
+      error: 'No se pudieron activar las notificaciones. Inténtalo de nuevo.',
+      deniedError: 'Permiso de notificación denegado. Puedes activarlo en Ajustes → Safari/Chrome → Notificaciones.',
       feature: {
         workout: 'Recordatorio de ejercicio',
         water: 'Recordatorio de agua',
