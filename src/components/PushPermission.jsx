@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, X, Check, Dumbbell, Droplets, Moon, Trophy } from 'lucide-react';
+import { Bell, X, Check, Dumbbell, Droplets, Moon, Trophy, AlertCircle } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import {
   isPushSupported,
@@ -8,11 +8,12 @@ import {
   wasRecentlyDismissed,
   dismissPushPrompt,
   subscribeToPush,
+  getPushUnsupportedReason,
 } from '../lib/pushService';
 
 /**
- * Push notification permission request — sleek top banner style
- * Shows after 3rd session, slides down from top
+ * Push notification permission request — bottom card style
+ * Only shows if device actually supports push notifications
  */
 export default function PushPermission() {
   const { t } = useTranslation();
@@ -22,36 +23,51 @@ export default function PushPermission() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Don't show if not supported, already granted/denied, or recently dismissed
+    // Don't show if not supported
     if (!isPushSupported()) return;
-    if (getPermissionStatus() !== 'default') return;
+    // Don't show if already granted or denied
+    const perm = getPermissionStatus();
+    if (perm === 'granted' || perm === 'denied') return;
+    // Don't show if recently dismissed
     if (wasRecentlyDismissed()) return;
 
-    // Show after a short delay (let user settle in)
     const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  const getErrorMessage = (reason, detail) => {
+    switch (reason) {
+      case 'denied':
+        return t('push.deniedError');
+      case 'dismissed':
+        return 'İzin dialogunu kapattın. Tekrar "İzin Ver" butonuna bas.';
+      case 'ios-old':
+        return 'Bildirimler iOS 16.4+ gerektirir. Telefonunu güncelle.';
+      case 'ios-not-standalone':
+        return 'Bildirimleri almak için uygulamayı ana ekrana eklemelisin.';
+      case 'sw-not-ready':
+        return 'Servis çalışanı hazır değil. Uygulamayı kapatıp tekrar aç.';
+      case 'vapid-missing':
+        return 'Sistem yapılandırma hatası. Lütfen daha sonra tekrar dene.';
+      case 'subscribe-failed':
+        return `Abonelik oluşturulamadı${detail ? ': ' + detail : ''}. Tekrar dene.`;
+      default:
+        return t('push.error');
+    }
+  };
+
   const handleAllow = async () => {
     setSubscribing(true);
     setError(null);
-    try {
-      const sub = await subscribeToPush();
-      setSubscribing(false);
-      if (sub) {
-        setDone(true);
-        setTimeout(() => setVisible(false), 3000);
-      } else {
-        // Check if permission was denied
-        if (getPermissionStatus() === 'denied') {
-          setError(t('push.deniedError') || 'Bildirim izni reddedildi. Ayarlardan açabilirsin.');
-        } else {
-          setError(t('push.error') || 'Bildirim açılamadı. Tekrar dene.');
-        }
-      }
-    } catch (err) {
-      setSubscribing(false);
-      setError('Bir hata oluştu. Tekrar dene.');
+
+    const result = await subscribeToPush();
+    setSubscribing(false);
+
+    if (result.success) {
+      setDone(true);
+      setTimeout(() => setVisible(false), 3000);
+    } else {
+      setError(getErrorMessage(result.reason, result.detail));
     }
   };
 
@@ -62,7 +78,6 @@ export default function PushPermission() {
 
   if (!visible) return null;
 
-  // Notification feature list
   const features = [
     { icon: Dumbbell, text: t('push.feature.workout'), color: 'text-orange-400' },
     { icon: Droplets, text: t('push.feature.water'), color: 'text-blue-400' },
@@ -131,6 +146,14 @@ export default function PushPermission() {
                 ))}
               </div>
 
+              {/* Error message */}
+              {error && (
+                <div className="flex items-start gap-2 mb-3 px-2.5 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                  <AlertCircle size={13} className="text-red-400 mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-red-300 leading-relaxed">{error}</p>
+                </div>
+              )}
+
               {/* Actions */}
               <div className="flex items-center gap-2">
                 <motion.button
@@ -140,7 +163,7 @@ export default function PushPermission() {
                   className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold cursor-pointer hover:from-orange-600 hover:to-orange-700 transition-colors disabled:opacity-50 shadow-lg shadow-orange-500/20"
                 >
                   <Bell size={12} />
-                  {subscribing ? '...' : t('push.allow')}
+                  {subscribing ? '...' : (error ? 'Tekrar Dene' : t('push.allow'))}
                 </motion.button>
 
                 <button
@@ -150,11 +173,6 @@ export default function PushPermission() {
                   {t('push.later')}
                 </button>
               </div>
-
-              {/* Error message */}
-              {error && (
-                <p className="text-[11px] text-red-400 mt-2">{error}</p>
-              )}
             </div>
           )}
         </div>
