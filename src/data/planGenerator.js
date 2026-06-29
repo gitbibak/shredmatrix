@@ -54,6 +54,7 @@ function calculateMacros(calories, goal) {
 function adjustCaloriesForDay(baseCalories, dayType, goal) {
   switch (dayType) {
     case 'upper':      return Math.round(baseCalories * 1.05);  // Üst vücut +%5
+    case 'back':       return Math.round(baseCalories * 1.08);  // Sırt (deadlift vb.) +%8
     case 'lower':      return Math.round(baseCalories * 1.10);  // Alt vücut +%10 (daha yorucu)
     case 'hiit':       return Math.round(baseCalories * 1.08);  // HIIT +%8
     case 'active_rest': return Math.round(baseCalories * 0.90); // Aktif dinlenme -%10
@@ -528,7 +529,7 @@ const workoutPhases = {
         image: '/images/workouts/chest.png',
         exercises: [
           { name: 'Bench Press', sets: 4, reps: '8-10', rest: '90s' },
-          { name: 'İncline Dumbbell Press', sets: 4, reps: '10-12', rest: '75s' },
+          { name: 'Incline Dumbbell Press', sets: 4, reps: '10-12', rest: '75s' },
           { name: 'Cable Flyes', sets: 3, reps: '12-15', rest: '60s' },
           { name: 'Dips', sets: 3, reps: '10-12', rest: '60s' },
           { name: 'Triceps Pushdown', sets: 3, reps: '12-15', rest: '45s' },
@@ -814,7 +815,7 @@ const workoutPhases = {
           { name: 'Burpees', sets: 4, reps: '15', rest: '30s' },
           { name: 'Kettlebell Swing', sets: 4, reps: '20', rest: '30s' },
           { name: 'Mountain Climbers', sets: 3, reps: '30s', rest: '15s' },
-          { name: 'Box Jumps', sets: 3, reps: '12', rest: '30s' },
+          { name: 'Box Jump', sets: 3, reps: '12', rest: '30s' },
           { name: 'Battle Ropes', sets: 3, reps: '30s', rest: '30s' },
         ],
       },
@@ -927,7 +928,7 @@ const workoutPhases = {
         day: 'Cumartesi', focus: 'HIIT Kardiyo Finisher', emoji: '🎯',
         image: '/images/workouts/chest.png',
         exercises: [
-          { name: 'Rowing Machine (500m x 4)', sets: 4, reps: '500m', rest: '90s' },
+          { name: 'Rowing Machine', sets: 4, reps: '500m', rest: '90s' },
           { name: 'Burpee Broad Jump', sets: 3, reps: '10', rest: '30s' },
           { name: 'Medicine Ball Slam', sets: 3, reps: '15', rest: '30s' },
           { name: 'Ski Erg Intervals', sets: 5, reps: '200m', rest: '45s' },
@@ -1747,6 +1748,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       : mealType === 'active_rest' ? 'active_rest'
       : mealType === 'lower' ? 'lower'
       : mealType === 'hiit' ? 'hiit'
+      : mealType === 'back' ? 'back'
       : 'upper';
 
     const dayCalories = adjustCaloriesForDay(baseCalories, dayType, primaryGoal);
