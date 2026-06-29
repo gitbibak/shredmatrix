@@ -25,7 +25,7 @@ const HeroCard = lazy(() => import('./HeroCard'));
 const NudgeCards = lazy(() => import('./NudgeCards'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
-const RetentionBanner = lazy(() => import('./RetentionBanner'));
+
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const PushPermission = lazy(() => import('./PushPermission'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -309,10 +309,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
         </Suspense>
 
-        {/* ── Retention Banner — Day-based motivational messages ── */}
-        <Suspense fallback={null}>
-          <RetentionBanner onNavigate={(tab) => setActiveTab(tab)} />
-        </Suspense>
+
+
 
         {/* ── Push Notification Permission Request ── */}
         <Suspense fallback={null}>
