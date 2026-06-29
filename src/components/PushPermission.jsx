@@ -19,6 +19,7 @@ export default function PushPermission() {
   const [visible, setVisible] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Don't show if not supported, already granted/denied, or recently dismissed
@@ -26,28 +27,31 @@ export default function PushPermission() {
     if (getPermissionStatus() !== 'default') return;
     if (wasRecentlyDismissed()) return;
 
-    // Only show after user has used the app at least 3 times
-    const SESSION_KEY = 'fb_session_count';
-    try {
-      const count = parseInt(localStorage.getItem(SESSION_KEY) || '0') + 1;
-      localStorage.setItem(SESSION_KEY, String(count));
-      if (count < 3) return;
-    } catch { return; }
-
-    // Delay showing by 8 seconds (let user settle in first)
-    const timer = setTimeout(() => setVisible(true), 8000);
+    // Show after a short delay (let user settle in)
+    const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   const handleAllow = async () => {
     setSubscribing(true);
-    const sub = await subscribeToPush();
-    setSubscribing(false);
-    if (sub) {
-      setDone(true);
-      setTimeout(() => setVisible(false), 2000);
-    } else {
-      setVisible(false);
+    setError(null);
+    try {
+      const sub = await subscribeToPush();
+      setSubscribing(false);
+      if (sub) {
+        setDone(true);
+        setTimeout(() => setVisible(false), 3000);
+      } else {
+        // Check if permission was denied
+        if (getPermissionStatus() === 'denied') {
+          setError(t('push.deniedError') || 'Bildirim izni reddedildi. Ayarlardan açabilirsin.');
+        } else {
+          setError(t('push.error') || 'Bildirim açılamadı. Tekrar dene.');
+        }
+      }
+    } catch (err) {
+      setSubscribing(false);
+      setError('Bir hata oluştu. Tekrar dene.');
     }
   };
 
@@ -146,6 +150,11 @@ export default function PushPermission() {
                   {t('push.later')}
                 </button>
               </div>
+
+              {/* Error message */}
+              {error && (
+                <p className="text-[11px] text-red-400 mt-2">{error}</p>
+              )}
             </div>
           )}
         </div>

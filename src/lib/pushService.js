@@ -14,11 +14,29 @@ const PUSH_SUB_KEY = 'fb_push_subscription';
 
 /**
  * Check if push notifications are supported
+ * iOS 16.4+ supports Web Push in standalone PWA mode
  */
 export function isPushSupported() {
-  return 'serviceWorker' in navigator &&
-         'PushManager' in window &&
-         'Notification' in window;
+  // Basic feature detection
+  const hasServiceWorker = 'serviceWorker' in navigator;
+  const hasPushManager = 'PushManager' in window;
+  const hasNotification = 'Notification' in window;
+
+  if (!hasServiceWorker || !hasPushManager || !hasNotification) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Check if running as iOS standalone PWA
+ */
+export function isIOSStandalone() {
+  return (
+    ('standalone' in navigator && navigator.standalone) ||
+    window.matchMedia('(display-mode: standalone)').matches
+  );
 }
 
 /**
@@ -63,33 +81,48 @@ function urlBase64ToUint8Array(base64String) {
 
 /**
  * Subscribe to push notifications
+ * Returns { subscription, error } for better UI feedback
  */
 export async function subscribeToPush() {
-  if (!isPushSupported() || !VAPID_PUBLIC_KEY) {
-    console.warn('[Push] Not supported or VAPID key missing');
+  if (!VAPID_PUBLIC_KEY) {
+    console.warn('[Push] VAPID key missing');
+    return null;
+  }
+
+  if (!isPushSupported()) {
+    console.warn('[Push] Push not supported on this device/browser');
     return null;
   }
 
   try {
-    // Request permission
+    // Request permission — MUST be triggered by user gesture on iOS
+    console.log('[Push] Requesting permission...');
     const permission = await Notification.requestPermission();
+    console.log('[Push] Permission result:', permission);
+
     if (permission !== 'granted') {
-      console.warn('[Push] Permission denied');
+      console.warn('[Push] Permission denied or dismissed');
       return null;
     }
 
     // Get service worker registration
+    console.log('[Push] Getting service worker...');
     const registration = await navigator.serviceWorker.ready;
+    console.log('[Push] Service worker ready');
 
     // Check for existing subscription
     let subscription = await registration.pushManager.getSubscription();
 
     if (!subscription) {
+      console.log('[Push] Creating new subscription...');
       // Create new subscription
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
       });
+      console.log('[Push] New subscription created');
+    } else {
+      console.log('[Push] Existing subscription found');
     }
 
     // Save to Supabase if available
@@ -99,6 +132,19 @@ export async function subscribeToPush() {
     try {
       localStorage.setItem(PUSH_SUB_KEY, JSON.stringify(subscription.toJSON()));
     } catch {}
+
+    // Send a welcome notification to confirm it works
+    try {
+      registration.showNotification('🔔 Bildirimler Açık!', {
+        body: 'Artık antrenman hatırlatmaları, su bildirimleri ve motivasyon mesajları alacaksın!',
+        icon: '/icon-192.png',
+        badge: '/favicon-32.png',
+        tag: 'fb-welcome',
+        vibrate: [100, 50, 100],
+      });
+    } catch (e) {
+      console.warn('[Push] Welcome notification failed:', e);
+    }
 
     console.log('[Push] Subscribed successfully');
     return subscription;
