@@ -5,10 +5,14 @@ import { supabase, isSupabaseReady } from './supabase';
 // Only accessible by admin role users
 // ══════════════════════════════════════════════
 
-const ADMIN_EMAIL = 'tlgdvc@gmail.com';
+const ADMIN_EMAILS = [
+  'tlgdvc@gmail.com',
+  'ahmetdeveci3112@gmail.com',
+];
 
 export function isAdmin(user) {
-  return user?.email?.toLowerCase() === ADMIN_EMAIL;
+  if (!user?.email) return false;
+  return ADMIN_EMAILS.includes(user.email.toLowerCase());
 }
 
 // ── Normalization Maps ──────────────────────────
@@ -261,4 +265,106 @@ export async function deleteUser(userId) {
   // Delete profile
   const { error } = await supabase.from('profiles').delete().eq('id', userId);
   if (error) throw error;
+}
+
+// ── Activity Stats ──────────────────────────────
+export async function getActivityStats() {
+  if (!isSupabaseReady()) return null;
+
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const weekAgo = new Date(Date.now() - 7 * 86400000);
+    const monthAgo = new Date(Date.now() - 30 * 86400000);
+
+    // Workout logs - total
+    const { count: totalWorkouts } = await supabase
+      .from('workout_logs')
+      .select('*', { count: 'exact', head: true });
+
+    // Workout logs - today
+    const { count: todayWorkouts } = await supabase
+      .from('workout_logs')
+      .select('*', { count: 'exact', head: true })
+      .gte('date', today.toISOString().split('T')[0]);
+
+    // Workout logs - this week
+    const { count: weekWorkouts } = await supabase
+      .from('workout_logs')
+      .select('*', { count: 'exact', head: true })
+      .gte('date', weekAgo.toISOString().split('T')[0]);
+
+    // Active users (logged workout in last 7 days)
+    const { data: activeData } = await supabase
+      .from('workout_logs')
+      .select('user_id')
+      .gte('date', weekAgo.toISOString().split('T')[0]);
+    const activeUsers = new Set((activeData || []).map(d => d.user_id)).size;
+
+    // Water tracking entries
+    const { count: totalWater } = await supabase
+      .from('water_tracking')
+      .select('*', { count: 'exact', head: true });
+
+    // Progress entries
+    const { count: totalProgress } = await supabase
+      .from('progress')
+      .select('*', { count: 'exact', head: true });
+
+    // Measurement entries
+    const { count: totalMeasurements } = await supabase
+      .from('measurements')
+      .select('*', { count: 'exact', head: true });
+
+    return {
+      totalWorkouts: totalWorkouts || 0,
+      todayWorkouts: todayWorkouts || 0,
+      weekWorkouts: weekWorkouts || 0,
+      activeUsers,
+      totalWater: totalWater || 0,
+      totalProgress: totalProgress || 0,
+      totalMeasurements: totalMeasurements || 0,
+    };
+  } catch (err) {
+    console.error('[Admin] Activity stats error:', err);
+    return null;
+  }
+}
+
+// ── Workout Trend (last 14 days) ────────────────
+export async function getWorkoutTrend() {
+  if (!isSupabaseReady()) return [];
+
+  try {
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+    const { data, error } = await supabase
+      .from('workout_logs')
+      .select('date')
+      .gte('date', fourteenDaysAgo.toISOString().split('T')[0])
+      .order('date', { ascending: true });
+
+    if (error) throw error;
+
+    const grouped = {};
+    for (let i = 0; i < 14; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - (13 - i));
+      grouped[d.toISOString().slice(0, 10)] = 0;
+    }
+
+    (data || []).forEach(({ date }) => {
+      const key = date?.slice(0, 10);
+      if (key && grouped[key] !== undefined) grouped[key]++;
+    });
+
+    return Object.entries(grouped).map(([date, count]) => ({
+      date: date.slice(5),
+      count,
+    }));
+  } catch (err) {
+    console.error('[Admin] Workout trend error:', err);
+    return [];
+  }
 }
