@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 8;
+export const PLAN_VERSION = 9;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -235,6 +235,7 @@ const EXERCISE_MUSCLE_MAP = {
   'Adductor Machine': ['legs'], 'Step-Ups': ['legs', 'glutes'],
   'Step-Up (low box)': ['legs', 'glutes'],
   'Nordic Hamstring Curl': ['legs'], 'Good Morning': ['legs', 'back'],
+  'Glute Ham Raise': ['legs', 'glutes'],
   'Box Jump': ['legs'], 'Sissy Squat': ['legs'],
   'Wall Sit': ['legs'], 'Deadlift (Orta Ağırlık)': ['legs', 'back'],
   // ── Core ──
@@ -570,6 +571,7 @@ const workoutPhases = {
         image: '/images/workouts/shoulders.png',
         exercises: [
           { name: 'Military Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Dumbbell Shoulder Press', sets: 3, reps: '10-12', rest: '75s' },
           { name: 'Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
           { name: 'Face Pull', sets: 3, reps: '15-20', rest: '45s' },
           { name: 'Rear Delt Fly', sets: 3, reps: '12-15', rest: '45s' },
@@ -585,7 +587,7 @@ const workoutPhases = {
           { name: 'Leg Press', sets: 3, reps: '12-15', rest: '75s' },
           { name: 'Walking Lunges', sets: 3, reps: '12/bacak', rest: '60s' },
           { name: 'Leg Curl', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Plank', sets: 3, reps: '60s', rest: '30s' },
+          { name: 'Standing Calf Raise (Dropset)', sets: 4, reps: '15-20', rest: '30s' },
         ],
       },
       {
@@ -644,6 +646,7 @@ const workoutPhases = {
           { name: 'Cable Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
           { name: 'Upright Row', sets: 3, reps: '10-12', rest: '60s' },
           { name: 'Close Grip Bench Press', sets: 3, reps: '8-10', rest: '75s' },
+          { name: 'Overhead Cable Extension', sets: 3, reps: '12-15', rest: '45s' },
           { name: 'Incline Dumbbell Curl', sets: 3, reps: '10-12', rest: '45s' },
           { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '45s' },
         ],
@@ -730,7 +733,10 @@ const workoutPhases = {
       },
       {
         day: 'Pazar', focus: 'Tam Dinlenme', emoji: '😴',
-        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
+        exercises: [
+          { name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' },
+          { name: '⚠️ Deload Notu: Her 4. haftada ağırlıkları %60\'a düşür, seti %50 azalt', sets: '-', reps: '-', rest: '-' },
+        ],
       },
     ],
 
@@ -776,10 +782,11 @@ const workoutPhases = {
         exercises: [
           { name: 'Back Squat (RPE 9)', sets: 5, reps: '3-5', rest: '180s' },
           { name: 'Paused Front Squat', sets: 3, reps: '6-8', rest: '120s' },
-          { name: 'Box Jump', sets: 4, reps: '5', rest: '90s' },
+          { name: 'Glute Ham Raise', sets: 3, reps: '8-10', rest: '75s' },
           { name: 'Süperset: Leg Press + Wall Sit', sets: 3, reps: '12 + 30s', rest: '75s' },
           { name: 'Reverse Lunge (Barbell)', sets: 3, reps: '8/bacak', rest: '75s' },
           { name: 'Standing Single Leg Calf Raise', sets: 4, reps: '12-15', rest: '30s' },
+          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '30s' },
           { name: '⚠️ Deload Notu: 4. haftada squat ağırlığı max %65', sets: '-', reps: '-', rest: '-' },
         ],
       },
