@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 7;
+export const PLAN_VERSION = 8;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -258,6 +258,11 @@ const EXERCISE_MUSCLE_MAP = {
   'Burpee to Pull-Up': ['full_body'], 'Burpee Broad Jump': ['full_body'],
   'Dumbbell Snatch': ['full_body', 'shoulder'],
   'Wall Ball': ['full_body', 'legs'],
+  'Plate Pinch + Farmer Walk': ['full_body', 'forearm'],
+  'Ab Wheel + Pallof Press': ['core'],
+  'Box Jump x30': ['legs'], 'Push-Up x30': ['chest', 'triceps'],
+  'Kettlebell Swing x30': ['full_body'], 'Walking Lunge x30': ['legs', 'glutes'],
+  'Burpee x20': ['full_body'],
   // ── Kardiyo Makineleri ──
   'Rowing Machine': ['full_body'], 'Assault Bike': ['full_body'],
   'Treadmill Sprint Intervals': ['full_body'], 'Sprint İntervalleri (Koşu Bandı)': ['full_body'],
