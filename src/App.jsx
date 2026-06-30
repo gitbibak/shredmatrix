@@ -356,6 +356,34 @@ function AppContent() {
   const [plan, setPlan] = useState(null);
   const [pendingFormData, setPendingFormData] = useState(null);
   const [showTour, setShowTour] = useState(false);
+
+  // Upgrade stale plans at load time
+  const goalMap = {
+    'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation',
+    'Muscle Growth': 'muscle', 'Fat Loss': 'fat_loss', 'Meditation': 'meditation',
+    'Crecimiento Muscular': 'muscle', 'Quema de Grasa': 'fat_loss', 'Meditación': 'meditation',
+    'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer',
+  };
+  const upgradePlanIfNeeded = (savedPlan, email) => {
+    if ((savedPlan.planVersion || 0) < PLAN_VERSION) {
+      console.log(`[App] Plan upgrade: v${savedPlan.planVersion || 0} → v${PLAN_VERSION}`);
+      const userMetrics = {
+        name: savedPlan.userName, age: savedPlan.userAge, gender: savedPlan.userGender,
+        height: savedPlan.userHeight, weight: savedPlan.userWeight,
+        bodyFatPercentage: savedPlan.userBodyFat, experience: savedPlan.userExperience,
+        activityLevel: savedPlan.userActivityLevel, primaryGoal: goalMap[savedPlan.goal] || 'muscle',
+        workSchedule: savedPlan.userWorkSchedule, budget: savedPlan.userBudget,
+      };
+      const targetLang = savedPlan.lang || lang || 'tr';
+      const rawPlan = generatePlan(userMetrics, savedPlan.phase || 0, targetLang);
+      const newPlan = localizePlan(rawPlan, targetLang);
+      setPlan(newPlan);
+      savePlan(newPlan, email).catch(() => {});
+      return newPlan;
+    }
+    setPlan(savedPlan);
+    return savedPlan;
+  };
   const [isRestoring, setIsRestoring] = useState(true);
 
   // Restore session on mount
@@ -382,7 +410,7 @@ function AppContent() {
           try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
           const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
-            setPlan(savedPlan);
+            upgradePlanIfNeeded(savedPlan, u.email);
             if (currentPath !== '/dashboard' && currentPath !== '/admin') navigate('/dashboard', { replace: true });
           } else {
             if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
@@ -395,7 +423,7 @@ function AppContent() {
               setUser(cachedUser);
               const savedPlan = await loadPlan(cachedUser.email);
               if (savedPlan) {
-                setPlan(savedPlan);
+                upgradePlanIfNeeded(savedPlan, cachedUser.email);
                 if (currentPath !== '/dashboard' && currentPath !== '/admin') navigate('/dashboard', { replace: true });
               } else {
                 if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
@@ -428,43 +456,21 @@ function AppContent() {
     return () => subscription?.unsubscribe?.();
   }, []);
 
-  // Regenerate plan when language changes OR plan version is outdated
+  // Regenerate plan when language changes
   useEffect(() => {
-    if (!plan) return;
-    const needsLangUpdate = plan.lang !== lang;
-    const needsVersionUpdate = (plan.planVersion || 0) < PLAN_VERSION;
-
-    if (needsLangUpdate || needsVersionUpdate) {
-      // Rebuild the plan with latest templates
-      const goalMap = {
-        'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation',
-        'Muscle Growth': 'muscle', 'Fat Loss': 'fat_loss', 'Meditation': 'meditation',
-        'Crecimiento Muscular': 'muscle', 'Quema de Grasa': 'fat_loss', 'Meditación': 'meditation',
-        'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer',
-      };
-      const userMetrics = {
-        name: plan.userName,
-        age: plan.userAge,
-        gender: plan.userGender,
-        height: plan.userHeight,
-        weight: plan.userWeight,
-        bodyFatPercentage: plan.userBodyFat,
-        experience: plan.userExperience,
-        activityLevel: plan.userActivityLevel,
-        primaryGoal: goalMap[plan.goal] || 'muscle',
-        workSchedule: plan.userWorkSchedule,
-        budget: plan.userBudget,
-      };
-      const targetLang = needsLangUpdate ? lang : (plan.lang || 'tr');
-      const rawPlan = generatePlan(userMetrics, plan.phase || 0, targetLang);
-      const newPlan = localizePlan(rawPlan, targetLang);
-      setPlan(newPlan);
-      savePlan(newPlan, user?.email).catch(() => {});
-      if (needsVersionUpdate) {
-        console.log(`[App] Plan upgraded: v${plan.planVersion || 0} → v${PLAN_VERSION}`);
-      }
-    }
-  }, [lang, plan?.planVersion]);
+    if (!plan || plan.lang === lang) return;
+    const userMetrics = {
+      name: plan.userName, age: plan.userAge, gender: plan.userGender,
+      height: plan.userHeight, weight: plan.userWeight,
+      bodyFatPercentage: plan.userBodyFat, experience: plan.userExperience,
+      activityLevel: plan.userActivityLevel, primaryGoal: goalMap[plan.goal] || 'muscle',
+      workSchedule: plan.userWorkSchedule, budget: plan.userBudget,
+    };
+    const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
+    const newPlan = localizePlan(rawPlan, lang);
+    setPlan(newPlan);
+    savePlan(newPlan, user?.email).catch(() => {});
+  }, [lang]);
 
   // Handle loading → dashboard transition
   useEffect(() => {
@@ -499,7 +505,7 @@ function AppContent() {
     try {
       const savedPlan = await loadPlan(userData.email);
       if (savedPlan) {
-        setPlan(savedPlan);
+        upgradePlanIfNeeded(savedPlan, userData.email);
         if (location.pathname !== '/dashboard') navigate('/dashboard', { replace: true });
       } else {
         if (location.pathname !== '/onboarding') navigate('/onboarding', { replace: true });
