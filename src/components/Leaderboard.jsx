@@ -81,14 +81,14 @@ export default function Leaderboard({ plan }) {
 
   function getDemoData() {
     return [
-      { display_name: 'Ahmet K.', workouts: 6, streak: 14, score: 92 },
-      { display_name: 'Elif S.', workouts: 5, streak: 21, score: 88 },
-      { display_name: 'Mert Y.', workouts: 5, streak: 10, score: 85 },
-      { display_name: 'Zeynep A.', workouts: 4, streak: 7, score: 78 },
-      { display_name: 'Sen', workouts: 3, streak: 5, score: 72 },
-      { display_name: 'Burak D.', workouts: 3, streak: 3, score: 65 },
-      { display_name: 'Ayşe T.', workouts: 2, streak: 2, score: 55 },
-      { display_name: 'Can M.', workouts: 2, streak: 1, score: 48 },
+      { display_name: `${t('leaderboard.user')} 1`, workouts: 6, streak: 14, score: 92 },
+      { display_name: `${t('leaderboard.user')} 2`, workouts: 5, streak: 21, score: 88 },
+      { display_name: `${t('leaderboard.user')} 3`, workouts: 5, streak: 10, score: 85 },
+      { display_name: `${t('leaderboard.user')} 4`, workouts: 4, streak: 7, score: 78 },
+      { display_name: t('leaderboard.you'), workouts: 3, streak: 5, score: 72, isMe: true },
+      { display_name: `${t('leaderboard.user')} 5`, workouts: 3, streak: 3, score: 65 },
+      { display_name: `${t('leaderboard.user')} 6`, workouts: 2, streak: 2, score: 55 },
+      { display_name: `${t('leaderboard.user')} 7`, workouts: 2, streak: 1, score: 48 },
     ];
   }
 
@@ -217,7 +217,7 @@ export default function Leaderboard({ plan }) {
                           idx < 3
                             ? 'bg-gradient-to-r from-slate-800/80 to-slate-800/40 border border-slate-700/30'
                             : 'hover:bg-slate-800/40'
-                        } ${item.display_name === 'Sen' ? 'ring-1 ring-orange-500/30 bg-orange-500/5' : ''}`}
+                        } ${item.isMe ? 'ring-1 ring-orange-500/30 bg-orange-500/5' : ''}`}
                       >
                         {/* Rank */}
                         <div className="w-6 flex items-center justify-center shrink-0">
@@ -237,7 +237,7 @@ export default function Leaderboard({ plan }) {
                         {/* Name */}
                         <div className="flex-1 min-w-0">
                           <p className={`text-sm font-medium truncate ${
-                            item.display_name === 'Sen' ? 'text-orange-400 font-bold' : 'text-white'
+                            item.isMe ? 'text-orange-400 font-bold' : 'text-white'
                           }`}>
                             {item.display_name}
                           </p>

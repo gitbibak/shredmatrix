@@ -36,17 +36,20 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const lang = (() => { try { return localStorage.getItem('shredmatrix_lang') || 'tr'; } catch { return 'tr'; } })();
+      const titles = { tr: 'Bir hata oluştu', en: 'Something went wrong', es: 'Algo salió mal' };
+      const buttons = { tr: 'Sayfayı Yenile', en: 'Refresh Page', es: 'Actualizar Página' };
       return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
           <div className="text-center max-w-md">
             <div className="text-6xl mb-4">⚠️</div>
-            <h1 className="text-2xl font-bold text-white mb-3 font-outfit">Something went wrong</h1>
+            <h1 className="text-2xl font-bold text-white mb-3 font-outfit">{titles[lang] || titles.en}</h1>
             <p className="text-slate-400 mb-6 text-sm">{this.state.error?.message}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold font-outfit hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer"
             >
-              Refresh Page
+              {buttons[lang] || buttons.en}
             </button>
           </div>
         </div>

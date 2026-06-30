@@ -301,8 +301,8 @@ export default function ProgressTracker({ userName }) {
           >
             <EmptyState
               type="progress"
-              title="Henüz ilerleme verisi yok"
-              subtitle="Kilonu ve vücut ölçülerini kaydet, gelişimini grafiklerle takip et."
+              title={t('progress.noData')}
+              subtitle={t('progress.noDataDesc')}
             />
           </motion.div>
         ) : (

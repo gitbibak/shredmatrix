@@ -237,8 +237,8 @@ function HistoryView({ logs }) {
     return (
       <EmptyState
         type="workout"
-        title="Henüz antrenman kaydı yok"
-        subtitle="İlk antrenmanını tamamla ve burada takip et. Her set, her tekrar seni hedefe yaklaştırır."
+        title={t('workoutLog.noData')}
+        subtitle={t('workoutLog.noDataDesc')}
       />
     );
   }

@@ -495,6 +495,8 @@ export const translations = {
       copiedList: '✓ Kopyalandı!',
       emptyList: 'Bu gün için öğün bulunamadı',
       clearChecked: 'Seçimleri Temizle',
+      noPlan: 'Beslenme planı yükleniyor...',
+      noPlanDesc: 'Plan oluşturulduktan sonra günlük beslenme programın burada görünecek',
     },
 
     // ── Workout ──
@@ -516,6 +518,8 @@ export const translations = {
       coreFinisher: 'Core Finisher',
       cardioNote: 'Kardiyo Önerisi',
       rest_period: 'Dinlenme',
+      noPlan: 'Henüz antrenman planı yok',
+      noPlanDesc: 'Profilinden plan oluştur',
     },
 
     // ── Progress ──
@@ -530,6 +534,8 @@ export const translations = {
       current: 'Mevcut', start: 'Başlangıç', change: 'Değişim',
       weightLabel: 'Kilo', bodyFatLabel: 'Yağ Oranı',
       recordHistory: 'Kayıt Geçmişi', records: 'kayıt',
+      noData: 'Henüz ilerleme verisi yok',
+      noDataDesc: 'Kilonu ve vücut ölçülerini kaydet, gelişimini takip et',
     },
 
     // ── Water ──
@@ -762,6 +768,8 @@ export const translations = {
       score: 'Puan',
       yourRank: 'Senin sıran',
       weekReset: 'Her Pazartesi sıfırlanır',
+      you: 'Sen',
+      user: 'Kullanıcı',
     },
 
     // ── Reminder ──
@@ -805,6 +813,8 @@ export const translations = {
       chest: 'Göğüs', waist: 'Bel', hip: 'Kalça', arm: 'Kol', leg: 'Bacak',
       emptyTitle: 'Henüz Ölçüm Yok', emptyDesc: 'İlk ölçümünü ekleyerek vücut değişimini takip et.',
       history: 'Ölçüm Geçmişi', chart: 'Ölçüm Grafiği', date: 'Tarih',
+      noData: 'Henüz ölçüm verisi yok',
+      noDataDesc: 'Vücut ölçülerini kaydet ve değişimini takip et',
     },
 
     // ── Export ──
@@ -885,6 +895,37 @@ export const translations = {
       exercisesActive: 'egzersiz aktif',
       savedWorkouts: 'kayıtlı antrenman',
       set: 'Set',
+      noData: 'Henüz antrenman kaydı yok',
+      noDataDesc: 'İlk antrenmanını tamamla ve burada kayıtlarını gör',
+    },
+    // ── Daily Challenge ──
+    challenge: {
+      title: 'Günlük Challenge',
+      days: 'gün',
+      todaysChallenge: 'Bugünün meydan okuması',
+      completed: 'Tamamlandı!',
+      complete: 'Tamamla ✓',
+      shareText: 'Günlük Challenge tamamlandı',
+      share: 'Paylaş',
+      units: {
+        water: 'bardak su iç',
+        workout: 'antrenman tamamla',
+        sleep: 'saat uyu',
+        plank: 'dk plank yap',
+        stretching: 'dk stretching yap',
+        sugarFree: 'gün şekersiz geçir',
+        proteinGoal: 'protein hedefine ulaş',
+        earlySleep: 'gece 23:00 öncesi yat',
+        meditation: 'dk meditasyon yap',
+        intenseWorkout: 'yoğun antrenman yap',
+        mealLog: 'öğün kaydet',
+        walk: 'dk yürüyüş yap',
+      },
+    },
+
+    // ── Offline ──
+    offline: {
+      message: 'İnternet bağlantısı yok — Veriler yerel olarak kaydedilecek',
     },
   },
 
@@ -1338,6 +1379,8 @@ export const translations = {
       copiedList: '✓ Copied!',
       emptyList: 'No meals found for this day',
       clearChecked: 'Clear Checked',
+      noPlan: 'Loading nutrition plan...',
+      noPlanDesc: 'Your daily meal plan will appear here after creating a plan',
     },
     workout: {
       title: 'Workout Dashboard', program: 'Program',
@@ -1352,6 +1395,8 @@ export const translations = {
       coreFinisher: 'Core Finisher',
       cardioNote: 'Cardio Recommendation',
       rest_period: 'Rest',
+      noPlan: 'No workout plan yet',
+      noPlanDesc: 'Create a plan from your profile',
     },
     progress: {
       title: 'Progress Tracking',
@@ -1364,6 +1409,8 @@ export const translations = {
       current: 'Current', start: 'Starting', change: 'Change',
       weightLabel: 'Weight', bodyFatLabel: 'Body Fat',
       recordHistory: 'Record History', records: 'records',
+      noData: 'No progress data yet',
+      noDataDesc: 'Log your weight and measurements to track progress',
     },
     water: {
       title: 'Water Tracking', glasses: 'glasses', target: 'target',
@@ -1573,6 +1620,8 @@ export const translations = {
       score: 'Score',
       yourRank: 'Your rank',
       weekReset: 'Resets every Monday',
+      you: 'You',
+      user: 'User',
     },
     progressPeriod: {
       days7: '7 Days', days30: '30 Days', all: 'All',
@@ -1597,6 +1646,8 @@ export const translations = {
       chest: 'Chest', waist: 'Waist', hip: 'Hip', arm: 'Arm', leg: 'Leg',
       emptyTitle: 'No Measurements Yet', emptyDesc: 'Add your first measurement to track body changes.',
       history: 'Measurement History', chart: 'Measurement Chart', date: 'Date',
+      noData: 'No measurement data yet',
+      noDataDesc: 'Log your body measurements to track changes',
     },
     dataExport: {
       title: 'Export Data', desc: 'Download your progress data',
@@ -1667,6 +1718,37 @@ export const translations = {
       exercisesActive: 'exercises active',
       savedWorkouts: 'recorded workouts',
       set: 'Set',
+      noData: 'No workout logs yet',
+      noDataDesc: 'Complete your first workout to see logs here',
+    },
+    // ── Daily Challenge ──
+    challenge: {
+      title: 'Daily Challenge',
+      days: 'days',
+      todaysChallenge: "Today's challenge",
+      completed: 'Completed!',
+      complete: 'Complete ✓',
+      shareText: 'Daily Challenge completed',
+      share: 'Share',
+      units: {
+        water: 'glasses of water',
+        workout: 'workout completed',
+        sleep: 'hours of sleep',
+        plank: 'min plank',
+        stretching: 'min stretching',
+        sugarFree: 'day sugar-free',
+        proteinGoal: 'hit protein goal',
+        earlySleep: 'sleep before 11 PM',
+        meditation: 'min meditation',
+        intenseWorkout: 'intense workout',
+        mealLog: 'meals logged',
+        walk: 'min walk',
+      },
+    },
+
+    // ── Offline ──
+    offline: {
+      message: 'No internet connection — Data will be saved locally',
     },
   },
 
@@ -2120,6 +2202,8 @@ export const translations = {
       copiedList: '✓ ¡Copiado!',
       emptyList: 'No se encontraron comidas para este día',
       clearChecked: 'Limpiar Marcados',
+      noPlan: 'Cargando plan nutricional...',
+      noPlanDesc: 'Tu plan de comidas diario aparecerá aquí después de crear un plan',
     },
     workout: {
       title: 'Panel de Entrenamiento', program: 'Programa',
@@ -2134,6 +2218,8 @@ export const translations = {
       coreFinisher: 'Core Finisher',
       cardioNote: 'Recomendación de Cardio',
       rest_period: 'Descanso',
+      noPlan: 'Aún no hay plan de entrenamiento',
+      noPlanDesc: 'Crea un plan desde tu perfil',
     },
     progress: {
       title: 'Seguimiento de Progreso',
@@ -2146,6 +2232,8 @@ export const translations = {
       current: 'Actual', start: 'Inicial', change: 'Cambio',
       weightLabel: 'Peso', bodyFatLabel: 'Grasa Corporal',
       recordHistory: 'Historial de Registros', records: 'registros',
+      noData: 'Aún no hay datos de progreso',
+      noDataDesc: 'Registra tu peso y medidas para seguir tu progreso',
     },
     water: {
       title: 'Seguimiento de Agua', glasses: 'vasos', target: 'meta',
@@ -2355,6 +2443,8 @@ export const translations = {
       score: 'Puntuación',
       yourRank: 'Tu posición',
       weekReset: 'Se reinicia cada lunes',
+      you: 'Tú',
+      user: 'Usuario',
     },
     progressPeriod: {
       days7: '7 Días', days30: '30 Días', all: 'Todo',
@@ -2379,6 +2469,8 @@ export const translations = {
       chest: 'Pecho', waist: 'Cintura', hip: 'Cadera', arm: 'Brazo', leg: 'Pierna',
       emptyTitle: 'Sin Medidas Aún', emptyDesc: 'Añade tu primera medida para seguir los cambios.',
       history: 'Historial de Medidas', chart: 'Gráfico de Medidas', date: 'Fecha',
+      noData: 'Aún no hay datos de medidas',
+      noDataDesc: 'Registra tus medidas corporales para seguir los cambios',
     },
     dataExport: {
       title: 'Exportar Datos', desc: 'Descarga tus datos de progreso',
@@ -2449,6 +2541,37 @@ export const translations = {
       exercisesActive: 'ejercicios activos',
       savedWorkouts: 'entrenamientos registrados',
       set: 'Serie',
+      noData: 'Aún no hay registros de entrenamiento',
+      noDataDesc: 'Completa tu primer entrenamiento para ver registros aquí',
+    },
+    // ── Daily Challenge ──
+    challenge: {
+      title: 'Desafío Diario',
+      days: 'días',
+      todaysChallenge: 'El desafío de hoy',
+      completed: '¡Completado!',
+      complete: 'Completar ✓',
+      shareText: 'Desafío Diario completado',
+      share: 'Compartir',
+      units: {
+        water: 'vasos de agua',
+        workout: 'entrenamiento completado',
+        sleep: 'horas de sueño',
+        plank: 'min plancha',
+        stretching: 'min estiramiento',
+        sugarFree: 'día sin azúcar',
+        proteinGoal: 'objetivo de proteína',
+        earlySleep: 'dormir antes de las 23:00',
+        meditation: 'min meditación',
+        intenseWorkout: 'entrenamiento intenso',
+        mealLog: 'comidas registradas',
+        walk: 'min caminata',
+      },
+    },
+
+    // ── Offline ──
+    offline: {
+      message: 'Sin conexión a internet — Los datos se guardarán localmente',
     },
   },
 };

@@ -110,7 +110,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
           {info?.formSteps && info.formSteps.length > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); onShowDemo?.({ name: exercise.name, ...info }); }}
-              className="flex items-center justify-center w-7 h-7 rounded-full border bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20 hover:scale-110 transition-all cursor-pointer"
+              className="flex items-center justify-center w-9 h-9 rounded-full border bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20 hover:scale-110 transition-all cursor-pointer"
               title={t('exerciseDemo.title')}
               aria-label={t('exerciseDemo.title')}
             >
@@ -120,7 +120,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
           {info?.tip && (
             <button
               onClick={() => setShowTip(!showTip)}
-              className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all cursor-pointer ${
+              className={`flex items-center justify-center w-9 h-9 rounded-full border transition-all cursor-pointer ${
                 showTip ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' : 'bg-slate-800/60 border-slate-700/30 text-slate-500 hover:text-cyan-400'
               }`}
               title="Form İpucu"
@@ -135,7 +135,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
             rel="noopener noreferrer"
             title={t('video.watch')}
             aria-label="Video izle"
-            className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
             onClick={(e) => e.stopPropagation()}
           >
             <Play size={9} fill="currentColor" />
@@ -388,7 +388,13 @@ export default function WorkoutPanel({ plan }) {
     }).catch((err) => { console.warn('[WorkoutPanel]', err?.message || err); });
   }, []);
 
-  if (!plan) return null;
+  if (!plan) return (
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1rem',textAlign:'center',color:'#94a3b8'}}>
+      <Dumbbell size={48} style={{marginBottom:'1rem',opacity:0.3}} />
+      <p style={{fontSize:'1.1rem',fontWeight:600,color:'#e2e8f0'}}>{t('workout.noPlan')}</p>
+      <p style={{fontSize:'0.875rem',marginTop:'0.5rem'}}>{t('workout.noPlanDesc')}</p>
+    </div>
+  );
 
   const { workoutSplit = [], goal = '' } = plan;
 
