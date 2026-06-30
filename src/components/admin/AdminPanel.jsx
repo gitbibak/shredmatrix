@@ -3,27 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, Users, PieChart, Activity, Search,
   TrendingUp, UserPlus, Calendar, Target, ChevronLeft, ChevronRight,
-  Trash2, Eye, X, Shield, RefreshCw, Menu, ArrowLeft, Clock, Zap
+  Trash2, Eye, X, Shield, RefreshCw, Menu, ArrowLeft, Clock, Zap,
+  Dumbbell, Droplets, Scale, Ruler
 } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
   AreaChart, Area, BarChart, Bar, PieChart as RechartPie, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import {
   isAdmin, getAdminStats, getAdminUsers, getPlanDistribution,
-  getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers
+  getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers,
+  getActivityStats, getWorkoutTrend
 } from '../../lib/adminService';
 
 // ── Colors ───────────────────────────────────────
 const COLORS = ['#ff6d00', '#00b0ff', '#00e676', '#ff4081', '#7c4dff', '#ffab00', '#00bfa5', '#ff1744'];
 const GOAL_COLORS = {
-  'Kas Gelişimi': '#ff6d00',
-  'Yağ Yakımı': '#00b0ff',
-  'Yoga': '#00e676',
-  'Pilates': '#7c4dff',
-  'Meditasyon': '#ff4081',
-  'Reformer': '#ffab00',
+  'Kas Gelişimi': '#ff6d00', 'Yağ Yakımı': '#00b0ff', 'Yoga': '#00e676',
+  'Pilates': '#7c4dff', 'Meditasyon': '#ff4081', 'Reformer': '#ffab00',
 };
 const EXP_COLORS = { 'Başlangıç': '#00e676', 'Orta': '#ffab00', 'İleri': '#ff4081' };
 const GENDER_COLORS = { 'Erkek': '#00b0ff', 'Kadın': '#ff4081', 'Bilinmiyor': '#64748b' };
@@ -68,6 +66,7 @@ function MiniDonut({ data, colorMap, title }) {
       <p className="text-slate-600 text-sm font-inter">Veri yok</p>
     </div>
   );
+  const total = data.reduce((s, d) => s + d.value, 0);
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
       <h3 className="text-sm font-bold font-outfit text-white mb-2">{title}</h3>
@@ -83,12 +82,11 @@ function MiniDonut({ data, colorMap, title }) {
           </RechartPie>
         </ResponsiveContainer>
       </div>
-      {/* Legend */}
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 justify-center">
         {data.map((entry, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: colorMap?.[entry.name] || COLORS[i % COLORS.length] }} />
-            <span className="text-[10px] text-slate-400 font-inter">{entry.name} ({entry.value})</span>
+            <span className="text-[10px] text-slate-400 font-inter">{entry.name} ({entry.value} — %{total > 0 ? Math.round(entry.value / total * 100) : 0})</span>
           </div>
         ))}
       </div>
@@ -107,16 +105,12 @@ function UserDetailModal({ userId, onClose }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
         onClick={e => e.stopPropagation()}
         className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto"
       >
@@ -138,12 +132,15 @@ function UserDetailModal({ userId, onClose }) {
               ['Cinsiyet', plan.userGender],
               ['Boy', plan.userHeight ? `${plan.userHeight} cm` : null],
               ['Kilo', plan.userWeight ? `${plan.userWeight} kg` : null],
+              ['Hedef Kilo', plan.userTargetWeight ? `${plan.userTargetWeight} kg` : null],
               ['Vücut Yağı', plan.userBodyFat ? `%${plan.userBodyFat}` : null],
               ['Deneyim', plan.userExperience],
               ['Aktivite', plan.userActivityLevel],
               ['Program', plan.userWorkSchedule],
               ['Bütçe', plan.userBudget],
               ['Kalori', plan.dailyCalories ? `${plan.dailyCalories} kcal` : null],
+              ['Protein', plan.macros?.protein ? `${plan.macros.protein}g` : null],
+              ['Faz', plan.phase != null ? `Faz ${plan.phase}` : null],
             ].filter(([, v]) => v).map(([label, value]) => (
               <div key={label} className="flex items-center justify-between py-2.5 border-b border-slate-800/50">
                 <span className="text-xs text-slate-500 font-inter">{label}</span>
@@ -176,7 +173,6 @@ function timeAgo(dateStr) {
 // Main Admin Panel
 // ═════════════════════════════════════════════════
 export default function AdminPanel({ user }) {
-  // Guard
   if (!user || !isAdmin(user)) return <Navigate to="/dashboard" replace />;
 
   const navigate = useNavigate();
@@ -194,20 +190,26 @@ export default function AdminPanel({ user }) {
   const [recentUsers, setRecentUsers] = useState([]);
   const [detailUserId, setDetailUserId] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [activityStats, setActivityStats] = useState(null);
+  const [workoutTrend, setWorkoutTrend] = useState([]);
 
   const PAGE_SIZE = 15;
 
   const loadData = useCallback(async () => {
-    const [s, d, t, r] = await Promise.all([
+    const [s, d, t, r, a, w] = await Promise.all([
       getAdminStats(),
       getPlanDistribution(),
       getRegistrationTrend(),
       getRecentUsers(),
+      getActivityStats(),
+      getWorkoutTrend(),
     ]);
     if (s) setStats(s);
     if (d) setDistribution(d);
     if (t) setTrend(t);
     if (r) setRecentUsers(r);
+    if (a) setActivityStats(a);
+    if (w) setWorkoutTrend(w);
   }, []);
 
   const loadUsers = useCallback(async () => {
@@ -245,6 +247,7 @@ export default function AdminPanel({ user }) {
   ];
 
   const totalPages = Math.ceil(usersTotal / PAGE_SIZE);
+  const adminName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Admin';
 
   return (
     <div className="min-h-screen bg-slate-950 text-white flex">
@@ -286,7 +289,17 @@ export default function AdminPanel({ user }) {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
+        {/* Admin Info */}
+        <div className="px-4 py-3 border-t border-slate-800">
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white font-outfit">
+              {adminName[0].toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-white font-outfit truncate">{adminName}</p>
+              <p className="text-[9px] text-orange-400 font-inter">Admin</p>
+            </div>
+          </div>
           <button onClick={() => navigate('/dashboard')}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all cursor-pointer font-outfit">
             <ArrowLeft size={16} />
@@ -329,7 +342,7 @@ export default function AdminPanel({ user }) {
                 {/* Trend */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                   className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                  <h3 className="text-sm font-bold font-outfit text-white mb-4">Son 30 Gün — Kayıt Trendi</h3>
+                  <h3 className="text-sm font-bold font-outfit text-white mb-4">📈 Son 30 Gün — Kayıt Trendi</h3>
                   <div className="h-56 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={trend}>
@@ -353,7 +366,7 @@ export default function AdminPanel({ user }) {
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <StatCard icon={Target} label="Plan Oluşturanlar" value={stats?.usersWithPlans ?? '—'}
                     sub={stats ? `%${stats.totalUsers > 0 ? Math.round((stats.usersWithPlans / stats.totalUsers) * 100) : 0} dönüşüm` : ''} color="#7c4dff" delay={0.25} />
-                  <StatCard icon={Zap} label="Supabase" value="Aktif" sub="Bağlantı stabil" color="#00e676" delay={0.3} />
+                  <StatCard icon={Zap} label="Aktif Kullanan (7 gün)" value={activityStats?.activeUsers ?? '—'} sub="Son 7 günde antrenman yapan" color="#00e676" delay={0.3} />
                 </div>
 
                 {/* Recent Users */}
@@ -397,7 +410,7 @@ export default function AdminPanel({ user }) {
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 font-inter transition-colors" />
                 </div>
 
-                {/* User Cards (mobile-friendly) */}
+                {/* User Cards */}
                 <div className="space-y-2">
                   {users.map(u => (
                     <motion.div key={u.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -423,7 +436,7 @@ export default function AdminPanel({ user }) {
                           </button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 mt-2.5 text-[10px] text-slate-500 font-inter">
+                      <div className="flex items-center gap-3 mt-2.5 text-[10px] text-slate-500 font-inter flex-wrap">
                         <span>{u.created_at ? new Date(u.created_at).toLocaleDateString('tr-TR') : '-'}</span>
                         <span>•</span>
                         {u.plan_created_at ? (
@@ -431,7 +444,7 @@ export default function AdminPanel({ user }) {
                         ) : (
                           <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-500">Plan Yok</span>
                         )}
-                        {u.role === 'admin' && (
+                        {isAdmin({ email: u.email }) && (
                           <>
                             <span>•</span>
                             <span className="px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-400">Admin</span>
@@ -506,15 +519,24 @@ export default function AdminPanel({ user }) {
             {/* ═══ ACTIVITY ═══ */}
             {activeTab === 'activity' && (
               <motion.div key="activity" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
-                {/* Daily bar */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+
+                {/* Engagement Stats */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <StatCard icon={Dumbbell} label="Toplam Antrenman" value={activityStats?.totalWorkouts ?? '—'} color="#ff6d00" delay={0} />
+                  <StatCard icon={Activity} label="Bugün Yapılan" value={activityStats?.todayWorkouts ?? '—'} color="#00b0ff" delay={0.05} />
+                  <StatCard icon={Zap} label="Bu Hafta" value={activityStats?.weekWorkouts ?? '—'} color="#00e676" delay={0.1} />
+                  <StatCard icon={Users} label="Aktif Kullanıcı" value={activityStats?.activeUsers ?? '—'} sub="Son 7 gün" color="#ff4081" delay={0.15} />
+                </div>
+
+                {/* Workout Trend */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                   className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                  <h3 className="text-sm font-bold font-outfit text-white mb-4">Günlük Kayıt Aktivitesi</h3>
-                  <div className="h-64 sm:h-80">
+                  <h3 className="text-sm font-bold font-outfit text-white mb-4">🏋️ Son 14 Gün — Antrenman Aktivitesi</h3>
+                  <div className="h-56 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={trend}>
+                      <BarChart data={workoutTrend}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                        <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                        <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
                         <Tooltip content={<ChartTooltip />} />
                         <Bar dataKey="count" radius={[4, 4, 0, 0]} fill="#ff6d00" />
@@ -523,38 +545,45 @@ export default function AdminPanel({ user }) {
                   </div>
                 </motion.div>
 
-                {/* Summary */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                  <StatCard icon={Users} label="Toplam" value={stats?.totalUsers ?? '—'} color="#ff6d00" />
-                  <StatCard icon={Target} label="Plan Var" value={stats?.usersWithPlans ?? '—'} color="#00b0ff" />
-                  <StatCard icon={UserPlus} label="Bu Ay" value={stats?.monthRegistrations ?? '—'} color="#00e676" />
-                  <StatCard icon={TrendingUp} label="Büyüme" value={stats?.monthlyGrowth != null ? `%${stats.monthlyGrowth}` : '—'} color="#ff4081" />
+                {/* Data Tracking Stats */}
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  <StatCard icon={Droplets} label="Su Kaydı" value={activityStats?.totalWater ?? '—'} sub="Toplam giriş" color="#38bdf8" delay={0.25} />
+                  <StatCard icon={Scale} label="Kilo Takibi" value={activityStats?.totalProgress ?? '—'} sub="Toplam giriş" color="#a78bfa" delay={0.3} />
+                  <StatCard icon={Ruler} label="Ölçüm Kaydı" value={activityStats?.totalMeasurements ?? '—'} sub="Toplam giriş" color="#34d399" delay={0.35} />
                 </div>
 
-                {/* Recent Users */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                  className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                  <h3 className="text-sm font-bold font-outfit text-white mb-3 flex items-center gap-2">
-                    <Clock size={14} className="text-orange-400" />
-                    Son 10 Kayıt
-                  </h3>
-                  <div className="space-y-2">
-                    {recentUsers.map(u => (
-                      <div key={u.id} className="flex items-center justify-between py-2 border-b border-slate-800/30 last:border-0">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center text-[10px] font-bold text-white font-outfit shrink-0">
-                            {(u.name || u.email || '?')[0].toUpperCase()}
+                {/* Engagement rate */}
+                {stats && activityStats && (
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                    className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                    <h3 className="text-sm font-bold font-outfit text-white mb-4">📊 Engagement Oranları</h3>
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Plan Oluşturma Oranı', value: stats.totalUsers > 0 ? Math.round((stats.usersWithPlans / stats.totalUsers) * 100) : 0, color: '#ff6d00' },
+                        { label: 'Haftalık Aktif Kullanıcı', value: stats.totalUsers > 0 ? Math.round((activityStats.activeUsers / stats.totalUsers) * 100) : 0, color: '#00e676' },
+                        { label: 'Antrenman / Kullanıcı (ort.)', value: stats.usersWithPlans > 0 ? (activityStats.totalWorkouts / stats.usersWithPlans).toFixed(1) : 0, color: '#00b0ff', isRaw: true },
+                      ].map((item, i) => (
+                        <div key={i}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs text-slate-400 font-inter">{item.label}</span>
+                            <span className="text-sm font-bold font-outfit text-white">{item.isRaw ? item.value : `%${item.value}`}</span>
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-xs text-white font-outfit font-medium truncate">{u.name || 'İsimsiz'}</p>
-                            <p className="text-[10px] text-slate-500 font-inter truncate">{u.email || '-'}</p>
-                          </div>
+                          {!item.isRaw && (
+                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ background: item.color }}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${Math.min(item.value, 100)}%` }}
+                                transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
+                              />
+                            </div>
+                          )}
                         </div>
-                        <span className="text-[10px] text-slate-500 font-inter shrink-0 ml-2">{timeAgo(u.created_at)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             )}
 
