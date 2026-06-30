@@ -250,7 +250,7 @@ export default function HeroCard({ plan }) {
     setShowMoodPicker(false);
 
     const mood = MOODS.find(m => m.id === moodId);
-    if (mood) {
+    if (mood && moodId !== 'normal') {
       toast.info(t(`hero.mood.${moodId}Tip`));
     }
   };
