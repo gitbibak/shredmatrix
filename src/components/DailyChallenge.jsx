@@ -1,25 +1,28 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Target, Check, Share2, Flame, Trophy } from 'lucide-react';
 import { trackChallengeComplete } from '../lib/analytics';
 import confetti from 'canvas-confetti';
 
-const CHALLENGES = [
-  { id: 'water_8', emoji: '💧', target: 8, unit: 'bardak su iç' },
-  { id: 'workout_1', emoji: '🏋️', target: 1, unit: 'antrenman tamamla' },
-  { id: 'sleep_7', emoji: '😴', target: 7, unit: 'saat uyu' },
-  { id: 'water_10', emoji: '💧', target: 10, unit: 'bardak su iç' },
-  { id: 'plank_3', emoji: '💪', target: 3, unit: 'dk plank yap' },
-  { id: 'stretch_10', emoji: '🧘', target: 10, unit: 'dk stretching yap' },
-  { id: 'no_sugar', emoji: '🍬', target: 1, unit: 'gün şekersiz geçir' },
-  { id: 'protein_goal', emoji: '🥩', target: 1, unit: 'protein hedefine ulaş' },
-  { id: 'early_sleep', emoji: '🌙', target: 1, unit: 'gece 23:00 öncesi yat' },
-  { id: 'meditation_5', emoji: '🧘', target: 5, unit: 'dk meditasyon yap' },
-  { id: 'water_12', emoji: '💧', target: 12, unit: 'bardak su iç' },
-  { id: 'workout_intense', emoji: '🔥', target: 1, unit: 'yoğun antrenman yap' },
-  { id: 'meal_log', emoji: '🥗', target: 3, unit: 'öğün kaydet' },
-  { id: 'walk_30', emoji: '🚶', target: 30, unit: 'dk yürüyüş yap' },
-];
+function getChallenges(t) {
+  return [
+    { id: 'water_8', emoji: '💧', target: 8, unit: t('challenge.units.water') },
+    { id: 'workout_1', emoji: '🏋️', target: 1, unit: t('challenge.units.workout') },
+    { id: 'sleep_7', emoji: '😴', target: 7, unit: t('challenge.units.sleep') },
+    { id: 'water_10', emoji: '💧', target: 10, unit: t('challenge.units.water') },
+    { id: 'plank_3', emoji: '💪', target: 3, unit: t('challenge.units.plank') },
+    { id: 'stretch_10', emoji: '🧘', target: 10, unit: t('challenge.units.stretching') },
+    { id: 'no_sugar', emoji: '🍬', target: 1, unit: t('challenge.units.sugarFree') },
+    { id: 'protein_goal', emoji: '🥩', target: 1, unit: t('challenge.units.proteinGoal') },
+    { id: 'early_sleep', emoji: '🌙', target: 1, unit: t('challenge.units.earlySleep') },
+    { id: 'meditation_5', emoji: '🧘', target: 5, unit: t('challenge.units.meditation') },
+    { id: 'water_12', emoji: '💧', target: 12, unit: t('challenge.units.water') },
+    { id: 'workout_intense', emoji: '🔥', target: 1, unit: t('challenge.units.intenseWorkout') },
+    { id: 'meal_log', emoji: '🥗', target: 3, unit: t('challenge.units.mealLog') },
+    { id: 'walk_30', emoji: '🚶', target: 30, unit: t('challenge.units.walk') },
+  ];
+}
 
 const STORAGE_KEY = 'fb_daily_challenge';
 
@@ -28,11 +31,13 @@ function getDayIndex() {
 }
 
 export default function DailyChallenge() {
+  const { t } = useTranslation();
   const [completed, setCompleted] = useState(false);
   const [streak, setStreak] = useState(0);
   const [justCompleted, setJustCompleted] = useState(false);
 
-  const challenge = useMemo(() => CHALLENGES[getDayIndex() % CHALLENGES.length], []);
+  const challenges = useMemo(() => getChallenges(t), [t]);
+  const challenge = useMemo(() => challenges[getDayIndex() % challenges.length], [challenges]);
 
   useEffect(() => {
     try {
@@ -75,7 +80,7 @@ export default function DailyChallenge() {
   };
 
   const handleShare = async () => {
-    const text = `${challenge.emoji} Günlük Challenge tamamlandı: ${challenge.target} ${challenge.unit}! 🔥 ${streak} gün üst üste! #FullBalance`;
+    const text = `${challenge.emoji} ${t('challenge.shareText')}: ${challenge.target} ${challenge.unit}! 🔥 ${streak} ${t('challenge.days')}! #FullBalance`;
     if (navigator.share) {
       await navigator.share({ title: 'Full Balance Challenge', text, url: 'https://fullbalance.app' }).catch(() => {});
     } else {
@@ -93,13 +98,13 @@ export default function DailyChallenge() {
         <div className="flex items-center gap-2">
           <Target size={14} className="text-cyan-400" />
           <span className="text-[10px] font-bold font-outfit text-white uppercase tracking-wider">
-            Günlük Challenge
+            {t('challenge.title')}
           </span>
         </div>
         {streak > 0 && (
           <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/20">
             <Flame size={10} className="text-orange-400" />
-            <span className="text-[9px] font-bold text-orange-400">{streak} gün</span>
+            <span className="text-[9px] font-bold text-orange-400">{streak} {t('challenge.days')}</span>
           </div>
         )}
       </div>
@@ -110,7 +115,7 @@ export default function DailyChallenge() {
           <p className="text-sm font-bold text-white font-outfit">
             {challenge.target} {challenge.unit}
           </p>
-          <p className="text-[9px] text-slate-500 mt-0.5">Bugünün meydan okuması</p>
+          <p className="text-[9px] text-slate-500 mt-0.5">{t('challenge.todaysChallenge')}</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -129,7 +134,7 @@ export default function DailyChallenge() {
                   exit={{ opacity: 0 }}
                   className="text-[9px] font-bold text-emerald-400"
                 >
-                  Tamamlandı! 🎉
+                  {t('challenge.completed')} 🎉
                 </motion.span>
               )}
               <motion.button
@@ -155,7 +160,7 @@ export default function DailyChallenge() {
               onClick={handleComplete}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold cursor-pointer shadow-lg shadow-orange-500/20"
             >
-              Tamamla ✓
+              {t('challenge.complete')}
             </motion.button>
           )}
         </AnimatePresence>

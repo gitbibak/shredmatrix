@@ -161,8 +161,8 @@ export default function BodyMeasurements() {
       {!hasData && (
         <EmptyState
           type="measurements"
-          title="Henüz ölçüm kaydı yok"
-          subtitle="Göğüs, bel, kol ve bacak ölçülerini kaydet. Değişimi santim santim gör."
+          title={t('measurements.noData')}
+          subtitle={t('measurements.noDataDesc')}
         />
       )}
 
