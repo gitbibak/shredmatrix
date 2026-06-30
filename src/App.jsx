@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, Component, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
-import { generatePlan, regeneratePlanWithPhase, localizePlan } from './data/planGenerator';
+import { generatePlan, regeneratePlanWithPhase, localizePlan, PLAN_VERSION } from './data/planGenerator';
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
@@ -425,10 +425,14 @@ function AppContent() {
     return () => subscription?.unsubscribe?.();
   }, []);
 
-  // Regenerate plan when language changes
+  // Regenerate plan when language changes OR plan version is outdated
   useEffect(() => {
-    if (plan && plan.lang !== lang) {
-      // Rebuild the plan with the new language using existing user metrics
+    if (!plan) return;
+    const needsLangUpdate = plan.lang !== lang;
+    const needsVersionUpdate = (plan.planVersion || 0) < PLAN_VERSION;
+
+    if (needsLangUpdate || needsVersionUpdate) {
+      // Rebuild the plan with latest templates
       const goalMap = {
         'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation',
         'Muscle Growth': 'muscle', 'Fat Loss': 'fat_loss', 'Meditation': 'meditation',
@@ -448,12 +452,16 @@ function AppContent() {
         workSchedule: plan.userWorkSchedule,
         budget: plan.userBudget,
       };
-      const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
-      const newPlan = localizePlan(rawPlan, lang);
+      const targetLang = needsLangUpdate ? lang : (plan.lang || 'tr');
+      const rawPlan = generatePlan(userMetrics, plan.phase || 0, targetLang);
+      const newPlan = localizePlan(rawPlan, targetLang);
       setPlan(newPlan);
       savePlan(newPlan, user?.email).catch(() => {});
+      if (needsVersionUpdate) {
+        console.log(`[App] Plan upgraded: v${plan.planVersion || 0} → v${PLAN_VERSION}`);
+      }
     }
-  }, [lang]);
+  }, [lang, plan?.planVersion]);
 
   // Handle loading → dashboard transition
   useEffect(() => {
