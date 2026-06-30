@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, ChevronRight, Sparkles, AlertTriangle, Check, Shield, UtensilsCrossed, Heart } from 'lucide-react';
+import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, ChevronRight, Sparkles, AlertTriangle, Check, Shield, UtensilsCrossed, Heart, Target, Scale, Ruler, Flame, Moon, Zap, Clock, Trophy, Star, Leaf } from 'lucide-react';
 import { analyzeProgress, advancePhase } from '../data/adaptiveEngine';
 import { regeneratePlanWithPhase } from '../data/planGenerator';
 
@@ -168,6 +168,45 @@ export default function ProgramAdvisor({ plan, onPlanUpdate }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Smart Coaching Tips */}
+      {analysis.tips?.length > 0 && (
+        <div className="mb-3 space-y-1.5">
+          {analysis.tips.map((tip, i) => {
+            const tipIcons = {
+              scale: Scale, ruler: Ruler, target: Target, meat: UtensilsCrossed,
+              flame: Flame, trending: TrendingUp, moon: Moon, zap: Zap,
+              heart: Heart, shield: Shield, brain: Brain, alert: AlertTriangle,
+              star: Star, refresh: RefreshCw, clock: Clock, trophy: Trophy, leaf: Leaf,
+            };
+            const catColors = {
+              training: { bg: 'bg-purple-500/8', border: 'border-purple-500/20', icon: 'text-purple-400', text: 'text-purple-300' },
+              nutrition: { bg: 'bg-amber-500/8', border: 'border-amber-500/20', icon: 'text-amber-400', text: 'text-amber-300' },
+              recovery: { bg: 'bg-blue-500/8', border: 'border-blue-500/20', icon: 'text-blue-400', text: 'text-blue-300' },
+              motivation: { bg: 'bg-emerald-500/8', border: 'border-emerald-500/20', icon: 'text-emerald-400', text: 'text-emerald-300' },
+              data: { bg: 'bg-slate-500/8', border: 'border-slate-500/20', icon: 'text-slate-400', text: 'text-slate-300' },
+              phase: { bg: 'bg-indigo-500/8', border: 'border-indigo-500/20', icon: 'text-indigo-400', text: 'text-indigo-300' },
+              mindset: { bg: 'bg-teal-500/8', border: 'border-teal-500/20', icon: 'text-teal-400', text: 'text-teal-300' },
+            };
+            const TipIcon = tipIcons[tip.icon] || Sparkles;
+            const cc = catColors[tip.cat] || catColors.training;
+            const tipText = t(`advisor.tips.${tip.key}`) || tip.key;
+
+            return (
+              <motion.div
+                key={tip.key}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className={`flex items-start gap-2.5 p-2.5 rounded-lg ${cc.bg} border ${cc.border}`}
+              >
+                <TipIcon size={13} className={`${cc.icon} mt-0.5 shrink-0`} />
+                <p className={`text-[10px] leading-relaxed ${cc.text}`}>{tipText}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Health Condition Warnings */}
       {plan?.healthConditions?.length > 0 && !plan.healthConditions.includes('none') && (

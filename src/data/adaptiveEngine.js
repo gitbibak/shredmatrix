@@ -216,6 +216,14 @@ export async function analyzeProgress(plan) {
   // Rule 9: Suggested next phase (capped at 3)
   const suggestedPhase = Math.min(currentPhase + 1, 3);
 
+  // --- Smart tips based on context ---
+  const tips = generateTips({
+    currentPhase, programAgeWeeks, phaseWeeksLeft,
+    weightTrend, measureTrend, weightChange, fatChange,
+    goal: plan?.goal, progressCount: sortedProgress.length,
+    measureCount: sortedMeasures.length,
+  });
+
   // --- Build summary ---
   const summary = {
     weightChange,   // kg difference: last 3 avg vs previous 3 avg
@@ -233,7 +241,78 @@ export async function analyzeProgress(plan) {
     weightTrend,
     measureTrend,
     summary,
+    tips,
   };
+}
+
+// ─── Smart Tips Generator ────────────────────────────────
+
+function generateTips(ctx) {
+  const tips = [];
+  const { currentPhase, programAgeWeeks, phaseWeeksLeft,
+    weightTrend, measureTrend, weightChange, fatChange,
+    goal, progressCount, measureCount } = ctx;
+
+  const isMuscle = goal === 'Kas Gelişimi';
+  const isFatLoss = goal === 'Yağ Yakımı';
+  const isWellness = ['Meditasyon', 'Yoga', 'Pilates', 'Reformer'].includes(goal);
+
+  // --- Data tracking nudges ---
+  if (progressCount < 3) {
+    tips.push({ key: 'trackWeight', icon: 'scale', cat: 'data' });
+  }
+  if (measureCount < 2) {
+    tips.push({ key: 'trackMeasure', icon: 'ruler', cat: 'data' });
+  }
+
+  // --- Phase-specific tips ---
+  if (currentPhase === 0) {
+    tips.push({ key: 'phase0Form', icon: 'target', cat: 'training' });
+    if (isMuscle) tips.push({ key: 'phase0MuscleProtein', icon: 'meat', cat: 'nutrition' });
+    if (isFatLoss) tips.push({ key: 'phase0FatDeficit', icon: 'flame', cat: 'nutrition' });
+  } else if (currentPhase === 1) {
+    tips.push({ key: 'phase1Progressive', icon: 'trending', cat: 'training' });
+    if (isMuscle) tips.push({ key: 'phase1MuscleSleep', icon: 'moon', cat: 'recovery' });
+  } else if (currentPhase === 2) {
+    tips.push({ key: 'phase2Intensity', icon: 'zap', cat: 'training' });
+    tips.push({ key: 'phase2Recovery', icon: 'heart', cat: 'recovery' });
+  } else if (currentPhase === 3) {
+    tips.push({ key: 'phase3Deload', icon: 'shield', cat: 'training' });
+    tips.push({ key: 'phase3Periodize', icon: 'brain', cat: 'training' });
+  }
+
+  // --- Trend-based tips ---
+  if (isMuscle && weightTrend === 'losing') {
+    tips.push({ key: 'muscleLosingWeight', icon: 'alert', cat: 'nutrition' });
+  }
+  if (isMuscle && weightTrend === 'gaining' && measureTrend === 'gaining') {
+    tips.push({ key: 'muscleGoodProgress', icon: 'star', cat: 'motivation' });
+  }
+  if (isFatLoss && weightTrend === 'losing') {
+    tips.push({ key: 'fatLossGoodProgress', icon: 'star', cat: 'motivation' });
+  }
+  if (isFatLoss && weightTrend === 'gaining') {
+    tips.push({ key: 'fatLossGaining', icon: 'alert', cat: 'nutrition' });
+  }
+  if (weightTrend === 'stable' && programAgeWeeks > 3) {
+    tips.push({ key: 'stableConsider', icon: 'refresh', cat: 'training' });
+  }
+
+  // --- Timing tips ---
+  if (phaseWeeksLeft <= 2 && phaseWeeksLeft > 0) {
+    tips.push({ key: 'phaseEndingSoon', icon: 'clock', cat: 'phase' });
+  }
+  if (programAgeWeeks >= 4 && programAgeWeeks < 6) {
+    tips.push({ key: 'oneMonthIn', icon: 'trophy', cat: 'motivation' });
+  }
+
+  // --- Wellness tips ---
+  if (isWellness) {
+    tips.push({ key: 'wellnessConsistency', icon: 'leaf', cat: 'mindset' });
+  }
+
+  // Limit to 3 most relevant tips
+  return tips.slice(0, 3);
 }
 
 // ─── Phase Advancement ───────────────────────────────────
