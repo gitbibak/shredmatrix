@@ -6,6 +6,10 @@
 
 import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
+// Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
+// App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
+export const PLAN_VERSION = 7;
+
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
   // Birincil: Katch-McArdle (yağsız kütle üzerinden)
@@ -1842,6 +1846,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       es: { muscle: 'Crecimiento Muscular', fat_loss: 'Quema de Grasa', meditation: 'Meditación', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' },
     }[lang]?.[primaryGoal] || { muscle: 'Muscle Growth', fat_loss: 'Fat Loss', meditation: 'Meditation', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' }[primaryGoal] || 'Muscle Growth',
     lang,
+    planVersion: PLAN_VERSION,
     createdAt: new Date().toISOString(),
   };
 }
