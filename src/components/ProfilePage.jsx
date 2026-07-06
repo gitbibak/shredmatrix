@@ -128,6 +128,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     beginner: t('onboarding.fields.beginner'),
     intermediate: t('onboarding.fields.intermediate'),
     advanced: t('onboarding.fields.advanced'),
+    expert: t('onboarding.fields.expert'),
   }[plan.userExperience] || '';
   const activityLabel = {
     sedentary: t('onboarding.fields.sedentary'),

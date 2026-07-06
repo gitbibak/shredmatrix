@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 9;
+export const PLAN_VERSION = 10;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -155,7 +155,7 @@ const SKIP_CORE_GOALS = new Set(['meditation', 'yoga', 'pilates', 'reformer']);
 const EXERCISE_MUSCLE_MAP = {
   // ── Göğüs ──
   'Bench Press': ['chest', 'triceps'], 'Incline Barbell Press': ['chest', 'shoulder'],
-  'İncline Dumbbell Press': ['chest', 'shoulder'], 'Incline Dumbbell Press': ['chest', 'shoulder'],
+  'Incline Dumbbell Press': ['chest', 'shoulder'],
   'Dumbbell Bench Press': ['chest', 'triceps'], 'Decline Press': ['chest', 'triceps'],
   'Cable Flyes': ['chest'], 'Dumbbell Flyes': ['chest'],
   'Cable Crossover': ['chest'], 'Pec Deck': ['chest'],
@@ -308,6 +308,10 @@ function getFocusMuscleCategory(focusStr) {
   if (f.includes('aktif') || f.includes('toparlanma') || f.includes('recovery')) return 'active_rest';
   if (f.includes('full body') || f.includes('tam vücut') || f.includes('zayıf nokta') || f.includes('hybrid') || f.includes('conditioning') || f.includes('amrap')) return 'full_body';
   if (f.includes('hiit') || f.includes('metaboli') || f.includes('kardiyo') || f.includes('circuit') || f.includes('devre') || f.includes('emom') || f.includes('tabata')) return 'hiit';
+  // Üst/Alt vücut günleri tek kas adı (göğüs/sırt/triceps...) içerse bile
+  // çok-kaslıdır — bu yüzden push/pull ve tekil-kas kontrollerinden ÖNCE yakala.
+  if (f.includes('üst vücut') || f.includes('upper')) return 'upper';
+  if (f.includes('alt vücut') || f.includes('lower')) return 'legs';
   if (f.includes('push') && f.includes('pull')) return 'upper';
   if (f.includes('push') || (f.includes('göğüs') && f.includes('omuz') && f.includes('triceps'))) return 'push';
   if (f.includes('pull') || (f.includes('sırt') && f.includes('biceps'))) return 'pull';
@@ -333,9 +337,10 @@ function isExerciseValidForFocus(exerciseName, focusCategory) {
 // DENEYİM SEVİYESİ MODİFİYELERİ
 // ══════════════════════════════════════════════════════════════
 const EXPERIENCE_MODIFIERS = {
-  beginner:     { setMult: 0.75, repShift: 2, restAddSec: 15, maxExercises: 5, skipSupersets: true },
+  beginner:     { setMult: 0.8,  repShift: 2, restAddSec: 15, maxExercises: 6, skipSupersets: true },
   intermediate: { setMult: 1.0,  repShift: 0, restAddSec: 0,  maxExercises: 7, skipSupersets: false },
-  advanced:     { setMult: 1.15, repShift: -1, restAddSec: -10, maxExercises: 8, skipSupersets: false },
+  advanced:     { setMult: 1.1,  repShift: -1, restAddSec: -10, maxExercises: 8, skipSupersets: false },
+  expert:       { setMult: 1.15, repShift: -1, restAddSec: -15, maxExercises: 9, skipSupersets: false },
 };
 
 function applyExperienceModifiers(exercises, experience, goal) {
@@ -385,7 +390,7 @@ function applyExperienceModifiers(exercises, experience, goal) {
 // Deneyim seviyesine göre başlangıç fazını belirle
 // ══════════════════════════════════════════════════════════════
 function getAutoPhase(experience, maxPhase) {
-  const phaseMap = { beginner: 0, intermediate: 1, advanced: Math.min(2, maxPhase) };
+  const phaseMap = { beginner: 0, intermediate: 1, advanced: 2, expert: 3 };
   return Math.min(phaseMap[experience] ?? 0, maxPhase);
 }
 
@@ -532,94 +537,31 @@ const HEALTH_EXERCISE_FILTERS = {
 // Her hedef için 4 faz: Foundation → Advanced → Intensive → Elite
 const workoutPhases = {
   muscle: [
-    // ─── Phase 0 — Foundation (Temel Program) ─────────────
+    // ─── Phase 0 — Temel (Upper/Lower ×2) ─────────────────
+    // Bilimsel temel: yeni başlayan her kası haftada 2× çalışmalı.
+    // Bileşik hareket odaklı, her üst gün direkt triceps + biceps içerir.
     [
       {
-        day: 'Pazartesi', focus: 'Göğüs & Triceps', emoji: '🔥',
+        day: 'Pazartesi', focus: 'Üst Vücut A — Göğüs, Omuz & Triceps', emoji: '🔥',
         image: '/images/workouts/chest.png',
         exercises: [
-          { name: 'Bench Press', sets: 4, reps: '8-10', rest: '90s' },
-          { name: 'Incline Dumbbell Press', sets: 4, reps: '10-12', rest: '75s' },
-          { name: 'Cable Flyes', sets: 3, reps: '12-15', rest: '60s' },
-          { name: 'Dips', sets: 3, reps: '10-12', rest: '60s' },
-          { name: 'Triceps Pushdown', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Overhead Triceps Extension', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Lat Pulldown', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Dumbbell Shoulder Press', sets: 3, reps: '10-12', rest: '90s' },
+          { name: 'Seated Cable Row', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Triceps Pushdown', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '60s' },
         ],
       },
       {
-        day: 'Salı', focus: 'Dinlenme', emoji: '😴',
-        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
-      },
-      {
-        day: 'Çarşamba', focus: 'Sırt & Biceps', emoji: '💪',
-        image: '/images/workouts/back.png',
-        exercises: [
-          { name: 'Deadlift', sets: 4, reps: '6-8', rest: '120s' },
-          { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
-          { name: 'Lat Pulldown', sets: 3, reps: '10-12', rest: '75s' },
-          { name: 'Seated Cable Row', sets: 3, reps: '12-15', rest: '60s' },
-          { name: 'Barbell Curl', sets: 3, reps: '10-12', rest: '45s' },
-          { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '45s' },
-        ],
-      },
-      {
-        day: 'Perşembe', focus: 'Dinlenme', emoji: '😴',
-        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
-      },
-      {
-        day: 'Cuma', focus: 'Omuz & Trapez', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
-        exercises: [
-          { name: 'Military Press', sets: 4, reps: '8-10', rest: '90s' },
-          { name: 'Dumbbell Shoulder Press', sets: 3, reps: '10-12', rest: '75s' },
-          { name: 'Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
-          { name: 'Face Pull', sets: 3, reps: '15-20', rest: '45s' },
-          { name: 'Rear Delt Fly', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Barbell Shrug', sets: 4, reps: '10-12', rest: '60s' },
-        ],
-      },
-      {
-        day: 'Cumartesi', focus: 'Bacak & Core', emoji: '🦵',
+        day: 'Salı', focus: 'Alt Vücut A — Bacak & Kalça', emoji: '🦵',
         image: '/images/workouts/legs.png',
         exercises: [
-          { name: 'Squat', sets: 4, reps: '8-10', rest: '120s' },
-          { name: 'Romanian Deadlift', sets: 4, reps: '10-12', rest: '90s' },
-          { name: 'Leg Press', sets: 3, reps: '12-15', rest: '75s' },
-          { name: 'Walking Lunges', sets: 3, reps: '12/bacak', rest: '60s' },
-          { name: 'Leg Curl', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Standing Calf Raise (Dropset)', sets: 4, reps: '15-20', rest: '30s' },
-        ],
-      },
-      {
-        day: 'Pazar', focus: 'Tam Dinlenme', emoji: '😴',
-        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
-      },
-    ],
-
-    // ─── Phase 1 — Advanced (Farklı Açılar, Artan Hacim) ──
-    [
-      {
-        day: 'Pazartesi', focus: 'Göğüs & Ön Omuz', emoji: '🔥',
-        image: '/images/workouts/chest.png',
-        exercises: [
-          { name: 'Incline Barbell Press', sets: 4, reps: '8-10', rest: '90s' },
-          { name: 'Dumbbell Flyes', sets: 4, reps: '10-12', rest: '60s' },
-          { name: 'Decline Press', sets: 3, reps: '10-12', rest: '75s' },
-          { name: 'Cable Crossover', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Front Raise', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Dumbbell Pullover', sets: 3, reps: '10-12', rest: '60s' },
-        ],
-      },
-      {
-        day: 'Salı', focus: 'Sırt & Arka Omuz', emoji: '💪',
-        image: '/images/workouts/back.png',
-        exercises: [
-          { name: 'Pull-Ups', sets: 4, reps: '8-12', rest: '90s' },
-          { name: 'T-Bar Row', sets: 4, reps: '8-10', rest: '75s' },
-          { name: 'Single Arm Dumbbell Row', sets: 3, reps: '10-12', rest: '60s' },
-          { name: 'Cable Pullover', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Reverse Pec Deck', sets: 3, reps: '15', rest: '45s' },
-          { name: 'Face Pull', sets: 3, reps: '15-20', rest: '45s' },
+          { name: 'Squat', sets: 4, reps: '6-8', rest: '150s' },
+          { name: 'Romanian Deadlift', sets: 3, reps: '8-10', rest: '120s' },
+          { name: 'Leg Press', sets: 3, reps: '12-15', rest: '90s' },
+          { name: 'Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Calf Raise', sets: 4, reps: '12-15', rest: '45s' },
         ],
       },
       {
@@ -627,28 +569,27 @@ const workoutPhases = {
         exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
       },
       {
-        day: 'Perşembe', focus: 'Bacak & Kalça', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        day: 'Perşembe', focus: 'Üst Vücut B — Sırt, Omuz & Biceps', emoji: '💪',
+        image: '/images/workouts/back.png',
         exercises: [
-          { name: 'Front Squat', sets: 4, reps: '8-10', rest: '120s' },
-          { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '75s' },
-          { name: 'Leg Extension', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Lying Leg Curl', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Hip Thrust', sets: 4, reps: '10-12', rest: '75s' },
-          { name: 'Calf Raise', sets: 4, reps: '15-20', rest: '30s' },
+          { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Lat Pulldown', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Lateral Raise', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Barbell Curl', sets: 3, reps: '10-12', rest: '60s' },
+          { name: 'Overhead Triceps Extension', sets: 3, reps: '12-15', rest: '60s' },
         ],
       },
       {
-        day: 'Cuma', focus: 'Omuz & Kol', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
+        day: 'Cuma', focus: 'Alt Vücut B — Bacak & Core', emoji: '⚡',
+        image: '/images/workouts/legs.png',
         exercises: [
-          { name: 'Arnold Press', sets: 4, reps: '8-10', rest: '75s' },
-          { name: 'Cable Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
-          { name: 'Upright Row', sets: 3, reps: '10-12', rest: '60s' },
-          { name: 'Close Grip Bench Press', sets: 3, reps: '8-10', rest: '75s' },
-          { name: 'Overhead Cable Extension', sets: 3, reps: '12-15', rest: '45s' },
-          { name: 'Incline Dumbbell Curl', sets: 3, reps: '10-12', rest: '45s' },
-          { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Leg Press', sets: 4, reps: '10-12', rest: '120s' },
+          { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '90s' },
+          { name: 'Leg Extension', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Lying Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Hip Thrust', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
         ],
       },
       {
@@ -661,74 +602,161 @@ const workoutPhases = {
       },
     ],
 
-    // ─── Phase 2 — Intensive (Süpersetler, Dropsetler) ────
-    // 5 günlük split: Push / Pull / Bacak / Üst / Alt
+    // ─── Phase 1 — Orta (Push / Pull / Legs + Upper / Lower) ──
+    // Her ana kas 2×/hafta. Triceps push + upper günlerinde,
+    // biceps pull + upper günlerinde → kollar artık haftada 2-3×.
     [
       {
-        day: 'Pazartesi', focus: 'Push — Göğüs & Omuz & Triceps', emoji: '🔥',
+        day: 'Pazartesi', focus: 'Push — Göğüs, Omuz & Triceps', emoji: '🔥',
         image: '/images/workouts/chest.png',
         exercises: [
-          { name: 'Süperset: Bench Press + Dumbbell Flyes', sets: 4, reps: '8 + 12', rest: '90s' },
-          { name: 'Incline Smith Machine Press', sets: 4, reps: '10-12', rest: '75s' },
-          { name: 'Süperset: Shoulder Press + Lateral Raise', sets: 3, reps: '10 + 15', rest: '75s' },
-          { name: 'Cable Crossover (Dropset)', sets: 3, reps: '12-10-8', rest: '60s' },
-          { name: 'Süperset: Triceps Dip + Pushdown', sets: 3, reps: '10 + 15', rest: '60s' },
-          { name: 'Overhead Cable Extension', sets: 3, reps: '15', rest: '30s' },
+          { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Dumbbell Shoulder Press', sets: 3, reps: '10-12', rest: '90s' },
+          { name: 'Cable Crossover', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
+          { name: 'Triceps Pushdown', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Overhead Triceps Extension', sets: 3, reps: '12-15', rest: '60s' },
         ],
       },
       {
         day: 'Salı', focus: 'Pull — Sırt & Biceps', emoji: '💪',
         image: '/images/workouts/back.png',
         exercises: [
-          { name: 'Süperset: Weighted Pull-Up + Straight Arm Pulldown', sets: 4, reps: '8 + 12', rest: '90s' },
-          { name: 'Pendlay Row', sets: 4, reps: '6-8', rest: '90s' },
-          { name: 'Süperset: Cable Row + Face Pull', sets: 3, reps: '10 + 15', rest: '75s' },
-          { name: 'Meadows Row', sets: 3, reps: '10-12', rest: '60s' },
-          { name: 'Süperset: EZ Bar Curl + Reverse Curl', sets: 3, reps: '10 + 12', rest: '45s' },
-          { name: 'Concentration Curl (Dropset)', sets: 2, reps: '12-10-8', rest: '45s' },
+          { name: 'Deadlift', sets: 4, reps: '5-6', rest: '180s' },
+          { name: 'Pull-Ups', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Seated Cable Row', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Face Pull', sets: 3, reps: '15-20', rest: '45s' },
+          { name: 'Barbell Curl', sets: 3, reps: '10-12', rest: '60s' },
+          { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '45s' },
         ],
       },
       {
-        day: 'Çarşamba', focus: 'Bacak — Quad Dominant', emoji: '🦵',
+        day: 'Çarşamba', focus: 'Bacak — Quad & Hamstring', emoji: '🦵',
         image: '/images/workouts/legs.png',
         exercises: [
-          { name: 'Back Squat (Pause)', sets: 5, reps: '5-6', rest: '150s' },
-          { name: 'Süperset: Leg Press + Jump Squat', sets: 4, reps: '12 + 8', rest: '90s' },
-          { name: 'Hack Squat', sets: 3, reps: '10-12', rest: '75s' },
-          { name: 'Süperset: Leg Extension + Sissy Squat', sets: 3, reps: '15 + 10', rest: '60s' },
-          { name: 'Standing Calf Raise (Dropset)', sets: 4, reps: '20-15-12', rest: '30s' },
-          { name: 'Hanging Leg Raise', sets: 3, reps: '15', rest: '45s' },
+          { name: 'Squat', sets: 4, reps: '6-8', rest: '150s' },
+          { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Leg Press', sets: 3, reps: '12-15', rest: '90s' },
+          { name: 'Leg Extension', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Lying Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
         ],
       },
       {
-        day: 'Perşembe', focus: 'Dinlenme / Aktif Toparlanma', emoji: '🧘',
-        exercises: [
-          { name: 'Hafif Yürüyüş', sets: 1, reps: '30 dk', rest: '-' },
-          { name: 'Foam Rolling & Stretching', sets: 1, reps: '20 dk', rest: '-' },
-        ],
+        day: 'Perşembe', focus: 'Dinlenme', emoji: '😴',
+        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
       },
       {
-        day: 'Cuma', focus: 'Üst Vücut — Push & Pull Mix', emoji: '⚡',
+        day: 'Cuma', focus: 'Üst Vücut — Göğüs, Sırt & Omuz', emoji: '⚡',
         image: '/images/workouts/shoulders.png',
         exercises: [
-          { name: 'Süperset: Incline DB Press + Chest-Supported Row', sets: 4, reps: '10 + 10', rest: '75s' },
-          { name: 'Süperset: OHP + Chin-Ups', sets: 3, reps: '8 + 8', rest: '90s' },
-          { name: 'Süperset: Cable Fly + Reverse Fly', sets: 3, reps: '12 + 15', rest: '60s' },
-          { name: 'Süperset: Skull Crusher + Barbell Curl', sets: 3, reps: '10 + 10', rest: '60s' },
-          { name: 'Lateral Raise (21s Method)', sets: 3, reps: '7+7+7', rest: '45s' },
-          { name: 'Shrug (Dropset)', sets: 3, reps: '12-10-8', rest: '45s' },
+          { name: 'Incline Barbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Lat Pulldown', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Arnold Press', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Lateral Raise', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Incline Dumbbell Curl', sets: 3, reps: '10-12', rest: '45s' },
+          { name: 'Rope Pushdown', sets: 3, reps: '12-15', rest: '45s' },
         ],
       },
       {
-        day: 'Cumartesi', focus: 'Bacak — Hamstring & Kalça', emoji: '🦵',
+        day: 'Cumartesi', focus: 'Alt Vücut — Bacak & Kalça', emoji: '🦵',
         image: '/images/workouts/legs.png',
         exercises: [
-          { name: 'Sumo Deadlift', sets: 4, reps: '6-8', rest: '120s' },
-          { name: 'Süperset: Hip Thrust + Glute Bridge', sets: 4, reps: '10 + 15', rest: '75s' },
-          { name: 'Nordic Hamstring Curl', sets: 3, reps: '6-8', rest: '90s' },
-          { name: 'Süperset: Lying Leg Curl + Good Morning', sets: 3, reps: '12 + 10', rest: '60s' },
-          { name: 'Adductor Machine', sets: 3, reps: '15', rest: '45s' },
-          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '30s' },
+          { name: 'Front Squat', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Hip Thrust', sets: 4, reps: '10-12', rest: '90s' },
+          { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '75s' },
+          { name: 'Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Leg Extension', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Pazar', focus: 'Tam Dinlenme', emoji: '😴',
+        exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
+      },
+    ],
+
+    // ─── Phase 2 — İleri (Push/Pull/Legs ×2 — 6 gün) ──────
+    // Yüksek hacim, kas grubu başına 2× frekans, süperset yoğunluğu.
+    // A günleri güç/kalınlık, B günleri hipertrofi/detay odaklı.
+    [
+      {
+        day: 'Pazartesi', focus: 'Push A — Göğüs & Triceps', emoji: '🔥',
+        image: '/images/workouts/chest.png',
+        exercises: [
+          { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Weighted Dips', sets: 3, reps: '8-10', rest: '90s' },
+          { name: 'Cable Crossover', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Lateral Raise', sets: 4, reps: '12-15', rest: '45s' },
+          { name: 'Skull Crushers', sets: 3, reps: '10-12', rest: '60s' },
+          { name: 'Rope Pushdown', sets: 3, reps: '12-15', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Salı', focus: 'Pull A — Sırt Genişlik & Biceps', emoji: '💪',
+        image: '/images/workouts/back.png',
+        exercises: [
+          { name: 'Weighted Pull-Up', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Lat Pulldown', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Face Pull', sets: 3, reps: '15-20', rest: '45s' },
+          { name: 'Barbell Curl', sets: 3, reps: '8-10', rest: '60s' },
+          { name: 'Incline Dumbbell Curl', sets: 3, reps: '10-12', rest: '45s' },
+          { name: 'Hammer Curl', sets: 3, reps: '12-15', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Çarşamba', focus: 'Bacak A — Quad Ağırlıklı', emoji: '🦵',
+        image: '/images/workouts/legs.png',
+        exercises: [
+          { name: 'Squat', sets: 5, reps: '5-6', rest: '180s' },
+          { name: 'Leg Press', sets: 4, reps: '10-12', rest: '90s' },
+          { name: 'Hack Squat', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Leg Extension', sets: 3, reps: '15', rest: '60s' },
+          { name: 'Lying Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Perşembe', focus: 'Push B — Omuz & Triceps', emoji: '🔥',
+        image: '/images/workouts/shoulders.png',
+        exercises: [
+          { name: 'OHP', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Incline Barbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Arnold Press', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Lateral Raise (21s Method)', sets: 4, reps: '7+7+7', rest: '45s' },
+          { name: 'Cable Crossover', sets: 3, reps: '15', rest: '45s' },
+          { name: 'Overhead Cable Extension', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Triceps Dip', sets: 3, reps: '12-15', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Cuma', focus: 'Pull B — Sırt Kalınlık & Arka Omuz', emoji: '💪',
+        image: '/images/workouts/back.png',
+        exercises: [
+          { name: 'Deadlift', sets: 4, reps: '5-6', rest: '180s' },
+          { name: 'T-Bar Row', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Seated Cable Row', sets: 3, reps: '10-12', rest: '75s' },
+          { name: 'Reverse Pec Deck', sets: 3, reps: '15', rest: '45s' },
+          { name: 'Straight Arm Pulldown', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Preacher Curl', sets: 3, reps: '10-12', rest: '45s' },
+          { name: 'Cable Curl', sets: 3, reps: '12-15', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Cumartesi', focus: 'Bacak B — Hamstring & Kalça', emoji: '🦵',
+        image: '/images/workouts/legs.png',
+        exercises: [
+          { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Hip Thrust', sets: 4, reps: '10-12', rest: '90s' },
+          { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '75s' },
+          { name: 'Lying Leg Curl', sets: 3, reps: '12-15', rest: '60s' },
+          { name: 'Leg Extension', sets: 3, reps: '15', rest: '60s' },
+          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
         ],
       },
       {
@@ -740,78 +768,83 @@ const workoutPhases = {
       },
     ],
 
-    // ─── Phase 3 — Elite (Periodize, Deload Notları) ──────
+    // ─── Phase 3 — Usta (PPL ×2 + Periyodizasyon + Deload) ─
+    // A günleri güç (düşük tekrar, RPE 8-9), B günleri hipertrofi
+    // (süperset/dropset/giant set). 4. hafta deload zorunlu.
     [
       {
-        day: 'Pazartesi', focus: 'Göğüs & Triceps — Güç Odaklı', emoji: '🏆',
+        day: 'Pazartesi', focus: 'Push A — Göğüs & Triceps (Güç)', emoji: '🏆',
         image: '/images/workouts/chest.png',
         exercises: [
-          { name: 'Paused Bench Press (3s)', sets: 5, reps: '4-6', rest: '180s' },
-          { name: 'Close Grip Floor Press', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Paused Bench Press (3s)', sets: 5, reps: '3-5', rest: '180s' },
+          { name: 'Incline Barbell Press', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Weighted Dips', sets: 4, reps: '6-8', rest: '90s' },
-          { name: 'Süperset: Incline DB Press + Pec Deck', sets: 3, reps: '8 + 12', rest: '75s' },
-          { name: 'JM Press', sets: 3, reps: '8-10', rest: '60s' },
-          { name: 'Cable Kickback (Dropset)', sets: 3, reps: '12-10-8', rest: '45s' },
+          { name: 'Süperset: Lateral Raise + Cable Crossover', sets: 4, reps: '15 + 12', rest: '60s' },
+          { name: 'Close Grip Bench Press', sets: 3, reps: '8-10', rest: '90s' },
+          { name: 'Süperset: Skull Crushers + Rope Pushdown', sets: 3, reps: '10 + 15', rest: '60s' },
           { name: '⚠️ Deload Notu: 4. haftada ağırlıkları %60\'a düşür', sets: '-', reps: '-', rest: '-' },
         ],
       },
       {
-        day: 'Salı', focus: 'Sırt & Biceps — Hacim Odaklı', emoji: '🏆',
+        day: 'Salı', focus: 'Pull A — Sırt & Biceps (Güç)', emoji: '🏆',
         image: '/images/workouts/back.png',
         exercises: [
           { name: 'Deficit Deadlift', sets: 5, reps: '3-5', rest: '180s' },
-          { name: 'Weighted Chin-Ups', sets: 4, reps: '6-8', rest: '120s' },
-          { name: 'Süperset: Seal Row + Chest-Supported Shrug', sets: 4, reps: '8 + 12', rest: '90s' },
-          { name: 'Kroc Row', sets: 3, reps: '15-20', rest: '75s' },
-          { name: 'Süperset: Spider Curl + Bayesian Curl', sets: 3, reps: '10 + 12', rest: '60s' },
-          { name: 'Behind-the-Back Wrist Curl', sets: 3, reps: '20', rest: '30s' },
+          { name: 'Weighted Pull-Up', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Pendlay Row', sets: 4, reps: '6-8', rest: '90s' },
+          { name: 'Süperset: Seal Row + Face Pull', sets: 3, reps: '10 + 20', rest: '60s' },
+          { name: 'Süperset: Barbell Curl + Hammer Curl', sets: 4, reps: '8 + 12', rest: '60s' },
+          { name: 'Bayesian Curl', sets: 3, reps: '12-15', rest: '45s' },
           { name: '⚠️ Deload Notu: 4. haftada toplam seti %50 azalt', sets: '-', reps: '-', rest: '-' },
         ],
       },
       {
-        day: 'Çarşamba', focus: 'Dinlenme / Aktif Toparlanma', emoji: '🧘',
-        exercises: [
-          { name: 'Hafif Yüzme veya Bisiklet', sets: 1, reps: '30 dk', rest: '-' },
-          { name: 'Mobility Drill (Kalça + Omuz)', sets: 1, reps: '20 dk', rest: '-' },
-          { name: 'Foam Rolling + Kontrast Duş', sets: 1, reps: '15 dk', rest: '-' },
-        ],
-      },
-      {
-        day: 'Perşembe', focus: 'Bacak — Güç & Patlayıcılık', emoji: '🏆',
+        day: 'Çarşamba', focus: 'Bacak A — Güç & Quad', emoji: '🏆',
         image: '/images/workouts/legs.png',
         exercises: [
           { name: 'Back Squat (RPE 9)', sets: 5, reps: '3-5', rest: '180s' },
-          { name: 'Paused Front Squat', sets: 3, reps: '6-8', rest: '120s' },
-          { name: 'Glute Ham Raise', sets: 3, reps: '8-10', rest: '75s' },
-          { name: 'Süperset: Leg Press + Wall Sit', sets: 3, reps: '12 + 30s', rest: '75s' },
-          { name: 'Reverse Lunge (Barbell)', sets: 3, reps: '8/bacak', rest: '75s' },
-          { name: 'Standing Single Leg Calf Raise', sets: 4, reps: '12-15', rest: '30s' },
-          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '30s' },
+          { name: 'Romanian Deadlift', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Hack Squat', sets: 3, reps: '10-12', rest: '90s' },
+          { name: 'Süperset: Leg Extension + Lying Leg Curl', sets: 3, reps: '15 + 15', rest: '60s' },
+          { name: 'Standing Single Leg Calf Raise', sets: 4, reps: '12-15', rest: '45s' },
           { name: '⚠️ Deload Notu: 4. haftada squat ağırlığı max %65', sets: '-', reps: '-', rest: '-' },
         ],
       },
       {
-        day: 'Cuma', focus: 'Omuz & Kol — Hipertrofi', emoji: '🏆',
+        day: 'Perşembe', focus: 'Push B — Omuz & Triceps (Hipertrofi)', emoji: '🏆',
         image: '/images/workouts/shoulders.png',
         exercises: [
-          { name: 'Push Press', sets: 4, reps: '5-6', rest: '120s' },
-          { name: 'Süperset: Lu Raise + Rear Delt Cable Fly', sets: 4, reps: '10 + 15', rest: '60s' },
-          { name: 'Süperset: Close Grip Bench + Weighted Chin-Up', sets: 4, reps: '8 + 8', rest: '90s' },
-          { name: 'Giant Set: Lateral Raise + Front Raise + Rear Delt', sets: 3, reps: '10+10+10', rest: '60s' },
-          { name: 'Süperset: Rope Pushdown + Cable Curl', sets: 3, reps: '15 + 15', rest: '45s' },
-          { name: 'Plate Pinch + Farmer Walk', sets: 3, reps: '30s + 40m', rest: '60s' },
+          { name: 'OHP', sets: 4, reps: '6-8', rest: '120s' },
+          { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Süperset: Arnold Press + Lateral Raise', sets: 4, reps: '10 + 15', rest: '60s' },
+          { name: 'Cable Crossover (Dropset)', sets: 3, reps: '12-10-8', rest: '60s' },
+          { name: 'Süperset: Overhead Cable Extension + Triceps Dip', sets: 3, reps: '12 + 15', rest: '45s' },
+          { name: 'JM Press', sets: 3, reps: '8-10', rest: '60s' },
         ],
       },
       {
-        day: 'Cumartesi', focus: 'Full Body — Zayıf Nokta Günü', emoji: '🎯',
-        image: '/images/workouts/chest.png',
+        day: 'Cuma', focus: 'Pull B — Sırt Detay & Arka Omuz (Hipertrofi)', emoji: '🏆',
+        image: '/images/workouts/back.png',
         exercises: [
-          { name: 'Tempo Squat (3-1-3)', sets: 3, reps: '8', rest: '90s' },
-          { name: 'Tempo Bench Press (3-1-3)', sets: 3, reps: '8', rest: '90s' },
-          { name: 'Pendlay Row (Strict)', sets: 3, reps: '8', rest: '75s' },
-          { name: 'Süperset: DB Lateral Raise + Band Pull-Apart', sets: 3, reps: '15 + 20', rest: '45s' },
-          { name: 'Turkish Get-Up', sets: 2, reps: '3/taraf', rest: '90s' },
-          { name: 'Ab Wheel + Pallof Press', sets: 3, reps: '10 + 12', rest: '45s' },
+          { name: 'Chest-Supported Row', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Lat Pulldown', sets: 4, reps: '10-12', rest: '75s' },
+          { name: 'Süperset: Meadows Row + Reverse Pec Deck', sets: 3, reps: '10 + 15', rest: '60s' },
+          { name: 'Straight Arm Pulldown', sets: 3, reps: '12-15', rest: '45s' },
+          { name: 'Süperset: Preacher Curl + Cable Curl', sets: 3, reps: '10 + 15', rest: '45s' },
+          { name: 'Spider Curl', sets: 3, reps: '12', rest: '45s' },
+        ],
+      },
+      {
+        day: 'Cumartesi', focus: 'Bacak B — Hamstring & Kalça (Hipertrofi)', emoji: '🏆',
+        image: '/images/workouts/legs.png',
+        exercises: [
+          { name: 'Front Squat', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
+          { name: 'Hip Thrust', sets: 4, reps: '8-10', rest: '90s' },
+          { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '75s' },
+          { name: 'Süperset: Leg Extension + Lying Leg Curl', sets: 3, reps: '15 + 15', rest: '75s' },
+          { name: 'Seated Calf Raise', sets: 4, reps: '15-20', rest: '45s' },
+          { name: '⚠️ Deload Notu: 4. haftada toplam hacmi %50 azalt', sets: '-', reps: '-', rest: '-' },
         ],
       },
       {
