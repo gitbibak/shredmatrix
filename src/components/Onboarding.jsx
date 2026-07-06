@@ -129,6 +129,7 @@ export default function Onboarding({ onSubmit }) {
     { value: 'beginner', label: t('onboarding.fields.beginner'), desc: t('onboarding.fields.expBeginner'), emoji: '🌱' },
     { value: 'intermediate', label: t('onboarding.fields.intermediate'), desc: t('onboarding.fields.expIntermediate'), emoji: '💪' },
     { value: 'advanced', label: t('onboarding.fields.advanced'), desc: t('onboarding.fields.expAdvanced'), emoji: '🔥' },
+    { value: 'expert', label: t('onboarding.fields.expert'), desc: t('onboarding.fields.expExpert'), emoji: '🏆' },
   ];
 
   const activityLevels = [
@@ -472,7 +473,7 @@ export default function Onboarding({ onSubmit }) {
                   {/* Experience */}
                   <div>
                     <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.experience')}</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {experienceLevels.map((lvl) => {
                         const sel = experience === lvl.value;
                         return (
