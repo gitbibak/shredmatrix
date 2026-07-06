@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 10;
+export const PLAN_VERSION = 11;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -2045,6 +2045,28 @@ const focusMap = {
     'Bacak — Güç & Patlayıcılık': 'Legs — Strength & Power',
     'Omuz & Kol — Hipertrofi': 'Shoulders & Arms — Hypertrophy',
     'Full Body — Zayıf Nokta Günü': 'Full Body — Weak Point Day',
+    // ── Muscle (v10 — Upper/Lower & Push/Pull/Legs) ──
+    'Üst Vücut A — Göğüs, Omuz & Triceps': 'Upper Body A — Chest, Shoulders & Triceps',
+    'Alt Vücut A — Bacak & Kalça': 'Lower Body A — Legs & Glutes',
+    'Üst Vücut B — Sırt, Omuz & Biceps': 'Upper Body B — Back, Shoulders & Biceps',
+    'Alt Vücut B — Bacak & Core': 'Lower Body B — Legs & Core',
+    'Push — Göğüs, Omuz & Triceps': 'Push — Chest, Shoulders & Triceps',
+    'Pull — Sırt & Biceps': 'Pull — Back & Biceps',
+    'Bacak — Quad & Hamstring': 'Legs — Quads & Hamstrings',
+    'Üst Vücut — Göğüs, Sırt & Omuz': 'Upper Body — Chest, Back & Shoulders',
+    'Alt Vücut — Bacak & Kalça': 'Lower Body — Legs & Glutes',
+    'Push A — Göğüs & Triceps': 'Push A — Chest & Triceps',
+    'Pull A — Sırt Genişlik & Biceps': 'Pull A — Back Width & Biceps',
+    'Bacak A — Quad Ağırlıklı': 'Legs A — Quad Focus',
+    'Push B — Omuz & Triceps': 'Push B — Shoulders & Triceps',
+    'Pull B — Sırt Kalınlık & Arka Omuz': 'Pull B — Back Thickness & Rear Delts',
+    'Bacak B — Hamstring & Kalça': 'Legs B — Hamstrings & Glutes',
+    'Push A — Göğüs & Triceps (Güç)': 'Push A — Chest & Triceps (Strength)',
+    'Pull A — Sırt & Biceps (Güç)': 'Pull A — Back & Biceps (Strength)',
+    'Bacak A — Güç & Quad': 'Legs A — Strength & Quads',
+    'Push B — Omuz & Triceps (Hipertrofi)': 'Push B — Shoulders & Triceps (Hypertrophy)',
+    'Pull B — Sırt Detay & Arka Omuz (Hipertrofi)': 'Pull B — Back Detail & Rear Delts (Hypertrophy)',
+    'Bacak B — Hamstring & Kalça (Hipertrofi)': 'Legs B — Hamstrings & Glutes (Hypertrophy)',
     // ── Fat Loss ──
     'Full Body HIIT': 'Full Body HIIT',
     'Üst Vücut + Kardiyo': 'Upper Body + Cardio',
@@ -2170,6 +2192,28 @@ const focusMap = {
     'Bacak — Güç & Patlayıcılık': 'Piernas — Fuerza & Potencia',
     'Omuz & Kol — Hipertrofi': 'Hombros & Brazos — Hipertrofia',
     'Full Body — Zayıf Nokta Günü': 'Cuerpo Completo — Día de Puntos Débiles',
+    // ── Muscle (v10 — Upper/Lower & Push/Pull/Legs) ──
+    'Üst Vücut A — Göğüs, Omuz & Triceps': 'Tren Superior A — Pecho, Hombros & Tríceps',
+    'Alt Vücut A — Bacak & Kalça': 'Tren Inferior A — Piernas & Glúteos',
+    'Üst Vücut B — Sırt, Omuz & Biceps': 'Tren Superior B — Espalda, Hombros & Bíceps',
+    'Alt Vücut B — Bacak & Core': 'Tren Inferior B — Piernas & Core',
+    'Push — Göğüs, Omuz & Triceps': 'Push — Pecho, Hombros & Tríceps',
+    'Pull — Sırt & Biceps': 'Pull — Espalda & Bíceps',
+    'Bacak — Quad & Hamstring': 'Piernas — Cuádriceps & Isquiotibiales',
+    'Üst Vücut — Göğüs, Sırt & Omuz': 'Tren Superior — Pecho, Espalda & Hombros',
+    'Alt Vücut — Bacak & Kalça': 'Tren Inferior — Piernas & Glúteos',
+    'Push A — Göğüs & Triceps': 'Push A — Pecho & Tríceps',
+    'Pull A — Sırt Genişlik & Biceps': 'Pull A — Amplitud de Espalda & Bíceps',
+    'Bacak A — Quad Ağırlıklı': 'Piernas A — Enfoque Cuádriceps',
+    'Push B — Omuz & Triceps': 'Push B — Hombros & Tríceps',
+    'Pull B — Sırt Kalınlık & Arka Omuz': 'Pull B — Grosor de Espalda & Deltoides Post.',
+    'Bacak B — Hamstring & Kalça': 'Piernas B — Isquiotibiales & Glúteos',
+    'Push A — Göğüs & Triceps (Güç)': 'Push A — Pecho & Tríceps (Fuerza)',
+    'Pull A — Sırt & Biceps (Güç)': 'Pull A — Espalda & Bíceps (Fuerza)',
+    'Bacak A — Güç & Quad': 'Piernas A — Fuerza & Cuádriceps',
+    'Push B — Omuz & Triceps (Hipertrofi)': 'Push B — Hombros & Tríceps (Hipertrofia)',
+    'Pull B — Sırt Detay & Arka Omuz (Hipertrofi)': 'Pull B — Detalle de Espalda & Deltoides Post. (Hipertrofia)',
+    'Bacak B — Hamstring & Kalça (Hipertrofi)': 'Piernas B — Isquiotibiales & Glúteos (Hipertrofia)',
     // ── Fat Loss ──
     'Full Body HIIT': 'HIIT Cuerpo Completo',
     'Üst Vücut + Kardiyo': 'Tren Superior + Cardio',
@@ -2287,6 +2331,50 @@ const restExerciseMap = {
   es: 'Descanso Total',
 };
 
+// ── Egzersiz içi Türkçe parçaların lokalizasyonu (TR dışı diller) ──
+const supersetPrefixMap = { en: 'Superset:', es: 'Superserie:' };
+
+const deloadNoteMap = {
+  en: {
+    '⚠️ Deload Notu: Her 4. haftada ağırlıkları %60\'a düşür, seti %50 azalt': '⚠️ Deload Note: Every 4th week — drop weights to 60% and cut sets by 50%',
+    '⚠️ Deload Notu: 4. haftada ağırlıkları %60\'a düşür': '⚠️ Deload Note: Week 4 — drop weights to 60%',
+    '⚠️ Deload Notu: 4. haftada toplam seti %50 azalt': '⚠️ Deload Note: Week 4 — cut total sets by 50%',
+    '⚠️ Deload Notu: 4. haftada squat ağırlığı max %65': '⚠️ Deload Note: Week 4 — squat weight max 65%',
+    '⚠️ Deload Notu: 4. haftada toplam hacmi %50 azalt': '⚠️ Deload Note: Week 4 — cut total volume by 50%',
+  },
+  es: {
+    '⚠️ Deload Notu: Her 4. haftada ağırlıkları %60\'a düşür, seti %50 azalt': '⚠️ Nota de Descarga: Cada 4ª semana — baja los pesos al 60% y reduce las series 50%',
+    '⚠️ Deload Notu: 4. haftada ağırlıkları %60\'a düşür': '⚠️ Nota de Descarga: Semana 4 — baja los pesos al 60%',
+    '⚠️ Deload Notu: 4. haftada toplam seti %50 azalt': '⚠️ Nota de Descarga: Semana 4 — reduce el total de series 50%',
+    '⚠️ Deload Notu: 4. haftada squat ağırlığı max %65': '⚠️ Nota de Descarga: Semana 4 — peso de sentadilla máx 65%',
+    '⚠️ Deload Notu: 4. haftada toplam hacmi %50 azalt': '⚠️ Nota de Descarga: Semana 4 — reduce el volumen total 50%',
+  },
+};
+
+// Tekrar (reps) alanındaki Türkçe kısaltmalar: 10/bacak, 3/taraf, 8/kol, 30 dk
+const repsTokenMap = {
+  en: [[/bacak/g, 'leg'], [/taraf/g, 'side'], [/\bkol\b/g, 'arm'], [/\bdk\b/g, 'min']],
+  es: [[/bacak/g, 'pierna'], [/taraf/g, 'lado'], [/\bkol\b/g, 'brazo'], [/\bdk\b/g, 'min']],
+};
+
+function localizeExerciseEntry(ex, lang) {
+  if (!ex || lang === 'tr') return ex;
+  let name = ex.name;
+  let reps = ex.reps;
+  if (typeof name === 'string') {
+    const dl = deloadNoteMap[lang]?.[name];
+    if (dl) {
+      name = dl;
+    } else if (name.startsWith('Süperset:')) {
+      name = name.replace('Süperset:', supersetPrefixMap[lang] || 'Superset:');
+    }
+  }
+  if (typeof reps === 'string' && repsTokenMap[lang]) {
+    for (const [re, tgt] of repsTokenMap[lang]) reps = reps.replace(re, tgt);
+  }
+  return { ...ex, name, reps };
+}
+
 export function localizePlan(plan, lang) {
   if (!plan || lang === 'tr') return plan; // workoutPhases are already in Turkish
   const dMap = dayNameMap[lang] || dayNameMap.en;
@@ -2297,10 +2385,11 @@ export function localizePlan(plan, lang) {
     ...day,
     day: dMap[day.day] || day.day,
     focus: fMap[day.focus] || day.focus,
-    exercises: day.exercises?.map(ex => ({
-      ...ex,
-      name: ex.name === 'Tam Dinlenme' ? restName : ex.name,
-    })),
+    exercises: day.exercises?.map(ex => {
+      const loc = localizeExerciseEntry(ex, lang);
+      return { ...loc, name: loc.name === 'Tam Dinlenme' ? restName : loc.name };
+    }),
+    coreFinisher: day.coreFinisher?.map(ex => localizeExerciseEntry(ex, lang)),
   });
 
   return {
