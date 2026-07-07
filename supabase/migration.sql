@@ -1,10 +1,15 @@
 -- ============================================
--- ShredMatrix — Supabase Database Migration
--- Run this in: Supabase Dashboard → SQL Editor
+-- Full Balance / ShredMatrix — Idempotent Supabase Schema
+-- Run in Supabase Dashboard -> SQL Editor.
+-- Safe to rerun: tables, columns, indexes, buckets, triggers and policies are guarded.
 -- ============================================
 
--- ── Kullanıcı profil bilgileri (auth.users'a ek) ──
-CREATE TABLE profiles (
+-- Required for gen_random_uuid() on older Postgres setups.
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- ── Core Tables ─────────────────────────────
+
+CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   onboarding_data JSONB,
@@ -12,11 +17,22 @@ CREATE TABLE profiles (
   plan_created_at TIMESTAMPTZ,
   first_login_at TIMESTAMPTZ DEFAULT NOW(),
   avatar_url TEXT,
+  role TEXT DEFAULT 'user',
+  email TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ── Antrenman planı ──
-CREATE TABLE plans (
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS onboarding_data JSONB,
+  ADD COLUMN IF NOT EXISTS current_phase INTEGER DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS plan_created_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS first_login_at TIMESTAMPTZ DEFAULT NOW(),
+  ADD COLUMN IF NOT EXISTS avatar_url TEXT,
+  ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'user',
+  ADD COLUMN IF NOT EXISTS email TEXT,
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+
+CREATE TABLE IF NOT EXISTS public.plans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   plan_data JSONB NOT NULL,
@@ -24,8 +40,7 @@ CREATE TABLE plans (
   UNIQUE(user_id)
 );
 
--- ── Antrenman logları ──
-CREATE TABLE workout_logs (
+CREATE TABLE IF NOT EXISTS public.workout_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -35,8 +50,7 @@ CREATE TABLE workout_logs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ── İlerleme takibi (kilo + yağ oranı) ──
-CREATE TABLE progress_entries (
+CREATE TABLE IF NOT EXISTS public.progress_entries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -45,17 +59,19 @@ CREATE TABLE progress_entries (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ── Vücut ölçüleri ──
-CREATE TABLE measurements (
+CREATE TABLE IF NOT EXISTS public.measurements (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
-  chest REAL, waist REAL, hip REAL, arm REAL, leg REAL,
+  chest REAL,
+  waist REAL,
+  hip REAL,
+  arm REAL,
+  leg REAL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ── Su takibi ──
-CREATE TABLE water_logs (
+CREATE TABLE IF NOT EXISTS public.water_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -65,8 +81,7 @@ CREATE TABLE water_logs (
   UNIQUE(user_id, date)
 );
 
--- ── Uyku takibi ──
-CREATE TABLE sleep_logs (
+CREATE TABLE IF NOT EXISTS public.sleep_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -75,8 +90,7 @@ CREATE TABLE sleep_logs (
   UNIQUE(user_id, date)
 );
 
--- ── Hatırlatıcı ayarları ──
-CREATE TABLE reminders (
+CREATE TABLE IF NOT EXISTS public.reminders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   enabled BOOLEAN DEFAULT FALSE,
@@ -85,86 +99,7 @@ CREATE TABLE reminders (
   UNIQUE(user_id)
 );
 
--- ============================================
--- Row Level Security (RLS) Policies
--- Kullanıcılar sadece kendi verilerine erişebilir
--- ============================================
-
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE plans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE workout_logs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE progress_entries ENABLE ROW LEVEL SECURITY;
-ALTER TABLE measurements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE water_logs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE sleep_logs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE reminders ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "profiles_own_data" ON profiles FOR ALL USING (id = auth.uid()) WITH CHECK (id = auth.uid());
-CREATE POLICY "plans_own_data" ON plans FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "workout_logs_own_data" ON workout_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "progress_entries_own_data" ON progress_entries FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "measurements_own_data" ON measurements FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "water_logs_own_data" ON water_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "sleep_logs_own_data" ON sleep_logs FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-CREATE POLICY "reminders_own_data" ON reminders FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
-
--- ============================================
--- Performance Indexes
--- ============================================
-
-CREATE INDEX idx_workout_logs_user ON workout_logs(user_id, date);
-CREATE INDEX idx_progress_user ON progress_entries(user_id, date);
-CREATE INDEX idx_water_user ON water_logs(user_id, date);
-CREATE INDEX idx_sleep_user ON sleep_logs(user_id, date);
-CREATE INDEX idx_measurements_user ON measurements(user_id, date);
-
--- ============================================
--- Storage Bucket (Fotoğraflar)
--- ============================================
-
-INSERT INTO storage.buckets (id, name, public) VALUES ('user-photos', 'user-photos', false);
-
-CREATE POLICY "users_own_photos" ON storage.objects FOR ALL
-  USING (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text)
-  WITH CHECK (bucket_id = 'user-photos' AND (storage.foldername(name))[1] = auth.uid()::text);
-
--- ============================================
--- Auto-create profile on signup (trigger)
--- ============================================
-
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id, name)
-  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'name', 'User'));
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- ============================================
--- Account deletion helper
--- Auth kullanıcı kaydını sadece kullanıcı kendisi silebilir
--- ============================================
-
-CREATE OR REPLACE FUNCTION public.delete_current_user()
-RETURNS void AS $$
-BEGIN
-  DELETE FROM auth.users WHERE id = auth.uid();
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, auth;
-
-REVOKE ALL ON FUNCTION public.delete_current_user() FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.delete_current_user() TO authenticated;
-
--- ============================================
--- Push Notification Subscriptions
--- ============================================
-
-CREATE TABLE push_subscriptions (
+CREATE TABLE IF NOT EXISTS public.push_subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   endpoint TEXT NOT NULL,
@@ -175,74 +110,478 @@ CREATE TABLE push_subscriptions (
   UNIQUE(user_id)
 );
 
-ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "push_subscriptions_own_data" ON push_subscriptions
-  FOR ALL USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
-
-CREATE INDEX idx_push_subs_user ON push_subscriptions(user_id);
-
--- ============================================
--- Leaderboard — Haftalık sıralama puanları
--- ============================================
-
-CREATE TABLE leaderboard_scores (
+CREATE TABLE IF NOT EXISTS public.leaderboard_scores (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   display_name TEXT NOT NULL DEFAULT 'User',
-  week_start DATE NOT NULL,  -- Haftanın Pazartesi günü
+  week_start DATE NOT NULL,
   workouts INTEGER DEFAULT 0,
   streak INTEGER DEFAULT 0,
-  score INTEGER DEFAULT 0,   -- Denge puanı (0-100)
+  score INTEGER DEFAULT 0,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, week_start)
 );
 
-ALTER TABLE leaderboard_scores ENABLE ROW LEVEL SECURITY;
-
--- Herkes sıralama tablosunu OKUYABİLİR (anonim görüntüleme)
-CREATE POLICY "leaderboard_read_all" ON leaderboard_scores
-  FOR SELECT USING (true);
-
--- Sadece kendi kaydını YAZMA/GÜNCELLEME
-CREATE POLICY "leaderboard_write_own" ON leaderboard_scores
-  FOR INSERT WITH CHECK (user_id = auth.uid());
-
-CREATE POLICY "leaderboard_update_own" ON leaderboard_scores
-  FOR UPDATE USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
-
-CREATE POLICY "leaderboard_delete_own" ON leaderboard_scores
-  FOR DELETE USING (user_id = auth.uid());
-
-CREATE INDEX idx_leaderboard_week ON leaderboard_scores(week_start, workouts DESC);
-CREATE INDEX idx_leaderboard_user ON leaderboard_scores(user_id, week_start);
-
--- ============================================
--- Referral tracking
--- ============================================
-
-CREATE TABLE referrals (
+CREATE TABLE IF NOT EXISTS public.referrals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   referrer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   referred_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   code TEXT NOT NULL,
-  status TEXT DEFAULT 'pending', -- pending | completed
+  status TEXT DEFAULT 'pending',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   completed_at TIMESTAMPTZ
 );
 
-ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
+CREATE TABLE IF NOT EXISTS public.trainer_invites (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  trainer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  code TEXT NOT NULL UNIQUE,
+  active BOOLEAN DEFAULT TRUE,
+  expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '14 days'),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
-CREATE POLICY "referrals_own_data" ON referrals
-  FOR ALL USING (referrer_id = auth.uid())
-  WITH CHECK (referrer_id = auth.uid());
+CREATE TABLE IF NOT EXISTS public.trainer_clients (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  trainer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  client_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  status TEXT DEFAULT 'active',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT trainer_clients_not_self CHECK (trainer_id <> client_id),
+  CONSTRAINT trainer_clients_unique_pair UNIQUE (trainer_id, client_id)
+);
 
--- Referred user'ın referral'ı complete etmesine izin ver
-CREATE POLICY "referrals_complete" ON referrals
-  FOR UPDATE USING (referred_id = auth.uid())
-  WITH CHECK (referred_id = auth.uid());
+-- ── Indexes ─────────────────────────────────
 
-CREATE INDEX idx_referrals_code ON referrals(code);
-CREATE INDEX idx_referrals_referrer ON referrals(referrer_id);
+CREATE INDEX IF NOT EXISTS idx_workout_logs_user ON public.workout_logs(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_progress_user ON public.progress_entries(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_water_user ON public.water_logs(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_sleep_user ON public.sleep_logs(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_measurements_user ON public.measurements(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_push_subs_user ON public.push_subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_leaderboard_week ON public.leaderboard_scores(week_start, workouts DESC);
+CREATE INDEX IF NOT EXISTS idx_leaderboard_user ON public.leaderboard_scores(user_id, week_start);
+CREATE INDEX IF NOT EXISTS idx_referrals_code ON public.referrals(code);
+CREATE INDEX IF NOT EXISTS idx_referrals_referrer ON public.referrals(referrer_id);
+CREATE INDEX IF NOT EXISTS idx_trainer_invites_trainer ON public.trainer_invites(trainer_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_trainer_invites_code ON public.trainer_invites(code);
+CREATE INDEX IF NOT EXISTS idx_trainer_clients_trainer ON public.trainer_clients(trainer_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_trainer_clients_client ON public.trainer_clients(client_id, created_at DESC);
+
+-- ── RLS ─────────────────────────────────────
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.workout_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.progress_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.measurements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.water_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.sleep_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reminders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leaderboard_scores ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.referrals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trainer_invites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trainer_clients ENABLE ROW LEVEL SECURITY;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_invites TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_clients TO authenticated;
+
+-- Drop legacy and current policies before recreating deterministic policies.
+DROP POLICY IF EXISTS "users_own_data" ON public.profiles;
+DROP POLICY IF EXISTS "users_own_data" ON public.plans;
+DROP POLICY IF EXISTS "users_own_data" ON public.workout_logs;
+DROP POLICY IF EXISTS "users_own_data" ON public.progress_entries;
+DROP POLICY IF EXISTS "users_own_data" ON public.measurements;
+DROP POLICY IF EXISTS "users_own_data" ON public.water_logs;
+DROP POLICY IF EXISTS "users_own_data" ON public.sleep_logs;
+DROP POLICY IF EXISTS "users_own_data" ON public.reminders;
+
+DROP POLICY IF EXISTS "profiles_own_data" ON public.profiles;
+DROP POLICY IF EXISTS "plans_own_data" ON public.plans;
+DROP POLICY IF EXISTS "workout_logs_own_data" ON public.workout_logs;
+DROP POLICY IF EXISTS "progress_entries_own_data" ON public.progress_entries;
+DROP POLICY IF EXISTS "measurements_own_data" ON public.measurements;
+DROP POLICY IF EXISTS "water_logs_own_data" ON public.water_logs;
+DROP POLICY IF EXISTS "sleep_logs_own_data" ON public.sleep_logs;
+DROP POLICY IF EXISTS "reminders_own_data" ON public.reminders;
+DROP POLICY IF EXISTS "push_subscriptions_own_data" ON public.push_subscriptions;
+DROP POLICY IF EXISTS "leaderboard_read_all" ON public.leaderboard_scores;
+DROP POLICY IF EXISTS "leaderboard_write_own" ON public.leaderboard_scores;
+DROP POLICY IF EXISTS "leaderboard_update_own" ON public.leaderboard_scores;
+DROP POLICY IF EXISTS "leaderboard_delete_own" ON public.leaderboard_scores;
+DROP POLICY IF EXISTS "referrals_own_data" ON public.referrals;
+DROP POLICY IF EXISTS "referrals_complete" ON public.referrals;
+DROP POLICY IF EXISTS "referrals_referrer_own" ON public.referrals;
+DROP POLICY IF EXISTS "referrals_referred_update" ON public.referrals;
+DROP POLICY IF EXISTS "trainer_invites_own_data" ON public.trainer_invites;
+DROP POLICY IF EXISTS "trainer_clients_linked_select" ON public.trainer_clients;
+DROP POLICY IF EXISTS "trainer_clients_linked_delete" ON public.trainer_clients;
+
+DROP POLICY IF EXISTS "profiles_select" ON public.profiles;
+DROP POLICY IF EXISTS "profiles_insert" ON public.profiles;
+DROP POLICY IF EXISTS "profiles_update" ON public.profiles;
+DROP POLICY IF EXISTS "profiles_delete" ON public.profiles;
+DROP POLICY IF EXISTS "plans_select" ON public.plans;
+DROP POLICY IF EXISTS "plans_insert" ON public.plans;
+DROP POLICY IF EXISTS "plans_update" ON public.plans;
+DROP POLICY IF EXISTS "plans_delete" ON public.plans;
+DROP POLICY IF EXISTS "workout_logs_select" ON public.workout_logs;
+DROP POLICY IF EXISTS "workout_logs_insert" ON public.workout_logs;
+DROP POLICY IF EXISTS "workout_logs_update" ON public.workout_logs;
+DROP POLICY IF EXISTS "workout_logs_delete" ON public.workout_logs;
+DROP POLICY IF EXISTS "progress_entries_select" ON public.progress_entries;
+DROP POLICY IF EXISTS "progress_entries_insert" ON public.progress_entries;
+DROP POLICY IF EXISTS "progress_entries_update" ON public.progress_entries;
+DROP POLICY IF EXISTS "progress_entries_delete" ON public.progress_entries;
+DROP POLICY IF EXISTS "measurements_select" ON public.measurements;
+DROP POLICY IF EXISTS "measurements_insert" ON public.measurements;
+DROP POLICY IF EXISTS "measurements_update" ON public.measurements;
+DROP POLICY IF EXISTS "measurements_delete" ON public.measurements;
+DROP POLICY IF EXISTS "water_logs_select" ON public.water_logs;
+DROP POLICY IF EXISTS "water_logs_insert" ON public.water_logs;
+DROP POLICY IF EXISTS "water_logs_update" ON public.water_logs;
+DROP POLICY IF EXISTS "water_logs_delete" ON public.water_logs;
+DROP POLICY IF EXISTS "sleep_logs_select" ON public.sleep_logs;
+DROP POLICY IF EXISTS "sleep_logs_insert" ON public.sleep_logs;
+DROP POLICY IF EXISTS "sleep_logs_update" ON public.sleep_logs;
+DROP POLICY IF EXISTS "sleep_logs_delete" ON public.sleep_logs;
+DROP POLICY IF EXISTS "reminders_select" ON public.reminders;
+DROP POLICY IF EXISTS "reminders_insert" ON public.reminders;
+DROP POLICY IF EXISTS "reminders_update" ON public.reminders;
+DROP POLICY IF EXISTS "reminders_delete" ON public.reminders;
+
+CREATE POLICY "profiles_own_data" ON public.profiles
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = id)
+  WITH CHECK ((SELECT auth.uid()) = id);
+
+CREATE POLICY "plans_own_data" ON public.plans
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "workout_logs_own_data" ON public.workout_logs
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "progress_entries_own_data" ON public.progress_entries
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "measurements_own_data" ON public.measurements
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "water_logs_own_data" ON public.water_logs
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "sleep_logs_own_data" ON public.sleep_logs
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "reminders_own_data" ON public.reminders
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "push_subscriptions_own_data" ON public.push_subscriptions
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "leaderboard_read_all" ON public.leaderboard_scores
+  FOR SELECT TO authenticated
+  USING (true);
+
+CREATE POLICY "leaderboard_write_own" ON public.leaderboard_scores
+  FOR INSERT TO authenticated
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "leaderboard_update_own" ON public.leaderboard_scores
+  FOR UPDATE TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "leaderboard_delete_own" ON public.leaderboard_scores
+  FOR DELETE TO authenticated
+  USING ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "referrals_referrer_own" ON public.referrals
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = referrer_id)
+  WITH CHECK ((SELECT auth.uid()) = referrer_id);
+
+CREATE POLICY "referrals_referred_update" ON public.referrals
+  FOR UPDATE TO authenticated
+  USING ((SELECT auth.uid()) = referred_id)
+  WITH CHECK ((SELECT auth.uid()) = referred_id);
+
+CREATE POLICY "trainer_invites_own_data" ON public.trainer_invites
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = trainer_id)
+  WITH CHECK ((SELECT auth.uid()) = trainer_id);
+
+CREATE POLICY "trainer_clients_linked_select" ON public.trainer_clients
+  FOR SELECT TO authenticated
+  USING ((SELECT auth.uid()) = trainer_id OR (SELECT auth.uid()) = client_id);
+
+CREATE POLICY "trainer_clients_linked_delete" ON public.trainer_clients
+  FOR DELETE TO authenticated
+  USING ((SELECT auth.uid()) = trainer_id OR (SELECT auth.uid()) = client_id);
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+DECLARE
+  current_user_id UUID := (SELECT auth.uid());
+BEGIN
+  IF current_user_id IS NULL THEN
+    RETURN false;
+  END IF;
+
+  RETURN EXISTS (
+    SELECT 1
+    FROM public.profiles
+    WHERE id = current_user_id
+      AND role = 'admin'
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.is_admin() FROM anon;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.create_trainer_invite()
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth, pg_catalog
+AS $$
+DECLARE
+  current_user_id UUID := (SELECT auth.uid());
+  invite_code TEXT;
+  invite_expires_at TIMESTAMPTZ := NOW() + INTERVAL '14 days';
+BEGIN
+  IF current_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  UPDATE public.trainer_invites
+  SET active = false
+  WHERE trainer_id = current_user_id
+    AND active = true;
+
+  LOOP
+    invite_code := 'PT-' || UPPER(SUBSTRING(ENCODE(gen_random_bytes(4), 'hex') FROM 1 FOR 8));
+
+    BEGIN
+      INSERT INTO public.trainer_invites (trainer_id, code, expires_at)
+      VALUES (current_user_id, invite_code, invite_expires_at);
+      EXIT;
+    EXCEPTION
+      WHEN unique_violation THEN
+    END;
+  END LOOP;
+
+  RETURN jsonb_build_object(
+    'code', invite_code,
+    'expires_at', invite_expires_at
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.create_trainer_invite() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.create_trainer_invite() FROM anon;
+GRANT EXECUTE ON FUNCTION public.create_trainer_invite() TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.connect_trainer_by_code(invite_code TEXT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth, pg_catalog
+AS $$
+DECLARE
+  current_user_id UUID := (SELECT auth.uid());
+  normalized_code TEXT := UPPER(TRIM(invite_code));
+  invite_row public.trainer_invites%ROWTYPE;
+  trainer_name TEXT;
+BEGIN
+  IF current_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  SELECT *
+  INTO invite_row
+  FROM public.trainer_invites
+  WHERE code = normalized_code
+    AND active = true
+    AND expires_at > NOW()
+  LIMIT 1;
+
+  IF invite_row.id IS NULL THEN
+    RAISE EXCEPTION 'Trainer invite code is invalid or expired';
+  END IF;
+
+  IF invite_row.trainer_id = current_user_id THEN
+    RAISE EXCEPTION 'A trainer cannot connect to their own invite code';
+  END IF;
+
+  INSERT INTO public.trainer_clients (trainer_id, client_id, status)
+  VALUES (invite_row.trainer_id, current_user_id, 'active')
+  ON CONFLICT (trainer_id, client_id)
+  DO UPDATE SET status = 'active';
+
+  SELECT name
+  INTO trainer_name
+  FROM public.profiles
+  WHERE id = invite_row.trainer_id;
+
+  RETURN jsonb_build_object(
+    'trainer_id', invite_row.trainer_id,
+    'trainer_name', COALESCE(trainer_name, 'Trainer')
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.connect_trainer_by_code(TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.connect_trainer_by_code(TEXT) FROM anon;
+GRANT EXECUTE ON FUNCTION public.connect_trainer_by_code(TEXT) TO authenticated;
+
+-- Admin read/delete policies are used by the admin panel. The is_admin()
+-- function is locked down and returns false for unauthenticated calls.
+DROP POLICY IF EXISTS "Admin can view all profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Admin can delete profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Admin can view all plans" ON public.plans;
+DROP POLICY IF EXISTS "Admin can delete plans" ON public.plans;
+
+CREATE POLICY "Admin can view all profiles" ON public.profiles
+  FOR SELECT TO authenticated
+  USING (public.is_admin() OR (SELECT auth.uid()) = id);
+
+CREATE POLICY "Admin can delete profiles" ON public.profiles
+  FOR DELETE TO authenticated
+  USING (public.is_admin());
+
+CREATE POLICY "Admin can view all plans" ON public.plans
+  FOR SELECT TO authenticated
+  USING (public.is_admin() OR (SELECT auth.uid()) = user_id);
+
+CREATE POLICY "Admin can delete plans" ON public.plans
+  FOR DELETE TO authenticated
+  USING (public.is_admin());
+
+-- ── Storage ─────────────────────────────────
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('user-photos', 'user-photos', false)
+ON CONFLICT (id) DO UPDATE SET public = false;
+
+DROP POLICY IF EXISTS "users_own_photos" ON storage.objects;
+DROP POLICY IF EXISTS "storage_select_own" ON storage.objects;
+DROP POLICY IF EXISTS "storage_insert_own" ON storage.objects;
+DROP POLICY IF EXISTS "storage_update_own" ON storage.objects;
+DROP POLICY IF EXISTS "storage_delete_own" ON storage.objects;
+
+CREATE POLICY "storage_select_own" ON storage.objects
+  FOR SELECT TO authenticated
+  USING (
+    bucket_id = 'user-photos'
+    AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+  );
+
+CREATE POLICY "storage_insert_own" ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id = 'user-photos'
+    AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+  );
+
+CREATE POLICY "storage_update_own" ON storage.objects
+  FOR UPDATE TO authenticated
+  USING (
+    bucket_id = 'user-photos'
+    AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+  )
+  WITH CHECK (
+    bucket_id = 'user-photos'
+    AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+  );
+
+CREATE POLICY "storage_delete_own" ON storage.objects
+  FOR DELETE TO authenticated
+  USING (
+    bucket_id = 'user-photos'
+    AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+  );
+
+-- ── Auth Profile Trigger ────────────────────
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+BEGIN
+  INSERT INTO public.profiles (id, name, email, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'name', 'User'),
+    NEW.email,
+    'user'
+  )
+  ON CONFLICT (id) DO UPDATE
+    SET email = COALESCE(public.profiles.email, EXCLUDED.email),
+        name = COALESCE(public.profiles.name, EXCLUDED.name);
+  RETURN NEW;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM anon;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'on_auth_user_created'
+  ) THEN
+    CREATE TRIGGER on_auth_user_created
+      AFTER INSERT ON auth.users
+      FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+  END IF;
+END $$;
+
+-- ── Account Deletion RPC ────────────────────
+
+CREATE OR REPLACE FUNCTION public.delete_current_user()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+DECLARE
+  current_user_id UUID := (SELECT auth.uid());
+BEGIN
+  IF current_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  DELETE FROM auth.users WHERE id = current_user_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.delete_current_user() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.delete_current_user() FROM anon;
+GRANT EXECUTE ON FUNCTION public.delete_current_user() TO authenticated;

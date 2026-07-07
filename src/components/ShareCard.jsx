@@ -47,8 +47,6 @@ export default function ShareCard({ plan, onClose }) {
   const refShareUrl = `https://fullbalance.app/?ref=${refCode}`;
   const refShareText = t('share.tagline');
 
-  if (!plan) return null;
-
   const {
     userName = t('profile.user'),
     goal = t('common.fatGoal'),
@@ -56,7 +54,7 @@ export default function ShareCard({ plan, onClose }) {
     macros = {},
     bmi = 0,
     userWeight = 0,
-  } = plan;
+  } = plan || {};
 
   const protein = macros?.protein ?? 0;
   const carbs = macros?.carbs ?? 0;
@@ -280,6 +278,7 @@ export default function ShareCard({ plan, onClose }) {
 
   /* ── Lock body scroll ── */
   useEffect(() => {
+    if (!plan) return undefined;
     const scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
@@ -294,7 +293,9 @@ export default function ShareCard({ plan, onClose }) {
       document.body.style.overflow = '';
       window.scrollTo(0, scrollY);
     };
-  }, []);
+  }, [plan]);
+
+  if (!plan) return null;
 
   return (
     <AnimatePresence>
@@ -482,4 +483,3 @@ export default function ShareCard({ plan, onClose }) {
     </AnimatePresence>
   );
 }
-

@@ -303,12 +303,12 @@ export async function getActivityStats() {
 
     // Water tracking entries
     const { count: totalWater } = await supabase
-      .from('water_tracking')
+      .from('water_logs')
       .select('*', { count: 'exact', head: true });
 
     // Progress entries
     const { count: totalProgress } = await supabase
-      .from('progress')
+      .from('progress_entries')
       .select('*', { count: 'exact', head: true });
 
     // Measurement entries

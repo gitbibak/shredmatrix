@@ -173,8 +173,7 @@ function timeAgo(dateStr) {
 // Main Admin Panel
 // ═════════════════════════════════════════════════
 export default function AdminPanel({ user }) {
-  if (!user || !isAdmin(user)) return <Navigate to="/dashboard" replace />;
-
+  const isAllowed = !!user && isAdmin(user);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -196,6 +195,7 @@ export default function AdminPanel({ user }) {
   const PAGE_SIZE = 15;
 
   const loadData = useCallback(async () => {
+    if (!isAllowed) return;
     const [s, d, t, r, a, w] = await Promise.all([
       getAdminStats(),
       getPlanDistribution(),
@@ -210,13 +210,14 @@ export default function AdminPanel({ user }) {
     if (r) setRecentUsers(r);
     if (a) setActivityStats(a);
     if (w) setWorkoutTrend(w);
-  }, []);
+  }, [isAllowed]);
 
   const loadUsers = useCallback(async () => {
+    if (!isAllowed) return;
     const result = await getAdminUsers(usersPage, PAGE_SIZE, searchQuery);
     setUsers(result.users);
     setUsersTotal(result.total);
-  }, [usersPage, searchQuery]);
+  }, [isAllowed, usersPage, searchQuery]);
 
   useEffect(() => { loadData(); }, [loadData]);
   useEffect(() => { loadUsers(); }, [loadUsers]);
@@ -227,6 +228,8 @@ export default function AdminPanel({ user }) {
     await loadUsers();
     setRefreshing(false);
   };
+
+  if (!isAllowed) return <Navigate to="/dashboard" replace />;
 
   const handleDeleteUser = async (userId, name) => {
     if (!confirm(`"${name}" kullanıcısını silmek istediğine emin misin?`)) return;

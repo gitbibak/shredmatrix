@@ -7,6 +7,8 @@ import { supabase, isSupabaseReady } from './supabase';
 
 // ── Helpers ──────────────────────────────────
 
+let activeUserId = null;
+
 function lsGet(key, fallback = null) {
   try {
     const raw = localStorage.getItem(key);
@@ -23,17 +25,40 @@ function lsRemove(key) {
   try { localStorage.removeItem(key); } catch (err) { console.warn('[DataService]', err?.message || err); }
 }
 
+function normalizeWaterLog(entry) {
+  if (typeof entry === 'string') {
+    return { date: entry, glasses: 8, target_met: true };
+  }
+  if (!entry || typeof entry !== 'object') return null;
+  const date = entry.date || entry.created_at?.slice?.(0, 10);
+  if (!date) return null;
+  const glasses = Number(entry.glasses ?? entry.amount ?? 0) || 0;
+  return {
+    ...entry,
+    date,
+    glasses,
+    target_met: Boolean(entry.target_met ?? entry.targetMet ?? glasses >= 8),
+  };
+}
+
+function getLocalWaterHistory() {
+  return lsGet('shredmatrix_water_history', [])
+    .map(normalizeWaterLog)
+    .filter(Boolean);
+}
+
+function setLocalWaterHistoryEntry(date, glasses, targetMet) {
+  const history = getLocalWaterHistory();
+  const nextEntry = { date, glasses, target_met: targetMet };
+  const idx = history.findIndex((entry) => entry.date === date);
+  if (idx >= 0) history[idx] = { ...history[idx], ...nextEntry };
+  else history.push(nextEntry);
+  history.sort((a, b) => b.date.localeCompare(a.date));
+  lsSet('shredmatrix_water_history', history);
+}
+
 function getUserId() {
-  if (!isSupabaseReady()) return null;
-  // Supabase stores session, we can read it synchronously from localStorage cache
-  try {
-    const sessionStr = localStorage.getItem('sb-' + import.meta.env.VITE_SUPABASE_URL?.split('//')[1]?.split('.')[0] + '-auth-token');
-    if (sessionStr) {
-      const session = JSON.parse(sessionStr);
-      return session?.user?.id || null;
-    }
-  } catch (err) { console.warn('[DataService]', err?.message || err); }
-  return null;
+  return isSupabaseReady() ? activeUserId : null;
 }
 
 // ══════════════════════════════════════════════
@@ -51,6 +76,7 @@ export async function signUp(email, password, name) {
     options: { data: { name } },
   });
   if (error) throw error;
+  activeUserId = data.session?.user?.id || null;
   return { user: data.user, session: data.session };
 }
 
@@ -61,6 +87,7 @@ export async function signIn(email, password) {
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
+  activeUserId = data.session?.user?.id || data.user?.id || null;
   return { user: data.user, session: data.session };
 }
 
@@ -79,6 +106,7 @@ export async function signOut() {
   if (isSupabaseReady()) {
     await supabase.auth.signOut();
   }
+  activeUserId = null;
   lsRemove('shredmatrix_session');
 }
 
@@ -120,7 +148,11 @@ export async function getSession() {
   if (!isSupabaseReady()) return null;
 
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) return null;
+  if (!session) {
+    activeUserId = null;
+    return null;
+  }
+  activeUserId = session.user.id;
   return {
     user: {
       id: session.user.id,
@@ -137,12 +169,14 @@ export function onAuthStateChange(callback) {
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
     // Only react to actual sign-in/sign-out events, not token refreshes or initial session
     if (event === 'SIGNED_IN' && session) {
+      activeUserId = session.user.id;
       callback('SIGNED_IN', {
         id: session.user.id,
         name: session.user.user_metadata?.name || 'User',
         email: session.user.email,
       });
     } else if (event === 'SIGNED_OUT') {
+      activeUserId = null;
       callback('SIGNED_OUT', null);
     }
     // Ignore: INITIAL_SESSION, TOKEN_REFRESHED, USER_UPDATED, PASSWORD_RECOVERY
@@ -404,14 +438,7 @@ export async function saveWater(date, glasses, targetMet = false) {
 
   if (!isSupabaseReady() || !userId) {
     lsSet('shredmatrix_water', { date, glasses });
-    // Also write to water_history for achievements
-    if (targetMet) {
-      const history = lsGet('shredmatrix_water_history', []);
-      if (!history.includes(date)) {
-        history.push(date);
-        lsSet('shredmatrix_water_history', history);
-      }
-    }
+    setLocalWaterHistoryEntry(date, glasses, targetMet);
     return;
   }
 
@@ -424,13 +451,7 @@ export async function saveWater(date, glasses, targetMet = false) {
     console.warn('[DataService]', err?.message || err);
     // Fallback to localStorage if table doesn't exist
     lsSet('shredmatrix_water', { date, glasses });
-    if (targetMet) {
-      const history = lsGet('shredmatrix_water_history', []);
-      if (!history.includes(date)) {
-        history.push(date);
-        lsSet('shredmatrix_water_history', history);
-      }
-    }
+    setLocalWaterHistoryEntry(date, glasses, targetMet);
   }
 }
 
@@ -465,7 +486,7 @@ export async function getWaterHistory(limit = 30) {
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
-    return lsGet('shredmatrix_water_history', []);
+    return getLocalWaterHistory().slice(0, limit);
   }
 
   try {
@@ -476,10 +497,10 @@ export async function getWaterHistory(limit = 30) {
       .order('date', { ascending: false })
       .limit(limit);
     if (error) throw error;
-    return data || [];
+    return (data || []).map(normalizeWaterLog).filter(Boolean);
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
-    return lsGet('shredmatrix_water_history', []);
+    return getLocalWaterHistory().slice(0, limit);
   }
 }
 
@@ -571,6 +592,127 @@ export async function getProfile() {
     console.warn('[DataService]', err?.message || err);
     return null;
   }
+}
+
+// ══════════════════════════════════════════════
+// TRAINER / CLIENT CONNECTIONS
+// ══════════════════════════════════════════════
+
+function normalizeInviteCode(code) {
+  return String(code || '').trim().toUpperCase();
+}
+
+function getLocalTrainerConnections() {
+  return lsGet('shredmatrix_trainer_connections', []);
+}
+
+function setLocalTrainerConnections(connections) {
+  lsSet('shredmatrix_trainer_connections', connections);
+}
+
+export async function createTrainerInvite() {
+  if (!isSupabaseReady() || !getUserId()) {
+    const code = `PT-${Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, '0')}`;
+    const invite = {
+      code,
+      expires_at: new Date(Date.now() + 14 * 86400000).toISOString(),
+      created_at: new Date().toISOString(),
+    };
+    lsSet('shredmatrix_trainer_invite', invite);
+    return invite;
+  }
+
+  const { data, error } = await supabase.rpc('create_trainer_invite');
+  if (error) throw error;
+  return data;
+}
+
+export async function connectTrainerByCode(code) {
+  const normalizedCode = normalizeInviteCode(code);
+  if (!normalizedCode) throw new Error('Invite code is required');
+
+  if (!isSupabaseReady() || !getUserId()) {
+    const invite = lsGet('shredmatrix_trainer_invite');
+    if (normalizeInviteCode(invite?.code) !== normalizedCode) {
+      throw new Error('Trainer invite code is invalid or expired');
+    }
+    const connection = {
+      id: `local-${Date.now()}`,
+      trainer_id: 'local-trainer',
+      client_id: 'local-client',
+      status: 'active',
+      created_at: new Date().toISOString(),
+      trainer: { name: 'Local Trainer' },
+      client: { name: 'Local Client' },
+    };
+    const connections = getLocalTrainerConnections().filter((item) => item.trainer_id !== connection.trainer_id);
+    connections.unshift(connection);
+    setLocalTrainerConnections(connections);
+    return { trainer_id: connection.trainer_id, trainer_name: connection.trainer.name };
+  }
+
+  const { data, error } = await supabase.rpc('connect_trainer_by_code', { invite_code: normalizedCode });
+  if (error) throw error;
+  return data;
+}
+
+export async function getTrainerClients() {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) {
+    return getLocalTrainerConnections();
+  }
+
+  const { data, error } = await supabase
+    .from('trainer_clients')
+    .select(`
+      id,
+      trainer_id,
+      client_id,
+      status,
+      created_at,
+      client:profiles!trainer_clients_client_id_fkey(id, name, email)
+    `)
+    .eq('trainer_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function getMyTrainers() {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) {
+    return getLocalTrainerConnections();
+  }
+
+  const { data, error } = await supabase
+    .from('trainer_clients')
+    .select(`
+      id,
+      trainer_id,
+      client_id,
+      status,
+      created_at,
+      trainer:profiles!trainer_clients_trainer_id_fkey(id, name, email)
+    `)
+    .eq('client_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function removeTrainerConnection(connectionId) {
+  if (!connectionId) return;
+
+  if (!isSupabaseReady() || !getUserId()) {
+    setLocalTrainerConnections(getLocalTrainerConnections().filter((item) => item.id !== connectionId));
+    return;
+  }
+
+  const { error } = await supabase
+    .from('trainer_clients')
+    .delete()
+    .eq('id', connectionId);
+  if (error) throw error;
 }
 
 // ══════════════════════════════════════════════
@@ -723,6 +865,23 @@ export async function deleteProgressPhoto(photoName) {
   // Return updated list
   return getProgressPhotos();
 }
+
+async function listStorageFilesRecursive(prefix) {
+  const files = [];
+  const { data, error } = await supabase.storage.from('user-photos').list(prefix, { limit: 1000 });
+  if (error) throw error;
+
+  for (const item of data || []) {
+    const path = `${prefix}/${item.name}`;
+    if (item.id) {
+      files.push(path);
+    } else {
+      files.push(...await listStorageFilesRecursive(path));
+    }
+  }
+
+  return files;
+}
 // ══════════════════════════════════════════════
 // PHASE MANAGEMENT
 // ══════════════════════════════════════════════
@@ -814,7 +973,8 @@ export async function deleteAllUserData(email) {
     'shredmatrix_profile_photo', 'shredmatrix_progress_photos',
     'shredmatrix_reminder', 'shredmatrix_current_phase', 'shredmatrix_plan_created',
     'shredmatrix_first_login', `shredmatrix_tour_seen_${email}`,
-    'shredmatrix_install_dismissed',
+    'shredmatrix_install_dismissed', 'shredmatrix_trainer_invite',
+    'shredmatrix_trainer_connections',
   ];
   allKeys.forEach(k => lsRemove(k));
 
@@ -832,12 +992,14 @@ export async function deleteAllUserData(email) {
     try { await supabase.from(table).delete().eq('user_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
   }
 
+  try { await supabase.from('trainer_invites').delete().eq('trainer_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
+  try { await supabase.from('trainer_clients').delete().eq('trainer_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
+  try { await supabase.from('trainer_clients').delete().eq('client_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
+
   // Delete storage files
   try {
-    const { data: files } = await supabase.storage.from('user-photos').list(userId, { limit: 100 });
-    if (files?.length) {
-      await supabase.storage.from('user-photos').remove(files.map(f => `${userId}/${f.name}`));
-    }
+    const files = await listStorageFilesRecursive(userId);
+    if (files.length) await supabase.storage.from('user-photos').remove(files);
   } catch (err) { console.warn('[DataService]', err?.message || err); }
 
   // Delete profile (cascade will handle auth)

@@ -7,6 +7,11 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  test: {
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    globals: true,
+  },
   build: {
     rolldownOptions: {
       output: {
@@ -18,9 +23,24 @@ export default defineConfig({
               priority: 20,
             },
             {
-              name: 'vendor-ui',
-              test: /[\\/]node_modules[\\/](framer-motion|lucide-react|recharts|canvas-confetti)/,
+              name: 'vendor-motion',
+              test: /[\\/]node_modules[\\/]framer-motion/,
               priority: 15,
+            },
+            {
+              name: 'vendor-icons',
+              test: /[\\/]node_modules[\\/]lucide-react/,
+              priority: 14,
+            },
+            {
+              name: 'vendor-charts',
+              test: /[\\/]node_modules[\\/]recharts/,
+              priority: 13,
+            },
+            {
+              name: 'vendor-effects',
+              test: /[\\/]node_modules[\\/]canvas-confetti/,
+              priority: 12,
             },
             {
               name: 'vendor-supabase',

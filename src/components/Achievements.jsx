@@ -8,11 +8,18 @@ import { getWorkoutLogs, getWaterHistory, getWater, getProgress, getFirstLogin, 
 
 /** Compute the current consecutive-day water streak from loaded data */
 function computeWaterStreak(waterHistory, todayWaterData) {
-  const history = [...(waterHistory || [])];
+  const history = (waterHistory || [])
+    .map((entry) => {
+      if (typeof entry === 'string') return entry;
+      if (!entry?.date) return null;
+      const glasses = Number(entry.glasses ?? entry.amount ?? 0) || 0;
+      return (entry.target_met || entry.targetMet || glasses >= 8) ? entry.date : null;
+    })
+    .filter(Boolean);
 
   // Also check today's water data
   const todayStr = new Date().toISOString().slice(0, 10);
-  if (todayWaterData && todayWaterData.glasses >= 8 && !history.includes(todayStr)) {
+  if (todayWaterData && (todayWaterData.glasses || 0) >= 8 && !history.includes(todayStr)) {
     history.push(todayStr);
   }
 

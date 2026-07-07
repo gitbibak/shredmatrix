@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan, regeneratePlanWithPhase, localizePlan, PLAN_VERSION } from './data/planGenerator';
 import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
+import { isSupabaseReady } from './lib/supabase';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
@@ -415,8 +416,8 @@ function AppContent() {
           } else {
             if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
           }
-        } else {
-          // Fallback: check localStorage for user data (covers email confirmation gap)
+        } else if (!isSupabaseReady()) {
+          // Offline/local-only fallback when Supabase is not configured.
           try {
             const cachedUser = JSON.parse(localStorage.getItem('shredmatrix_user'));
             if (cachedUser?.email) {
@@ -430,6 +431,8 @@ function AppContent() {
               }
             }
           } catch (err) { console.warn('[App]', err?.message || err); }
+        } else {
+          try { localStorage.removeItem('shredmatrix_user'); } catch (err) { console.warn('[App]', err?.message || err); }
         }
       } catch (err) {
         console.warn('[App]', err?.message || err);

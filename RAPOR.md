@@ -1,264 +1,217 @@
-# 🏋️ ShredMatrix — Teknik Analiz Raporu
+# Full Balance / ShredMatrix — Güncel Teknik Analiz ve Düzeltme Raporu
 
-> **Tarih:** 14 Haziran 2026
-> **İnceleme:** 2 paralel agent ile ultra-detaylı kod analizi (31 dosya, ~7000+ satır)
-> **Kapsam:** Güvenlik, mimari, veri modeli, UX, performans, i18n, PWA
+> Tarih: 7 Temmuz 2026
+> Kapsam: React/Vite frontend, Supabase Auth/DB/Storage, PWA, test/lint/build, performans paketleme
+> Durum: Build/test/lint/audit çalışan, Supabase şeması idempotent hale getirilmiş ve PT bağlantı modeli eklenmiş ürün prototipi.
 
----
+## 1. Son Durum
 
-## 📊 Genel Durum
+Proje React 19 + Vite 8 + Tailwind CSS 4 tabanlı. Supabase Auth, Database ve Storage entegrasyonu `src/lib/dataService.js` üzerinden çalışıyor; Supabase env yoksa localStorage fallback mevcut.
 
-| Alan | Puan | Durum |
-|------|------|-------|
-| UI/UX Tasarım | 9/10 | ✅ Mükemmel — karanlık tema, animasyonlar, mobil uyum |
-| Özellik Zenginliği | 9/10 | ✅ 24 program, beslenme, su/uyku/vücut takibi, badge'ler |
-| Güvenlik | 1/10 | ❌ Base64 şifre, localStorage'da tüm kullanıcı verileri |
-| Veri Kalıcılığı | 2/10 | ❌ %100 localStorage — tarayıcı temizlenince HER ŞEY silinir |
-| Performans | 5/10 | ⚠️ Code splitting yok, 90KB plan generator, render'da localStorage |
-| i18n | 6/10 | ⚠️ Sistem var ama onlarca hardcoded Türkçe string |
-| Kod Kalitesi | 5/10 | ⚠️ React Rules of Hooks ihlali, useState misuse |
-| Test | 0/10 | ❌ Sıfır test dosyası |
-| Production Hazırlık | 2/10 | ❌ Güçlü prototip ama SaaS olarak yayınlanamaz |
+Bu çalışma sonunda:
 
----
+- `npm run build` başarılı.
+- `npm test` başarılı: 4 test dosyası, 16 test.
+- `npm run lint` başarılı: 0 error, 0 warning.
+- Büyük Vite chunk uyarısı giderildi.
+- Supabase migration dosyası tek kanonik ve idempotent kurulum scriptine dönüştürüldü.
+- Supabase `shredmatrix` projesine migration’lar MCP üzerinden uygulandı ve doğrulandı.
+- PT/antrenör bağlantısı için davet kodu, danışan ilişkisi, RLS policy ve güvenli RPC altyapısı eklendi.
 
-## 🔴 EN KRİTİK SORUN: Veri Modeli
+## 2. Yapılan Düzeltmeler
 
-### %100 localStorage — Backend YOK
+### Auth ve Session Güvenliği
 
-Projede **hiçbir backend, API çağrısı, Supabase, veritabanı veya sunucu tarafı kod yok.** Tüm veri tarayıcının localStorage'ında saklanıyor.
+Dosyalar:
 
-**Ne anlama geliyor:**
-- ❌ Kullanıcı tarayıcı verisini temizlerse → **TÜM VERİ SİLİNİR** (antrenmanlar, ilerleme, fotoğraflar, hesap)
-- ❌ Başka cihazdan giriş yapılamaz → **Senkronizasyon imkansız**
-- ❌ localStorage limiti 5-10MB → **Fotoğraflar ile çabuk dolar, uygulama çöker**
-- ❌ Veri kurtarma mekanizması yok
-- ❌ Herhangi bir XSS açığı ile tüm veriler (şifreler dahil) okunabilir
+- `src/components/AuthScreen.jsx`
+- `src/App.jsx`
+- `src/lib/dataService.js`
 
-### 18 localStorage Key Haritası
+Düzeltmeler:
 
-| # | Key | Veri | Risk |
-|---|-----|------|------|
-| 1 | `shredmatrix_users` | **TÜM kullanıcıların isim, email ve şifreleri** (tek key'de!) | 🔴 Kritik |
-| 2 | `shredmatrix_session` | Aktif oturum (isim + email) | 🟠 |
-| 3 | `shredmatrix_plan_${email}` | Kişisel antrenman + beslenme planı (devasa obje) | 🟡 |
-| 4 | `shredmatrix_workout_log` | Antrenman geçmişi | 🟡 |
-| 5 | `shredmatrix_progress` | Kilo + yağ oranı takibi | 🟡 |
-| 6 | `shredmatrix_measurements` | Vücut ölçüleri (göğüs, bel, kalça, kol, bacak) | 🟡 |
-| 7 | `shredmatrix_water` | Bugünkü su tüketimi | 🟢 |
-| 8 | `shredmatrix_water_history` | Su geçmişi — **HİÇ YAZILMIYOR AMA 2 COMPONENT OKUYOR!** | 🔴 Bug |
-| 9 | `shredmatrix_sleep` | Uyku saatleri | 🟡 |
-| 10 | `shredmatrix_profile_photo` | Profil fotoğrafı (Base64 data URL) | 🟠 Quota riski |
-| 11 | `shredmatrix_progress_photos` | İlerleme fotoğrafları (Base64 array) | 🔴 Quota bombası |
-| 12 | `shredmatrix_reminder` | Hatırlatıcı ayarları | 🟢 |
-| 13 | `shredmatrix_current_phase` | Mevcut program fazı | 🟢 |
-| 14 | `shredmatrix_plan_created` | Plan oluşturma tarihi | 🟢 |
-| 15 | `shredmatrix_first_login` | İlk giriş tarihi | 🟢 |
-| 16 | `shredmatrix_lang` | Dil tercihi | 🟢 |
-| 17 | `shredmatrix_install_dismissed` | PWA prompt gizleme | 🟢 |
-| 18 | `shredmatrix_tour_seen_${email}` | Tur gösterildi mi | 🟢 |
+- E-posta doğrulaması açıkken session oluşmadan kullanıcının uygulamaya alınması engellendi.
+- Supabase aktifken `localStorage` içindeki `shredmatrix_user` artık oturum gibi restore edilmiyor.
+- `dataService.getUserId()` Supabase auth cache key formatını elle okumayı bıraktı; aktif user id artık `signIn`, `signUp`, `getSession` ve `onAuthStateChange` akışından tutuluyor.
 
----
+### Veri Tutarlılığı
 
-## 🔐 Güvenlik: GRADE F
+Dosyalar:
 
-### 1. Şifreler Base64 ile Saklanıyor (Düz metin eşdeğeri)
-**Dosya:** `AuthScreen.jsx` satır 11
-```javascript
-const hashPassword = (pw) => btoa(pw);
-```
-`btoa('123456')` = `'MTIzNDU2'` — herkes `atob()` ile çözebilir. **Bu hash DEĞİL, encoding.**
+- `src/lib/dataService.js`
+- `src/components/Achievements.jsx`
 
-### 2. Tüm Kullanıcı Hesapları Tek Key'de
-**Dosya:** `AuthScreen.jsx` satır 7, 22
-```javascript
-const users = JSON.parse(localStorage.getItem('shredmatrix_users') || '[]');
-// [{name: "Ali", email: "ali@test.com", password: "MTIzNDU2"}, ...]
-```
-DevTools > Application > localStorage ile herkes tüm hesapları görebilir.
+Düzeltmeler:
 
-### 3. Demo Hesap Kaynak Kodda
-**Dosya:** `AuthScreen.jsx` satır 107-109
-```javascript
-// demo@shredmatrix.com / 123456
-```
+- `getWaterHistory()` Supabase ve localStorage fallback için aynı veri şekline normalize edildi.
+- Eski string tabanlı su geçmişi kayıtları geriye uyumlu okunuyor.
+- Su streak hesabı hem eski hem yeni formatta doğru çalışacak hale getirildi.
 
-### 4. Gerçek Auth Yok
-"Giriş" tamamen kozmetik — localStorage'da email kontrolü yapıyor. JWT, session, token hiçbir şey yok.
+### Storage Cleanup
 
----
+Dosya:
 
-## 🐛 Kritik Buglar
+- `src/lib/dataService.js`
 
-### Bug 1: `shredmatrix_water_history` hiç yazılmıyor
-**Okuyan:** `Achievements.jsx:10`, `WeeklyReport.jsx:71`
-**Yazan:** HİÇBİR COMPONENT
+Düzeltme:
 
-**Sonuç:** Su serisi achievement'ı her zaman 0 gösterir. Haftalık rapordaki su ortalaması her zaman boş.
+- Hesap silmede `user-photos` bucket altında `${userId}/profile/...` ve `${userId}/progress/...` gibi alt klasörlerde kalan dosyalar recursive listelenip siliniyor.
 
-**Düzeltme:** `WaterTracker.jsx`'e su hedefi karşılandığında history yazma ekle.
+### React Hook Hataları
 
-### Bug 2: React Rules of Hooks İhlali
-**Dosya:** `Dashboard.jsx` satır 108-111
-```javascript
-if (!plan) return null;  // ← L108: Early return
-useEffect(() => { ... }); // ← L111: Hook çağrısı SONRA
-```
-Hook'lar koşullu çağrılamaz. `plan` null olursa React crash eder.
+Dosyalar:
 
-**Düzeltme:** `useEffect`'i `if` kontrolünden ÖNCE taşı.
+- `src/components/NutritionPanel.jsx`
+- `src/components/ShareCard.jsx`
+- `src/components/admin/AdminPanel.jsx`
 
-### Bug 3: `useState` Side Effect Olarak Kullanılıyor
-**Dosya:** `AuthScreen.jsx` satır 138, `WorkoutPanel.jsx` satır 243
-```javascript
-useState(() => seedDemoAccount()); // ← side effect, return yok
-useState(() => { setCompletedDays(...) }); // ← başka state'i set ediyor
-```
-`useState` initializer fonksiyon sadece başlangıç değeri döndürmelidir. Side effect için `useEffect` kullanılmalı.
+Düzeltmeler:
 
-### Bug 4: WeeklyReport Stale Data
-**Dosya:** `WeeklyReport.jsx`
-```javascript
-const report = useMemo(() => { ... }, []); // ← boş dependency array!
-```
-Rapor ilk render'dan sonra hiç güncellenmez.
+- Conditional hook çağrıları giderildi.
+- Erken return akışları hook sırasını bozmayacak hale getirildi.
 
-### Bug 5: Hesap Silme Eksik
-**Dosya:** `ProfilePage.jsx` satır 180-190
+### Duplicate Key Hataları
 
-Silinen key'ler: `session`, `plan_${email}`, `progress`, `water`, `profile_photo`, `progress_photos`
-**Silinmeyen key'ler:** `workout_log`, `measurements`, `sleep`, `reminder`, `first_login`, `install_dismissed`, `water_history`, `current_phase`
+Dosyalar:
 
-### Bug 6: Plan Regenerasyonunda Activity Level Kayboluyor
-**Dosya:** `planGenerator.js` satır 1741
-```javascript
-activityLevel: 'moderate' // ← hardcoded, kullanıcının gerçek seviyesi değil
-```
+- `src/data/planGenerator.js`
+- `src/i18n/translations.js`
 
----
+Düzeltmeler:
 
-## 🌐 i18n Sorunları
+- Aynı object içinde tekrar eden plan çeviri key’leri tekilleştirildi.
+- `bodyMap.back`, `bodyMap.balance`, `streak.days` çakışmaları giderildi; ezilen değerler ayrı key’lere taşındı.
 
-İyi bir i18n sistemi var (LanguageContext + 1202 satır translations.ts) ama birçok component bunu kullanmıyor:
+### Supabase Migration
 
-| Component | Hardcoded String Örnekleri | Dil |
-|-----------|---------------------------|-----|
-| `WorkoutLog.jsx` | "Ağırlık", "Tekrar", "Set Ekle", "toplam hacim" | 🇹🇷 |
-| `Onboarding.jsx` | "Zayıf", "Normal", "Fazla Kilolu", "Obez", "Özet" | 🇹🇷 |
-| `planGenerator.js` | Tüm yemek isimleri, bazı egzersiz isimleri | 🇹🇷 |
-| `NutritionPanel.jsx` | Yemek alternatifleri, ikon mapping | 🇹🇷 |
-| `SupplementGuide.jsx` | Tüm supplement isimleri ve dozajları | 🇹🇷 |
-| `ShareCard.jsx` | "Hedef", "Günlük Kalori", paylaşım metni | 🇹🇷 |
-| `WorkoutTimer.jsx` | "2dk" preset | 🇹🇷 |
+Dosyalar:
 
-**`translations.js` 69KB** — 3 dilin tamamı startup'ta yükleniyor. Dil başına split yapılmalı.
+- `supabase/migration.sql`
+- `supabase/migration_v2.sql`
+- `supabase/run_this.sql`
+- `supabase/security_hardening.sql`
 
----
+Düzeltmeler:
 
-## ⚡ Performans Sorunları
+- `migration.sql` kanonik idempotent şema dosyası oldu.
+- Tablolar, indeksler, RLS policy’leri, Storage bucket policy’leri, auth profile trigger’ı ve `delete_current_user` RPC tek yerde toplandı.
+- Policy’ler `TO authenticated`, ownership predicate ve `WITH CHECK` ile yeniden düzenlendi.
+- Eski yardımcı SQL dosyaları artık zayıf/çakışan policy üretmeyecek şekilde `migration.sql` dosyasına yönlendiriliyor.
+- Remote Supabase projesinde uygulanan migration’lar:
+  - `fullbalance_schema_hardening`
+  - `drop_legacy_granular_policies`
+  - `harden_admin_function`
+  - `align_profiles_admin_columns`
+  - `revoke_admin_function_from_anon`
+  - `add_trainer_client_connections`
+- Remote doğrulamada public tabloların RLS açık olduğu, `user-photos` bucket’ının private olduğu ve `is_admin` / `delete_current_user` fonksiyonlarının `anon` execute yetkisinin kapalı olduğu doğrulandı.
+- Remote doğrulamada `trainer_invites` ve `trainer_clients` tablolarında RLS açık olduğu, PT policy’lerinin sadece `authenticated` role tanımlandığı, `create_trainer_invite` ve `connect_trainer_by_code` RPC’lerinin `anon` execute yetkisinin kapalı olduğu doğrulandı.
 
-| # | Sorun | Etki | Dosya |
-|---|-------|------|-------|
-| 1 | **Zero code splitting** — 24 component eagerly loaded | İlk yükleme çok yavaş | App.jsx |
-| 2 | **planGenerator.js 90KB** statik veri senkron yükleniyor | Bundle şişiyor | data/planGenerator.js |
-| 3 | **translations.js 69KB** tüm diller birden yükleniyor | Gereksiz yük | i18n/translations.js |
-| 4 | **Landing page'de ~40 Framer Motion animasyonu** | Düşük cihazlarda lag | LandingPage.jsx |
-| 5 | **localStorage render path'inde okunuyor** | Her render'da disk I/O | Dashboard.jsx:238 |
-| 6 | **Base64 resimler localStorage'da** | Quota aşımı, crash | ProfilePage.jsx |
-| 7 | **React.memo kullanılmıyor** | Gereksiz re-render | Tüm component'ler |
+### Test ve Lint Altyapısı
 
----
+Dosyalar:
 
-## 📱 Landing Page — Aldatıcı İstatistikler
+- `package.json`
+- `package-lock.json`
+- `eslint.config.js`
+- `vite.config.js`
+- `src/test/setup.js`
+- `src/utils/balanceScore.test.js`
 
-**Dosya:** `LandingPage.jsx` satır 91-97
-```
-"10K+ Exercises" — Gerçekte ~100 egzersiz var
-"500+ Recipes" — Gerçekte ~50 yemek var
-```
+Eklenenler:
 
-**Sahte testimonial'lar (satır 204-223)** — uydurulmuş isimler ve yorumlar.
+- `npm run lint`
+- `npm test`
+- `npm run test:watch`
+- Vitest + jsdom + Testing Library setup
+- ESLint flat config
+- Balance score için başlangıç unit testleri
+- DataService local fallback testleri
+- Supabase migration statik güvenlik/idempotency testleri
+- Supabase admin/RPC güvenlik testleri
+- ESLint gürültüsü temizlendi; kalite kapısı artık uyarısız çalışıyor.
 
-**ShareCard "Kaydet" butonu** aslında bir şey kaydetmiyor — sadece ekran görüntüsü almayı öneriyor.
+### Eski Kullanılmayan Kod Temizliği
 
-**CalorieCalc "Fotoğraf Tarama"** AI yeteneği varmış gibi görünüyor ama hiçbir şey yapmıyor.
+Dosyalar:
 
----
+- `src/lib/authCrypto.js`
+- `src/components/WorkoutLog.jsx`
 
-## 🏗️ Bölünmesi Gereken Dosyalar
+Düzeltme:
 
-| Dosya | Satır | Boyut | Öneri |
-|-------|-------|-------|-------|
-| `planGenerator.js` | 1747 | 90KB | Egzersiz/yemek verisini JSON dosyalarına ayır |
-| `LandingPage.jsx` | 800 | 38KB | Section component'lerine böl |
-| `Onboarding.jsx` | 628 | 29KB | Step component'lerine böl |
-| `CalorieCalc.jsx` | 390 | 30KB | FOODS datasını `data/foods.json`'a çıkar |
-| `WorkoutLog.jsx` | 582 | 20KB | ExerciseCard, SetRow, HistoryView ayrı component |
-| `ProfilePage.jsx` | 552 | 25KB | PhotoGallery, GoalChanger, AccountActions ayır |
-| `NutritionPanel.jsx` | 536 | 20KB | DaySelector, MacroChart, MealCard ayır |
-| `ProgressTracker.jsx` | 503 | 19KB | Chart, EntryForm, History ayır |
+- Import edilmeyen eski local auth helper’ı ve kullanılmayan eski workout log component’i kaldırıldı.
 
----
+### Performans / Bundle
 
-## 🚫 Production SaaS İçin Eksikler
+Dosya:
 
-| # | Eksik | Öncelik |
-|---|-------|---------|
-| 1 | **Backend / Veritabanı** (Supabase, Firebase vb.) | 🔴 Zorunlu |
-| 2 | **Gerçek Authentication** (OAuth, JWT, email doğrulama) | 🔴 Zorunlu |
-| 3 | **Cloud Storage** (kullanıcı verileri + fotoğraflar) | 🔴 Zorunlu |
-| 4 | **React Router** (URL routing, deep link, geri butonu) | 🟠 Yüksek |
-| 5 | **Error Boundary** (crash = beyaz ekran) | 🟠 Yüksek |
-| 6 | **Test altyapısı** (Vitest minimum) | 🟠 Yüksek |
-| 7 | **Code Splitting** (lazy loading) | 🟡 Orta |
-| 8 | **Hata takibi** (Sentry vb.) | 🟡 Orta |
-| 9 | **Analytics** | 🟡 Orta |
-| 10 | **Gizlilik Politikası / KVKK** | 🟡 Orta |
-| 11 | **Kullanım Koşulları** | 🟡 Orta |
-| 12 | **SEO** (SSR/SSG yok, SPA) | 🟡 Orta |
-| 13 | **Email bildirimleri** | 🟢 Düşük |
-| 14 | **Ödeme sistemi** | 🟢 Düşük |
-| 15 | **Sosyal özellikler** | 🟢 Düşük |
+- `vite.config.js`
 
----
+Düzeltme:
 
-## ✅ İyi Yapılmış Şeyler
+- Tek büyük `vendor-ui` chunk parçalandı:
+  - `vendor-motion`
+  - `vendor-icons`
+  - `vendor-charts`
+  - `vendor-effects`
 
-Her şey kötü değil — şunlar çok iyi:
+Son build’de 500 kB üstü chunk uyarısı yok.
 
-1. **UI/UX tasarımı mükemmel** — dark theme, glassmorphism, micro-animations
-2. **PWA desteği iyi** — service worker, manifest, install prompt, offline cache
-3. **Özellik kapsamı etkileyici** — 6 hedef × 4 faz = 24 program, beslenme planı, su/uyku/vücut takibi
-4. **Plan generator akıllı** — çift BMR formülü ortalaması, gün bazlı kalori ayarlama, bütçe çarpanı
-5. **Adaptive engine** — trend algılama, plato tespiti, faz önerisi
-6. **Responsive tasarım** — mobil bottom nav, safe area, touch target boyutları
-7. **DailyMotivation, OnboardingTour, InstallPrompt** temiz ve production-ready
+### PT / Antrenör Özelliği
 
----
+Dosyalar:
 
-## 📈 Önerilen İş Sırası
+- `src/components/TrainerReport.jsx`
+- `src/lib/dataService.js`
+- `src/utils/trainerReport.js`
+- `src/utils/trainerReport.test.js`
+- `src/components/Dashboard.jsx`
+- `supabase/migration.sql`
 
-```
-Hafta 1-2: Temel Altyapı
-├── Supabase entegrasyonu (Auth + Database + Storage)
-├── localStorage → Supabase migration
-├── React Router ekle
-└── Kritik bugları düzelt (water_history, hooks, useState)
+Eklenenler:
 
-Hafta 3: Güvenlik + Kalite
-├── Gerçek auth (Supabase Auth)
-├── Fotoğrafları Supabase Storage'a taşı
-├── Error Boundary ekle
-└── Rules of Hooks ihlallerini düzelt
+- Profil sekmesine “PT Raporu / Trainer Report” kartı eklendi.
+- Rapor plan, antrenman geçmişi, kilo, ölçüm, su ve uyku verilerinden otomatik özet oluşturuyor.
+- Kullanıcı raporu tek tıkla kopyalayabiliyor veya cihaz destekliyorsa native share ile paylaşabiliyor.
+- Antrenör tarafı için 14 gün geçerli PT davet kodu üretme akışı eklendi.
+- Danışan tarafı için davet koduyla PT’ye bağlanma akışı eklendi.
+- Aktif PT/danışan bağlantıları listeleniyor ve iki taraf da bağlantıyı kaldırabiliyor.
+- Supabase tarafında `trainer_invites`, `trainer_clients`, `create_trainer_invite()` ve `connect_trainer_by_code(TEXT)` eklendi.
+- PT ilişki modeli RLS ile korunuyor; ilişki oluşturma doğrulanmış RPC üzerinden yapılıyor.
+- PT rapor formatı için unit test eklendi.
 
-Hafta 4: Polish
-├── Hardcoded Turkish string'leri i18n'e taşı
-├── Code splitting (lazy loading)
-├── planGenerator + translations split
-├── Sahte istatistikleri kaldır
-└── Vitest ile temel testler
-```
+## 3. Doğrulama
 
----
+| Komut | Sonuç |
+|---|---|
+| `npm run build` | Başarılı |
+| `npm test` | Başarılı, 16 test |
+| `npm run lint` | Başarılı, 0 error / 0 warning |
+| `npm audit` | 0 vulnerability |
 
-> **Sonuç:** ShredMatrix UI/UX açısından Off the Clock'tan çok daha iyi bir prototip. Ama mimari olarak aynı sorunları taşıyor: gerçek backend yok, tüm veri tarayıcıda, güvenlik yok. Supabase entegrasyonu ile hızla production-ready hale getirilebilir çünkü frontend altyapısı sağlam.
+## 4. Kalan İşler
+
+### P1
+
+1. UI/auth akışları için Playwright veya React Testing Library integration testleri eklenebilir.
+2. PT tarafında bir sonraki seviye: antrenörün bağlı danışanın özet raporunu yetkili olarak okuyabildiği ayrı “Trainer Dashboard” görünümü eklenebilir.
+
+### P2
+
+1. `src/i18n/translations.js` hâlâ büyük; dil bazlı split yapılabilir.
+2. `src/data/planGenerator.js` büyük; statik dataset ve plan logic ayrıştırılabilir.
+3. Rapor/dashboard kartlarında global data refresh stratejisi kurulabilir.
+
+## 5. Güncel Puanlama
+
+| Alan | Puan | Not |
+|---|---:|---|
+| UI/UX | 8.5/10 | Zengin, mobil uyumlu, profil içinde PT bağlantı akışı var |
+| Özellik kapsamı | 9.3/10 | Fitness, beslenme, rapor, PWA, Strava, push, PT raporu ve PT bağlantısı |
+| Güvenlik | 8.5/10 | Session açığı, RLS, storage, admin RPC ve PT RPC yetkileri sertleştirildi |
+| Veri kalıcılığı | 8.5/10 | Supabase primary + normalize fallback + PT ilişki modeli |
+| Performans | 7.5/10 | Büyük chunk uyarısı giderildi, lazy route/component yapısı korunuyor |
+| Kod kalitesi | 8.7/10 | Lint/test altyapısı uyarısız çalışıyor, eski kod temizlendi |
+| Test | 6.5/10 | Balance score, dataService fallback, migration/RPC ve PT rapor testleri var |
+| Production hazırlık | 8.5/10 | Kalite kapıları, audit, remote migration ve güvenlik doğrulamaları temiz |

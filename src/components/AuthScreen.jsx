@@ -110,6 +110,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
 
   const [resetSent, setResetSent] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const toggleMode = useCallback(() => {
     setDirection(mode === 'login' ? 1 : -1);
@@ -117,6 +118,7 @@ export default function AuthScreen({ onAuth, onBack }) {
     setErrors({});
     setFormError('');
     setResetSent(false);
+    setVerificationSent(false);
   }, [mode]);
 
   // ── Validate ─────────────────────────────────────────
@@ -156,6 +158,7 @@ export default function AuthScreen({ onAuth, onBack }) {
     async (e) => {
       e.preventDefault();
       setFormError('');
+      setVerificationSent(false);
 
       if (!validate()) return;
 
@@ -176,11 +179,7 @@ export default function AuthScreen({ onAuth, onBack }) {
               const user = loginResult.user;
               onAuth({ name: user.user_metadata?.name || name.trim(), email: user.email, id: user.id });
             } catch {
-              // If sign-in also fails, use the signUp user data directly
-              const user = result.user;
-              if (user) {
-                onAuth({ name: user.user_metadata?.name || name.trim(), email: user.email, id: user.id });
-              }
+              setVerificationSent(true);
             }
           }
         } else {
@@ -278,6 +277,7 @@ export default function AuthScreen({ onAuth, onBack }) {
                   setMode(m);
                   setErrors({});
                   setFormError('');
+                  setVerificationSent(false);
                 }
               }}
               className={[
@@ -409,7 +409,21 @@ export default function AuthScreen({ onAuth, onBack }) {
                 className="space-y-4"
                 noValidate
               >
-                {!isLogin && (
+                {!isLogin && verificationSent ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-4"
+                  >
+                    <CheckCircle size={40} className="text-emerald-400 mx-auto mb-3" />
+                    <p className="text-sm text-white font-outfit font-bold mb-1">
+                      {t('auth.verifyEmailTitle') || 'E-postanı Doğrula'}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {t('auth.verifyEmailDesc') || 'Hesabını etkinleştirmek için gelen kutundaki doğrulama bağlantısını aç.'}
+                    </p>
+                  </motion.div>
+                ) : !isLogin && (
                   <AuthInput
                     icon={User}
                     placeholder={t('auth.name')}
@@ -420,6 +434,8 @@ export default function AuthScreen({ onAuth, onBack }) {
                   />
                 )}
 
+                {!verificationSent && (
+                  <>
                 <AuthInput
                   icon={Mail}
                   type="email"
@@ -520,6 +536,8 @@ export default function AuthScreen({ onAuth, onBack }) {
                     {t('auth.agreeEnd') || "'nı kabul etmiş olursunuz."}
                   </p>
                 )}
+                  </>
+                )}
               </motion.form>
             )}
           </AnimatePresence>
@@ -536,6 +554,7 @@ export default function AuthScreen({ onAuth, onBack }) {
                   setErrors({});
                   setFormError('');
                   setResetSent(false);
+                  setVerificationSent(false);
                 }}
                 className="text-orange-400 hover:text-orange-300 font-semibold transition-colors cursor-pointer"
               >

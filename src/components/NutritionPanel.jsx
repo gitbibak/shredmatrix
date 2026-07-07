@@ -252,18 +252,8 @@ export default function NutritionPanel({ plan }) {
 
   const [selectedDayIdx, setSelectedDayIdx] = useState(todayDayIdx);
   const [direction, setDirection] = useState(0);
-
-  if (!dailyNutrition || !dailyNutrition.length) return (
-    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1rem',textAlign:'center',color:'#94a3b8'}}>
-      <span style={{fontSize:'3rem',marginBottom:'1rem'}}>🥗</span>
-      <p style={{fontSize:'1.1rem',fontWeight:600,color:'#e2e8f0'}}>{t('nutrition.noPlan')}</p>
-      <p style={{fontSize:'0.875rem',marginTop:'0.5rem'}}>{t('nutrition.noPlanDesc')}</p>
-    </div>
-  );
-
-  const dayData = dailyNutrition[selectedDayIdx];
-  if (!dayData) return null;
-  const { calories: dayCalories, macros, meals, totalPrice, mealLabel, day: dayName, emoji, focus } = dayData;
+  const dayData = dailyNutrition?.[selectedDayIdx];
+  const meals = dayData?.meals;
 
   /* ── Shopping List State ── */
   const [showShoppingList, setShowShoppingList] = useState(false);
@@ -300,6 +290,17 @@ export default function NutritionPanel({ plan }) {
   };
 
   const checkedCount = shoppingItems.filter(i => checkedItems[i]).length;
+
+  if (!dailyNutrition || !dailyNutrition.length) return (
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1rem',textAlign:'center',color:'#94a3b8'}}>
+      <span style={{fontSize:'3rem',marginBottom:'1rem'}}>🥗</span>
+      <p style={{fontSize:'1.1rem',fontWeight:600,color:'#e2e8f0'}}>{t('nutrition.noPlan')}</p>
+      <p style={{fontSize:'0.875rem',marginTop:'0.5rem'}}>{t('nutrition.noPlanDesc')}</p>
+    </div>
+  );
+
+  if (!dayData) return null;
+  const { calories: dayCalories, macros, totalPrice, mealLabel, day: dayName, emoji, focus } = dayData;
 
   const donutData = [
     { name: t('nutrition.protein'), value: macros.protein },
