@@ -230,13 +230,6 @@ button, a, [role="button"] {
   }
 }
 
-/* Safe area for notched phones — bottom (home indicator) */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  nav:last-of-type {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-}
-
 /* Better mobile scrollbar */
 @media (max-width: 768px) {
   ::-webkit-scrollbar {

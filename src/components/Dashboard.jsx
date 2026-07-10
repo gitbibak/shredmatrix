@@ -109,6 +109,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [showWelcome, setShowWelcome] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [daysSinceJoin] = useState(() => {
     try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch (err) { console.warn('[Dashboard]', err?.message || err); return 0; }
   });
@@ -136,11 +137,28 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     }
   }, [plan, user]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return undefined;
+    const initialHeight = window.visualViewport.height;
+    const updateKeyboardState = () => {
+      const viewport = window.visualViewport;
+      const heightLoss = window.innerHeight - viewport.height;
+      setKeyboardOpen(heightLoss > 140 || viewport.height < initialHeight - 140);
+    };
+
+    window.visualViewport.addEventListener('resize', updateKeyboardState);
+    window.visualViewport.addEventListener('scroll', updateKeyboardState);
+    return () => {
+      window.visualViewport.removeEventListener('resize', updateKeyboardState);
+      window.visualViewport.removeEventListener('scroll', updateKeyboardState);
+    };
+  }, []);
+
   if (!plan) return null;
 
   return (
     <>
-    <div className="min-h-screen bg-grid pb-20 lg:pb-0 overflow-x-hidden w-full">
+    <div className="min-h-screen bg-grid pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0 overflow-x-hidden w-full">
       {/* ── Welcome Overlay ── */}
       <AnimatePresence>
         {showWelcome && (
@@ -462,7 +480,13 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       </main>
 
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">
+      <nav
+        className={[
+          'lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50 transition-transform duration-200',
+          keyboardOpen ? 'translate-y-full pointer-events-none' : 'translate-y-0',
+        ].join(' ')}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
         <div role="tablist" className="flex items-center justify-around h-16 max-w-lg mx-auto">
           {TABS.map((tab) => {
             const Icon = tab.icon;

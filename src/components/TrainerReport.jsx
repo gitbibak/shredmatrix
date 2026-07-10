@@ -194,6 +194,7 @@ export default function TrainerReport({ plan }) {
 
   const copyReport = async () => {
     document.activeElement?.blur?.();
+    setConnectCode('');
     await navigator.clipboard.writeText(reportText);
     toast.success(lang === 'tr' ? 'PT raporu kopyalandı' : 'Trainer report copied');
   };
@@ -400,7 +401,27 @@ export default function TrainerReport({ plan }) {
           <form onSubmit={connectTrainer} className="flex gap-2 mt-3">
             <input
               value={connectCode}
-              onChange={(event) => setConnectCode(event.target.value.toUpperCase())}
+              onChange={(event) => {
+                const nextValue = event.target.value.toUpperCase();
+                if (nextValue.includes('RAPOR') || nextValue.includes('REPORT') || nextValue.includes('OLUŞTURMA')) {
+                  setConnectCode('');
+                  toast.info(lang === 'tr'
+                    ? 'Bu alan sadece PT bağlantı kodu içindir.'
+                    : 'This field is only for trainer invite codes.');
+                  return;
+                }
+                setConnectCode(nextValue.replace(/[^A-Z0-9-]/g, '').slice(0, 11));
+              }}
+              onPaste={(event) => {
+                const text = event.clipboardData.getData('text') || '';
+                if (text.includes('\n') || /rapor|report|oluşturma/i.test(text)) {
+                  event.preventDefault();
+                  setConnectCode('');
+                  toast.info(lang === 'tr'
+                    ? 'Rapor metni PT kod alanına yapıştırılamaz.'
+                    : 'Report text cannot be pasted into the trainer code field.');
+                }
+              }}
               autoCapitalize="characters"
               autoCorrect="off"
               spellCheck={false}
@@ -473,7 +494,7 @@ export default function TrainerReport({ plan }) {
           className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold cursor-pointer hover:bg-emerald-500/20 transition-colors"
         >
           <Clipboard size={14} />
-          {lang === 'tr' ? 'Kopyala' : lang === 'es' ? 'Copiar' : 'Copy'}
+          {lang === 'tr' ? 'Raporu Kopyala' : lang === 'es' ? 'Copiar informe' : 'Copy Report'}
         </button>
         <button
           type="button"
