@@ -1,6 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Clipboard, Link2, RefreshCw, Share2, UserRoundCheck, UsersRound, X } from 'lucide-react';
+import {
+  Award,
+  CalendarCheck2,
+  Clipboard,
+  Link2,
+  RefreshCw,
+  Share2,
+  ShieldCheck,
+  Target,
+  TrendingUp,
+  UserRoundCheck,
+  UsersRound,
+  X,
+} from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import {
   connectTrainerByCode,
@@ -57,6 +70,12 @@ const LABELS = {
   },
 };
 
+function formatMetric(value, fallback = '-') {
+  if (value == null) return fallback;
+  if (typeof value === 'number') return value.toFixed(1).replace(/\.0$/, '');
+  return value;
+}
+
 export default function TrainerReport({ plan }) {
   const { lang } = useTranslation();
   const toast = useToast();
@@ -109,6 +128,51 @@ export default function TrainerReport({ plan }) {
     () => formatTrainerReport(summary, LABELS[lang] || LABELS.en),
     [summary, lang],
   );
+  const connectedCount = clients.length + trainers.length;
+  const readinessScore = Math.min(100, Math.round(
+    summary.workoutsLast7 * 12
+    + (summary.waterTargetDays || 0) * 4
+    + (summary.sleepAvg ? Math.min(summary.sleepAvg, 8) * 4 : 0)
+    + (summary.latestProgress ? 10 : 0),
+  ));
+  const readinessLabel = readinessScore >= 80
+    ? (lang === 'tr' ? 'PT için hazır' : 'Trainer ready')
+    : readinessScore >= 50
+      ? (lang === 'tr' ? 'Takip edilebilir' : 'Trackable')
+      : (lang === 'tr' ? 'Veri birikiyor' : 'Building data');
+  const trainerNames = [
+    ...clients.map((item) => item.client?.name || item.client?.email || 'Client'),
+    ...trainers.map((item) => item.trainer?.name || item.trainer?.email || 'Trainer'),
+  ];
+  const reportHighlights = [
+    {
+      icon: CalendarCheck2,
+      label: lang === 'tr' ? '7 gün' : '7 days',
+      value: summary.workoutsLast7,
+      sub: lang === 'tr' ? 'antrenman' : 'workouts',
+      color: 'text-orange-400',
+      bg: 'bg-orange-500/10',
+      border: 'border-orange-500/20',
+    },
+    {
+      icon: Target,
+      label: lang === 'tr' ? 'Su hedefi' : 'Water target',
+      value: `${summary.waterTargetDays || 0}/7`,
+      sub: summary.waterAvg == null ? '-' : `${formatMetric(summary.waterAvg)} glass`,
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-500/10',
+      border: 'border-cyan-500/20',
+    },
+    {
+      icon: TrendingUp,
+      label: lang === 'tr' ? 'Kilo trendi' : 'Weight trend',
+      value: summary.weightChange == null ? '-' : `${summary.weightChange > 0 ? '+' : ''}${formatMetric(summary.weightChange)} kg`,
+      sub: summary.latestProgress?.weight ? `${summary.latestProgress.weight} kg` : (lang === 'tr' ? 'veri yok' : 'no data'),
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+    },
+  ];
 
   const copyReport = async () => {
     await navigator.clipboard.writeText(reportText);
@@ -177,57 +241,97 @@ export default function TrainerReport({ plan }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-5"
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-5 overflow-hidden relative"
     >
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <UserRoundCheck size={16} className="text-emerald-400" />
-          <h3 className="text-sm font-bold font-outfit text-white">
-            {lang === 'tr' ? 'PT Raporu' : lang === 'es' ? 'Informe PT' : 'Trainer Report'}
-          </h3>
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500" />
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <UserRoundCheck size={17} className="text-emerald-400 shrink-0" />
+            <h3 className="text-base font-bold font-outfit text-white">
+              {lang === 'tr' ? 'PT Kontrol Merkezi' : lang === 'es' ? 'Centro PT' : 'Trainer Hub'}
+            </h3>
+          </div>
+          <p className="text-[11px] text-slate-500">
+            {lang === 'tr' ? 'Rapor, bağlantı ve paylaşım tek panelde' : 'Report, links and sharing in one panel'}
+          </p>
         </div>
         <button
           type="button"
           onClick={loadData}
           disabled={loading}
-          className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white disabled:opacity-50 cursor-pointer transition-colors"
+          className="p-2.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white disabled:opacity-50 cursor-pointer transition-colors"
           aria-label="Refresh trainer report"
         >
-          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
+          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="rounded-xl bg-slate-950/60 border border-slate-800/60 p-2 text-center">
-          <p className="text-[9px] text-slate-500 mb-0.5">7d</p>
-          <p className="text-sm font-bold text-orange-400">{summary.workoutsLast7}</p>
-        </div>
-        <div className="rounded-xl bg-slate-950/60 border border-slate-800/60 p-2 text-center">
-          <p className="text-[9px] text-slate-500 mb-0.5">Water</p>
-          <p className="text-sm font-bold text-blue-400">
-            {summary.waterAvg == null ? '-' : summary.waterAvg.toFixed(1)}
-          </p>
-        </div>
-        <div className="rounded-xl bg-slate-950/60 border border-slate-800/60 p-2 text-center">
-          <p className="text-[9px] text-slate-500 mb-0.5">Sleep</p>
-          <p className="text-sm font-bold text-purple-400">
-            {summary.sleepAvg == null ? '-' : summary.sleepAvg.toFixed(1)}
-          </p>
+      <div className="rounded-2xl bg-slate-950/60 border border-slate-800/70 p-4 mb-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase text-slate-500 font-semibold tracking-wider mb-1">
+              {lang === 'tr' ? 'Coach skoru' : 'Coach score'}
+            </p>
+            <div className="flex items-end gap-2">
+              <span className="text-4xl font-black font-outfit text-white leading-none">{readinessScore}</span>
+              <span className="text-xs text-slate-500 pb-1">/100</span>
+            </div>
+            <p className="text-xs text-emerald-400 font-semibold mt-2">{readinessLabel}</p>
+          </div>
+          <div className="w-24 h-24 rounded-full border border-emerald-500/25 bg-emerald-500/10 flex items-center justify-center shrink-0">
+            <div className="w-16 h-16 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center">
+              <Award size={26} className="text-emerald-400" />
+            </div>
+          </div>
         </div>
       </div>
 
-      <pre className="max-h-44 overflow-auto whitespace-pre-wrap rounded-xl bg-slate-950/70 border border-slate-800 p-3 text-[10px] leading-relaxed text-slate-300 mb-4">
-        {reportText}
-      </pre>
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        {reportHighlights.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.label} className={`rounded-xl ${item.bg} border ${item.border} p-2.5 min-w-0`}>
+              <div className="flex items-center gap-1.5 mb-2">
+                <Icon size={12} className={item.color} />
+                <p className="text-[9px] text-slate-400 truncate">{item.label}</p>
+              </div>
+              <p className={`text-sm font-bold font-outfit ${item.color}`}>{item.value}</p>
+              <p className="text-[9px] text-slate-500 truncate mt-0.5">{item.sub}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="rounded-xl bg-slate-950/50 border border-slate-800/70 p-3 mb-3">
+        <div className="flex items-center gap-2 mb-2">
+          <ShieldCheck size={14} className="text-blue-400" />
+          <p className="text-xs font-semibold text-white">
+            {lang === 'tr' ? 'Rapor özeti' : 'Report summary'}
+          </p>
+        </div>
+        <p className="text-[11px] leading-relaxed text-slate-400">
+          {lang === 'tr'
+            ? `${summary.athleteName} için ${summary.trainingDaysPerWeek} günlük plan, ${summary.workoutsLast30} son 30 gün antrenmanı ve ${summary.latestProgress?.weight ? `${summary.latestProgress.weight} kg güncel kilo` : 'henüz kilo verisi yok'} bilgisi hazır.`
+            : `${summary.trainingDaysPerWeek}-day plan, ${summary.workoutsLast30} workouts in 30 days and current body metrics are ready for sharing.`}
+        </p>
+      </div>
 
       <div className="grid gap-3 mb-4">
         <div className="rounded-xl bg-slate-950/50 border border-slate-800 p-3">
           <div className="flex items-center justify-between gap-2 mb-3">
             <div className="flex items-center gap-2 min-w-0">
               <Link2 size={14} className="text-cyan-400 shrink-0" />
-              <p className="text-xs font-semibold text-white truncate">
-                {lang === 'tr' ? 'PT Bağlantısı' : lang === 'es' ? 'Conexión PT' : 'Trainer Link'}
-              </p>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-white truncate">
+                  {lang === 'tr' ? 'PT Bağlantısı' : lang === 'es' ? 'Conexión PT' : 'Trainer Link'}
+                </p>
+                <p className="text-[9px] text-slate-500 truncate">
+                  {connectedCount
+                    ? trainerNames.join(', ')
+                    : (lang === 'tr' ? 'Kod üret veya PT kodu gir' : 'Create or enter a code')}
+                </p>
+              </div>
             </div>
             <button
               type="button"
@@ -255,12 +359,12 @@ export default function TrainerReport({ plan }) {
               value={connectCode}
               onChange={(event) => setConnectCode(event.target.value.toUpperCase())}
               placeholder={lang === 'tr' ? 'PT kodu' : lang === 'es' ? 'Código PT' : 'Trainer code'}
-              className="min-w-0 flex-1 rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white placeholder:text-slate-500 outline-none focus:border-cyan-500"
+              className="min-w-0 flex-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-cyan-500"
             />
             <button
               type="submit"
               disabled={connectionBusy || !connectCode.trim()}
-              className="px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold cursor-pointer hover:bg-emerald-500/20 disabled:opacity-50 transition-colors"
+              className="px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold cursor-pointer hover:bg-emerald-500/20 disabled:opacity-50 transition-colors"
             >
               {lang === 'tr' ? 'Bağlan' : lang === 'es' ? 'Conectar' : 'Connect'}
             </button>
