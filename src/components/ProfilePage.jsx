@@ -24,14 +24,26 @@ const itemV = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
 };
 
-function StatCard({ icon: Icon, label, value, unit, color = '#ff6d00' }) {
+function StatCard({ icon: Icon, label, value, unit, color = '#ff6d00', sub, tone = 'neutral' }) {
+  const toneClass = {
+    good: 'text-emerald-400',
+    warn: 'text-amber-400',
+    danger: 'text-red-400',
+    neutral: 'text-slate-500',
+  }[tone] || 'text-slate-500';
+
   return (
-    <motion.div variants={itemV} className="bg-slate-950/50 border border-slate-800/50 rounded-xl p-3 flex flex-col items-center gap-1.5">
-      <Icon size={16} style={{ color }} />
-      <span className="text-[10px] text-slate-400 font-outfit">{label}</span>
-      <span className="text-sm font-bold text-white font-outfit">
-        {value}{unit && <span className="text-xs text-slate-400 ml-0.5">{unit}</span>}
+    <motion.div variants={itemV} className="bg-slate-950/50 border border-slate-800/50 rounded-xl p-3 min-w-0">
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${color}14` }}>
+          <Icon size={15} style={{ color }} />
+        </div>
+        <span className="text-[10px] text-slate-400 font-outfit truncate">{label}</span>
+      </div>
+      <span className="block text-base font-bold text-white font-outfit truncate">
+        {value ?? '—'}{unit && <span className="text-xs text-slate-400 ml-0.5">{unit}</span>}
       </span>
+      {sub && <span className={`block text-[9px] mt-1 truncate ${toneClass}`}>{sub}</span>}
     </motion.div>
   );
 }
@@ -59,6 +71,132 @@ function loadGallery() {
 }
 function saveGallery(arr) {
   try { localStorage.setItem(GALLERY_KEY, JSON.stringify(arr)); } catch (err) { console.warn('[Profile]', err?.message || err); }
+}
+
+function normalizeGoal(goal) {
+  const key = String(goal || '').toLowerCase();
+  if (key.includes('fat') || key.includes('yağ')) return 'fat_loss';
+  if (key.includes('yoga')) return 'yoga';
+  if (key.includes('pilates')) return 'pilates';
+  if (key.includes('reformer')) return 'reformer';
+  if (key.includes('meditation') || key.includes('meditasyon')) return 'meditation';
+  return 'muscle';
+}
+
+function getBmiStatus(bmi, lang) {
+  const value = Number(bmi);
+  if (!Number.isFinite(value)) return { label: '-', tone: 'neutral' };
+  if (value < 18.5) return { label: lang === 'tr' ? 'Düşük' : 'Low', tone: 'warn' };
+  if (value < 25) return { label: lang === 'tr' ? 'Normal' : 'Normal', tone: 'good' };
+  if (value < 30) return { label: lang === 'tr' ? 'Yüksek' : 'High', tone: 'warn' };
+  return { label: lang === 'tr' ? 'Çok yüksek' : 'Very high', tone: 'danger' };
+}
+
+function getGoalProfile(plan, lang) {
+  const goalKey = normalizeGoal(plan.primaryGoal || plan.goal);
+  const dailyCalories = Number(plan.dailyCalories || 0);
+  const tdee = Number(plan.tdee || 0);
+  const calorieDelta = dailyCalories && tdee ? Math.round(dailyCalories - tdee) : null;
+  const trainingDays = plan.trainingDays || plan.workoutSplit?.filter((day) => !day.isRest).length || 0;
+  const protein = plan.macros?.protein;
+
+  const copy = {
+    muscle: {
+      title: lang === 'tr' ? 'Kas gelişimi modu' : 'Muscle growth mode',
+      focus: lang === 'tr' ? 'Kalori fazlası, progresif yüklenme ve protein takibi öncelikli.' : 'Prioritize surplus calories, progressive overload and protein.',
+      primary: calorieDelta == null ? '-' : `${calorieDelta >= 0 ? '+' : ''}${calorieDelta} kcal`,
+      primaryLabel: lang === 'tr' ? 'TDEE farkı' : 'TDEE delta',
+      secondary: protein ? `${protein}g` : '-',
+      secondaryLabel: lang === 'tr' ? 'Protein hedefi' : 'Protein target',
+      action: lang === 'tr' ? 'Haftalık kilo artışı 0.25-0.5 kg aralığında kalmalı.' : 'Keep weekly gain around 0.25-0.5 kg.',
+      color: '#ff6d00',
+    },
+    fat_loss: {
+      title: lang === 'tr' ? 'Yağ yakımı modu' : 'Fat loss mode',
+      focus: lang === 'tr' ? 'Kalori açığı, adım/aktivite ve bel ölçüsü takibi öncelikli.' : 'Prioritize deficit, activity and waist tracking.',
+      primary: calorieDelta == null ? '-' : `${calorieDelta} kcal`,
+      primaryLabel: lang === 'tr' ? 'TDEE farkı' : 'TDEE delta',
+      secondary: plan.userBodyFat ? `%${plan.userBodyFat}` : '-',
+      secondaryLabel: lang === 'tr' ? 'Yağ oranı' : 'Body fat',
+      action: lang === 'tr' ? 'Açık sürdürülebilir kalmalı; performans düşerse kaloriyi yeniden değerlendir.' : 'Keep the deficit sustainable; review calories if performance drops.',
+      color: '#00b0ff',
+    },
+    yoga: {
+      title: lang === 'tr' ? 'Yoga modu' : 'Yoga mode',
+      focus: lang === 'tr' ? 'Mobilite, nefes, toparlanma ve düzenli pratik öncelikli.' : 'Prioritize mobility, breath, recovery and consistent practice.',
+      primary: `${trainingDays}`,
+      primaryLabel: lang === 'tr' ? 'Pratik günü' : 'Practice days',
+      secondary: plan.userActivityLevel ? activityLabelFromPlan(plan, lang) : '-',
+      secondaryLabel: lang === 'tr' ? 'Aktivite' : 'Activity',
+      action: lang === 'tr' ? 'Haftada en az 3 pratik ve 1 toparlanma günü dengeli olur.' : 'Aim for at least 3 practice days and 1 recovery day.',
+      color: '#a855f7',
+    },
+    pilates: {
+      title: lang === 'tr' ? 'Pilates modu' : 'Pilates mode',
+      focus: lang === 'tr' ? 'Core, postür, kontrollü tempo ve düzenli ölçüm öncelikli.' : 'Prioritize core, posture, controlled tempo and measurements.',
+      primary: `${trainingDays}`,
+      primaryLabel: lang === 'tr' ? 'Seans/hafta' : 'Sessions/week',
+      secondary: plan.userBodyFat ? `%${plan.userBodyFat}` : '-',
+      secondaryLabel: lang === 'tr' ? 'Yağ oranı' : 'Body fat',
+      action: lang === 'tr' ? 'Bel/kalça ölçülerini 2 haftada bir takip etmek daha anlamlıdır.' : 'Track waist/hip measurements every 2 weeks.',
+      color: '#ec4899',
+    },
+    reformer: {
+      title: lang === 'tr' ? 'Reformer modu' : 'Reformer mode',
+      focus: lang === 'tr' ? 'Kontrollü direnç, hareket kalitesi ve toparlanma öncelikli.' : 'Prioritize controlled resistance, movement quality and recovery.',
+      primary: `${trainingDays}`,
+      primaryLabel: lang === 'tr' ? 'Seans/hafta' : 'Sessions/week',
+      secondary: plan.userExperience ? experienceLabelFromPlan(plan, lang) : '-',
+      secondaryLabel: lang === 'tr' ? 'Seviye' : 'Level',
+      action: lang === 'tr' ? 'Zor seanslardan sonra uyku ve mobilite takibi önemli.' : 'After hard sessions, watch sleep and mobility.',
+      color: '#14b8a6',
+    },
+    meditation: {
+      title: lang === 'tr' ? 'Meditasyon modu' : 'Meditation mode',
+      focus: lang === 'tr' ? 'Stres yönetimi, uyku kalitesi ve günlük süreklilik öncelikli.' : 'Prioritize stress control, sleep quality and daily consistency.',
+      primary: `${trainingDays}`,
+      primaryLabel: lang === 'tr' ? 'Pratik günü' : 'Practice days',
+      secondary: plan.userWorkSchedule ? scheduleLabelFromPlan(plan, lang) : '-',
+      secondaryLabel: lang === 'tr' ? 'Zaman tercihi' : 'Timing',
+      action: lang === 'tr' ? 'Kısa ama günlük pratik, uzun düzensiz pratikten daha değerlidir.' : 'Short daily practice beats long inconsistent sessions.',
+      color: '#8b5cf6',
+    },
+  };
+
+  return copy[goalKey] || copy.muscle;
+}
+
+function activityLabelFromPlan(plan, lang) {
+  const labels = {
+    sedentary: lang === 'tr' ? 'Hareketsiz' : 'Sedentary',
+    light: lang === 'tr' ? 'Hafif aktif' : 'Light',
+    moderate: lang === 'tr' ? 'Orta aktif' : 'Moderate',
+    active: lang === 'tr' ? 'Aktif' : 'Active',
+    athlete: lang === 'tr' ? 'Çok aktif' : 'Very active',
+    veryActive: lang === 'tr' ? 'Çok aktif' : 'Very active',
+  };
+  return labels[plan.userActivityLevel] || '-';
+}
+
+function experienceLabelFromPlan(plan, lang) {
+  const labels = {
+    beginner: lang === 'tr' ? 'Başlangıç' : 'Beginner',
+    intermediate: lang === 'tr' ? 'Orta' : 'Intermediate',
+    advanced: lang === 'tr' ? 'İleri' : 'Advanced',
+    expert: lang === 'tr' ? 'Uzman' : 'Expert',
+  };
+  return labels[plan.userExperience] || '-';
+}
+
+function scheduleLabelFromPlan(plan, lang) {
+  const labels = {
+    morning: lang === 'tr' ? 'Sabah' : 'Morning',
+    afternoon: lang === 'tr' ? 'Öğlen' : 'Afternoon',
+    evening: lang === 'tr' ? 'Akşam' : 'Evening',
+    flexible: lang === 'tr' ? 'Esnek' : 'Flexible',
+    none: lang === 'tr' ? 'Esnek' : 'Flexible',
+  };
+  return labels[plan.userWorkSchedule] || '-';
 }
 
 export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlanUpdate }) {
@@ -123,7 +261,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   if (!plan) return null;
 
   const goalMap = { 'Kas Gelişimi': 'muscle', 'Yağ Yakımı': 'fat_loss', 'Meditasyon': 'meditation', 'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer' };
-  const currentGoalKey = goalMap[plan.goal] || 'muscle';
+  const currentGoalKey = goalMap[plan.goal] || normalizeGoal(plan.primaryGoal || plan.goal);
   const experienceLabel = {
     beginner: t('onboarding.fields.beginner'),
     intermediate: t('onboarding.fields.intermediate'),
@@ -150,6 +288,12 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     flexible: t('onboarding.fields.flexible'),
     none: t('onboarding.fields.flexible'),
   }[plan.userWorkSchedule] || '';
+  const bmiStatus = getBmiStatus(plan.bmi, lang);
+  const goalProfile = getGoalProfile(plan, lang);
+  const calorieDelta = Number(plan.dailyCalories || 0) && Number(plan.tdee || 0)
+    ? Math.round(Number(plan.dailyCalories) - Number(plan.tdee))
+    : null;
+  const trainingDays = plan.trainingDays || plan.workoutSplit?.filter(d => !d.isRest).length || null;
 
   const handleGoalChange = (newGoal) => {
     if (newGoal === currentGoalKey) return;
@@ -454,6 +598,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 <div className="flex-1">
                   <p className="text-xs text-slate-400">{t('profile.currentGoal') || 'Mevcut Hedef'}</p>
                   <p className="text-sm font-bold text-white font-outfit">{plan.goal}</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">{goalProfile.focus}</p>
                 </div>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ backgroundColor: `${current?.color || '#ff6d00'}15`, color: current?.color || '#ff6d00' }}>
                   {t('profile.active') || 'Aktif'}
@@ -524,21 +669,58 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
         </AnimatePresence>
       </motion.div>
 
+      {/* ── Goal Intelligence ── */}
+      <motion.div variants={itemV}>
+        <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4 overflow-hidden relative">
+          <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: goalProfile.color }} />
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">
+                {lang === 'tr' ? 'Kişisel hedef paneli' : 'Personal goal panel'}
+              </p>
+              <h3 className="text-base font-bold font-outfit text-white">{goalProfile.title}</h3>
+              <p className="text-[11px] leading-relaxed text-slate-400 mt-1">{goalProfile.focus}</p>
+            </div>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${goalProfile.color}18` }}>
+              <Target size={21} style={{ color: goalProfile.color }} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="rounded-xl bg-slate-950/60 border border-slate-800/60 p-3">
+              <p className="text-[9px] text-slate-500 mb-1">{goalProfile.primaryLabel}</p>
+              <p className="text-lg font-black font-outfit text-white">{goalProfile.primary}</p>
+            </div>
+            <div className="rounded-xl bg-slate-950/60 border border-slate-800/60 p-3">
+              <p className="text-[9px] text-slate-500 mb-1">{goalProfile.secondaryLabel}</p>
+              <p className="text-lg font-black font-outfit text-white">{goalProfile.secondary}</p>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-slate-950/50 border border-slate-800/60 px-3 py-2">
+            <p className="text-[10px] leading-relaxed text-slate-400">
+              <span className="font-semibold text-slate-200">{lang === 'tr' ? 'Öneri: ' : 'Suggestion: '}</span>
+              {goalProfile.action}
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
       {/* ── Body Stats ── */}
       <motion.div variants={itemV}>
         <h3 className="text-sm font-bold font-outfit text-white mb-3 flex items-center gap-2">
           <Activity size={14} className="text-orange-400" />
           {t('profile.bodyStats')}
         </h3>
-        <motion.div variants={containerV} className="grid grid-cols-4 gap-2">
-          <StatCard icon={Ruler} label={t('profile.height')} value={plan.userHeight} unit="cm" color="#00b0ff" />
-          <StatCard icon={Scale} label={t('profile.weight')} value={plan.userWeight} unit="kg" color="#ff6d00" />
-          <StatCard icon={Heart} label={t('profile.bmi')} value={plan.bmi} color="#f472b6" />
-          <StatCard icon={Flame} label={t('profile.bodyFat')} value={`%${plan.userBodyFat}`} color="#ef4444" />
-          <StatCard icon={Sparkles} label={t('profile.bmr')} value={plan.bmr} unit="kcal" color="#22c55e" />
-          <StatCard icon={Activity} label={t('profile.tdee')} value={plan.tdee} unit="kcal" color="#a855f7" />
-          <StatCard icon={Dumbbell} label={t('profile.dailyCal')} value={plan.dailyCalories} unit="kcal" color="#ff6d00" />
-          <StatCard icon={Target} label={t('dashboard.quickStats.training') || 'Antrenman'} value={plan.trainingDays || plan.workoutSplit?.filter(d => !d.isRest).length || '—'} unit={t('dashboard.quickStats.daysWeek') || 'gün/h'} color="#06b6d4" />
+        <motion.div variants={containerV} className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <StatCard icon={Ruler} label={t('profile.height')} value={plan.userHeight} unit="cm" color="#00b0ff" sub={lang === 'tr' ? 'Profil ölçüsü' : 'Profile metric'} />
+          <StatCard icon={Scale} label={t('profile.weight')} value={plan.userWeight} unit="kg" color="#ff6d00" sub={currentGoalKey === 'muscle' ? (lang === 'tr' ? 'Haftalık trend önemli' : 'Watch weekly trend') : (lang === 'tr' ? 'Bel ölçüsüyle takip et' : 'Track with waist')} />
+          <StatCard icon={Heart} label={t('profile.bmi')} value={plan.bmi} color="#f472b6" sub={bmiStatus.label} tone={bmiStatus.tone} />
+          <StatCard icon={Flame} label={t('profile.bodyFat')} value={plan.userBodyFat ? `%${plan.userBodyFat}` : '—'} color="#ef4444" sub={currentGoalKey === 'fat_loss' ? (lang === 'tr' ? 'Ana takip metriği' : 'Primary metric') : (lang === 'tr' ? 'Kompozisyon' : 'Composition')} />
+          <StatCard icon={Sparkles} label={t('profile.bmr')} value={plan.bmr} unit="kcal" color="#22c55e" sub={lang === 'tr' ? 'Baz metabolizma' : 'Base burn'} />
+          <StatCard icon={Activity} label={t('profile.tdee')} value={plan.tdee} unit="kcal" color="#a855f7" sub={lang === 'tr' ? 'Koruma kalorisi' : 'Maintenance'} />
+          <StatCard icon={Dumbbell} label={t('profile.dailyCal')} value={plan.dailyCalories} unit="kcal" color="#ff6d00" sub={calorieDelta == null ? '-' : `${calorieDelta >= 0 ? '+' : ''}${calorieDelta} ${lang === 'tr' ? 'kcal fark' : 'kcal delta'}`} tone={calorieDelta == null ? 'neutral' : calorieDelta >= 0 ? 'good' : 'warn'} />
+          <StatCard icon={Target} label={t('dashboard.quickStats.training') || 'Antrenman'} value={trainingDays || '—'} unit={t('dashboard.quickStats.daysWeek') || 'gün/h'} color="#06b6d4" sub={trainingDays >= 5 ? (lang === 'tr' ? 'Yüksek hacim' : 'High volume') : (lang === 'tr' ? 'Orta hacim' : 'Moderate')} />
         </motion.div>
       </motion.div>
 
