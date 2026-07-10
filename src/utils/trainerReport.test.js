@@ -41,4 +41,25 @@ describe('trainer report utilities', () => {
     expect(report).toContain('Athlete: Ada');
     expect(report).toContain('Goal: Fat Loss');
   });
+
+  it('uses localized unit labels in shareable reports', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const report = formatTrainerReport(summarizeTrainerData({
+      plan: { workoutSplit: [{ isRest: false }, { isRest: false }] },
+      waterHistory: [{ date: today, glasses: 8, target_met: true }],
+      sleepEntries: [{ date: today, hours: 7 }],
+    }), {
+      training: 'Antrenman',
+      water: 'Su',
+      sleep: 'Uyku',
+      daysPerWeek: 'gün/hafta',
+      glassesPerDay: 'bardak/gün',
+      targetDays: 'hedef gün',
+      hoursPerDay: 'saat/gün',
+    });
+
+    expect(report).toContain('Antrenman: 2 gün/hafta');
+    expect(report).toContain('Su: 8 bardak/gün (1/7 hedef gün)');
+    expect(report).toContain('Uyku: 7 saat/gün');
+  });
 });

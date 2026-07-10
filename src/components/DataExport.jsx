@@ -46,7 +46,7 @@ function downloadBlob(blob, filename) {
 }
 
 export default function DataExport() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [data, setData] = useState({
@@ -114,84 +114,103 @@ export default function DataExport() {
 
   const totalRecords = data.progress.length + data.measurements.length + data.sleep.length + data.water.length + data.workouts.length;
   const today = new Date().toISOString().split('T')[0];
+  const labels = {
+    spreadsheet: lang === 'tr' ? 'Excel indir' : lang === 'es' ? 'Descargar Excel' : 'Download Excel',
+    pdf: lang === 'tr' ? 'Rapor indir' : lang === 'es' ? 'Descargar informe' : 'Download report',
+    generated: lang === 'tr' ? 'Oluşturma' : lang === 'es' ? 'Generado' : 'Generated',
+    summary: lang === 'tr' ? 'Özet' : lang === 'es' ? 'Resumen' : 'Summary',
+    latestWeight: lang === 'tr' ? 'Son kilo' : lang === 'es' ? 'Peso actual' : 'Latest weight',
+    records: lang === 'tr' ? 'kayıt' : lang === 'es' ? 'registros' : 'records',
+    focus: lang === 'tr' ? 'Odak' : lang === 'es' ? 'Enfoque' : 'Focus',
+    water: lang === 'tr' ? 'Su' : lang === 'es' ? 'Agua' : 'Water',
+    workout: lang === 'tr' ? 'Antrenman' : lang === 'es' ? 'Entreno' : 'Workout',
+  };
 
-  const exportCSV = () => {
-    const header = [
-      t('dataExport.date'),
-      `${t('dataExport.weight')} (kg)`,
-      `${t('dataExport.bodyFat')} (%)`,
-      `${t('measurements.chest')} (cm)`,
-      `${t('measurements.waist')} (cm)`,
-      `${t('measurements.hip')} (cm)`,
-      `${t('measurements.arm')} (cm)`,
-      `${t('measurements.leg')} (cm)`,
-      `${t('sleep.title')} (h)`,
-      'Water',
-      'Workouts',
-      'Workout focus',
-    ];
+  const latestProgress = [...data.progress]
+    .filter((entry) => entry?.date)
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))[0];
 
-    const csv = [
-      header.map(csvCell).join(','),
-      ...rows.map((row) => [
-        row.date,
-        row.weight,
-        row.bodyFat,
-        row.chest,
-        row.waist,
-        row.hip,
-        row.arm,
-        row.leg,
-        row.sleep,
-        row.water,
-        row.workouts,
-        row.workoutFocus,
-      ].map(csvCell).join(',')),
-    ].join('\n');
+  const buildReportTables = () => {
+    const progressRows = data.progress.map((entry) => `<tr>
+      <td>${escapeHtml(entry.date || '-')}</td>
+      <td>${escapeHtml(entry.weight || '-')}</td>
+      <td>${escapeHtml(entry.bodyFat || entry.body_fat || '-')}</td>
+    </tr>`).join('');
 
-    downloadBlob(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }), `fullbalance_data_${today}.csv`);
+    const measurementRows = data.measurements.map((entry) => `<tr>
+      <td>${escapeHtml(entry.date || '-')}</td>
+      <td>${escapeHtml(entry.chest || '-')}</td>
+      <td>${escapeHtml(entry.waist || '-')}</td>
+      <td>${escapeHtml(entry.hip || '-')}</td>
+      <td>${escapeHtml(entry.arm || '-')}</td>
+      <td>${escapeHtml(entry.leg || '-')}</td>
+    </tr>`).join('');
+
+    const workoutRows = data.workouts.map((entry) => `<tr>
+      <td>${escapeHtml(entry.date || '-')}</td>
+      <td>${escapeHtml(entry.day_focus || entry.focus || '-')}</td>
+      <td>${escapeHtml((entry.exercises || []).length || '-')}</td>
+      <td>${escapeHtml(entry.notes || '-')}</td>
+    </tr>`).join('');
+
+    const habitRows = rows
+      .filter((row) => row.water !== '' || row.sleep !== '')
+      .map((row) => `<tr>
+        <td>${escapeHtml(row.date)}</td>
+        <td>${escapeHtml(row.water === '' ? '-' : row.water)}</td>
+        <td>${escapeHtml(row.sleep || '-')}</td>
+      </tr>`).join('');
+
+    return { progressRows, measurementRows, workoutRows, habitRows };
+  };
+
+  const buildDocumentHtml = ({ printable = false } = {}) => {
+    const { progressRows, measurementRows, workoutRows, habitRows } = buildReportTables();
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Full Balance ${today}</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: ${printable ? '#f8fafc' : '#fff'}; color: #0f172a; padding: 28px; }
+      h1 { color: #ff6d00; font-size: 26px; margin: 0 0 4px; }
+      h2 { color: #64748b; font-size: 12px; font-weight: 600; margin: 0 0 20px; }
+      h3 { color: #0f172a; font-size: 15px; margin: 24px 0 8px; }
+      .stats { display: grid; grid-template-columns: repeat(4, minmax(90px, 1fr)); gap: 8px; margin-bottom: 18px; }
+      .stat { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
+      .stat b { display: block; font-size: 20px; }
+      .stat span { color: #64748b; font-size: 10px; }
+      table { width: 100%; border-collapse: collapse; font-size: 12px; background: #fff; margin-bottom: 8px; table-layout: fixed; }
+      th { background: #e2e8f0; color: #334155; padding: 9px; text-align: left; font-weight: 700; }
+      td { padding: 8px 9px; border-bottom: 1px solid #e2e8f0; vertical-align: top; word-wrap: break-word; }
+      .empty { color: #94a3b8; font-size: 12px; padding: 10px 0; }
+      @media print { body { background: #fff; padding: 18px; } .stat { break-inside: avoid; } table { page-break-inside: auto; } tr { page-break-inside: avoid; } }
+    </style></head><body>
+    <h1>Full Balance</h1>
+    <h2>${escapeHtml(labels.generated)}: ${escapeHtml(new Date().toLocaleDateString())}</h2>
+    <div class="stats">
+      <div class="stat"><b>${data.progress.length}</b><span>Progress</span></div>
+      <div class="stat"><b>${data.workouts.length}</b><span>${escapeHtml(labels.workout)}</span></div>
+      <div class="stat"><b>${data.water.length}</b><span>${escapeHtml(labels.water)}</span></div>
+      <div class="stat"><b>${latestProgress?.weight || '-'}</b><span>${escapeHtml(labels.latestWeight)}</span></div>
+    </div>
+    <h3>Progress</h3>
+    ${progressRows ? `<table><thead><tr><th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(t('dataExport.weight'))} (kg)</th><th>${escapeHtml(t('dataExport.bodyFat'))} (%)</th></tr></thead><tbody>${progressRows}</tbody></table>` : `<p class="empty">0 ${escapeHtml(labels.records)}</p>`}
+    <h3>${escapeHtml(t('measurements.title') || 'Measurements')}</h3>
+    ${measurementRows ? `<table><thead><tr><th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(t('measurements.chest'))}</th><th>${escapeHtml(t('measurements.waist'))}</th><th>${escapeHtml(t('measurements.hip'))}</th><th>${escapeHtml(t('measurements.arm'))}</th><th>${escapeHtml(t('measurements.leg'))}</th></tr></thead><tbody>${measurementRows}</tbody></table>` : `<p class="empty">0 ${escapeHtml(labels.records)}</p>`}
+    <h3>${escapeHtml(labels.workout)}</h3>
+    ${workoutRows ? `<table><thead><tr><th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(labels.focus)}</th><th>Exercise</th><th>Notes</th></tr></thead><tbody>${workoutRows}</tbody></table>` : `<p class="empty">0 ${escapeHtml(labels.records)}</p>`}
+    <h3>${escapeHtml(labels.water)} / ${escapeHtml(t('sleep.title'))}</h3>
+    ${habitRows ? `<table><thead><tr><th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(labels.water)}</th><th>${escapeHtml(t('sleep.title'))}</th></tr></thead><tbody>${habitRows}</tbody></table>` : `<p class="empty">0 ${escapeHtml(labels.records)}</p>`}
+    </body></html>`;
+  };
+
+  const exportSpreadsheet = () => {
+    const html = buildDocumentHtml();
+    downloadBlob(
+      new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8;' }),
+      `fullbalance_data_${today}.xls`,
+    );
   };
 
   const exportPDF = () => {
-    const tableRows = rows.map((row) => `<tr>
-      <td>${escapeHtml(row.date)}</td>
-      <td>${escapeHtml(row.weight || '-')}</td>
-      <td>${escapeHtml(row.bodyFat || '-')}</td>
-      <td>${escapeHtml(row.waist || '-')}</td>
-      <td>${escapeHtml(row.sleep || '-')}</td>
-      <td>${escapeHtml(row.water || '-')}</td>
-      <td>${escapeHtml(row.workouts || '-')}</td>
-      <td>${escapeHtml(row.workoutFocus || '-')}</td>
-    </tr>`).join('');
-
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Full Balance Data</title>
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #0f172a; padding: 32px; }
-      h1 { color: #ff6d00; font-size: 24px; margin: 0 0 4px; }
-      h2 { color: #64748b; font-size: 12px; font-weight: 500; margin: 0 0 20px; }
-      .stats { display: flex; gap: 8px; margin-bottom: 18px; }
-      .stat { border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; min-width: 90px; }
-      .stat b { display: block; font-size: 18px; }
-      .stat span { color: #64748b; font-size: 10px; }
-      table { width: 100%; border-collapse: collapse; font-size: 11px; }
-      th { background: #f1f5f9; color: #334155; padding: 8px; text-align: left; }
-      td { padding: 8px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
-    </style></head><body>
-    <h1>Full Balance</h1>
-    <h2>${escapeHtml(t('dataExport.desc'))} - ${escapeHtml(new Date().toLocaleDateString())}</h2>
-    <div class="stats">
-      <div class="stat"><b>${data.progress.length}</b><span>Progress</span></div>
-      <div class="stat"><b>${data.workouts.length}</b><span>Workouts</span></div>
-      <div class="stat"><b>${data.water.length}</b><span>Water</span></div>
-      <div class="stat"><b>${data.sleep.length}</b><span>Sleep</span></div>
-    </div>
-    <table>
-      <thead><tr>
-        <th>${escapeHtml(t('dataExport.date'))}</th><th>${escapeHtml(t('dataExport.weight'))}</th><th>${escapeHtml(t('dataExport.bodyFat'))}</th>
-        <th>${escapeHtml(t('measurements.waist'))}</th><th>${escapeHtml(t('sleep.title'))}</th><th>Water</th><th>Workouts</th><th>Focus</th>
-      </tr></thead>
-      <tbody>${tableRows}</tbody>
-    </table></body></html>`;
+    const html = buildDocumentHtml({ printable: true });
 
     const w = window.open('', '_blank');
     if (!w) {
@@ -259,11 +278,11 @@ export default function DataExport() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              onClick={exportCSV}
+              onClick={exportSpreadsheet}
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold cursor-pointer hover:bg-emerald-500/20 transition-colors"
             >
               <FileSpreadsheet size={14} />
-              {t('dataExport.csv')}
+              {labels.spreadsheet}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -272,7 +291,7 @@ export default function DataExport() {
               className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold cursor-pointer hover:bg-blue-500/20 transition-colors"
             >
               <FileText size={14} />
-              {t('dataExport.pdf')}
+              {labels.pdf}
             </motion.button>
           </div>
         </>

@@ -67,6 +67,8 @@ describe('supabase migration.sql', () => {
     expect(migrationSql).toContain('CREATE POLICY "trainer_clients_linked_select"');
     expect(migrationSql).toContain('CREATE OR REPLACE FUNCTION public.create_trainer_invite()');
     expect(migrationSql).toContain('CREATE OR REPLACE FUNCTION public.connect_trainer_by_code(invite_code TEXT)');
+    expect(migrationSql).toContain('gen_random_uuid()');
+    expect(migrationSql).not.toContain('gen_random_bytes');
     expect(migrationSql).toContain('REVOKE ALL ON FUNCTION public.create_trainer_invite() FROM anon');
     expect(migrationSql).toContain('REVOKE ALL ON FUNCTION public.connect_trainer_by_code(TEXT) FROM anon');
     expect(migrationSql).toContain('GRANT EXECUTE ON FUNCTION public.create_trainer_invite() TO authenticated');

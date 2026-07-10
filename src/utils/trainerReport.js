@@ -85,7 +85,7 @@ export function summarizeTrainerData({
 
 function formatNumber(value, digits = 1) {
   if (!Number.isFinite(value)) return '-';
-  return Number(value).toFixed(digits).replace(/\\.0$/, '');
+  return Number(value).toFixed(digits).replace(/\.0$/, '');
 }
 
 export function formatTrainerReport(summary, labels = {}) {
@@ -106,6 +106,15 @@ export function formatTrainerReport(summary, labels = {}) {
     measurements: 'Measurements',
     generated: 'Generated',
     noData: 'No data',
+    daysPerWeek: 'days/week',
+    glassesPerDay: 'glasses/day',
+    targetDays: 'target days',
+    hoursPerDay: 'h/day',
+    chest: 'chest',
+    waist: 'waist',
+    hip: 'hip',
+    arm: 'arm',
+    leg: 'leg',
     ...labels,
   };
 
@@ -123,15 +132,15 @@ export function formatTrainerReport(summary, labels = {}) {
     `${l.calories}: ${summary.calories ? `${Math.round(summary.calories)} kcal` : '-'}`,
     `${l.macros}: P ${protein ?? '-'}g / C ${carbs ?? '-'}g / F ${fat ?? '-'}g`,
     '',
-    `${l.training}: ${summary.trainingDaysPerWeek} days/week`,
+    `${l.training}: ${summary.trainingDaysPerWeek} ${l.daysPerWeek}`,
     `${l.workouts7}: ${summary.workoutsLast7}`,
     `${l.workouts30}: ${summary.workoutsLast30}`,
-    `${l.water}: ${summary.waterAvg == null ? l.noData : `${formatNumber(summary.waterAvg)} glasses/day (${summary.waterTargetDays}/7 target days)`}`,
-    `${l.sleep}: ${summary.sleepAvg == null ? l.noData : `${formatNumber(summary.sleepAvg)} h/day`}`,
+    `${l.water}: ${summary.waterAvg == null ? l.noData : `${formatNumber(summary.waterAvg)} ${l.glassesPerDay} (${summary.waterTargetDays}/7 ${l.targetDays})`}`,
+    `${l.sleep}: ${summary.sleepAvg == null ? l.noData : `${formatNumber(summary.sleepAvg)} ${l.hoursPerDay}`}`,
     '',
     `${l.latestWeight}: ${summary.latestProgress?.weight ? `${summary.latestProgress.weight} kg (${summary.latestProgress.date})` : l.noData}`,
     `${l.bodyFat}: ${summary.latestProgress?.bodyFat ?? summary.latestProgress?.body_fat ?? '-'}`,
     `${l.weightChange}: ${summary.weightChange == null ? '-' : `${formatNumber(summary.weightChange)} kg`}`,
-    `${l.measurements}: ${measurement ? `chest ${measurement.chest ?? '-'} / waist ${measurement.waist ?? '-'} / hip ${measurement.hip ?? '-'} / arm ${measurement.arm ?? '-'} / leg ${measurement.leg ?? '-'}` : l.noData}`,
+    `${l.measurements}: ${measurement ? `${l.chest} ${measurement.chest ?? '-'} / ${l.waist} ${measurement.waist ?? '-'} / ${l.hip} ${measurement.hip ?? '-'} / ${l.arm} ${measurement.arm ?? '-'} / ${l.leg} ${measurement.leg ?? '-'}` : l.noData}`,
   ].join('\n');
 }

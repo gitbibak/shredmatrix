@@ -366,7 +366,7 @@ CREATE OR REPLACE FUNCTION public.create_trainer_invite()
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, auth, pg_catalog
+  SET search_path = public, auth, pg_catalog
 AS $$
 DECLARE
   current_user_id UUID := (SELECT auth.uid());
@@ -383,7 +383,7 @@ BEGIN
     AND active = true;
 
   LOOP
-    invite_code := 'PT-' || UPPER(SUBSTRING(ENCODE(gen_random_bytes(4), 'hex') FROM 1 FOR 8));
+    invite_code := 'PT-' || UPPER(SUBSTRING(REPLACE(gen_random_uuid()::text, '-', '') FROM 1 FOR 8));
 
     BEGIN
       INSERT INTO public.trainer_invites (trainer_id, code, expires_at)
