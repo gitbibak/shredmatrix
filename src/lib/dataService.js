@@ -652,7 +652,15 @@ export async function connectTrainerByCode(code) {
   }
 
   const { data, error } = await supabase.rpc('connect_trainer_by_code', { invite_code: normalizedCode });
-  if (error) throw error;
+  if (error) {
+    if (/own invite code/i.test(error.message || '')) {
+      throw new Error('Bu kendi oluşturduğun kod. Bağlanmak için başka bir PT hesabından alınan kodu girmelisin.');
+    }
+    if (/invalid or expired/i.test(error.message || '')) {
+      throw new Error('PT kodu geçersiz veya süresi dolmuş.');
+    }
+    throw error;
+  }
   return data;
 }
 

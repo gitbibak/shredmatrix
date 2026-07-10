@@ -193,17 +193,20 @@ export default function TrainerReport({ plan }) {
   ];
 
   const copyReport = async () => {
+    document.activeElement?.blur?.();
     await navigator.clipboard.writeText(reportText);
     toast.success(lang === 'tr' ? 'PT raporu kopyalandı' : 'Trainer report copied');
   };
 
   const copyInvite = async () => {
     if (!invite?.code) return;
+    document.activeElement?.blur?.();
     await navigator.clipboard.writeText(invite.code);
     toast.success(lang === 'tr' ? 'Davet kodu kopyalandı' : 'Invite code copied');
   };
 
   const createInvite = async () => {
+    document.activeElement?.blur?.();
     setConnectionBusy(true);
     try {
       const nextInvite = await createTrainerInvite();
@@ -218,6 +221,13 @@ export default function TrainerReport({ plan }) {
 
   const connectTrainer = async (event) => {
     event.preventDefault();
+    document.activeElement?.blur?.();
+    if (invite?.code && connectCode.trim().toUpperCase() === invite.code.toUpperCase()) {
+      toast.warning(lang === 'tr'
+        ? 'Bu senin oluşturduğun kod. Bu kodu PT olarak danışanına gönder; bağlanmak için başka bir PT kodu gir.'
+        : 'This is your own code. Send it to a client, or enter another trainer code to connect.');
+      return;
+    }
     setConnectionBusy(true);
     try {
       await connectTrainerByCode(connectCode);
@@ -347,7 +357,7 @@ export default function TrainerReport({ plan }) {
                 <p className="text-[9px] text-slate-500 truncate">
                   {connectedCount
                     ? trainerNames.join(', ')
-                    : (lang === 'tr' ? 'Kod üret veya PT kodu gir' : 'Create or enter a code')}
+                    : (lang === 'tr' ? 'PT olarak kod gönder, danışan olarak gelen kodu gir' : 'Send your code or enter a trainer code')}
                 </p>
               </div>
             </div>
@@ -362,21 +372,40 @@ export default function TrainerReport({ plan }) {
           </div>
 
           {invite?.code && (
-            <button
-              type="button"
-              onClick={copyInvite}
-              className="w-full flex items-center justify-between gap-2 rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-left cursor-pointer hover:border-cyan-500/40 transition-colors"
-            >
-              <span className="font-mono text-sm font-bold text-cyan-300 tracking-normal">{invite.code}</span>
-              <Clipboard size={13} className="text-slate-400" />
-            </button>
+            <div className="rounded-xl bg-cyan-500/10 border border-cyan-500/20 p-3 mb-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[9px] uppercase font-semibold text-cyan-300 mb-1">
+                    {lang === 'tr' ? 'Antrenör kodun' : 'Your trainer code'}
+                  </p>
+                  <p className="font-mono text-base font-bold text-cyan-200 tracking-normal">{invite.code}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={copyInvite}
+                  className="p-2 rounded-lg bg-slate-950/50 text-slate-300 hover:text-white transition-colors"
+                  aria-label="Copy trainer invite code"
+                >
+                  <Clipboard size={16} />
+                </button>
+              </div>
+              <p className="text-[10px] leading-relaxed text-slate-400 mt-2">
+                {lang === 'tr'
+                  ? 'Bu kodu danışanına gönder. Kendi hesabında bu kodla bağlanamazsın.'
+                  : 'Send this code to a client. You cannot connect to your own code.'}
+              </p>
+            </div>
           )}
 
           <form onSubmit={connectTrainer} className="flex gap-2 mt-3">
             <input
               value={connectCode}
               onChange={(event) => setConnectCode(event.target.value.toUpperCase())}
-              placeholder={lang === 'tr' ? 'PT kodu' : lang === 'es' ? 'Código PT' : 'Trainer code'}
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="text"
+              placeholder={lang === 'tr' ? 'Başka PT kodu' : lang === 'es' ? 'Código de otro PT' : 'Other trainer code'}
               className="min-w-0 flex-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-cyan-500"
             />
             <button
@@ -387,6 +416,24 @@ export default function TrainerReport({ plan }) {
               {lang === 'tr' ? 'Bağlan' : lang === 'es' ? 'Conectar' : 'Connect'}
             </button>
           </form>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="rounded-lg bg-slate-900/70 border border-slate-800 px-3 py-2">
+              <p className="text-[9px] font-semibold text-slate-400 mb-0.5">
+                {lang === 'tr' ? 'PT isen' : 'As trainer'}
+              </p>
+              <p className="text-[10px] leading-snug text-slate-500">
+                {lang === 'tr' ? 'Kod üretip danışanına gönderirsin.' : 'Create a code and send it to a client.'}
+              </p>
+            </div>
+            <div className="rounded-lg bg-slate-900/70 border border-slate-800 px-3 py-2">
+              <p className="text-[9px] font-semibold text-slate-400 mb-0.5">
+                {lang === 'tr' ? 'Danışan isen' : 'As client'}
+              </p>
+              <p className="text-[10px] leading-snug text-slate-500">
+                {lang === 'tr' ? 'PT’den gelen kodla bağlanırsın.' : 'Enter the code from your trainer.'}
+              </p>
+            </div>
+          </div>
         </div>
 
         {(clients.length > 0 || trainers.length > 0) && (
