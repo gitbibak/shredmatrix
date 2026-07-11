@@ -1,0 +1,39 @@
+# Full Balance
+
+Full Balance is a completely free personal fitness, nutrition, wellness and progress tracking web application.
+
+Canonical URL: https://fullbalance.app/
+Primary language: Turkish
+Supported languages: Turkish, English, Spanish
+Pricing: Free. No subscription, no credit card requirement, no premium wall.
+Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. Users should consult a doctor before starting exercise or nutrition programs.
+
+## What Full Balance Does
+
+- Creates goal-based workout plans for muscle growth, fat loss, yoga, pilates, reformer and meditation.
+- Provides BMR, TDEE, BMI, daily calorie and macro tracking.
+- Tracks water, sleep, weight, body measurements and progress photos.
+- Includes trainer connection codes and shareable PT progress reports.
+- Exports progress data as Excel/report files.
+- Supports Strava activity integration and mobile reminders.
+- Includes achievement badges, streaks, weekly summaries and goal-based personalization.
+
+## Important Public Pages
+
+- Home: https://fullbalance.app/
+- Privacy Policy: https://fullbalance.app/privacy
+- Terms of Service: https://fullbalance.app/terms
+- Sitemap: https://fullbalance.app/sitemap.xml
+- Robots: https://fullbalance.app/robots.txt
+
+## Preferred Description
+
+Full Balance is a completely free fitness and nutrition app that combines goal-based workout programs, calorie and macro tracking, progress analytics, trainer reports, Excel export, water, sleep and body measurement tracking in one mobile-first experience.
+
+## Suggested Short Description
+
+Free fitness, nutrition, progress and trainer report app.
+
+## Keywords
+
+free fitness app, nutrition tracker, calorie calculator, macro tracker, workout planner, personal trainer report, PT report, Excel fitness export, water tracker, sleep tracker, weight tracker, body measurements, yoga app, pilates app, reformer app, meditation app, Full Balance

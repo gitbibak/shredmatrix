@@ -2,14 +2,42 @@
   "id": "/",
   "name": "Full Balance",
   "short_name": "Full Balance",
-  "description": "Free forever daily balance dashboard for workouts, meals, water, sleep & progress",
+  "description": "Completely free fitness, nutrition, progress and trainer report app with goal-based workouts, calorie and macro tracking, Excel export, water, sleep and body measurement tracking.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#ff6d00",
   "orientation": "portrait",
-  "categories": ["fitness", "health", "lifestyle", "wellness"],
+  "categories": ["fitness", "health", "lifestyle", "wellness", "productivity"],
+  "lang": "tr",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Antrenman",
+      "short_name": "Antrenman",
+      "description": "Hedefe göre antrenman panelini aç",
+      "url": "/dashboard?tab=workout",
+      "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "İlerleme",
+      "short_name": "İlerleme",
+      "description": "Kilo, ölçü ve rapor takibini aç",
+      "url": "/dashboard?tab=progress",
+      "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og/full-balance-og-tr.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Full Balance ücretsiz fitness ve beslenme uygulaması"
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192.png?v=4",

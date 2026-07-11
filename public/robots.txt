@@ -1,8 +1,52 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /onboarding
+Disallow: /onboarding/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
 Disallow: /onboarding
 Disallow: /admin
 Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
 
 Sitemap: https://fullbalance.app/sitemap.xml
