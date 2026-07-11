@@ -20,6 +20,18 @@ const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./components/TermsOfService'));
 const StravaCallback = lazy(() => import('./components/StravaCallback'));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
+const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
+
+const SEO_PAGE_SLUGS = [
+  'ucretsiz-fitness-uygulamasi',
+  'pt-raporu',
+  'kalori-makro-takibi',
+  'antrenman-programi',
+  'ilerleme-takibi',
+  'su-uyku-kilo-takibi',
+  'yoga-pilates-reformer',
+  'excel-rapor-disari-aktarma',
+];
 
 // ── Error Boundary (P1-3) ────────────────────────────────────
 class ErrorBoundary extends Component {
@@ -597,6 +609,18 @@ function AppContent() {
                 <TermsOfService />
               </motion.div>
             } />
+
+            {SEO_PAGE_SLUGS.map((slug) => (
+              <Route
+                key={slug}
+                path={`/${slug}`}
+                element={
+                  <motion.div key={slug} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                    <SeoLandingPage slug={slug} />
+                  </motion.div>
+                }
+              />
+            ))}
 
             <Route path="/strava/callback" element={
               <motion.div key="strava-cb" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>

@@ -173,6 +173,17 @@ export default function LandingPage({ onStart }) {
     },
   ];
 
+  const seoTopics = [
+    { to: '/ucretsiz-fitness-uygulamasi', label: 'Ücretsiz fitness uygulaması' },
+    { to: '/pt-raporu', label: 'PT raporu ve bağlantı' },
+    { to: '/kalori-makro-takibi', label: 'Kalori ve makro takibi' },
+    { to: '/antrenman-programi', label: 'Kişisel antrenman programı' },
+    { to: '/ilerleme-takibi', label: 'İlerleme ve gelişim takibi' },
+    { to: '/su-uyku-kilo-takibi', label: 'Su, uyku ve kilo takibi' },
+    { to: '/yoga-pilates-reformer', label: 'Yoga, pilates ve reformer' },
+    { to: '/excel-rapor-disari-aktarma', label: 'Excel ve rapor dışa aktarma' },
+  ];
+
   /* ── 6 goals ── */
   const goals = [
     {
@@ -490,6 +501,32 @@ export default function LandingPage({ onStart }) {
               );
             })}
           </motion.div>
+        </div>
+      </Section>
+
+      {/* ═══════════════════ SEARCH INTENT LINKS ═══════════════════ */}
+      <Section dark id="popular-searches" className="py-14 sm:py-20">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader
+            tag="Popüler Aramalar"
+            title="Full Balance ile"
+            titleAccent="Neler Yapabilirsin?"
+            desc="Google ve AI arama sistemlerinin de anlayabileceği net konu sayfaları: ücretsiz kullanım, PT raporu, kalori takibi, antrenman, ilerleme ve dışa aktarma."
+          />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {seoTopics.map((topic) => (
+              <Link
+                key={topic.to}
+                to={topic.to}
+                className="group min-w-0 rounded-2xl border border-slate-800/70 bg-slate-950/45 p-4 transition-all hover:border-orange-500/45 hover:bg-slate-900/80"
+              >
+                <span className="text-sm font-bold text-slate-200 group-hover:text-orange-300">{topic.label}</span>
+                <span className="mt-3 flex items-center gap-1 text-xs font-semibold text-slate-500 group-hover:text-blue-300">
+                  Detayları gör <ArrowRight size={13} />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </Section>
 

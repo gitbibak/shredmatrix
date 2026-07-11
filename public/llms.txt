@@ -21,6 +21,14 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 ## Important Public Pages
 
 - Home: https://fullbalance.app/
+- Free Fitness App: https://fullbalance.app/ucretsiz-fitness-uygulamasi
+- Trainer Report: https://fullbalance.app/pt-raporu
+- Calorie and Macro Tracking: https://fullbalance.app/kalori-makro-takibi
+- Workout Planner: https://fullbalance.app/antrenman-programi
+- Progress Tracking: https://fullbalance.app/ilerleme-takibi
+- Water, Sleep and Weight Tracking: https://fullbalance.app/su-uyku-kilo-takibi
+- Yoga, Pilates and Reformer: https://fullbalance.app/yoga-pilates-reformer
+- Excel and Report Export: https://fullbalance.app/excel-rapor-disari-aktarma
 - Privacy Policy: https://fullbalance.app/privacy
 - Terms of Service: https://fullbalance.app/terms
 - Sitemap: https://fullbalance.app/sitemap.xml
