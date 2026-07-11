@@ -87,14 +87,90 @@ function SectionHeader({ tag, title, titleAccent, desc, idx = 0 }) {
    ──────────────────────────────────────────── */
 export default function LandingPage({ onStart }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
+  const tx = (key, fallback) => {
+    const value = t(key);
+    return value && value !== key ? value : fallback;
+  };
 
   /* ── stats data ── */
   const stats = [
-    { value: '100+', label: t('landing.stats.exercises') || 'Egzersiz' },
-    { value: '50+', label: t('landing.stats.recipes') || 'Tarif' },
-    { value: '24', label: t('landing.stats.programs') || 'Program' },
-    { value: '6', label: t('landing.stats.goals') || 'Hedef' },
-    { value: '%100', label: t('landing.stats.free') || 'Ücretsiz' },
+    { value: '%100', label: tx('landing.stats.free', 'Ücretsiz') },
+    { value: '6', label: tx('landing.stats.goals', 'Hedef modu') },
+    { value: '24', label: tx('landing.stats.programs', 'Program') },
+    { value: 'PT', label: tx('landing.stats.trainer', 'Rapor + bağlantı') },
+    { value: 'Excel', label: tx('landing.stats.export', 'Dışa aktar') },
+  ];
+
+  const heroHighlights = [
+    {
+      icon: CreditCard,
+      color: '#22c55e',
+      title: tx('landing.heroHighlights.free.title', 'Tamamen ücretsiz'),
+      desc: tx('landing.heroHighlights.free.desc', 'Kredi kartı, premium duvarı ve gizli ücret yok.'),
+    },
+    {
+      icon: Target,
+      color: '#f97316',
+      title: tx('landing.heroHighlights.goal.title', 'Hedefe göre kişisel plan'),
+      desc: tx('landing.heroHighlights.goal.desc', 'Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon.'),
+    },
+    {
+      icon: Users,
+      color: '#06b6d4',
+      title: tx('landing.heroHighlights.pt.title', 'PT bağlantısı ve rapor'),
+      desc: tx('landing.heroHighlights.pt.desc', 'Danışan kodu, paylaşılabilir gelişim özeti ve antrenör görünümü.'),
+    },
+    {
+      icon: FileDown,
+      color: '#3b82f6',
+      title: tx('landing.heroHighlights.export.title', 'Excel ve rapor çıktısı'),
+      desc: tx('landing.heroHighlights.export.desc', 'Kilo, ölçü, su, uyku ve antrenman verilerini dışa aktar.'),
+    },
+  ];
+
+  const appModules = [
+    {
+      icon: UtensilsCrossed,
+      color: '#22c55e',
+      title: tx('landing.modules.nutrition.title', 'Beslenme'),
+      desc: tx('landing.modules.nutrition.desc', 'BMR, TDEE, BMI, günlük kalori, makro hedefleri ve 7 günlük menü önerileri.'),
+      tags: ['Kalori', 'Makro', 'Menü'],
+    },
+    {
+      icon: Dumbbell,
+      color: '#f97316',
+      title: tx('landing.modules.training.title', 'Antrenman'),
+      desc: tx('landing.modules.training.desc', 'Hedefe ve faza göre program, set/tekrar/dinlenme detayları ve form rehberi.'),
+      tags: ['24 program', 'Timer', 'Split'],
+    },
+    {
+      icon: TrendingUp,
+      color: '#06b6d4',
+      title: tx('landing.modules.progress.title', 'İlerleme'),
+      desc: tx('landing.modules.progress.desc', 'Kilo, yağ oranı, ölçüler, su, uyku ve fotoğraf takibini tek panelde gör.'),
+      tags: ['Grafikler', 'Fotoğraf', 'Strava'],
+    },
+    {
+      icon: Award,
+      color: '#eab308',
+      title: tx('landing.modules.achievements.title', 'Başarım'),
+      desc: tx('landing.modules.achievements.desc', 'Seri, rozet ve hedef kartlarıyla devamlılığı takip et.'),
+      tags: ['Rozet', 'Seri', 'Hedef'],
+    },
+    {
+      icon: UserCheck,
+      color: '#a855f7',
+      title: tx('landing.modules.profile.title', 'Profil ve hedef'),
+      desc: tx('landing.modules.profile.desc', 'Boy, kilo, yaş, aktivite, deneyim ve hedef bilgilerine göre kişiselleştirme.'),
+      tags: ['BMI', 'BMR', 'TDEE'],
+    },
+    {
+      icon: Smartphone,
+      color: '#3b82f6',
+      title: tx('landing.modules.mobile.title', 'Mobil hazır'),
+      desc: tx('landing.modules.mobile.desc', 'Telefon odaklı arayüz, bildirimler, güvenli oturum ve hızlı kullanım.'),
+      tags: ['PWA', 'Bildirim', 'Güvenli'],
+    },
   ];
 
   /* ── 6 goals ── */
@@ -268,7 +344,7 @@ export default function LandingPage({ onStart }) {
           <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-6">
               <Sparkles size={12} />
-              {t('landing.badge') || 'AI-Powered Fitness & Wellness'}
+              {tx('landing.badge', '%100 ücretsiz fitness, wellness ve PT takip uygulaması')}
             </span>
           </motion.div>
 
@@ -276,10 +352,10 @@ export default function LandingPage({ onStart }) {
             custom={1} variants={fadeUp} initial="hidden" animate="visible"
             className="text-4xl sm:text-5xl md:text-7xl font-extrabold font-outfit leading-[1.08] tracking-tight mb-6"
           >
-            {t('landing.heroTitle1') || 'Vücudunu Dönüştür,'}{' '}
+            {tx('landing.heroTitle1', 'Tek Uygulamada')}{' '}
             <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-              {t('landing.heroTitle2') || 'Zihnini Güçlendir'}
+              {tx('landing.heroTitle2', 'Ücretsiz Kişisel Koçluk')}
             </span>
           </motion.h1>
 
@@ -287,7 +363,7 @@ export default function LandingPage({ onStart }) {
             custom={2} variants={fadeUp} initial="hidden" animate="visible"
             className="text-slate-400 text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed"
           >
-            {t('landing.heroDesc') || 'Kas gelişimi, yağ yakımı, yoga, pilates, meditasyon ve reformer — 6 hedef kategorisi, 24 program, 500+ tarif ve 10.000+ egzersiz. Tamamen ücretsiz, kişisel antrenörün cebinde.'}
+            {tx('landing.heroDesc', 'Full Balance; beslenme, antrenman, ilerleme, başarımlar, PT raporu, Excel/rapor dışa aktarımı ve mobil hatırlatmaları tek yerde toplayan tamamen ücretsiz kişisel fitness uygulaması.')}
           </motion.p>
 
           <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -302,8 +378,35 @@ export default function LandingPage({ onStart }) {
             </motion.button>
             <span className="flex items-center gap-1.5 text-slate-500 text-xs">
               <Shield size={12} />
-              {t('landing.noCard') || 'Kredi kartı gerekmez'}
+              {tx('landing.noCard', 'Kredi kartı yok · premium duvarı yok')}
             </span>
+          </motion.div>
+
+          <motion.div
+            custom={4}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left"
+          >
+            {heroHighlights.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="min-w-0 rounded-2xl border border-slate-800/70 bg-slate-900/65 p-4 backdrop-blur"
+                >
+                  <div
+                    className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: `${item.color}18` }}
+                  >
+                    <Icon size={20} style={{ color: item.color }} />
+                  </div>
+                  <h3 className="font-outfit text-sm font-bold text-white">{item.title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500">{item.desc}</p>
+                </div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -334,6 +437,61 @@ export default function LandingPage({ onStart }) {
           ))}
         </div>
       </motion.section>
+
+      {/* ═══════════════════ APP MODULES OVERVIEW ═══════════════════ */}
+      <Section id="modules" className="pt-16 sm:pt-24">
+        <div className="max-w-6xl mx-auto">
+          <SectionHeader
+            tag={tx('landing.modules.tag', 'Uygulamada Neler Var?')}
+            title={tx('landing.modules.title', 'Tüm Ana Modüller')}
+            titleAccent={tx('landing.modules.titleAccent', 'Ücretsiz Dahil')}
+            desc={tx('landing.modules.desc', 'Girişten itibaren kullanıcıya ne kazanacağını net göster: hedefe göre plan, günlük takip, PT paylaşımı, dışa aktarma ve mobil kullanım tek akışta çalışır.')}
+          />
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {appModules.map((module) => {
+              const Icon = module.icon;
+              return (
+                <motion.div
+                  key={module.title}
+                  variants={fadeUp}
+                  whileHover={{ y: -4, borderColor: `${module.color}55` }}
+                  className="min-w-0 rounded-2xl border border-slate-800/60 bg-slate-900/60 p-5 transition-all"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                      style={{ backgroundColor: `${module.color}16` }}
+                    >
+                      <Icon size={24} style={{ color: module.color }} />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-outfit text-base font-bold text-white">{module.title}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{module.desc}</p>
+                    </div>
+                  </div>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {module.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-lg border border-slate-700/50 bg-slate-950/45 px-2.5 py-1 text-[11px] font-semibold text-slate-400"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </Section>
 
       {/* ═══════════════════ SECTION 2: 6 GOAL CATEGORIES ═══════════════════ */}
       <Section id="goals">
