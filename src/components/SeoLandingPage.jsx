@@ -14,7 +14,6 @@ import {
   Sparkles,
   Target,
   TrendingUp,
-  Users,
   UtensilsCrossed,
   Waves,
 } from 'lucide-react';
@@ -29,7 +28,7 @@ const pages = {
     title: 'Ücretsiz Fitness Uygulaması',
     titleAccent: 'Full Balance',
     metaTitle: 'Ücretsiz Fitness Uygulaması | Full Balance',
-    description: 'Full Balance; antrenman, beslenme, ilerleme, PT raporu, Excel dışa aktarma, su, uyku ve kilo takibini tek yerde sunan tamamen ücretsiz fitness uygulamasıdır.',
+    description: 'Full Balance; antrenman, beslenme, ilerleme, gelişim raporu, Excel dışa aktarma, su, uyku ve kilo takibini tek yerde sunan tamamen ücretsiz fitness uygulamasıdır.',
     keywords: 'ücretsiz fitness uygulaması, ücretsiz antrenman uygulaması, ücretsiz beslenme uygulaması, Full Balance',
     heroCopy: 'Kredi kartı, abonelik ve premium duvarı olmadan hedefe göre antrenman, beslenme ve ilerleme takibi.',
     sections: [
@@ -41,26 +40,6 @@ const pages = {
       ['Full Balance ücretsiz mi?', 'Evet. Full Balance ücretsizdir; kredi kartı, abonelik veya premium duvarı gerektirmez.'],
       ['Uygulama hangi hedefleri destekler?', 'Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon hedeflerini destekler.'],
       ['Telefonda kullanılabilir mi?', 'Evet. Full Balance mobil öncelikli tasarlanmıştır ve PWA olarak telefona eklenebilir.'],
-    ],
-  },
-  'pt-raporu': {
-    icon: Users,
-    accent: '#06b6d4',
-    title: 'PT Raporu ve',
-    titleAccent: 'Antrenör Bağlantısı',
-    metaTitle: 'PT Raporu ve Antrenör Bağlantısı | Full Balance',
-    description: 'Full Balance PT raporu; danışanın antrenman, kilo, su, uyku, ölçüm ve hedef verilerini paylaşılabilir gelişim özeti olarak sunar.',
-    keywords: 'PT raporu, antrenör raporu, fitness gelişim raporu, danışan takip uygulaması',
-    heroCopy: 'Danışan ve antrenör arasında daha net takip için kodla bağlantı, rapor paylaşımı ve dışa aktarma akışı.',
-    sections: [
-      { title: 'Kodla bağlantı akışı', body: 'PT kendi kodunu üretir, danışan bu kodla bağlantı kurar. Kendi koduyla bağlanma gibi hatalı akışlar engellenir.' },
-      { title: 'Paylaşılabilir gelişim özeti', body: 'Son antrenmanlar, kilo trendi, su, uyku, ölçümler ve hedef bilgileri sade bir rapora dönüşür.' },
-      { title: 'Excel ve rapor çıktısı', body: 'İlerleme verileri dışa aktarılabilir, böylece antrenör danışanı tek ekrana bağlı kalmadan takip edebilir.' },
-    ],
-    faqs: [
-      ['PT bağlantısı ne işe yarar?', 'Danışanın gelişimini antrenörle daha düzenli paylaşmasını sağlar.'],
-      ['Danışan kendi koduyla bağlanabilir mi?', 'Hayır. Sistem kendi koduyla bağlanmayı engeller; kod PT tarafından danışana gönderilir.'],
-      ['Rapor dışa aktarılabilir mi?', 'Evet. Excel ve rapor indirme akışları desteklenir.'],
     ],
   },
   'kalori-makro-takibi': {
@@ -120,7 +99,7 @@ const pages = {
     faqs: [
       ['Sadece kilo mu takip edilir?', 'Hayır. Ölçüler, yağ oranı, fotoğraf, su, uyku ve antrenman verileri de takip edilir.'],
       ['Veriler dışa aktarılır mı?', 'Evet. İlerleme verileri Excel ve rapor çıktısı olarak dışa aktarılabilir.'],
-      ['PT ile paylaşılabilir mi?', 'Evet. PT raporu ile gelişim özeti paylaşılabilir.'],
+      ['Rapor olarak alınabilir mi?', 'Evet. Gelişim verileri rapor ve Excel çıktısı olarak dışa aktarılabilir.'],
     ],
   },
   'su-uyku-kilo-takibi': {
@@ -140,7 +119,7 @@ const pages = {
     faqs: [
       ['Su takibi nasıl çalışır?', 'Günlük hedefe göre bardak kayıtları tutulur ve ilerleme panelde görünür.'],
       ['Uyku verisi rapora girer mi?', 'Evet. Uyku verileri rapor ve denge değerlendirmesine dahil edilir.'],
-      ['Kilo trendi PT raporunda görünür mü?', 'Evet. Kilo bilgisi gelişim raporuna dahil edilebilir.'],
+      ['Kilo trendi rapora dahil olur mu?', 'Evet. Kilo bilgisi gelişim raporuna dahil edilebilir.'],
     ],
   },
   'yoga-pilates-reformer': {
@@ -174,7 +153,7 @@ const pages = {
     heroCopy: 'Veriler uygulamada kalmak zorunda değil; gelişim kayıtlarını paylaşılabilir rapora ve Excel çıktısına dönüştür.',
     sections: [
       { title: 'Excel çıktısı', body: 'Kilo, ölçüm, su, uyku ve antrenman kayıtları düzenli tablo formatında dışa aktarılabilir.' },
-      { title: 'Rapor indir', body: 'PT veya kişisel takip için özetlenmiş gelişim raporu indirilebilir ve paylaşılabilir.' },
+      { title: 'Rapor indir', body: 'Kişisel takip için özetlenmiş gelişim raporu indirilebilir ve paylaşılabilir.' },
       { title: 'Veri sahipliği', body: 'Kullanıcının ilerleme verisini dışa alabilmesi, uygulamaya güveni ve taşınabilirliği artırır.' },
     ],
     faqs: [

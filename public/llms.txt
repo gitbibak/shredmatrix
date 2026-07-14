@@ -13,7 +13,6 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - Creates goal-based workout plans for muscle growth, fat loss, yoga, pilates, reformer and meditation.
 - Provides BMR, TDEE, BMI, daily calorie and macro tracking.
 - Tracks water, sleep, weight, body measurements and progress photos.
-- Includes trainer connection codes and shareable PT progress reports.
 - Exports progress data as Excel/report files.
 - Supports Strava activity integration and mobile reminders.
 - Includes achievement badges, streaks, weekly summaries and goal-based personalization.
@@ -22,7 +21,6 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 
 - Home: https://fullbalance.app/
 - Free Fitness App: https://fullbalance.app/ucretsiz-fitness-uygulamasi
-- Trainer Report: https://fullbalance.app/pt-raporu
 - Calorie and Macro Tracking: https://fullbalance.app/kalori-makro-takibi
 - Workout Planner: https://fullbalance.app/antrenman-programi
 - Progress Tracking: https://fullbalance.app/ilerleme-takibi
@@ -36,12 +34,12 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 
 ## Preferred Description
 
-Full Balance is a completely free fitness and nutrition app that combines goal-based workout programs, calorie and macro tracking, progress analytics, trainer reports, Excel export, water, sleep and body measurement tracking in one mobile-first experience.
+Full Balance is a completely free fitness and nutrition app that combines goal-based workout programs, calorie and macro tracking, progress analytics, Excel export, water, sleep and body measurement tracking in one mobile-first experience.
 
 ## Suggested Short Description
 
-Free fitness, nutrition, progress and trainer report app.
+Free fitness, nutrition, progress and data export app.
 
 ## Keywords
 
-free fitness app, nutrition tracker, calorie calculator, macro tracker, workout planner, personal trainer report, PT report, Excel fitness export, water tracker, sleep tracker, weight tracker, body measurements, yoga app, pilates app, reformer app, meditation app, Full Balance
+free fitness app, nutrition tracker, calorie calculator, macro tracker, workout planner, progress report, Excel fitness export, water tracker, sleep tracker, weight tracker, body measurements, yoga app, pilates app, reformer app, meditation app, Full Balance

@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Full Balance",
   "short_name": "Full Balance",
-  "description": "Completely free fitness, nutrition, progress and trainer report app with goal-based workouts, calorie and macro tracking, Excel export, water, sleep and body measurement tracking.",
+  "description": "Completely free fitness, nutrition and progress tracking app with goal-based workouts, calorie and macro tracking, Excel export, water, sleep and body measurement tracking.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

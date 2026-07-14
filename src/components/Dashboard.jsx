@@ -20,7 +20,6 @@ const BodyMeasurements = lazy(() => import('./BodyMeasurements'));
 const SleepTracker = lazy(() => import('./SleepTracker'));
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const DataExport = lazy(() => import('./DataExport'));
-const TrainerReport = lazy(() => import('./TrainerReport'));
 const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
 const HeroCard = lazy(() => import('./HeroCard'));
 const NudgeCards = lazy(() => import('./NudgeCards'));
@@ -463,7 +462,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               />
               <div className="mt-6 space-y-6">
                 <StravaConnectCard />
-                <TrainerReport plan={plan} />
                 <DataExport />
               </div>
               </Suspense>

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import {
   Dumbbell, UtensilsCrossed, TrendingUp, Timer, Award,
   Droplets, Target, ChevronRight, Shield, Smartphone, BarChart3,
-  Heart, Flame, Brain, Sun, CircleDot, Cog, Users, Star,
+  Heart, Flame, Brain, Sun, CircleDot, Cog, Star,
   Camera, Scale, Trophy, Globe, CreditCard, Download, ArrowRight,
   CheckCircle2, Quote, Sparkles, Lock, Languages, MonitorSmartphone,
   RefreshCw, FileDown, Apple, Calculator, ShoppingBag, Image,
@@ -97,7 +97,7 @@ export default function LandingPage({ onStart }) {
     { value: '%100', label: tx('landing.stats.free', 'Ücretsiz') },
     { value: '6', label: tx('landing.stats.goals', 'Hedef modu') },
     { value: '24', label: tx('landing.stats.programs', 'Program') },
-    { value: 'PT', label: tx('landing.stats.trainer', 'Rapor + bağlantı') },
+    { value: 'Rapor', label: tx('landing.stats.trainer', 'Gelişim özeti') },
     { value: 'Excel', label: tx('landing.stats.export', 'Dışa aktar') },
   ];
 
@@ -115,10 +115,10 @@ export default function LandingPage({ onStart }) {
       desc: tx('landing.heroHighlights.goal.desc', 'Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon.'),
     },
     {
-      icon: Users,
+      icon: BarChart3,
       color: '#06b6d4',
-      title: tx('landing.heroHighlights.pt.title', 'PT bağlantısı ve rapor'),
-      desc: tx('landing.heroHighlights.pt.desc', 'Danışan kodu, paylaşılabilir gelişim özeti ve antrenör görünümü.'),
+      title: tx('landing.heroHighlights.pt.title', 'Gelişim raporu'),
+      desc: tx('landing.heroHighlights.pt.desc', 'Kilo, ölçü, su, uyku ve antrenman verilerini anlaşılır özete dönüştür.'),
     },
     {
       icon: FileDown,
@@ -175,7 +175,6 @@ export default function LandingPage({ onStart }) {
 
   const seoTopics = [
     { to: '/ucretsiz-fitness-uygulamasi', label: 'Ücretsiz fitness uygulaması' },
-    { to: '/pt-raporu', label: 'PT raporu ve bağlantı' },
     { to: '/kalori-makro-takibi', label: 'Kalori ve makro takibi' },
     { to: '/antrenman-programi', label: 'Kişisel antrenman programı' },
     { to: '/ilerleme-takibi', label: 'İlerleme ve gelişim takibi' },
@@ -355,7 +354,7 @@ export default function LandingPage({ onStart }) {
           <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-6">
               <Sparkles size={12} />
-              {tx('landing.badge', '%100 ücretsiz fitness, wellness ve PT takip uygulaması')}
+              {tx('landing.badge', '%100 ücretsiz fitness, wellness ve rapor uygulaması')}
             </span>
           </motion.div>
 
@@ -374,7 +373,7 @@ export default function LandingPage({ onStart }) {
             custom={2} variants={fadeUp} initial="hidden" animate="visible"
             className="text-slate-400 text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed"
           >
-            {tx('landing.heroDesc', 'Full Balance; beslenme, antrenman, ilerleme, başarımlar, PT raporu, Excel/rapor dışa aktarımı ve mobil hatırlatmaları tek yerde toplayan tamamen ücretsiz kişisel fitness uygulaması.')}
+            {tx('landing.heroDesc', 'Full Balance; beslenme, antrenman, ilerleme, başarımlar, Excel/rapor dışa aktarımı ve mobil hatırlatmaları tek yerde toplayan tamamen ücretsiz kişisel fitness uygulaması.')}
           </motion.p>
 
           <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -456,7 +455,7 @@ export default function LandingPage({ onStart }) {
             tag={tx('landing.modules.tag', 'Uygulamada Neler Var?')}
             title={tx('landing.modules.title', 'Tüm Ana Modüller')}
             titleAccent={tx('landing.modules.titleAccent', 'Ücretsiz Dahil')}
-            desc={tx('landing.modules.desc', 'Girişten itibaren kullanıcıya ne kazanacağını net göster: hedefe göre plan, günlük takip, PT paylaşımı, dışa aktarma ve mobil kullanım tek akışta çalışır.')}
+            desc={tx('landing.modules.desc', 'Girişten itibaren kullanıcıya ne kazanacağını net göster: hedefe göre plan, günlük takip, gelişim raporu, dışa aktarma ve mobil kullanım tek akışta çalışır.')}
           />
 
           <motion.div
@@ -511,7 +510,7 @@ export default function LandingPage({ onStart }) {
             tag="Popüler Aramalar"
             title="Full Balance ile"
             titleAccent="Neler Yapabilirsin?"
-            desc="Google ve AI arama sistemlerinin de anlayabileceği net konu sayfaları: ücretsiz kullanım, PT raporu, kalori takibi, antrenman, ilerleme ve dışa aktarma."
+            desc="Google ve AI arama sistemlerinin de anlayabileceği net konu sayfaları: ücretsiz kullanım, kalori takibi, antrenman, ilerleme, alışkanlık takibi ve dışa aktarma."
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {seoTopics.map((topic) => (

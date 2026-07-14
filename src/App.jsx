@@ -24,7 +24,6 @@ const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
-  'pt-raporu',
   'kalori-makro-takibi',
   'antrenman-programi',
   'ilerleme-takibi',
