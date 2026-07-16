@@ -12,22 +12,23 @@ import {
   Ruler,
   ChevronRight,
   ChevronLeft,
-  Briefcase,
-  Clock,
-  Wallet,
   BadgeCheck,
   Brain,
   Flower2,
   Circle,
   Wrench,
   Sparkles,
-  Heart,
-  UtensilsCrossed,
 } from 'lucide-react';
 
 // ── Step Configuration ───────────────────────────────────
-const STEP_IDS = ['personal', 'body', 'activity', 'goal', 'health', 'allergies', 'lifestyle'];
-const STEP_ICONS = [User, Ruler, Footprints, TrendingUp, Heart, UtensilsCrossed, Briefcase];
+const STEP_IDS = ['goal', 'personal', 'body', 'activity'];
+const STEP_ICONS = [TrendingUp, User, Ruler, Footprints];
+const STEP_LABEL_KEYS = {
+  goal: 'onboarding.step4.title',
+  personal: 'onboarding.step1.title',
+  body: 'onboarding.step2.title',
+  activity: 'onboarding.step3.title',
+};
 
 // ── Animation Variants ───────────────────────────────────
 const pageVariants = {
@@ -116,7 +117,7 @@ export default function Onboarding({ onSubmit }) {
   // Translated data arrays (need t() from hook)
   const STEPS = STEP_IDS.map((id, i) => ({
     id,
-    label: t(`onboarding.step${i + 1}.title`),
+    label: t(STEP_LABEL_KEYS[id]),
     icon: STEP_ICONS[i],
   }));
 
@@ -149,69 +150,15 @@ export default function Onboarding({ onSubmit }) {
     { value: 'meditation', icon: Brain, label: t('onboarding.fields.meditation'), desc: t('onboarding.fields.meditationDesc'), color: '#8b5cf6' },
   ];
 
-  const workSchedules = [
-    { value: 'morning', label: t('onboarding.fields.morning'), desc: '06:00 – 14:00', emoji: '🌅' },
-    { value: 'afternoon', label: t('onboarding.fields.afternoon'), desc: '14:00 – 18:00', emoji: '☀️' },
-    { value: 'evening', label: t('onboarding.fields.evening'), desc: '16:00 – 00:00', emoji: '🌙' },
-    { value: 'flexible', label: t('onboarding.fields.flexible'), desc: '', emoji: '🔄' },
-  ];
-
-  const budgetOptions = [
-    { value: 'economy', label: t('onboarding.fields.low'), desc: '', emoji: '💚', color: '#22c55e' },
-    { value: 'moderate', label: t('onboarding.fields.mid'), desc: '', emoji: '💰', color: '#f59e0b' },
-    { value: 'premium', label: t('onboarding.fields.high'), desc: '', emoji: '💎', color: '#a855f7' },
-  ];
-
-  // Health condition options
-  const healthOptions = [
-    { value: 'back_pain', label: t('onboarding.fields.back_pain'), emoji: '🪶' },
-    { value: 'knee_issue', label: t('onboarding.fields.knee_issue'), emoji: '🦵' },
-    { value: 'shoulder_injury', label: t('onboarding.fields.shoulder_injury'), emoji: '💪' },
-    { value: 'wrist_issue', label: t('onboarding.fields.wrist_issue'), emoji: '✋' },
-    { value: 'heart_condition', label: t('onboarding.fields.heart_condition'), emoji: '❤️' },
-    { value: 'none', label: t('onboarding.fields.noHealthIssue'), emoji: '✅' },
-  ];
-
-  // Food allergy options
-  const allergyOptions = [
-    { value: 'lactose', label: t('onboarding.fields.lactose'), emoji: '🥛' },
-    { value: 'gluten', label: t('onboarding.fields.gluten'), emoji: '🌾' },
-    { value: 'egg', label: t('onboarding.fields.egg'), emoji: '🥚' },
-    { value: 'nuts', label: t('onboarding.fields.nuts'), emoji: '🥜' },
-    { value: 'seafood', label: t('onboarding.fields.seafood'), emoji: '🐟' },
-    { value: 'vegan', label: t('onboarding.fields.vegan'), emoji: '🌱' },
-    { value: 'vegetarian', label: t('onboarding.fields.vegetarian'), emoji: '🥬' },
-    { value: 'none', label: t('onboarding.fields.noAllergy'), emoji: '✅' },
-  ];
-
-  // Multi-select toggle helper
-  const toggleMultiSelect = (arr, setArr, value) => {
-    if (value === 'none') {
-      setArr(['none']);
-      return;
-    }
-    const without = arr.filter((v) => v !== 'none');
-    if (without.includes(value)) {
-      setArr(without.filter((v) => v !== value));
-    } else {
-      setArr([...without, value]);
-    }
-  };
-
   // Form state
   const [name, setName] = useState('');
   const [age, setAge] = useState(25);
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState(175);
   const [weight, setWeight] = useState(75);
-  const [bodyFatPercentage, setBodyFatPercentage] = useState(20);
   const [experience, setExperience] = useState('intermediate');
   const [activityLevel, setActivityLevel] = useState('moderate');
   const [primaryGoal, setPrimaryGoal] = useState('muscle');
-  const [healthConditions, setHealthConditions] = useState([]);
-  const [allergies, setAllergies] = useState([]);
-  const [workSchedule, setWorkSchedule] = useState([]);
-  const [budget, setBudget] = useState('moderate');
 
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
@@ -226,15 +173,10 @@ export default function Onboarding({ onSubmit }) {
         if (saved.gender) setGender(saved.gender);
         if (saved.height) setHeight(saved.height);
         if (saved.weight) setWeight(saved.weight);
-        if (saved.bodyFatPercentage) setBodyFatPercentage(saved.bodyFatPercentage);
         if (saved.experience) setExperience(saved.experience);
         if (saved.activityLevel) setActivityLevel(saved.activityLevel);
         if (saved.primaryGoal) setPrimaryGoal(saved.primaryGoal);
-        if (saved.healthConditions?.length) setHealthConditions(saved.healthConditions);
-        if (saved.allergies?.length) setAllergies(saved.allergies);
-        if (saved.workSchedule?.length) setWorkSchedule(saved.workSchedule);
-        if (saved.budget) setBudget(saved.budget);
-        if (typeof saved.step === 'number') setStep(saved.step);
+        if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
       }
     } catch (err) { console.warn('[Onboarding] restore:', err); }
   }, []);
@@ -243,22 +185,18 @@ export default function Onboarding({ onSubmit }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        name, age, gender, height, weight, bodyFatPercentage,
-        experience, activityLevel, primaryGoal,
-        healthConditions, allergies, workSchedule, budget, step,
+        name, age, gender, height, weight,
+        experience, activityLevel, primaryGoal, step,
       }));
     } catch (err) { console.warn('[Onboarding] save:', err); }
-  }, [name, age, gender, height, weight, bodyFatPercentage, experience, activityLevel, primaryGoal, healthConditions, allergies, workSchedule, budget, step]);
+  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, step]);
 
   const canNext = () => {
     switch (step) {
-      case 0: return name.trim().length > 0 && gender;
-      case 1: return weight > 0 && height > 0;
-      case 2: return activityLevel && experience;
-      case 3: return primaryGoal;
-      case 4: return healthConditions.length > 0;
-      case 5: return allergies.length > 0;
-      case 6: return workSchedule.length > 0 && budget;
+      case 0: return primaryGoal;
+      case 1: return name.trim().length > 0 && gender;
+      case 2: return weight > 0 && height > 0;
+      case 3: return activityLevel && experience;
       default: return true;
     }
   };
@@ -292,9 +230,14 @@ export default function Onboarding({ onSubmit }) {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
       name, age, gender, height, weight,
-      bodyFatPercentage, experience, activityLevel,
-      primaryGoal, workSchedule, budget,
-      healthConditions, allergies,
+      bodyFatPercentage: 20,
+      experience,
+      activityLevel,
+      primaryGoal,
+      workSchedule: ['flexible'],
+      budget: 'moderate',
+      healthConditions: ['none'],
+      allergies: ['none'],
     });
   };
 
@@ -377,8 +320,64 @@ export default function Onboarding({ onSubmit }) {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="flex-1 flex flex-col"
             >
-              {/* ─── STEP 0: Kişisel ───────────────────── */}
+              {/* ─── STEP 0: Hedef ────────────────────── */}
               {step === 0 && (
+                <div className="space-y-6 flex-1">
+                  <div>
+                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step4.title')}</h2>
+                    <p className="text-sm text-slate-500">
+                      {t('onboarding.step4.subtitle') || 'Önce hedefini seç. Planı hemen oluşturacağız; ayrıntıları sonra ekleyebilirsin.'}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {goals.map((goal) => {
+                      const Icon = goal.icon;
+                      const sel = primaryGoal === goal.value;
+                      return (
+                        <motion.button
+                          type="button"
+                          key={goal.value}
+                          onClick={() => setPrimaryGoal(goal.value)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.97 }}
+                          className={[
+                            'relative flex flex-col items-center gap-2 p-4 rounded-2xl border text-center transition-all duration-200 cursor-pointer',
+                            sel
+                              ? 'bg-slate-900 border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.15)]'
+                              : 'bg-slate-900 border-slate-800 hover:border-slate-700',
+                          ].join(' ')}
+                        >
+                          {sel && (
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3">
+                              <BadgeCheck size={18} className="text-orange-400" />
+                            </motion.div>
+                          )}
+                          <div className={`p-3 rounded-2xl ${sel ? 'bg-orange-500/10' : 'bg-slate-800'}`}>
+                            <Icon size={28} style={{ color: sel ? goal.color : '#64748b' }} />
+                          </div>
+                          <div>
+                            <span className={`block text-sm font-bold font-outfit ${sel ? 'text-white' : 'text-slate-300'}`}>
+                              {goal.label}
+                            </span>
+                            <span className="text-xs text-slate-500 mt-1 block">{goal.desc}</span>
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                    <Sparkles size={18} className="text-emerald-400 shrink-0" />
+                    <p className="text-xs text-slate-400">
+                      Hızlı başlangıç açık: sadece temel bilgilerle plan oluşur, sağlık ve beslenme tercihlerini sonra profilden ekleyebilirsin.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* ─── STEP 1: Kişisel ───────────────────── */}
+              {step === 1 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step1.title')}</h2>
@@ -424,8 +423,8 @@ export default function Onboarding({ onSubmit }) {
                 </div>
               )}
 
-              {/* ─── STEP 1: Vücut ────────────────────── */}
-              {step === 1 && (
+              {/* ─── STEP 2: Vücut ────────────────────── */}
+              {step === 2 && (
                 <div className="space-y-5 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step2.title')}</h2>
@@ -438,10 +437,6 @@ export default function Onboarding({ onSubmit }) {
 
                   <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
                     <SliderInput label={t('onboarding.fields.weight')} value={weight} onChange={setWeight} min={40} max={200} unit="kg" />
-                  </div>
-
-                  <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
-                    <SliderInput label={t('onboarding.fields.bodyFat')} value={bodyFatPercentage} onChange={setBodyFatPercentage} min={5} max={50} unit="%" />
                   </div>
 
                   {/* Live BMI indicator */}
@@ -462,8 +457,8 @@ export default function Onboarding({ onSubmit }) {
                 </div>
               )}
 
-              {/* ─── STEP 2: Aktivite ─────────────────── */}
-              {step === 2 && (
+              {/* ─── STEP 3: Aktivite ─────────────────── */}
+              {step === 3 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step3.title')}</h2>
@@ -506,228 +501,6 @@ export default function Onboarding({ onSubmit }) {
                           </SelectCard>
                         );
                       })}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 3: Hedef ────────────────────── */}
-              {step === 3 && (
-                <div className="space-y-6 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step4.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.step4.subtitle')}</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {goals.map((goal) => {
-                      const Icon = goal.icon;
-                      const sel = primaryGoal === goal.value;
-                      return (
-                        <motion.button
-                          type="button"
-                          key={goal.value}
-                          onClick={() => setPrimaryGoal(goal.value)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.97 }}
-                          className={[
-                            'relative flex flex-col items-center gap-2 p-4 rounded-2xl border text-center transition-all duration-200 cursor-pointer',
-                            sel
-                              ? 'bg-slate-900 border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.15)]'
-                              : 'bg-slate-900 border-slate-800 hover:border-slate-700',
-                          ].join(' ')}
-                        >
-                          {sel && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3">
-                              <BadgeCheck size={18} className="text-orange-400" />
-                            </motion.div>
-                          )}
-                          <div className={`p-3 rounded-2xl ${sel ? 'bg-orange-500/10' : 'bg-slate-800'}`}>
-                            <Icon size={28} style={{ color: sel ? goal.color : '#64748b' }} />
-                          </div>
-                          <div>
-                            <span className={`block text-sm font-bold font-outfit ${sel ? 'text-white' : 'text-slate-300'}`}>
-                              {goal.label}
-                            </span>
-                            <span className="text-xs text-slate-500 mt-1 block">{goal.desc}</span>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Motivational note */}
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500/5 border border-orange-500/10">
-                    <Flame size={18} className="text-orange-400 shrink-0" />
-                    <p className="text-xs text-slate-400">
-                      {primaryGoal === 'muscle'
-                        ? t('onboarding.fields.muscleDesc')
-                        : primaryGoal === 'fat_loss'
-                          ? t('onboarding.fields.fatLossDesc')
-                          : primaryGoal === 'yoga'
-                            ? t('onboarding.fields.yogaGoalDesc')
-                            : primaryGoal === 'pilates'
-                              ? t('onboarding.fields.pilatesGoalDesc')
-                              : primaryGoal === 'reformer'
-                                ? t('onboarding.fields.reformerGoalDesc')
-                                : t('onboarding.fields.meditationGoalDesc')}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 4: Sağlık Durumu ──────────── */}
-              {step === 4 && (
-                <div className="space-y-6 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step5.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.fields.healthSubtitle')}</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">
-                      {t('onboarding.fields.healthTitle')}
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {healthOptions.map((opt) => {
-                        const sel = healthConditions.includes(opt.value);
-                        return (
-                          <SelectCard
-                            key={opt.value}
-                            selected={sel}
-                            onClick={() => toggleMultiSelect(healthConditions, setHealthConditions, opt.value)}
-                          >
-                            <span className="text-2xl">{opt.emoji}</span>
-                            <span className={`text-sm font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {opt.label}
-                            </span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 5: Gıda Alerjileri ────────── */}
-              {step === 5 && (
-                <div className="space-y-6 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step6.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.fields.allergySubtitle')}</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">
-                      {t('onboarding.fields.allergyTitle')}
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {allergyOptions.map((opt) => {
-                        const sel = allergies.includes(opt.value);
-                        return (
-                          <SelectCard
-                            key={opt.value}
-                            selected={sel}
-                            onClick={() => toggleMultiSelect(allergies, setAllergies, opt.value)}
-                          >
-                            <span className="text-2xl">{opt.emoji}</span>
-                            <span className={`text-sm font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {opt.label}
-                            </span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 6: Yaşam Tarzı ──────────────── */}
-              {step === 6 && (
-                <div className="space-y-6 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step7.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.step7.subtitle')}</p>
-                  </div>
-
-                  {/* Work Schedule */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-slate-400 mb-3 font-outfit">
-                      <Clock size={14} />
-                      {t('onboarding.fields.workSchedule')}
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {workSchedules.map((ws) => {
-                        const sel = workSchedule.includes(ws.value);
-                        const isFlexible = ws.value === 'flexible';
-                        return (
-                          <SelectCard
-                            key={ws.value}
-                            selected={sel}
-                            onClick={() => {
-                              if (isFlexible) {
-                                setWorkSchedule(['flexible']);
-                              } else {
-                                const without = workSchedule.filter((v) => v !== 'flexible');
-                                if (without.includes(ws.value)) {
-                                  setWorkSchedule(without.filter((v) => v !== ws.value));
-                                } else if (without.length < 2) {
-                                  setWorkSchedule([...without, ws.value]);
-                                } else {
-                                  setWorkSchedule([without[1], ws.value]);
-                                }
-                              }
-                            }}
-                            className="p-3"
-                          >
-                            <span className="text-xl">{ws.emoji}</span>
-                            <span className={`text-xs font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {ws.label}
-                            </span>
-                            <span className="text-[9px] text-slate-600">{ws.desc}</span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Budget */}
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-slate-400 mb-3 font-outfit">
-                      <Wallet size={14} />
-                      {t('onboarding.fields.budget')}
-                    </label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {budgetOptions.map((b) => {
-                        const sel = budget === b.value;
-                        return (
-                          <SelectCard key={b.value} selected={sel} onClick={() => setBudget(b.value)} className="p-4">
-                            <span className="text-2xl">{b.emoji}</span>
-                            <span className={`text-sm font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {b.label}
-                            </span>
-                            <span className="text-[10px] font-medium" style={{ color: sel ? b.color : '#64748b' }}>
-                              {b.desc}
-                            </span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Summary preview */}
-                  <div className="px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800/50">
-                    <p className="text-xs text-slate-500 mb-2 font-outfit font-medium">{t('onboarding.fields.summary')}</p>
-                    <div className="flex flex-wrap gap-2 text-[10px]">
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{name || '?'}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{age} {t('onboarding.fields.ageUnit')}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{gender === 'male' ? t('onboarding.fields.male') : t('onboarding.fields.female')}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">{height}cm / {weight}kg</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">%{bodyFatPercentage} {t('onboarding.fields.fatUnit')}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">BMI: {bmi}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-orange-500/15 text-orange-400">
-                        {goals.find(g => g.value === primaryGoal)?.label || primaryGoal}
-                      </span>
                     </div>
                   </div>
                 </div>
