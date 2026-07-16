@@ -14,50 +14,50 @@ import {
 const CARD_CONFIGS = {
   water: {
     icon: Droplets,
-    gradient: 'from-blue-500/15 to-cyan-500/15',
-    border: 'border-blue-500/25',
+    tint: 'bg-cyan-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-blue-400',
     priority: 1,
   },
   sleep: {
     icon: Moon,
-    gradient: 'from-indigo-500/15 to-purple-500/15',
-    border: 'border-indigo-500/25',
+    tint: 'bg-violet-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-indigo-400',
     priority: 2,
   },
   workout: {
     icon: Dumbbell,
-    gradient: 'from-orange-500/15 to-red-500/15',
-    border: 'border-orange-500/25',
+    tint: 'bg-orange-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-orange-400',
     priority: 0,
   },
   measurement: {
     icon: Ruler,
-    gradient: 'from-emerald-500/15 to-teal-500/15',
-    border: 'border-emerald-500/25',
+    tint: 'bg-emerald-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-emerald-400',
     priority: 4,
   },
   progress: {
     icon: Scale,
-    gradient: 'from-pink-500/15 to-rose-500/15',
-    border: 'border-pink-500/25',
+    tint: 'bg-pink-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-pink-400',
     priority: 3,
   },
   streak: {
     icon: Flame,
-    gradient: 'from-amber-500/15 to-orange-500/15',
-    border: 'border-amber-500/25',
+    tint: 'bg-amber-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-amber-400',
     priority: 5,
   },
   milestone: {
     icon: Trophy,
-    gradient: 'from-yellow-500/15 to-amber-500/15',
-    border: 'border-yellow-500/25',
+    tint: 'bg-yellow-500/10',
+    border: 'border-slate-800/75',
     iconColor: 'text-yellow-400',
     priority: -1, // highest
   },
@@ -98,37 +98,37 @@ function NudgeCard({ nudge, onDismiss, onAction }) {
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 20, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className={`relative group bg-gradient-to-r ${config.gradient} border ${config.border} rounded-2xl p-3.5 cursor-pointer hover:scale-[1.01] transition-transform`}
+      className={`relative group rounded-xl border ${config.border} bg-slate-900/45 px-3 py-2.5 cursor-pointer transition-colors hover:bg-slate-900/70`}
       onClick={() => onAction?.(nudge)}
     >
       {/* Dismiss button */}
       <button
         onClick={(e) => { e.stopPropagation(); onDismiss(nudge.id); }}
         aria-label="Kapat"
-        className="absolute top-2 right-2 p-1 rounded-full bg-slate-800/60 text-slate-500 hover:text-slate-300 hover:bg-slate-700/60 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-slate-800/60 text-slate-500 hover:text-slate-300 hover:bg-slate-700/60 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
       >
         <X size={10} />
       </button>
 
       <div className="flex items-center gap-3">
         {/* Icon */}
-        <div className={`shrink-0 w-9 h-9 rounded-xl bg-slate-900/40 flex items-center justify-center ${config.iconColor}`}>
+        <div className={`shrink-0 w-8 h-8 rounded-lg ${config.tint} flex items-center justify-center ${config.iconColor}`}>
           <Icon size={16} />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-bold text-white font-outfit leading-tight">
+          <p className="text-xs font-bold text-white font-outfit leading-tight">
             {nudge.title}
           </p>
-          <p className="text-[9px] text-slate-400 mt-0.5 leading-relaxed">
+          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed line-clamp-2">
             {nudge.message}
           </p>
         </div>
 
         {/* Score boost badge */}
         {nudge.scoreBoost && (
-          <div className="shrink-0 flex items-center gap-0.5 px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/20">
+          <div className="shrink-0 hidden items-center gap-0.5 rounded-full border border-emerald-500/15 bg-emerald-500/10 px-2 py-1 sm:flex">
             <Target size={9} className="text-emerald-400" />
             <span className="text-[8px] font-bold text-emerald-400">+{nudge.scoreBoost}</span>
           </div>
@@ -149,7 +149,7 @@ function MilestoneCard({ nudge, onDismiss }) {
       initial={{ opacity: 0, y: -10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="relative bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-orange-500/10 border border-yellow-500/20 rounded-2xl p-3.5"
+      className="relative rounded-xl border border-slate-800/75 bg-slate-900/45 px-3 py-2.5"
     >
       <button
         onClick={() => onDismiss(nudge.id)}
@@ -159,12 +159,12 @@ function MilestoneCard({ nudge, onDismiss }) {
         <X size={10} />
       </button>
       <div className="flex items-center gap-3">
-        <div className="shrink-0 w-9 h-9 rounded-xl bg-yellow-500/15 flex items-center justify-center">
+        <div className="shrink-0 w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
           <span className="text-lg">{nudge.emoji}</span>
         </div>
         <div>
-          <p className="text-[11px] font-bold text-yellow-300 font-outfit">{nudge.title}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5">{nudge.message}</p>
+          <p className="text-xs font-bold text-yellow-300 font-outfit">{nudge.title}</p>
+          <p className="text-[10px] text-slate-500 mt-0.5">{nudge.message}</p>
         </div>
       </div>
     </motion.div>
@@ -350,7 +350,7 @@ export default function NudgeCards({ plan, onNavigate }) {
       {/* Section header */}
       <div className="flex items-center gap-1.5 mb-1">
         <Sparkles size={11} className="text-orange-400" />
-        <span className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">
+        <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
           {t('nudge.sectionTitle')}
         </span>
       </div>
