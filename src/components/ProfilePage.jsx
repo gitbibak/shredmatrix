@@ -207,6 +207,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const [profilePhoto, setProfilePhoto] = useState(loadPhoto);
   const [gallery, setGallery] = useState(loadGallery);
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [showProgressPhotos, setShowProgressPhotos] = useState(false);
   const [showGoalChange, setShowGoalChange] = useState(false);
   const [changingGoal, setChangingGoal] = useState(null);
   const toast = useToast();
@@ -233,17 +234,33 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
 
   useEffect(() => {
     let cancelled = false;
-    async function loadPhotos() {
+    async function loadProfilePhoto() {
       try {
-        const [photo, photos] = await Promise.all([getProfilePhoto(), getProgressPhotos()]);
+        const photo = await getProfilePhoto();
         if (cancelled) return;
         if (photo) setProfilePhoto(photo);
+      } catch (err) {
+        console.warn('[Profile]', err?.message || err);
+      }
+    }
+    loadProfilePhoto();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadProgressPhotos() {
+      try {
+        const photos = await getProgressPhotos();
+        if (cancelled) return;
         setGallery(photos || []);
       } catch (err) {
         console.warn('[Profile]', err?.message || err);
       }
     }
-    loadPhotos();
+    loadProgressPhotos();
     return () => {
       cancelled = true;
     };
@@ -353,6 +370,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       const updated = await getProgressPhotos();
       setGallery(updated || []);
       saveGallery(updated || []);
+      setShowProgressPhotos(true);
       toast.success(t('errors.saveSuccess'));
     } catch (err) {
       toast.error(t('errors.uploadFailed'));
@@ -411,9 +429,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 src={profilePhoto}
                 alt="Profile"
                 loading="eager"
-                onLoad={(e) => { e.target.style.opacity = '1'; }}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-                style={{ opacity: 0 }}
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             )}
           </div>
@@ -454,20 +471,50 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
 
       {/* ── Progress Photos Gallery ── */}
       <motion.div variants={itemV}>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold font-outfit text-white flex items-center gap-2">
-            <Camera size={14} className="text-orange-400" />
-            {t('profile.progressPhotos')}
-          </h3>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => galleryInputRef.current?.click()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium cursor-pointer hover:bg-orange-500/20 transition-colors"
-          >
-            <ImagePlus size={12} />
-            {t('profile.addPhoto')}
-          </motion.button>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-500/10 text-orange-400">
+              <Camera size={16} />
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowProgressPhotos((value) => !value)}
+              className="min-w-0 flex-1 text-left"
+            >
+              <h3 className="truncate text-sm font-bold font-outfit text-white">
+                {t('profile.progressPhotos')}
+              </h3>
+              <p className="text-[10px] leading-relaxed text-slate-500">
+                {gallery.length > 0
+                  ? `${gallery.length} ${lang === 'tr' ? 'fotoğraf kayıtlı' : 'photos saved'}`
+                  : (lang === 'tr' ? 'İsteğe bağlı. Profil akışını kalabalıklaştırmaz.' : 'Optional. Kept out of the main profile flow.')}
+              </p>
+            </button>
+            {gallery.length > 0 && (
+              <div className="hidden shrink-0 items-center gap-1 sm:flex">
+                {gallery.slice(0, 3).map((photo) => (
+                  <img
+                    key={photo.id}
+                    src={photo.src}
+                    alt=""
+                    className="h-8 w-8 rounded-lg border border-slate-700 object-cover"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            )}
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              type="button"
+              onClick={() => galleryInputRef.current?.click()}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg border border-orange-500/20 bg-orange-500/10 px-3 py-2 text-xs font-medium text-orange-400 transition-colors hover:bg-orange-500/20"
+              aria-label={t('profile.addPhoto')}
+            >
+              <ImagePlus size={13} />
+              <span className="hidden sm:inline">{t('profile.addPhoto')}</span>
+            </motion.button>
+          </div>
           <input
             ref={galleryInputRef}
             type="file"
@@ -475,31 +522,42 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             className="hidden"
             onChange={handleGalleryPhoto}
           />
-        </div>
 
-        {gallery.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
-            <Camera size={32} className="text-slate-700 mx-auto mb-3" />
-            <p className="text-xs text-slate-400">{t('profile.noPhotos')}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-            {gallery.map((photo, idx) => (
+          <AnimatePresence initial={false}>
+            {showProgressPhotos && (
               <motion.div
-                key={photo.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="relative aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-800 cursor-pointer"
-                onClick={() => setLightboxIdx(idx)}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: 'easeInOut' }}
+                className="overflow-hidden"
               >
-                <img src={photo.src} alt="Fotoğraf" className="w-full h-full object-cover" />
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
-                  <span className="text-[10px] text-white/80 font-medium">{new Date(photo.date).toLocaleDateString(LOCALE_MAP[lang] || 'tr-TR', { day: '2-digit', month: 'short' })}</span>
-                </div>
+                {gallery.length === 0 ? (
+                  <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-4 text-center">
+                    <p className="text-xs text-slate-500">{t('profile.noPhotos')}</p>
+                  </div>
+                ) : (
+                  <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                    {gallery.map((photo, idx) => (
+                      <motion.div
+                        key={photo.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative aspect-square cursor-pointer overflow-hidden rounded-xl border border-slate-800 bg-slate-950"
+                        onClick={() => setLightboxIdx(idx)}
+                      >
+                        <img src={photo.src} alt="Fotoğraf" className="h-full w-full object-cover" loading="lazy" />
+                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+                          <span className="text-[10px] font-medium text-white/80">{new Date(photo.date).toLocaleDateString(LOCALE_MAP[lang] || 'tr-TR', { day: '2-digit', month: 'short' })}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
-            ))}
-          </div>
-        )}
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
 
       {/* ── Lightbox ── */}
