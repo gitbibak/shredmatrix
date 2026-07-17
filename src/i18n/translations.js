@@ -964,6 +964,7 @@ export const translations = {
       todaysChallenge: 'Bugünün meydan okuması',
       completed: 'Tamamlandı!',
       complete: 'Tamamla ✓',
+      change: 'Değiştir',
       shareText: 'Günlük Challenge tamamlandı',
       share: 'Paylaş',
       units: {
@@ -1845,6 +1846,7 @@ export const translations = {
       todaysChallenge: "Today's challenge",
       completed: 'Completed!',
       complete: 'Complete ✓',
+      change: 'Change',
       shareText: 'Daily Challenge completed',
       share: 'Share',
       units: {
@@ -2726,6 +2728,7 @@ export const translations = {
       todaysChallenge: 'El desafío de hoy',
       completed: '¡Completado!',
       complete: 'Completar ✓',
+      change: 'Cambiar',
       shareText: 'Desafío Diario completado',
       share: 'Compartir',
       units: {

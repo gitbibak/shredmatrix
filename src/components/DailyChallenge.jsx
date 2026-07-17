@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, Check, Share2, Flame, Trophy } from 'lucide-react';
+import { Target, Check, Share2, Flame, RefreshCw } from 'lucide-react';
 import { trackChallengeComplete } from '../lib/analytics';
 import confetti from 'canvas-confetti';
 
@@ -25,9 +25,14 @@ function getChallenges(t) {
 }
 
 const STORAGE_KEY = 'fb_daily_challenge';
+const PICK_STORAGE_KEY = 'fb_daily_challenge_pick';
 
 function getDayIndex() {
   return Math.floor((Date.now() - new Date(2024, 0, 1).getTime()) / 86400000);
+}
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
 }
 
 export default function DailyChallenge() {
@@ -35,14 +40,28 @@ export default function DailyChallenge() {
   const [completed, setCompleted] = useState(false);
   const [streak, setStreak] = useState(0);
   const [justCompleted, setJustCompleted] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   const challenges = useMemo(() => getChallenges(t), [t]);
-  const challenge = useMemo(() => challenges[getDayIndex() % challenges.length], [challenges]);
+  const defaultIndex = useMemo(() => getDayIndex() % challenges.length, [challenges.length]);
+  const challengeIndex = selectedIndex ?? defaultIndex;
+  const challenge = useMemo(() => challenges[challengeIndex] || challenges[defaultIndex], [challengeIndex, challenges, defaultIndex]);
+
+  useEffect(() => {
+    try {
+      const picks = JSON.parse(localStorage.getItem(PICK_STORAGE_KEY) || '{}');
+      const today = getTodayKey();
+      const saved = Number(picks[today]);
+      setSelectedIndex(Number.isInteger(saved) && saved >= 0 ? saved % challenges.length : defaultIndex);
+    } catch {
+      setSelectedIndex(defaultIndex);
+    }
+  }, [challenges.length, defaultIndex]);
 
   useEffect(() => {
     try {
       const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayKey();
       setCompleted(!!data[today]);
       let s = 0;
       const d = new Date();
@@ -54,11 +73,22 @@ export default function DailyChallenge() {
     } catch {}
   }, []);
 
+  const handleChangeChallenge = () => {
+    if (completed || challenges.length <= 1) return;
+    const nextIndex = (challengeIndex + 1) % challenges.length;
+    try {
+      const picks = JSON.parse(localStorage.getItem(PICK_STORAGE_KEY) || '{}');
+      picks[getTodayKey()] = nextIndex;
+      localStorage.setItem(PICK_STORAGE_KEY, JSON.stringify(picks));
+    } catch {}
+    setSelectedIndex(nextIndex);
+  };
+
   const handleComplete = () => {
     if (completed) return;
     try {
       const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayKey();
       data[today] = { challenge: challenge.id, completedAt: Date.now() };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       setCompleted(true);
@@ -153,15 +183,26 @@ export default function DailyChallenge() {
               </motion.div>
             </motion.div>
           ) : (
-            <motion.button
-              key="do"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleComplete}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold cursor-pointer shadow-lg shadow-orange-500/20"
-            >
-              {t('challenge.complete')}
-            </motion.button>
+            <motion.div key="do" className="flex items-center gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleChangeChallenge}
+                className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 cursor-pointer hover:text-cyan-300 hover:border-cyan-500/30 transition-colors"
+                aria-label={t('challenge.change')}
+                title={t('challenge.change')}
+              >
+                <RefreshCw size={14} />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleComplete}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[10px] font-bold cursor-pointer shadow-lg shadow-orange-500/20"
+              >
+                {t('challenge.complete')}
+              </motion.button>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
