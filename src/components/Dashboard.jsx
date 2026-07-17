@@ -21,7 +21,6 @@ const SleepTracker = lazy(() => import('./SleepTracker'));
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const DataExport = lazy(() => import('./DataExport'));
 const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
-const HeroCard = lazy(() => import('./HeroCard'));
 const NudgeCards = lazy(() => import('./NudgeCards'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
@@ -317,11 +316,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
       {/* ── Main Content ─────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
-        {/* ── Hero Card — Full Balance Score + Today ── */}
-        <Suspense fallback={null}>
-          <HeroCard plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-        </Suspense>
-
         {/* ── Nudge Cards — Akıllı Hatırlatmalar ── */}
         <Suspense fallback={null}>
           <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
