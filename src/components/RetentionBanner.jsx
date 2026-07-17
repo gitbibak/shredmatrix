@@ -31,7 +31,7 @@ const MESSAGES = {
       icon: PartyPopper,
       title: '1 hafta tamamlandı!',
       subtitle: 'Müthiş! İlk haftayı geride bıraktın. Başarını arkadaşlarınla paylaş!',
-      cta: { label: 'Başarıları Gör', tab: 'achievements' },
+      cta: { label: 'Başarıları Gör', tab: 'progress' },
     },
     14: {
       emoji: '📈',
@@ -45,7 +45,7 @@ const MESSAGES = {
       icon: Trophy,
       title: '1 ay! Sen bir efsanesin',
       subtitle: '30 gün boyunca kararlılığını korudun. Bu inanılmaz bir başarı!',
-      cta: { label: 'Başarı Rozetlerini Gör', tab: 'achievements' },
+      cta: { label: 'Başarı Rozetlerini Gör', tab: 'progress' },
     },
   },
   en: {
@@ -75,7 +75,7 @@ const MESSAGES = {
       icon: PartyPopper,
       title: '1 week completed!',
       subtitle: 'Amazing! You\'ve crushed your first week. Share your achievement with friends!',
-      cta: { label: 'View Achievements', tab: 'achievements' },
+      cta: { label: 'View Achievements', tab: 'progress' },
     },
     14: {
       emoji: '📈',
@@ -89,7 +89,7 @@ const MESSAGES = {
       icon: Trophy,
       title: '1 month! You\'re a legend',
       subtitle: 'You stayed committed for 30 days. That\'s an incredible achievement!',
-      cta: { label: 'View Achievement Badges', tab: 'achievements' },
+      cta: { label: 'View Achievement Badges', tab: 'progress' },
     },
   },
   es: {
@@ -119,7 +119,7 @@ const MESSAGES = {
       icon: PartyPopper,
       title: '¡1 semana completada!',
       subtitle: '¡Increíble! Has superado tu primera semana. ¡Comparte tu logro con amigos!',
-      cta: { label: 'Ver Logros', tab: 'achievements' },
+      cta: { label: 'Ver Logros', tab: 'progress' },
     },
     14: {
       emoji: '📈',
@@ -133,7 +133,7 @@ const MESSAGES = {
       icon: Trophy,
       title: '¡1 mes! Eres una leyenda',
       subtitle: 'Te mantuviste comprometido durante 30 días. ¡Es un logro increíble!',
-      cta: { label: 'Ver Insignias de Logros', tab: 'achievements' },
+      cta: { label: 'Ver Insignias de Logros', tab: 'progress' },
     },
   },
 };

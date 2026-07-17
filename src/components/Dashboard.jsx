@@ -33,7 +33,7 @@ const StravaActivitiesPanel = lazy(() => import('./StravaPanel').then(m => ({ de
 
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
-  LogOut, Target, Award, Share2, ChevronDown,
+  LogOut, Target, CalendarCheck, Share2, ChevronDown,
 } from 'lucide-react';
 
 
@@ -103,7 +103,7 @@ function WelcomeOverlay({ name, onClose, t }) {
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
-  const [activeTab, setActiveTab] = useState('nutrition');
+  const [activeTab, setActiveTab] = useState('today');
   const [showWelcome, setShowWelcome] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
@@ -116,8 +116,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const TABS = [
     { id: 'nutrition', label: t('dashboard.tabs.nutrition'), icon: UtensilsCrossed },
     { id: 'workout', label: t('dashboard.tabs.workout'), icon: Dumbbell },
+    { id: 'today', label: t('dashboard.tabs.today'), icon: CalendarCheck },
     { id: 'progress', label: t('dashboard.tabs.progress'), icon: TrendingUp },
-    { id: 'achievements', label: t('dashboard.tabs.achievements'), icon: Award },
     { id: 'profile', label: t('dashboard.tabs.profile'), icon: User },
   ];
 
@@ -317,6 +317,35 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       {/* ── Main Content ─────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
         <AnimatePresence mode="wait">
+          {/* ─── Bugün Tab ─── */}
+          {activeTab === 'today' && (
+            <motion.div
+              key="today"
+              role="tabpanel"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
+              <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <motion.div variants={columnVariants} className="lg:col-span-2 space-y-6">
+                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+                    <DailyChallenge />
+                    <DailyMotivation />
+                    <PushPermission />
+                  </motion.div>
+                  <motion.div variants={columnVariants} className="space-y-6">
+                    <WaterTracker />
+                    <SleepTracker />
+                    <StreakCalendar />
+                  </motion.div>
+                </div>
+              </motion.div>
+              </Suspense>
+            </motion.div>
+          )}
 
           {/* ─── Beslenme Tab ─── */}
           {activeTab === 'nutrition' && (
@@ -335,13 +364,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <NutritionPanel plan={plan} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
-                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-                    <PushPermission />
                     <CalorieCalc />
                     <WaterTracker />
                     <SleepTracker />
-                    <DailyChallenge />
-                    <DailyMotivation />
                   </motion.div>
                 </div>
               </motion.div>
@@ -366,7 +391,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <WorkoutPanel plan={plan} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
-                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <WorkoutTimer />
                     <MuscleRecovery plan={plan} />
                     <ProgramAdvisor plan={plan} onPlanUpdate={onPlanUpdate} />
@@ -395,7 +419,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <ProgressTracker userName={plan.userName} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
-                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <StreakCalendar />
                     <StravaActivitiesPanel />
                     <WeeklyReport plan={plan} />
@@ -403,26 +426,11 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <BodyMeasurements />
                   </motion.div>
                 </div>
+                <div className="mt-6 space-y-6">
+                  <Achievements plan={plan} user={user} />
+                  <Leaderboard plan={plan} />
+                </div>
               </motion.div>
-              </Suspense>
-            </motion.div>
-          )}
-
-          {/* ─── Başarım Tab ─── */}
-          {activeTab === 'achievements' && (
-            <motion.div
-              key="achievements"
-              role="tabpanel"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            >
-              <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
-              <Achievements plan={plan} user={user} />
-              <div className="mt-4">
-                <Leaderboard plan={plan} />
-              </div>
               </Suspense>
             </motion.div>
           )}

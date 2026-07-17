@@ -491,7 +491,7 @@ export const translations = {
     dashboard: {
       tabs: {
         nutrition: 'Beslenme', workout: 'Antrenman',
-        progress: 'İlerleme', achievements: 'Başarım', profile: 'Profil',
+        today: 'Bugün', progress: 'İlerleme', achievements: 'Başarım', profile: 'Profil',
       },
       welcome: { hi: 'Hoş geldin,', subtitle: 'Hazırız, başlayalım!' },
       share: 'Paylaş', logout: 'Çıkış',
@@ -1418,7 +1418,7 @@ export const translations = {
       },
     },
     dashboard: {
-      tabs: { nutrition: 'Nutrition', workout: 'Workout', progress: 'Progress', achievements: 'Achievements', profile: 'Profile' },
+      tabs: { nutrition: 'Nutrition', workout: 'Workout', today: 'Today', progress: 'Progress', achievements: 'Achievements', profile: 'Profile' },
       welcome: { hi: 'Welcome,', subtitle: 'Ready to go!' },
       share: 'Share', logout: 'Logout',
       quickStats: { title: 'Quick Stats', goal: 'Goal', dailyCal: 'Daily Calories', training: 'Training', daysWeek: 'days/week', programAge: 'Program Age', days: 'days' },
@@ -2280,7 +2280,7 @@ export const translations = {
       },
     },
     dashboard: {
-      tabs: { nutrition: 'Nutrición', workout: 'Entreno', progress: 'Progreso', achievements: 'Logros', profile: 'Perfil' },
+      tabs: { nutrition: 'Nutrición', workout: 'Entreno', today: 'Hoy', progress: 'Progreso', achievements: 'Logros', profile: 'Perfil' },
       welcome: { hi: 'Bienvenido,', subtitle: '¡Vamos a empezar!' },
       share: 'Compartir', logout: 'Salir',
       quickStats: { title: 'Resumen Rápido', goal: 'Objetivo', dailyCal: 'Calorías Diarias', training: 'Entrenamiento', daysWeek: 'días/semana', programAge: 'Edad del Plan', days: 'días' },
