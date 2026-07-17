@@ -22,6 +22,7 @@ const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const DataExport = lazy(() => import('./DataExport'));
 const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
 const NudgeCards = lazy(() => import('./NudgeCards'));
+const TodayFocusPanel = lazy(() => import('./TodayFocusPanel'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
 
@@ -331,6 +332,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2 space-y-6">
+                    <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <DailyChallenge />
                     <DailyMotivation />
@@ -339,7 +341,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   <motion.div variants={columnVariants} className="space-y-6">
                     <WaterTracker />
                     <SleepTracker />
-                    <StreakCalendar />
                   </motion.div>
                 </div>
               </motion.div>
