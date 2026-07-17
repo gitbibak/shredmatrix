@@ -316,19 +316,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
       {/* ── Main Content ─────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
-        {/* ── Nudge Cards — Akıllı Hatırlatmalar ── */}
-        <Suspense fallback={null}>
-          <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-        </Suspense>
-
-
-
-
-        {/* ── Push Notification Permission Request ── */}
-        <Suspense fallback={null}>
-          <PushPermission />
-        </Suspense>
-
         <AnimatePresence mode="wait">
 
           {/* ─── Beslenme Tab ─── */}
@@ -348,6 +335,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <NutritionPanel plan={plan} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
+                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+                    <PushPermission />
                     <CalorieCalc />
                     <WaterTracker />
                     <SleepTracker />
@@ -377,6 +366,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <WorkoutPanel plan={plan} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
+                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <WorkoutTimer />
                     <MuscleRecovery plan={plan} />
                     <ProgramAdvisor plan={plan} onPlanUpdate={onPlanUpdate} />
@@ -405,6 +395,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <ProgressTracker userName={plan.userName} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
+                    <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                     <StreakCalendar />
                     <StravaActivitiesPanel />
                     <WeeklyReport plan={plan} />
