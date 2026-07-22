@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 11;
+export const PLAN_VERSION = 12;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -532,6 +532,16 @@ const HEALTH_EXERCISE_FILTERS = {
     },
   },
 };
+
+function getHealthExerciseReplacement(exerciseName, filter) {
+  const normalized = String(exerciseName || '').toLowerCase();
+  const matched = filter.exclude.find((blocked) => {
+    const blockedName = blocked.toLowerCase();
+    return normalized === blockedName || normalized.includes(blockedName);
+  });
+  if (!matched) return undefined;
+  return filter.replace[exerciseName] || filter.replace[matched] || null;
+}
 
 // ── Antrenman Programı — Fazlı Sistem ─────────────────────
 // Her hedef için 4 faz: Foundation → Advanced → Intensive → Elite
@@ -1777,9 +1787,8 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
         for (const condition of healthConditions) {
           const filter = HEALTH_EXERCISE_FILTERS[condition];
           if (!filter) continue;
-          if (filter.exclude.includes(ex.name)) {
-            return filter.replace[ex.name] || null;
-          }
+          const replacement = getHealthExerciseReplacement(ex.name, filter);
+          if (replacement !== undefined) return replacement;
         }
         return ex;
       }).filter(Boolean);

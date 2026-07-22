@@ -10,6 +10,8 @@ import {
   TrendingUp,
   User,
   Ruler,
+  HeartPulse,
+  Utensils,
   ChevronRight,
   ChevronLeft,
   BadgeCheck,
@@ -21,13 +23,15 @@ import {
 } from 'lucide-react';
 
 // ── Step Configuration ───────────────────────────────────
-const STEP_IDS = ['goal', 'personal', 'body', 'activity'];
-const STEP_ICONS = [TrendingUp, User, Ruler, Footprints];
+const STEP_IDS = ['goal', 'personal', 'body', 'activity', 'health', 'allergies'];
+const STEP_ICONS = [TrendingUp, User, Ruler, Footprints, HeartPulse, Utensils];
 const STEP_LABEL_KEYS = {
   goal: 'onboarding.step4.title',
   personal: 'onboarding.step1.title',
   body: 'onboarding.step2.title',
   activity: 'onboarding.step3.title',
+  health: 'onboarding.step5.title',
+  allergies: 'onboarding.step6.title',
 };
 
 // ── Animation Variants ───────────────────────────────────
@@ -106,6 +110,16 @@ function SelectCard({ selected, onClick, children, className = '' }) {
   );
 }
 
+function toggleMultiValue(values, value, noneValue = 'none') {
+  if (value === noneValue) return [noneValue];
+  const next = values.filter((item) => item !== noneValue);
+  if (next.includes(value)) {
+    const filtered = next.filter((item) => item !== value);
+    return filtered.length ? filtered : [noneValue];
+  }
+  return [...next, value];
+}
+
 // ═════════════════════════════════════════════════════════
 // Onboarding Component
 // ═════════════════════════════════════════════════════════
@@ -150,6 +164,26 @@ export default function Onboarding({ onSubmit }) {
     { value: 'meditation', icon: Brain, label: t('onboarding.fields.meditation'), desc: t('onboarding.fields.meditationDesc'), color: '#8b5cf6' },
   ];
 
+  const healthOptions = [
+    { value: 'none', label: t('onboarding.fields.noHealthIssue'), emoji: '✅' },
+    { value: 'back_pain', label: t('onboarding.fields.back_pain'), emoji: '🦴' },
+    { value: 'knee_issue', label: t('onboarding.fields.knee_issue'), emoji: '🦵' },
+    { value: 'shoulder_injury', label: t('onboarding.fields.shoulder_injury'), emoji: '💪' },
+    { value: 'wrist_issue', label: t('onboarding.fields.wrist_issue'), emoji: '✋' },
+    { value: 'heart_condition', label: t('onboarding.fields.heart_condition'), emoji: '❤️' },
+  ];
+
+  const allergyOptions = [
+    { value: 'none', label: t('onboarding.fields.noAllergy'), emoji: '✅' },
+    { value: 'lactose', label: t('onboarding.fields.lactose'), emoji: '🥛' },
+    { value: 'gluten', label: t('onboarding.fields.gluten'), emoji: '🌾' },
+    { value: 'egg', label: t('onboarding.fields.egg'), emoji: '🥚' },
+    { value: 'nuts', label: t('onboarding.fields.nuts'), emoji: '🥜' },
+    { value: 'seafood', label: t('onboarding.fields.seafood'), emoji: '🐟' },
+    { value: 'vegan', label: t('onboarding.fields.vegan'), emoji: '🌱' },
+    { value: 'vegetarian', label: t('onboarding.fields.vegetarian'), emoji: '🥬' },
+  ];
+
   // Form state
   const [name, setName] = useState('');
   const [age, setAge] = useState(25);
@@ -159,6 +193,8 @@ export default function Onboarding({ onSubmit }) {
   const [experience, setExperience] = useState('intermediate');
   const [activityLevel, setActivityLevel] = useState('moderate');
   const [primaryGoal, setPrimaryGoal] = useState('muscle');
+  const [healthConditions, setHealthConditions] = useState(['none']);
+  const [allergies, setAllergies] = useState(['none']);
 
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
@@ -176,6 +212,8 @@ export default function Onboarding({ onSubmit }) {
         if (saved.experience) setExperience(saved.experience);
         if (saved.activityLevel) setActivityLevel(saved.activityLevel);
         if (saved.primaryGoal) setPrimaryGoal(saved.primaryGoal);
+        if (Array.isArray(saved.healthConditions)) setHealthConditions(saved.healthConditions.length ? saved.healthConditions : ['none']);
+        if (Array.isArray(saved.allergies)) setAllergies(saved.allergies.length ? saved.allergies : ['none']);
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
       }
     } catch (err) { console.warn('[Onboarding] restore:', err); }
@@ -186,10 +224,10 @@ export default function Onboarding({ onSubmit }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         name, age, gender, height, weight,
-        experience, activityLevel, primaryGoal, step,
+        experience, activityLevel, primaryGoal, healthConditions, allergies, step,
       }));
     } catch (err) { console.warn('[Onboarding] save:', err); }
-  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, step]);
+  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, healthConditions, allergies, step]);
 
   const canNext = () => {
     switch (step) {
@@ -197,6 +235,8 @@ export default function Onboarding({ onSubmit }) {
       case 1: return name.trim().length > 0 && gender;
       case 2: return weight > 0 && height > 0;
       case 3: return activityLevel && experience;
+      case 4: return healthConditions.length > 0;
+      case 5: return allergies.length > 0;
       default: return true;
     }
   };
@@ -236,8 +276,8 @@ export default function Onboarding({ onSubmit }) {
       primaryGoal,
       workSchedule: ['flexible'],
       budget: 'moderate',
-      healthConditions: ['none'],
-      allergies: ['none'],
+      healthConditions,
+      allergies,
     });
   };
 
@@ -370,7 +410,7 @@ export default function Onboarding({ onSubmit }) {
                   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                     <Sparkles size={18} className="text-emerald-400 shrink-0" />
                     <p className="text-xs text-slate-400">
-                      Hızlı başlangıç açık: sadece temel bilgilerle plan oluşur, sağlık ve beslenme tercihlerini sonra profilden ekleyebilirsin.
+                      Sağlık ve alerji bilgilerin alınarak antrenman ve beslenme planın daha güvenli hazırlanır.
                     </p>
                   </div>
                 </div>
@@ -502,6 +542,64 @@ export default function Onboarding({ onSubmit }) {
                         );
                       })}
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ─── STEP 4: Sağlık ───────────────────── */}
+              {step === 4 && (
+                <div className="space-y-6 flex-1">
+                  <div>
+                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.healthTitle')}</h2>
+                    <p className="text-sm text-slate-500">{t('onboarding.fields.healthSubtitle')}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {healthOptions.map((option) => {
+                      const selected = healthConditions.includes(option.value);
+                      return (
+                        <SelectCard
+                          key={option.value}
+                          selected={selected}
+                          onClick={() => setHealthConditions((prev) => toggleMultiValue(prev, option.value))}
+                          className="min-h-[104px]"
+                        >
+                          <span className="text-2xl">{option.emoji}</span>
+                          <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
+                            {option.label}
+                          </span>
+                        </SelectCard>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ─── STEP 5: Alerji ───────────────────── */}
+              {step === 5 && (
+                <div className="space-y-6 flex-1">
+                  <div>
+                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.allergyTitle')}</h2>
+                    <p className="text-sm text-slate-500">{t('onboarding.fields.allergySubtitle')}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {allergyOptions.map((option) => {
+                      const selected = allergies.includes(option.value);
+                      return (
+                        <SelectCard
+                          key={option.value}
+                          selected={selected}
+                          onClick={() => setAllergies((prev) => toggleMultiValue(prev, option.value))}
+                          className="min-h-[104px]"
+                        >
+                          <span className="text-2xl">{option.emoji}</span>
+                          <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
+                            {option.label}
+                          </span>
+                        </SelectCard>
+                      );
+                    })}
                   </div>
                 </div>
               )}
