@@ -385,6 +385,8 @@ function AppContent() {
         bodyFatPercentage: savedPlan.userBodyFat, experience: savedPlan.userExperience,
         activityLevel: savedPlan.userActivityLevel, primaryGoal: goalMap[savedPlan.goal] || 'muscle',
         workSchedule: savedPlan.userWorkSchedule, budget: savedPlan.userBudget,
+        healthConditions: savedPlan.healthConditions || ['none'],
+        allergies: savedPlan.allergies || ['none'],
       };
       const targetLang = savedPlan.lang || lang || 'tr';
       const rawPlan = generatePlan(userMetrics, savedPlan.phase || 0, targetLang);
@@ -479,6 +481,8 @@ function AppContent() {
       bodyFatPercentage: plan.userBodyFat, experience: plan.userExperience,
       activityLevel: plan.userActivityLevel, primaryGoal: goalMap[plan.goal] || 'muscle',
       workSchedule: plan.userWorkSchedule, budget: plan.userBudget,
+      healthConditions: plan.healthConditions || ['none'],
+      allergies: plan.allergies || ['none'],
     };
     const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
     const newPlan = localizePlan(rawPlan, lang);
