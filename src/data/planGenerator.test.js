@@ -22,7 +22,16 @@ describe('planGenerator safety personalization', () => {
     expect(plan.planVersion).toBe(PLAN_VERSION);
     expect(plan.healthConditions).toEqual(['knee_issue', 'back_pain']);
     expect(plan.allergies).toEqual(['lactose', 'gluten']);
-    expect(plan.dailyNutrition.some((day) => day.meals.some((meal) => meal.hasAllergenWarning))).toBe(true);
+    expect(plan.dailyNutrition.some((day) => day.meals.some((meal) => meal.allergyAdjusted))).toBe(true);
+
+    const foodText = plan.dailyNutrition
+      .flatMap((day) => day.meals)
+      .flatMap((meal) => meal.items)
+      .join(' ')
+      .toLowerCase();
+
+    const forbidden = ['süt', 'peynir', 'yoğurt', 'whey', 'ekmek', 'makarna', 'bulgur', 'yulaf', 'granola'];
+    expect(forbidden.some((keyword) => foodText.includes(keyword))).toBe(false);
   });
 
   it('filters risky exercise name variants for selected health conditions', () => {

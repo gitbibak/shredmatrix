@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 12;
+export const PLAN_VERSION = 13;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -532,6 +532,99 @@ const HEALTH_EXERCISE_FILTERS = {
     },
   },
 };
+
+const ALLERGEN_KEYWORDS = {
+  lactose: [
+    'süt', 'peynir', 'yoğurt', 'lor', 'ayran', 'cacık',
+    'milk', 'cheese', 'yogurt', 'cottage', 'buttermilk', 'greek yogurt', 'cheddar',
+    'leche', 'queso', 'yogur', 'requesón', 'manchego',
+    'whey',
+  ],
+  gluten: [
+    'ekmek', 'makarna', 'yulaf', 'bulgur', 'un', 'kraker', 'bisküvi', 'wrap', 'tost',
+    'bread', 'pasta', 'oat', 'wheat', 'cracker', 'biscuit', 'toast', 'noodle', 'couscous',
+    'pan ', 'avena', 'trigo', 'tortita', 'galleta', 'cuscús',
+    'granola', 'pancake', 'tortitas',
+  ],
+  egg: [
+    'yumurta', 'omlet', 'menemen',
+    'egg', 'omelet', 'scrambled',
+    'huevo', 'tortilla española', 'huevos',
+  ],
+  nuts: [
+    'fıstık', 'badem', 'ceviz', 'fındık',
+    'peanut', 'almond', 'walnut', 'hazelnut', 'pb',
+    'cacahuete', 'almendra', 'nuez', 'avellana', 'nueces',
+  ],
+  seafood: [
+    'balık', 'somon', 'ton', 'levrek', 'palamut',
+    'salmon', 'tuna', 'fish', 'sea bass', 'mackerel',
+    'salmón', 'atún', 'lubina', 'caballa',
+  ],
+  vegan: [
+    'tavuk', 'et', 'dana', 'hindi', 'köfte', 'yumurta', 'süt', 'peynir', 'yoğurt', 'lor', 'balık', 'somon', 'ton', 'levrek', 'palamut', 'bal',
+    'chicken', 'beef', 'turkey', 'meat', 'egg', 'milk', 'cheese', 'yogurt', 'cottage', 'fish', 'salmon', 'tuna', 'honey', 'whey',
+    'pollo', 'ternera', 'pavo', 'albóndiga', 'huevo', 'leche', 'queso', 'yogur', 'requesón', 'salmón', 'atún', 'miel',
+  ],
+  vegetarian: [
+    'tavuk', 'et', 'dana', 'hindi', 'köfte', 'balık', 'somon', 'ton', 'levrek', 'palamut',
+    'chicken', 'beef', 'turkey', 'meat', 'fish', 'salmon', 'tuna',
+    'pollo', 'ternera', 'pavo', 'albóndiga', 'salmón', 'atún',
+  ],
+};
+
+const ALLERGY_REPLACEMENTS = {
+  tr: {
+    lactose: ['Laktozsuz yoğurt + chia', 'Bezelye protein shake (su ile)', 'Humus + pirinç patlağı'],
+    gluten: ['Basmati pirinç + sebze', 'Kinoa salatası', 'Pirinç patlağı + avokado'],
+    egg: ['Nohutlu sebze tabağı', 'Hindi füme + avokado', 'Bitkisel protein smoothie'],
+    nuts: ['Kabak çekirdeği (30g)', 'Avokado + pirinç patlağı', 'Chia puding'],
+    seafood: ['Izgara tavuk göğsü (200g)', 'Hindi köfte (180g)', 'Mercimek köftesi + salata'],
+    vegan: ['Mercimek + kinoa bowl', 'Nohutlu sebze yemeği', 'Bezelye protein smoothie'],
+    vegetarian: ['Yumurta dışı sebzeli protein bowl', 'Mercimek + kinoa salatası', 'Nohutlu sebze yemeği'],
+    safe: 'Pirinç + sebze + zeytinyağı',
+  },
+  en: {
+    lactose: ['Lactose-free yogurt + chia', 'Pea protein shake with water', 'Hummus + rice cakes'],
+    gluten: ['Basmati rice + vegetables', 'Quinoa salad', 'Rice cakes + avocado'],
+    egg: ['Chickpea vegetable bowl', 'Turkey slices + avocado', 'Plant protein smoothie'],
+    nuts: ['Pumpkin seeds (30g)', 'Avocado + rice cakes', 'Chia pudding'],
+    seafood: ['Grilled chicken breast (200g)', 'Turkey meatballs (180g)', 'Lentil patties + salad'],
+    vegan: ['Lentil + quinoa bowl', 'Chickpea vegetable stew', 'Pea protein smoothie'],
+    vegetarian: ['Vegetable protein bowl', 'Lentil + quinoa salad', 'Chickpea vegetable stew'],
+    safe: 'Rice + vegetables + olive oil',
+  },
+  es: {
+    lactose: ['Yogur sin lactosa + chía', 'Batido de proteína vegetal con agua', 'Hummus + tortitas de arroz'],
+    gluten: ['Arroz basmati + verduras', 'Ensalada de quinoa', 'Tortitas de arroz + aguacate'],
+    egg: ['Bowl de garbanzos y verduras', 'Pavo + aguacate', 'Smoothie de proteína vegetal'],
+    nuts: ['Semillas de calabaza (30g)', 'Aguacate + tortitas de arroz', 'Pudin de chía'],
+    seafood: ['Pechuga de pollo a la plancha (200g)', 'Albóndigas de pavo (180g)', 'Hamburguesas de lentejas + ensalada'],
+    vegan: ['Bowl de lentejas + quinoa', 'Guiso de garbanzos y verduras', 'Smoothie de proteína vegetal'],
+    vegetarian: ['Bowl vegetal alto en proteína', 'Ensalada de lentejas + quinoa', 'Guiso de garbanzos y verduras'],
+    safe: 'Arroz + verduras + aceite de oliva',
+  },
+};
+
+function itemMatchesAllergy(item, allergy) {
+  const lower = String(item || '').toLowerCase();
+  const keywords = ALLERGEN_KEYWORDS[allergy];
+  return Boolean(keywords?.some((kw) => lower.includes(kw)));
+}
+
+function itemConflictsWithAllergies(item, allergies) {
+  return allergies.some((allergy) => allergy !== 'none' && itemMatchesAllergy(item, allergy));
+}
+
+function getSafeFoodReplacement(item, triggeredAllergy, allergies, lang) {
+  const replacements = ALLERGY_REPLACEMENTS[lang] || ALLERGY_REPLACEMENTS.tr;
+  const candidates = [
+    ...(replacements[triggeredAllergy] || []),
+    replacements.safe,
+    ALLERGY_REPLACEMENTS.tr.safe,
+  ].filter(Boolean);
+  return candidates.find((candidate) => !itemConflictsWithAllergies(candidate, allergies)) || item;
+}
 
 function getHealthExerciseReplacement(exerciseName, filter) {
   const normalized = String(exerciseName || '').toLowerCase();
@@ -1832,28 +1925,16 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
 
   // Apply food allergy filters to nutrition plan
   if (allergies.length > 0 && !allergies.includes('none')) {
-    const allergenFoods = {
-      lactose: ['süt', 'peynir', 'yoğurt', 'lor', 'milk', 'cheese', 'yogurt', 'cottage', 'leche', 'queso', 'yogur', 'requesón', 'whey'],
-      gluten: ['ekmek', 'makarna', 'yulaf', 'bulgur', 'un', 'bread', 'pasta', 'oat', 'wheat', 'pan ', 'avena', 'trigo', 'wrap', 'tost', 'toast', 'pancake', 'tortita', 'cracker', 'bisküvi', 'granola'],
-      egg: ['yumurta', 'omlet', 'menemen', 'egg', 'omelet', 'huevo', 'tortilla española'],
-      nuts: ['fıstık', 'badem', 'ceviz', 'fındık', 'peanut', 'almond', 'walnut', 'hazelnut', 'cacahuete', 'almendra', 'nuez', 'avellana'],
-      seafood: ['balık', 'somon', 'ton', 'levrek', 'palamut', 'salmon', 'tuna', 'fish', 'sea bass', 'mackerel', 'salmón', 'atún', 'lubina', 'caballa'],
-      vegan: ['tavuk', 'et', 'dana', 'hindi', 'köfte', 'chicken', 'beef', 'turkey', 'meat', 'pollo', 'ternera', 'pavo', 'albóndiga', 'yumurta', 'egg', 'huevo', 'süt', 'milk', 'leche', 'peynir', 'cheese', 'queso', 'yoğurt', 'yogurt', 'yogur', 'balık', 'fish', 'salmon', 'whey'],
-      vegetarian: ['tavuk', 'et', 'dana', 'hindi', 'köfte', 'chicken', 'beef', 'turkey', 'meat', 'pollo', 'ternera', 'pavo', 'albóndiga', 'balık', 'fish', 'salmon', 'somon', 'ton', 'tuna', 'salmón', 'atún'],
-    };
-
     dailyNutrition.forEach((dayNut) => {
       if (!dayNut.meals) return;
       dayNut.meals.forEach((meal) => {
         if (!meal.items) return;
         meal.items = meal.items.map((item) => {
-          const lower = item.toLowerCase();
           for (const allergy of allergies) {
-            const keywords = allergenFoods[allergy];
-            if (!keywords) continue;
-            if (keywords.some((kw) => lower.includes(kw))) {
-              meal.hasAllergenWarning = true;
-              return `⚠️ ${item}`;
+            if (itemMatchesAllergy(item, allergy)) {
+              meal.allergyAdjusted = true;
+              meal.removedAllergens = Array.from(new Set([...(meal.removedAllergens || []), allergy]));
+              return getSafeFoodReplacement(item, allergy, allergies, lang);
             }
           }
           return item;
