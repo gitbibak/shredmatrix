@@ -265,6 +265,10 @@ export default function Onboarding({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (step < STEPS.length - 1) {
+      nextStep();
+      return;
+    }
     if (!canNext()) return;
     // Clear draft on successful submit
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
