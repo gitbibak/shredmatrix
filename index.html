@@ -149,7 +149,10 @@
         } else {
           // Production: register SW immediately (not on load) for iOS PWA push support
           navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('[SW] Registered:', reg.scope))
+            .then(reg => {
+              console.log('[SW] Registered:', reg.scope);
+              reg.update();
+            })
             .catch(err => console.warn('[SW] Registration failed:', err));
         }
       }

@@ -198,10 +198,12 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
+  const DRAFT_VERSION = 2;
 
   // Restore on mount
   useEffect(() => {
     if (initialData) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
       setName(initialData.name || '');
       setAge(initialData.age || 25);
       setGender(initialData.gender || 'male');
@@ -219,6 +221,10 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (saved) {
+        if (saved.draftVersion !== DRAFT_VERSION) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
         if (saved.name) setName(saved.name);
         if (saved.age) setAge(saved.age);
         if (saved.gender) setGender(saved.gender);
@@ -238,6 +244,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        draftVersion: DRAFT_VERSION,
         name, age, gender, height, weight,
         experience, activityLevel, primaryGoal, healthConditions, allergies, step,
       }));
@@ -263,6 +270,31 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     }
   };
 
+  const submitOnboarding = () => {
+    if (STEP_IDS[step] !== 'allergies' || !canNext()) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    onSubmit({
+      name, age, gender, height, weight,
+      bodyFatPercentage: 20,
+      experience,
+      activityLevel,
+      primaryGoal,
+      workSchedule: ['flexible'],
+      budget: 'moderate',
+      healthConditions,
+      allergies,
+    });
+  };
+
+  const advanceOrSubmit = () => {
+    if (!canNext()) return;
+    if (STEP_IDS[step] !== 'allergies') {
+      nextStep();
+      return;
+    }
+    submitOnboarding();
+  };
+
   const prevStep = () => {
     if (step > 0) {
       setDirection(-1);
@@ -280,30 +312,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const allergyStepIndex = STEP_IDS.indexOf('allergies');
-    if (step < allergyStepIndex) {
-      setDirection(1);
-      setStep((current) => Math.min(current + 1, allergyStepIndex));
-      return;
-    }
-    if (step < STEPS.length - 1) {
-      nextStep();
-      return;
-    }
-    if (!canNext()) return;
-    // Clear draft on successful submit
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    onSubmit({
-      name, age, gender, height, weight,
-      bodyFatPercentage: 20,
-      experience,
-      activityLevel,
-      primaryGoal,
-      workSchedule: ['flexible'],
-      budget: 'moderate',
-      healthConditions,
-      allergies,
-    });
+    advanceOrSubmit();
   };
 
   const progress = ((step + 1) / STEPS.length) * 100;
@@ -656,7 +665,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
             {step < STEPS.length - 1 ? (
               <motion.button
                 type="button"
-                onClick={nextStep}
+                onClick={advanceOrSubmit}
                 disabled={!canNext()}
                 whileHover={canNext() ? { scale: 1.03 } : {}}
                 whileTap={canNext() ? { scale: 0.97 } : {}}
@@ -672,7 +681,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
               </motion.button>
             ) : (
               <motion.button
-                type="submit"
+                type="button"
+                onClick={advanceOrSubmit}
                 disabled={!canNext()}
                 whileHover={{ scale: 1.03, boxShadow: '0 0 32px rgba(249,115,22,0.35)' }}
                 whileTap={{ scale: 0.97 }}

@@ -37,6 +37,13 @@ describe('Onboarding step flow', () => {
   });
 
   it('does not skip allergy step when editing existing profile data', async () => {
+    localStorage.setItem('fb_onboarding_draft', JSON.stringify({
+      step: 5,
+      name: 'Old Draft',
+      healthConditions: ['none'],
+      allergies: ['none'],
+    }));
+
     const onSubmit = renderOnboarding(vi.fn(), {
       initialData: {
         name: 'Tolga',
