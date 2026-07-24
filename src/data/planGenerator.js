@@ -8,7 +8,7 @@ import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 13;
+export const PLAN_VERSION = 14;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -470,6 +470,436 @@ function validateAndFixExercises(workoutSplit) {
 
     return { ...day, exercises: validExercises };
   });
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROGRAM KALİTE KATMANI
+// Her modül/faz için amaç, süre, ilerleme, regresyon ve güvenlik bilgisi.
+// ══════════════════════════════════════════════════════════════
+const PHASE_LABELS = ['Temel', 'Orta', 'İleri', 'Usta'];
+
+const QUALITY_PROFILES = {
+  muscle: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '45-60 dk',
+      weeklyTarget: '4 antrenman + 3 toparlanma günü',
+      intensity: 'RPE 6-7',
+      progressionRule: 'Tüm setlerde üst tekrar sınırına temiz formda çıkınca sonraki hafta ağırlığı %2-5 artır.',
+      regressionOption: 'Serbest ağırlık zor gelirse makine veya vücut ağırlığı alternatifi kullan.',
+      safetyNotes: 'Failure, dropset ve süperset yok; önce teknik ve düzen.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '55-70 dk',
+      weeklyTarget: '5 antrenman + 2 toparlanma günü',
+      intensity: 'RPE 7-8',
+      progressionRule: 'Haftalık kas hacmini 8-12 kaliteli sete taşı, form bozulursa hacmi sabitle.',
+      regressionOption: 'Yorgunluk artarsa son izolasyon hareketini çıkar.',
+      safetyNotes: 'Aynı eklemi iki gün üst üste zorlayan ekstra set ekleme.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '60-75 dk',
+      weeklyTarget: '6 antrenman + 1 tam dinlenme',
+      intensity: 'RPE 7-9',
+      progressionRule: 'Top set + back-off mantığı kullan; 4-6 haftada bir deload yap.',
+      regressionOption: 'Uyku veya toparlanma düşükse ana hareket setini 1 azalt.',
+      safetyNotes: 'Ağır omurga yükünü arka arkaya günlere ekleme.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '65-80 dk',
+      weeklyTarget: '6 antrenman + zorunlu deload haftası',
+      intensity: 'RPE 8-9 kontrollü',
+      progressionRule: '3 hafta yüklen, 1 hafta deload; ileri teknikleri seans başına 1-2 hareketle sınırla.',
+      regressionOption: 'Ağrı, düşük uyku veya performans düşüşünde hipertrofi versiyonuna dön.',
+      safetyNotes: '7 sert gün yok; maksimum performans için toparlanma planın parçası.',
+    },
+  ],
+  fat_loss: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '35-50 dk',
+      weeklyTarget: '3 güç + 2 düşük yoğunluk kardiyo + 2 dinlenme',
+      intensity: 'Konuşabilecek tempo',
+      progressionRule: 'Önce haftalık adım/kardiyo süresini artır; HIIT ekleme.',
+      regressionOption: 'Nefes çok yükselirse tempolu yürüyüşe dön.',
+      safetyNotes: 'Başlangıçta zıplama, burpee ve sprint zorunlu değil.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '45-60 dk',
+      weeklyTarget: '3-4 güç + 2 kardiyo + 1 kısa interval',
+      intensity: 'RPE 6-8',
+      progressionRule: 'Güç hareketlerinde performansı koru, kardiyo süresini kademeli artır.',
+      regressionOption: 'Bacak yorgunluğu varsa intervali LISS ile değiştir.',
+      safetyNotes: 'Arka arkaya HIIT günü yok.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '50-65 dk',
+      weeklyTarget: '4 güç + 2 LISS + maksimum 1 HIIT',
+      intensity: 'RPE 7-8',
+      progressionRule: 'Haftalık kondisyonu dalgalandır; her hafta daha sert yapma.',
+      regressionOption: 'Uyku düşükse metabolik devreyi teknik güç gününe çevir.',
+      safetyNotes: 'Yağ yakımı için toparlanma ve kas koruma öncelik.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '55-70 dk',
+      weeklyTarget: 'Hybrid ama güç koruma merkezde',
+      intensity: 'RPE 7-9 kontrollü',
+      progressionRule: '3 hafta yoğunluk dalgası + 1 hafta düşük hacim uygula.',
+      regressionOption: 'Nabız/yorgunluk yüksekse testi düşük yoğunluk kardiyoya indir.',
+      safetyNotes: 'Her gün maksimum kondisyon testi yapılmaz.',
+    },
+  ],
+  yoga: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '25-40 dk',
+      weeklyTarget: '4 pratik + 1 restoratif + 2 dinlenme',
+      intensity: 'Rahat nefes',
+      progressionRule: 'Poz süresini önce 15-30 sn artır, sonra akış sayısını artır.',
+      regressionOption: 'Diz/kalça rahatsızlığında blok, yastık veya diz desteği kullan.',
+      safetyNotes: 'Headstand, shoulder stand, lotus ve zorlayıcı nefes yok.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '35-50 dk',
+      weeklyTarget: '5 pratik + 2 toparlanma',
+      intensity: 'Kontrollü akış',
+      progressionRule: 'Denge ve inversiyon hazırlığını duvar/destek ile ilerlet.',
+      regressionOption: 'Baş dönmesi veya boyun baskısında inversiyon hazırlığını kaldır.',
+      safetyNotes: 'İnversiyonlar hazırlık seviyesinde kalır; boyna yük bindirme.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '45-65 dk',
+      weeklyTarget: '5 pratik + 1 restoratif + 1 dinlenme',
+      intensity: 'RPE 6-8',
+      progressionRule: 'İleri pozlar sadece ağrısız ve kontrollü hazırlık tamamlandıysa yapılır.',
+      regressionOption: 'Her ileri poza hazırlık versiyonu ile başla.',
+      safetyNotes: 'Derin backbend ve inversiyonlar opsiyonel ilerleme kabul edilir.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '55-75 dk',
+      weeklyTarget: '6 pratik + 1 restoratif/dinlenme',
+      intensity: 'Yüksek beceri, düşük ego',
+      progressionRule: 'Beceri günlerini restoratif günlerle dengele.',
+      regressionOption: 'Boyun, bilek veya bel sinyalinde hazırlık varyasyonuna dön.',
+      safetyNotes: 'Nefes tutma ve ileri inversiyonlar güvenlik notuyla uygulanır.',
+    },
+  ],
+  pilates: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '25-40 dk',
+      weeklyTarget: '3 temel seans + 1 mobilite + dinlenme',
+      intensity: 'Kontrol odaklı',
+      progressionRule: 'Önce nefes, pelvis ve omurga kontrolünü sabitle.',
+      regressionOption: 'Boyun/bel zorlanırsa baş destekli veya küçük aralıkla çalış.',
+      safetyNotes: 'Hız değil kontrol; ağrı varsa hareketi küçült.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '35-50 dk',
+      weeklyTarget: '4 seans + 1 mobilite/toparlanma',
+      intensity: 'Orta dayanıklılık',
+      progressionRule: 'Tek taraflı ve anti-rotasyon hareketleri kademeli artır.',
+      regressionOption: 'Form bozulursa tekrar sayısını azalt.',
+      safetyNotes: 'Bel çukurunu kontrol edemediğin pozisyonu ilerletme.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '45-60 dk',
+      weeklyTarget: '5 seans + 1 restoratif + 1 dinlenme',
+      intensity: 'Yüksek kontrol',
+      progressionRule: 'Akışları ancak geçişler temizse uzat.',
+      regressionOption: 'Boyun/bilek rahatsızlığında destekli versiyona dön.',
+      safetyNotes: 'İleri omurga fleksiyonu ve ters pozisyonlar zorunlu değildir.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '50-65 dk',
+      weeklyTarget: '5-6 seans, koreografi + toparlanma dengesi',
+      intensity: 'Master kontrol',
+      progressionRule: 'Koreografiyi yoğunluk değil kalite üzerinden ilerlet.',
+      regressionOption: 'Her akış için kısa teknik versiyon kullanılabilir.',
+      safetyNotes: 'Master seviye bile ağrısız hareket standardına bağlı.',
+    },
+  ],
+  reformer: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '30-45 dk',
+      weeklyTarget: '3 reformer temeli + 1 esneklik + dinlenme',
+      intensity: 'Hafif-orta yay',
+      progressionRule: 'Önce yay kontrolü ve carriage stabilitesi; sonra aralık artır.',
+      regressionOption: 'Denge bozulursa yay direncini ve hareket aralığını düşür.',
+      safetyNotes: 'Başlangıçta unstable ileri pozisyon, jump board ve inversiyon yok.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '40-55 dk',
+      weeklyTarget: '4 reformer seansı + toparlanma',
+      intensity: 'Orta yay, kontrollü tempo',
+      progressionRule: 'Tek taraflı iş ve tempo kontrolünü kademeli artır.',
+      regressionOption: 'Bel/diz sinyalinde kısa kutu veya destekli varyasyon kullan.',
+      safetyNotes: 'Yay direnci kaliteyi bozuyorsa azaltılır.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '45-60 dk',
+      weeklyTarget: '5 seans + 1 restoratif',
+      intensity: 'İleri kontrol',
+      progressionRule: 'Jump board sadece diz/bel şikayeti yoksa ve düşük hacimle eklenir.',
+      regressionOption: 'Zıplama yerine footwork veya düşük etkili leg press kullan.',
+      safetyNotes: 'İnversiyon ve unstable hareketler opsiyoneldir.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '50-70 dk',
+      weeklyTarget: '5-6 seans + ekipman uygunluğu kontrolü',
+      intensity: 'Master akış',
+      progressionRule: 'Repertoire genişletme ekipman ve teknik uygunlukla yapılır.',
+      regressionOption: 'Tower/Cadillac yoksa reformer-only master akış uygulanır.',
+      safetyNotes: 'Ekipman seçimi doğrulanmadan farklı cihaz hareketi verilmez.',
+    },
+  ],
+  meditation: [
+    {
+      difficulty: 'Temel',
+      expectedDuration: '5-10 dk',
+      weeklyTarget: '5 kısa pratik + 2 serbest gün',
+      intensity: 'Kolay başla',
+      progressionRule: 'Her hafta 1-2 dk ekle; süre değil düzen kazan.',
+      regressionOption: 'Zorlanırsan 3 dk nefes sayımı yap.',
+      safetyNotes: 'Nefes tutma veya zorlayıcı teknik yok.',
+    },
+    {
+      difficulty: 'Orta',
+      expectedDuration: '10-20 dk',
+      weeklyTarget: '5 pratik + 1 yürüyüş meditasyonu',
+      intensity: 'Sürdürülebilir',
+      progressionRule: 'Odak süresini artır, farklı tekniği aynı gün yığma.',
+      regressionOption: 'Zihin çok dağınıksa rehberli beden taramasına dön.',
+      safetyNotes: 'Baş dönmesi olursa nefes tekniğini bırak.',
+    },
+    {
+      difficulty: 'İleri',
+      expectedDuration: '20-30 dk',
+      weeklyTarget: '5 uzun pratik + 1 restoratif',
+      intensity: 'Derinleşme',
+      progressionRule: 'Açık farkındalık ve yürüyüş meditasyonunu dönüşümlü kullan.',
+      regressionOption: 'Duygusal yoğunluk artarsa kısa güvenli nefese dön.',
+      safetyNotes: 'Zorlayıcı nefes tutmalar günlük rutin yapılmaz.',
+    },
+    {
+      difficulty: 'Usta',
+      expectedDuration: '30-45 dk',
+      weeklyTarget: 'Uzun oturum + toparlayıcı kısa pratikler',
+      intensity: 'İleri farkındalık',
+      progressionRule: 'Uzun oturumları toparlayıcı günlerle dengele.',
+      regressionOption: 'Uykusuz veya stresli günlerde 10 dk beden taraması yap.',
+      safetyNotes: 'Nefes retansiyonu ve uzun sessizlik herkes için uygun değildir.',
+    },
+  ],
+};
+
+const QUALITY_FALLBACK_EXERCISES = {
+  fatLossBeginnerStrength: [
+    { name: 'Goblet Squat / Chair Squat', sets: 3, reps: '10-12', rest: '75s' },
+    { name: 'Incline Push-Up', sets: 3, reps: '8-12', rest: '60s' },
+    { name: 'Dumbbell Row', sets: 3, reps: '10-12', rest: '60s' },
+    { name: 'Glute Bridge', sets: 3, reps: '12-15', rest: '45s' },
+    { name: 'Tempolu Yürüyüş', sets: 1, reps: '20 dk', rest: '-' },
+  ],
+  fatLossLiss: [
+    { name: 'Tempolu Yürüyüş veya Bisiklet', sets: 1, reps: '30-40 dk', rest: '-' },
+    { name: 'Mobilite Akışı', sets: 1, reps: '10 dk', rest: '-' },
+  ],
+  yogaFoundation: [
+    { name: 'Dolphin Pose Prep', sets: 3, reps: '20s', rest: '30s' },
+    { name: 'Wall Shoulder Opener', sets: 2, reps: '45s', rest: '20s' },
+    { name: 'Legs Up The Wall', sets: 1, reps: '4 dk', rest: '-' },
+  ],
+  reformerFoundation: [
+    { name: 'Footwork (Paralel, hafif yay)', sets: 3, reps: '10', rest: '30s' },
+    { name: 'Pelvic Curl on Reformer', sets: 3, reps: '8', rest: '30s' },
+    { name: 'Arm Straps Supine', sets: 3, reps: '10', rest: '30s' },
+    { name: 'Knee Stretch Prep', sets: 2, reps: '8', rest: '30s' },
+  ],
+  reformerMasterOnly: [
+    { name: 'Advanced Footwork Flow', sets: 1, reps: '12 dk', rest: '-' },
+    { name: 'Long Box Pulling Straps', sets: 3, reps: '10', rest: '30s' },
+    { name: 'Side Split Control', sets: 3, reps: '8/taraf', rest: '45s' },
+    { name: 'Semi Circle Prep', sets: 3, reps: '6', rest: '45s' },
+  ],
+};
+
+const UNSAFE_YOGA_FOUNDATION = [
+  'headstand', 'sirsasana', 'shoulder stand', 'sarvangasana', 'handstand',
+  'lotus', 'kapalabhati', 'kumbhaka', 'scorpion',
+];
+
+const UNSAFE_REFORMER_FOUNDATION = [
+  'short spine', 'snake', 'control balance', 'headstand', 'jump', 'plyometric',
+  'tower', 'cadillac', 'wunda chair',
+];
+
+const FAT_LOSS_BEGINNER_HIGH_IMPACT = [
+  'burpee', 'box jump', 'jump lunge', 'jump squat', 'sprint', 'battle ropes',
+  'thruster', 'devil press', 'emom', 'amrap', 'assault bike', 'tabata',
+];
+
+function getQualityProfile(goal, phase) {
+  const profiles = QUALITY_PROFILES[goal] || QUALITY_PROFILES.muscle;
+  return profiles[Math.max(0, Math.min(phase, profiles.length - 1))];
+}
+
+function isRestLikeDay(day) {
+  const focus = day.focus?.toLowerCase() || '';
+  return focus.includes('dinlenme') || focus.includes('rest') || focus.includes('off') || focus.includes('descanso');
+}
+
+function exerciseNameIncludes(exercise, keywords) {
+  const name = exercise.name?.toLowerCase() || '';
+  return keywords.some((keyword) => name.includes(keyword));
+}
+
+function inferDayGoal(day, goal) {
+  const focus = day.focus?.toLowerCase() || '';
+  if (isRestLikeDay(day)) return 'Toparlanma';
+  if (goal === 'meditation') return 'Zihinsel toparlanma';
+  if (goal === 'yoga') return focus.includes('restore') || focus.includes('restoratif') ? 'Restoratif mobilite' : 'Mobilite + denge';
+  if (goal === 'pilates') return focus.includes('core') ? 'Core kontrolü' : 'Kontrollü kuvvet';
+  if (goal === 'reformer') return 'Reformer kontrolü';
+  if (goal === 'fat_loss') {
+    if (focus.includes('kardiyo') || focus.includes('cardio')) return 'Kondisyon';
+    if (focus.includes('toparlanma')) return 'Aktif toparlanma';
+    return 'Kas koruma + enerji harcaması';
+  }
+  if (focus.includes('güç') || focus.includes('strength')) return 'Kuvvet';
+  if (focus.includes('hipertrofi')) return 'Hipertrofi';
+  return 'Kas gelişimi';
+}
+
+function getWarmup(goal, phase, day) {
+  if (isRestLikeDay(day)) return '5-10 dk rahat yürüyüş veya nefes + mobilite';
+  if (goal === 'meditation') return '1 dk rahat oturuş, burundan sakin nefes';
+  if (goal === 'yoga') return phase < 2 ? 'Eklem daireleri + cat-cow + 3 sakin nefes' : 'Eklem hazırlığı + bilek/omuz/kalça aktivasyonu';
+  if (goal === 'pilates') return 'Nefes, pelvis nötrleme ve 3 dk omurga mobilizasyonu';
+  if (goal === 'reformer') return 'Yay kontrolü, carriage stabilitesi ve hafif footwork';
+  if (goal === 'fat_loss') return phase === 0 ? '5 dk tempolu yürüyüş + temel eklem mobilitesi' : '5-8 dk düşük tempo kardiyo + dinamik mobilite';
+  return '5-8 dk hafif kardiyo + çalışılacak ekleme özel ısınma setleri';
+}
+
+function getCooldown(goal, day) {
+  if (isRestLikeDay(day)) return 'Erken uyku, hafif yürüyüş ve su hedefini tamamla.';
+  if (goal === 'meditation') return 'Son 1 dk nefesi doğal bırak, kısa not al.';
+  if (goal === 'yoga') return 'Savasana veya legs up the wall ile 3-5 dk bitir.';
+  if (goal === 'pilates' || goal === 'reformer') return 'Child pose, mermaid veya nazik omurga rotasyonu ile bitir.';
+  if (goal === 'fat_loss') return '5 dk düşük tempo yürüyüş ve burundan nefesle nabzı düşür.';
+  return 'Hafif esneme + 5 dk düşük tempo yürüyüş.';
+}
+
+function applyEvidenceBasedExerciseSafety(day, goal, phase) {
+  let nextDay = { ...day, exercises: [...(day.exercises || [])] };
+  if (isRestLikeDay(nextDay)) return nextDay;
+
+  if (goal === 'fat_loss' && phase === 0) {
+    const hasHighImpact = nextDay.exercises.some((exercise) => exerciseNameIncludes(exercise, FAT_LOSS_BEGINNER_HIGH_IMPACT))
+      || /hiit|sprint|conditioning|metabolik/i.test(nextDay.focus || '');
+    if (hasHighImpact) {
+      const isCardioDay = /kardiyo|cardio|conditioning|metabolik|hiit/i.test(nextDay.focus || '');
+      nextDay = {
+        ...nextDay,
+        focus: isCardioDay ? 'Düşük Yoğunluk Kardiyo + Mobilite' : 'Temel Güç + Düşük Yoğunluk Kardiyo',
+        emoji: isCardioDay ? '🚶' : nextDay.emoji,
+        exercises: isCardioDay
+          ? QUALITY_FALLBACK_EXERCISES.fatLossLiss.map((exercise) => ({ ...exercise }))
+          : QUALITY_FALLBACK_EXERCISES.fatLossBeginnerStrength.map((exercise) => ({ ...exercise })),
+      };
+    }
+  }
+
+  if (goal === 'yoga' && phase <= 1) {
+    const filtered = nextDay.exercises.filter((exercise) => !exerciseNameIncludes(exercise, UNSAFE_YOGA_FOUNDATION));
+    if (filtered.length !== nextDay.exercises.length) {
+      nextDay = {
+        ...nextDay,
+        focus: nextDay.focus.replace('İnversiyon Hazırlık', 'Omuz Stabilitesi + Güvenli Ters Duruş Hazırlığı'),
+        exercises: [
+          ...filtered,
+          ...QUALITY_FALLBACK_EXERCISES.yogaFoundation.map((exercise) => ({ ...exercise })),
+        ].slice(0, Math.max(4, filtered.length)),
+      };
+    }
+  }
+
+  if (goal === 'reformer') {
+    if (phase === 0) {
+      const filtered = nextDay.exercises.filter((exercise) => !exerciseNameIncludes(exercise, UNSAFE_REFORMER_FOUNDATION));
+      if (filtered.length !== nextDay.exercises.length || filtered.length < 4) {
+        nextDay = {
+          ...nextDay,
+          focus: nextDay.focus.replace('Core & Tam Vücut', 'Core Kontrol + Reformer Temeli'),
+          exercises: [
+            ...filtered,
+            ...QUALITY_FALLBACK_EXERCISES.reformerFoundation.map((exercise) => ({ ...exercise })),
+          ].slice(0, 5),
+        };
+      }
+    }
+    if (phase === 3 && /tower|cadillac|wunda/i.test(nextDay.focus || '')) {
+      nextDay = {
+        ...nextDay,
+        focus: 'Reformer-Only Master Kontrol',
+        emoji: '🏆',
+        exercises: QUALITY_FALLBACK_EXERCISES.reformerMasterOnly.map((exercise) => ({ ...exercise })),
+      };
+    }
+  }
+
+  return nextDay;
+}
+
+function enhanceWorkoutQuality(workoutSplit, goal, phase) {
+  const profile = getQualityProfile(goal, phase);
+  return workoutSplit.map((day) => {
+    const safeDay = applyEvidenceBasedExerciseSafety(day, goal, phase);
+    const restDay = isRestLikeDay(safeDay);
+    return {
+      ...safeDay,
+      isRest: restDay,
+      quality: {
+        goal: inferDayGoal(safeDay, goal),
+        difficulty: profile.difficulty,
+        expectedDuration: restDay ? '10-30 dk opsiyonel toparlanma' : profile.expectedDuration,
+        intensity: restDay ? 'Çok hafif' : profile.intensity,
+        warmup: getWarmup(goal, phase, safeDay),
+        cooldown: getCooldown(goal, safeDay),
+        progressionRule: profile.progressionRule,
+        regressionOption: profile.regressionOption,
+        safetyNotes: profile.safetyNotes,
+      },
+    };
+  });
+}
+
+function buildPlanQualitySummary(goal, phase) {
+  const profile = getQualityProfile(goal, phase);
+  return {
+    phaseName: PHASE_LABELS[phase] || profile.difficulty,
+    weeklyTarget: profile.weeklyTarget,
+    intensity: profile.intensity,
+    progressionRule: profile.progressionRule,
+    regressionOption: profile.regressionOption,
+    safetyNotes: profile.safetyNotes,
+  };
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1891,6 +2321,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   // ── Egzersiz-Focus doğrulaması ──
   // Her günün egzersizlerinin focus alanıyla uyumlu olmasını garanti et
   workoutSplit = validateAndFixExercises(workoutSplit);
+  workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
 
   // Her gün için özel beslenme planı oluştur
   const dailyNutrition = workoutSplit.map((day) => {
@@ -1957,6 +2388,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     userWorkSchedule: workSchedule,
     // Faz bilgisi
     phase: safePhase,
+    planQuality: buildPlanQualitySummary(primaryGoal, safePhase),
     // Hesaplanan değerler
     dailyCalories: baseCalories,
     bmr: Math.round(bmr),

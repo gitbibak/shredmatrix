@@ -271,6 +271,29 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo }) {
               className="overflow-hidden"
             >
               <div className="px-4 pb-4 flex flex-col gap-2">
+                {day.quality && (
+                  <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-3">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                        <Info size={13} />
+                        {day.quality.goal}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800">
+                        {day.quality.expectedDuration}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800">
+                        {day.quality.intensity}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-1.5 text-[11px] leading-relaxed text-slate-400">
+                      <p><span className="text-slate-300 font-semibold">{t('workout.warmup')}:</span> {day.quality.warmup}</p>
+                      <p><span className="text-slate-300 font-semibold">{t('workout.progression')}:</span> {day.quality.progressionRule}</p>
+                      <p><span className="text-slate-300 font-semibold">{t('workout.regression')}:</span> {day.quality.regressionOption}</p>
+                      <p><span className="text-slate-300 font-semibold">{t('workout.safety')}:</span> {day.quality.safetyNotes}</p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Column labels */}
                 <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-slate-500 px-3 pb-1">
                   <span>{t('workout.totalExercises')}</span>

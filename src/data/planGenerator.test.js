@@ -2,19 +2,27 @@ import { describe, expect, it } from 'vitest';
 import { generatePlan, PLAN_VERSION } from './planGenerator';
 
 describe('planGenerator safety personalization', () => {
+  const baseMetrics = {
+    name: 'Test User',
+    age: 30,
+    gender: 'male',
+    height: 180,
+    weight: 82,
+    bodyFatPercentage: 18,
+    experience: 'beginner',
+    activityLevel: 'moderate',
+    primaryGoal: 'muscle',
+    workSchedule: ['flexible'],
+    budget: 'moderate',
+    healthConditions: ['none'],
+    allergies: ['none'],
+  };
+
   it('carries health and allergy choices into the generated plan', () => {
     const plan = generatePlan({
-      name: 'Test User',
-      age: 30,
-      gender: 'male',
-      height: 180,
-      weight: 82,
-      bodyFatPercentage: 18,
+      ...baseMetrics,
       experience: 'intermediate',
-      activityLevel: 'moderate',
       primaryGoal: 'muscle',
-      workSchedule: ['flexible'],
-      budget: 'moderate',
       healthConditions: ['knee_issue', 'back_pain'],
       allergies: ['lactose', 'gluten'],
     }, 0, 'tr');
@@ -36,19 +44,10 @@ describe('planGenerator safety personalization', () => {
 
   it('filters risky exercise name variants for selected health conditions', () => {
     const plan = generatePlan({
-      name: 'Test User',
-      age: 30,
-      gender: 'male',
-      height: 180,
-      weight: 82,
-      bodyFatPercentage: 18,
+      ...baseMetrics,
       experience: 'advanced',
-      activityLevel: 'moderate',
       primaryGoal: 'muscle',
-      workSchedule: ['flexible'],
-      budget: 'moderate',
       healthConditions: ['knee_issue', 'back_pain'],
-      allergies: ['none'],
     }, 0, 'tr');
 
     const exerciseNames = plan.workoutSplit
@@ -66,5 +65,111 @@ describe('planGenerator safety personalization', () => {
     ];
 
     expect(exerciseNames.some((name) => blocked.some((blockedName) => name.includes(blockedName)))).toBe(false);
+  });
+
+  it('adds quality guidance to every module and level', () => {
+    const goals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
+
+    for (const goal of goals) {
+      for (const phase of [0, 1, 2, 3]) {
+        const plan = generatePlan({
+          ...baseMetrics,
+          primaryGoal: goal,
+          experience: phase === 0 ? 'beginner' : 'intermediate',
+        }, phase, 'tr');
+
+        expect(plan.planQuality).toEqual(expect.objectContaining({
+          phaseName: expect.any(String),
+          weeklyTarget: expect.any(String),
+          progressionRule: expect.any(String),
+          regressionOption: expect.any(String),
+          safetyNotes: expect.any(String),
+        }));
+
+        plan.workoutSplit.forEach((day) => {
+          expect(day.quality).toEqual(expect.objectContaining({
+            goal: expect.any(String),
+            difficulty: expect.any(String),
+            expectedDuration: expect.any(String),
+            intensity: expect.any(String),
+            warmup: expect.any(String),
+            cooldown: expect.any(String),
+            progressionRule: expect.any(String),
+            regressionOption: expect.any(String),
+            safetyNotes: expect.any(String),
+          }));
+        });
+      }
+    }
+  });
+
+  it('keeps beginner fat-loss plans low impact and strength-retention focused', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'fat_loss',
+      experience: 'beginner',
+    }, 0, 'tr');
+
+    const planText = plan.workoutSplit
+      .flatMap((day) => [day.focus, ...(day.exercises || []).map((exercise) => exercise.name)])
+      .join(' ')
+      .toLowerCase();
+
+    ['burpee', 'box jump', 'jump lunge', 'jump squat', 'sprint', 'battle ropes', 'hiit'].forEach((keyword) => {
+      expect(planText).not.toContain(keyword);
+    });
+
+    expect(plan.planQuality.weeklyTarget).toContain('3 güç');
+  });
+
+  it('keeps foundation yoga and intermediate yoga away from neck-loaded inversions', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'yoga',
+      experience: 'intermediate',
+    }, 1, 'tr');
+
+    const planText = plan.workoutSplit
+      .flatMap((day) => [day.focus, ...(day.exercises || []).map((exercise) => exercise.name)])
+      .join(' ')
+      .toLowerCase();
+
+    ['headstand', 'sirsasana', 'shoulder stand', 'sarvangasana', 'kapalabhati'].forEach((keyword) => {
+      expect(planText).not.toContain(keyword);
+    });
+  });
+
+  it('keeps reformer beginner plans on stable reformer-only basics', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'reformer',
+      experience: 'beginner',
+    }, 0, 'tr');
+
+    const planText = plan.workoutSplit
+      .flatMap((day) => [day.focus, ...(day.exercises || []).map((exercise) => exercise.name)])
+      .join(' ')
+      .toLowerCase();
+
+    ['short spine', 'snake', 'control balance', 'headstand', 'jump', 'tower', 'cadillac', 'wunda'].forEach((keyword) => {
+      expect(planText).not.toContain(keyword);
+    });
+  });
+
+  it('keeps expert reformer plans reformer-only until equipment selection exists', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'reformer',
+      experience: 'expert',
+    }, 3, 'tr');
+
+    const planText = plan.workoutSplit
+      .flatMap((day) => [day.focus, ...(day.exercises || []).map((exercise) => exercise.name)])
+      .join(' ')
+      .toLowerCase();
+
+    ['tower', 'cadillac', 'wunda chair'].forEach((keyword) => {
+      expect(planText).not.toContain(keyword);
+    });
   });
 });
