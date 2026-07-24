@@ -9,7 +9,7 @@ const itemV = {
 };
 
 /* ── Goal key mapping ── */
-function resolveGoalKey(goal) {
+export function resolveGoalKey(goal) {
   if (!goal) return 'muscle';
   const g = goal.toLowerCase();
   if (g.includes('yağ') || g.includes('fat')) return 'fat_loss';
@@ -69,7 +69,7 @@ const supplementMeta = {
 };
 
 /* ── Build translated supplement data ── */
-function buildSupplements(t, goalKey) {
+export function buildSupplements(t, goalKey) {
   const meta = supplementMeta[goalKey] || supplementMeta.muscle;
   return meta.map((m, i) => ({
     ...m,

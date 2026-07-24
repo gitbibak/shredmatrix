@@ -5,6 +5,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
+import { buildSupplements, resolveGoalKey } from './SupplementGuide';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -18,6 +19,7 @@ import {
   Activity,
   Info,
   BookOpen,
+  Pill,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -54,6 +56,33 @@ function isRestDay(day) {
     focus.includes('off') ||
     focus.includes('descanso')
   );
+}
+
+function scheduleMatches(schedule, keywords) {
+  const text = String(schedule || '').toLowerCase();
+  return keywords.some((keyword) => text.includes(keyword));
+}
+
+function buildWorkoutSupplementAdvice(supplements) {
+  const before = supplements
+    .filter((item) => scheduleMatches(item.schedule, ['öncesi', 'pre-workout', 'pre workout', 'before']))
+    .slice(0, 2);
+  const during = supplements
+    .filter((item) => scheduleMatches(item.schedule, ['sırası', 'during']))
+    .slice(0, 1);
+  const after = supplements
+    .filter((item) => scheduleMatches(item.schedule, ['sonrası', 'post-workout', 'post workout', 'after']))
+    .slice(0, 2);
+
+  const fallback = supplements
+    .filter((item) => item.importance === 'high')
+    .slice(0, 2);
+
+  return {
+    before,
+    during,
+    after: after.length ? after : fallback,
+  };
 }
 
 function ExerciseRow({ exercise, index, t, onShowDemo }) {
@@ -396,6 +425,11 @@ export default function WorkoutPanel({ plan }) {
   const [celebration, setCelebration] = useState(null);
   const [demoExercise, setDemoExercise] = useState(null);
   const toast = useToast();
+  const planGoal = plan?.goal || '';
+  const supplementAdvice = useMemo(() => {
+    const goalKey = resolveGoalKey(planGoal);
+    return buildWorkoutSupplementAdvice(buildSupplements(t, goalKey));
+  }, [planGoal, t]);
 
   // Load completed workouts from dataService
   useEffect(() => {
@@ -475,6 +509,7 @@ export default function WorkoutPanel({ plan }) {
         focus,
         exercises: (day.exercises || []).length,
         sets: (day.exercises || []).reduce((s, ex) => s + (parseInt(ex.sets) || 4), 0),
+        supplementAdvice,
       });
     } catch {
       toast.error(t('errors.saveFailed'));
@@ -665,6 +700,55 @@ export default function WorkoutPanel({ plan }) {
                   <p className="text-[9px] text-slate-500">{t('celebration.complete')}</p>
                 </div>
               </motion.div>
+
+              {celebration.supplementAdvice && (
+                <motion.div
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.72 }}
+                  className="mb-5 text-left rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Pill size={14} className="text-emerald-300" />
+                    <p className="text-[11px] font-bold font-outfit text-emerald-200">
+                      {t('workout.supplementTitle')}
+                    </p>
+                  </div>
+
+                  {[
+                    { key: 'before', label: t('workout.beforeWorkout'), items: celebration.supplementAdvice.before },
+                    { key: 'during', label: t('workout.duringWorkout'), items: celebration.supplementAdvice.during },
+                    { key: 'after', label: t('workout.afterWorkout'), items: celebration.supplementAdvice.after },
+                  ].filter((group) => group.items?.length > 0).map((group) => (
+                    <div key={group.key} className="mb-2 last:mb-0">
+                      <p className="text-[9px] uppercase tracking-wider font-semibold text-slate-400 mb-1">
+                        {group.label}
+                      </p>
+                      <div className="space-y-1">
+                        {group.items.map((item) => (
+                          <div key={`${group.key}-${item.name}`} className="rounded-xl bg-slate-950/70 border border-slate-800/70 px-2.5 py-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-[11px] font-bold text-white truncate">
+                                {item.emoji} {item.name}
+                              </p>
+                              <span className="text-[9px] text-emerald-300 shrink-0">
+                                {item.dose}
+                              </span>
+                            </div>
+                            <p className="text-[9px] text-slate-500 mt-0.5 leading-relaxed">
+                              {item.schedule} · {item.why}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <p className="text-[9px] text-amber-200/80 leading-relaxed mt-2">
+                    {t('workout.supplementMedical')}
+                  </p>
+                </motion.div>
+              )}
 
               {/* Motivational quote */}
               <motion.p
