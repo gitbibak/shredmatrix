@@ -123,7 +123,7 @@ function toggleMultiValue(values, value, noneValue = 'none') {
 // ═════════════════════════════════════════════════════════
 // Onboarding Component
 // ═════════════════════════════════════════════════════════
-export default function Onboarding({ onSubmit }) {
+export default function Onboarding({ onSubmit, initialData = null, resetDraftKey = 0 }) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -201,6 +201,21 @@ export default function Onboarding({ onSubmit }) {
 
   // Restore on mount
   useEffect(() => {
+    if (initialData) {
+      setName(initialData.name || '');
+      setAge(initialData.age || 25);
+      setGender(initialData.gender || 'male');
+      setHeight(initialData.height || 175);
+      setWeight(initialData.weight || 75);
+      setExperience(initialData.experience || 'intermediate');
+      setActivityLevel(initialData.activityLevel || 'moderate');
+      setPrimaryGoal(initialData.primaryGoal || 'muscle');
+      setHealthConditions(Array.isArray(initialData.healthConditions) && initialData.healthConditions.length ? initialData.healthConditions : ['none']);
+      setAllergies(Array.isArray(initialData.allergies) && initialData.allergies.length ? initialData.allergies : ['none']);
+      setStep(0);
+      return;
+    }
+
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (saved) {
@@ -217,7 +232,7 @@ export default function Onboarding({ onSubmit }) {
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
       }
     } catch (err) { console.warn('[Onboarding] restore:', err); }
-  }, []);
+  }, [initialData, resetDraftKey]);
 
   // Save on every change
   useEffect(() => {
@@ -265,6 +280,12 @@ export default function Onboarding({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const allergyStepIndex = STEP_IDS.indexOf('allergies');
+    if (step < allergyStepIndex) {
+      setDirection(1);
+      setStep((current) => Math.min(current + 1, allergyStepIndex));
+      return;
+    }
     if (step < STEPS.length - 1) {
       nextStep();
       return;

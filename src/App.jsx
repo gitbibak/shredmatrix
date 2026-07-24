@@ -367,6 +367,8 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [plan, setPlan] = useState(null);
   const [pendingFormData, setPendingFormData] = useState(null);
+  const [onboardingInitialData, setOnboardingInitialData] = useState(null);
+  const [onboardingResetKey, setOnboardingResetKey] = useState(0);
   const [showTour, setShowTour] = useState(false);
 
   // Upgrade stale plans at load time
@@ -534,12 +536,31 @@ function AppContent() {
   };
 
   const handleSubmit = (formData) => {
+    setOnboardingInitialData(null);
     setPendingFormData(formData);
     navigate('/loading', { replace: true });
   };
 
   const handleBack = () => {
-    setPlan(null);
+    if (plan) {
+      setOnboardingInitialData({
+        name: plan.userName,
+        age: plan.userAge,
+        gender: plan.userGender,
+        height: plan.userHeight,
+        weight: plan.userWeight,
+        bodyFatPercentage: plan.userBodyFat,
+        experience: plan.userExperience,
+        activityLevel: plan.userActivityLevel,
+        primaryGoal: goalMap[plan.goal] || 'muscle',
+        workSchedule: plan.userWorkSchedule || ['flexible'],
+        budget: plan.userBudget || 'moderate',
+        healthConditions: plan.healthConditions || ['none'],
+        allergies: plan.allergies || ['none'],
+      });
+    }
+    try { localStorage.removeItem('fb_onboarding_draft'); } catch (err) { console.warn('[App]', err?.message || err); }
+    setOnboardingResetKey((key) => key + 1);
     navigate('/onboarding', { replace: true });
   };
 
@@ -582,7 +603,11 @@ function AppContent() {
             <Route path="/onboarding" element={
               <ProtectedRoute user={user}>
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-                  <Onboarding onSubmit={handleSubmit} />
+                  <Onboarding
+                    onSubmit={handleSubmit}
+                    initialData={onboardingInitialData}
+                    resetDraftKey={onboardingResetKey}
+                  />
                 </motion.div>
               </ProtectedRoute>
             } />
