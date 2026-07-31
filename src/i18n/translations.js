@@ -510,6 +510,12 @@ export const translations = {
       welcome: { hi: 'Hoş geldin,', subtitle: 'Hazırız, başlayalım!' },
       share: 'Paylaş', logout: 'Çıkış',
       quickStats: { title: 'Hızlı Özet', goal: 'Hedef', dailyCal: 'Günlük Kalori', training: 'Antrenman', daysWeek: 'gün/hafta', programAge: 'Program Yaşı', days: 'gün' },
+      todayActions: {
+        workout: { title: 'Antrenman', desc: 'Bugünkü programını aç' },
+        nutrition: { title: 'Beslenme', desc: 'Öğünlerini ve suyu takip et' },
+        progress: { title: 'İlerleme', desc: 'Kilo, ölçü ve raporları gör' },
+        profile: { title: 'Profil', desc: 'Hedef ve bilgilerini yönet' },
+      },
       athlete: 'Sporcu',
       footer: '© 2026 Full Balance — Kişisel Antrenman & Beslenme Programı',
     },
@@ -531,6 +537,8 @@ export const translations = {
       legendToday: 'Bugün',
       legendDone: 'Tamamlandı',
       legendRest: 'Dinlenme',
+      showWeek: 'Haftayı göster',
+      hideWeek: 'Haftayı gizle',
     },
 
     // ── Nutrition ──
@@ -1481,6 +1489,12 @@ export const translations = {
       welcome: { hi: 'Welcome,', subtitle: 'Ready to go!' },
       share: 'Share', logout: 'Logout',
       quickStats: { title: 'Quick Stats', goal: 'Goal', dailyCal: 'Daily Calories', training: 'Training', daysWeek: 'days/week', programAge: 'Program Age', days: 'days' },
+      todayActions: {
+        workout: { title: 'Workout', desc: "Open today's plan" },
+        nutrition: { title: 'Nutrition', desc: 'Track meals and water' },
+        progress: { title: 'Progress', desc: 'View weight, measures and reports' },
+        profile: { title: 'Profile', desc: 'Manage goals and details' },
+      },
       athlete: 'Athlete',
       footer: '© 2026 Full Balance — Personal Workout & Nutrition Program',
     },
@@ -1502,6 +1516,8 @@ export const translations = {
       legendToday: 'Today',
       legendDone: 'Done',
       legendRest: 'Rest',
+      showWeek: 'Show week',
+      hideWeek: 'Hide week',
     },
     nutrition: {
       title: 'Nutrition Plan', macroDistribution: 'Macro Distribution',
@@ -2388,6 +2404,12 @@ export const translations = {
       welcome: { hi: 'Bienvenido,', subtitle: '¡Vamos a empezar!' },
       share: 'Compartir', logout: 'Salir',
       quickStats: { title: 'Resumen Rápido', goal: 'Objetivo', dailyCal: 'Calorías Diarias', training: 'Entrenamiento', daysWeek: 'días/semana', programAge: 'Edad del Plan', days: 'días' },
+      todayActions: {
+        workout: { title: 'Entreno', desc: 'Abrir el plan de hoy' },
+        nutrition: { title: 'Nutrición', desc: 'Registrar comidas y agua' },
+        progress: { title: 'Progreso', desc: 'Ver peso, medidas e informes' },
+        profile: { title: 'Perfil', desc: 'Gestionar metas y datos' },
+      },
       athlete: 'Atleta',
       footer: '© 2026 Full Balance — Programa Personal de Entrenamiento y Nutrición',
     },
@@ -2409,6 +2431,8 @@ export const translations = {
       legendToday: 'Hoy',
       legendDone: 'Hecho',
       legendRest: 'Descanso',
+      showWeek: 'Mostrar semana',
+      hideWeek: 'Ocultar semana',
     },
     nutrition: {
       title: 'Plan Nutricional', macroDistribution: 'Distribución de Macros',

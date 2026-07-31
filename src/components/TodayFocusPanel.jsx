@@ -7,6 +7,7 @@ import {
   Dumbbell,
   Flame,
   Moon,
+  ChevronDown,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs } from '../lib/dataService';
@@ -77,6 +78,7 @@ function getWeekRows(plan, workoutDates) {
 export default function TodayFocusPanel({ plan, onNavigate }) {
   const { t, lang } = useTranslation();
   const [logs, setLogs] = useState([]);
+  const [showWeek, setShowWeek] = useState(false);
 
   useEffect(() => {
     getWorkoutLogs()
@@ -125,9 +127,9 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-5 overflow-hidden"
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 overflow-hidden"
     >
-      <div className="flex items-start justify-between gap-4 mb-5">
+      <div className="flex items-start justify-between gap-4 mb-4">
         <div className="flex items-start gap-3 min-w-0">
           <div className="p-2 rounded-xl bg-orange-500/10 border border-orange-500/20 shrink-0">
             {restToday ? (
@@ -140,10 +142,10 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
             <p className="text-[10px] uppercase tracking-wide font-bold text-orange-400 mb-1">
               {t('todayFocus.eyebrow')}
             </p>
-            <h2 className="text-2xl sm:text-3xl font-outfit font-extrabold text-white leading-tight">
+            <h2 className="text-xl sm:text-2xl font-outfit font-extrabold text-white leading-tight">
               {title}
             </h2>
-            <p className="text-sm text-slate-400 leading-relaxed mt-2">
+            <p className="text-sm text-slate-400 leading-relaxed mt-1.5">
               {subtitle}
             </p>
           </div>
@@ -155,47 +157,25 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5">
+      <div className="grid grid-cols-3 gap-2 mb-4">
         <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
           <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.weekTarget')}</p>
-          <p className="text-lg font-outfit font-bold text-white">
+          <p className="text-base sm:text-lg font-outfit font-bold text-white">
             {completedThisWeek}/{trainingDays || 0}
           </p>
         </div>
         <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
           <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.remaining')}</p>
-          <p className="text-lg font-outfit font-bold text-white">
+          <p className="text-base sm:text-lg font-outfit font-bold text-white">
             {remainingWorkouts}
           </p>
         </div>
-        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 col-span-2 sm:col-span-1">
+        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
           <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.todayLoad')}</p>
-          <p className="text-lg font-outfit font-bold text-white">
+          <p className="text-base sm:text-lg font-outfit font-bold text-white truncate">
             {restToday ? t('todayFocus.rest') : `${todayExerciseCount} ${t('todayFocus.exercise')}`}
           </p>
         </div>
-      </div>
-
-      <div className="grid grid-cols-7 gap-1.5 mb-5">
-        {weekRows.map((row, index) => (
-          <div
-            key={row.key}
-            className={[
-              'min-h-[56px] rounded-xl border px-1 py-2 text-center flex flex-col items-center justify-center gap-1',
-              statusClass[row.status],
-            ].join(' ')}
-            title={row.dayPlan?.focus || ''}
-          >
-            <span className="text-[9px] font-semibold">{dayLabels[index]}</span>
-            {row.completed ? (
-              <CheckCircle2 size={15} />
-            ) : row.rest ? (
-              <Moon size={14} />
-            ) : (
-              <Dumbbell size={14} />
-            )}
-          </div>
-        ))}
       </div>
 
       <button
@@ -207,14 +187,46 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         <ArrowRight size={16} />
       </button>
 
-      <div className="mt-4 flex flex-wrap gap-2 text-[10px] text-slate-500">
-        <span className="inline-flex items-center gap-1">
-          <CalendarCheck size={12} className="text-orange-400" />
-          {t('todayFocus.legendToday')}
-        </span>
-        <span>{t('todayFocus.legendDone')}</span>
-        <span>{t('todayFocus.legendRest')}</span>
-      </div>
+      <button
+        type="button"
+        onClick={() => setShowWeek((value) => !value)}
+        className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-300 transition-colors"
+      >
+        <CalendarCheck size={13} />
+        {showWeek ? t('todayFocus.hideWeek') : t('todayFocus.showWeek')}
+        <ChevronDown size={13} className={`transition-transform ${showWeek ? 'rotate-180' : ''}`} />
+      </button>
+
+      {showWeek && (
+        <div className="mt-3">
+          <div className="grid grid-cols-7 gap-1.5">
+            {weekRows.map((row, index) => (
+              <div
+                key={row.key}
+                className={[
+                  'min-h-[52px] rounded-xl border px-1 py-2 text-center flex flex-col items-center justify-center gap-1',
+                  statusClass[row.status],
+                ].join(' ')}
+                title={row.dayPlan?.focus || ''}
+              >
+                <span className="text-[9px] font-semibold">{dayLabels[index]}</span>
+                {row.completed ? (
+                  <CheckCircle2 size={15} />
+                ) : row.rest ? (
+                  <Moon size={14} />
+                ) : (
+                  <Dumbbell size={14} />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-[10px] text-slate-500">
+            <span>{t('todayFocus.legendToday')}</span>
+            <span>{t('todayFocus.legendDone')}</span>
+            <span>{t('todayFocus.legendRest')}</span>
+          </div>
+        </div>
+      )}
     </motion.section>
   );
 }
