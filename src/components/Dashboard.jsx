@@ -130,6 +130,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [showWelcome, setShowWelcome] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
+  const [showProgressDetails, setShowProgressDetails] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [daysSinceJoin] = useState(() => {
     try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch (err) { console.warn('[Dashboard]', err?.message || err); return 0; }
@@ -478,15 +479,32 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
                     <StreakCalendar />
-                    <StravaActivitiesPanel />
-                    <WeeklyReport plan={plan} />
-                    <MonthlyReport plan={plan} />
-                    <BodyMeasurements />
                   </motion.div>
                 </div>
-                <div className="mt-6 space-y-6">
-                  <Achievements plan={plan} user={user} />
-                  <Leaderboard plan={plan} />
+                <div className="mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setShowProgressDetails((value) => !value)}
+                    className="w-full flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 text-left text-sm font-outfit font-bold text-slate-300 hover:border-slate-700 transition-colors"
+                  >
+                    <span>{showProgressDetails ? t('dashboard.progressDetails.hide') : t('dashboard.progressDetails.show')}</span>
+                    <ChevronDown size={16} className={`text-slate-500 transition-transform ${showProgressDetails ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {showProgressDetails && (
+                    <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      <div className="lg:col-span-2 space-y-6">
+                        <WeeklyReport plan={plan} />
+                        <MonthlyReport plan={plan} />
+                        <Achievements plan={plan} user={user} />
+                      </div>
+                      <div className="space-y-6">
+                        <BodyMeasurements />
+                        <StravaActivitiesPanel />
+                        <Leaderboard plan={plan} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
               </Suspense>
