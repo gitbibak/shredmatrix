@@ -1026,6 +1026,10 @@ export default function LandingPage({ onStart }) {
             <Link to="/terms" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
               {t('auth.termsLink') || 'Kullanım Şartları'}
             </Link>
+            <span className="text-slate-800">•</span>
+            <Link to="/contact" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
+              {t('contact.link')}
+            </Link>
           </div>
         </div>
       </footer>

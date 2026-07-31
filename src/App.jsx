@@ -21,6 +21,7 @@ const TermsOfService = lazy(() => import('./components/TermsOfService'));
 const StravaCallback = lazy(() => import('./components/StravaCallback'));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
@@ -635,6 +636,12 @@ function AppContent() {
             <Route path="/terms" element={
               <motion.div key="terms" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                 <TermsOfService />
+              </motion.div>
+            } />
+
+            <Route path="/contact" element={
+              <motion.div key="contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <ContactPage />
               </motion.div>
             } />
 

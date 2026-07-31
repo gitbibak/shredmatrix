@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Mail, Ruler, Dumbbell, Flame, Wallet, Clock,
@@ -872,6 +873,17 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             </div>
           </motion.button>
         )}
+
+        <Link
+          to="/contact"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 transition-colors cursor-pointer"
+        >
+          <Mail size={16} className="text-emerald-400" />
+          <div className="text-left">
+            <p className="text-sm font-semibold">{t('profile.contactSupport')}</p>
+            <p className="text-[10px] text-slate-400">{t('profile.contactSupportDesc')}</p>
+          </div>
+        </Link>
 
         {/* Danger zone */}
         <div className="mt-4 p-4 rounded-xl border border-red-500/20 bg-red-500/5">
