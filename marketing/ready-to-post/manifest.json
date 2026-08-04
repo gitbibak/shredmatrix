@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-08-04T19:19:11.426Z",
+  "staticAssets": [
+    "assets/reels-cover-01-6-modul-tr.svg",
+    "assets/reels-cover-02-kas-gelisimi-tr.svg",
+    "assets/reels-cover-03-wellness-tr.svg",
+    "assets/pin-01-6-modul-tr.svg",
+    "assets/pin-02-kas-gelisimi-tr.svg",
+    "assets/pin-03-yag-yakimi-tr.svg"
+  ],
+  "pngExports": [
+    "png/reels-cover-01-6-modul-tr.png",
+    "png/reels-cover-02-kas-gelisimi-tr.png",
+    "png/reels-cover-03-wellness-tr.png",
+    "png/pin-01-6-modul-tr.png",
+    "png/pin-02-kas-gelisimi-tr.png",
+    "png/pin-03-yag-yakimi-tr.png"
+  ],
+  "animatedVideos": [
+    "videos/video-01-6-modul-tr.svg",
+    "videos/video-02-kas-gelisimi-tr.svg",
+    "videos/video-03-wellness-tr.svg"
+  ],
+  "note": "SVG video files are 15-second animated vertical creatives. Open in a browser, screen-record, or import into a design/video tool for MP4 export."
+}
