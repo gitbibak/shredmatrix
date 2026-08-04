@@ -3,7 +3,7 @@
 Bu klasor onceki uzun pazarlama planinin sade, kullanima hazir halidir.
 
 Ilk bakilacak dosya:
-- `review.html` — tum kapaklari, pinleri ve 15 saniyelik animasyonlari tek sayfada gosterir.
+- `review.html` — tum kapaklari, pinleri ve video dosyalarini tek sayfada gosterir.
 
 ## Hemen Kullanilacak Dosyalar
 
@@ -16,47 +16,47 @@ Bu dosyalar hazir gorseldir. Direkt TikTok/Reels kapagi, Instagram postu veya Pi
    - Ust mesaj: "6 modul tek uygulama"
    - Paylasim zamani: Bugun 20:30.
 
-2. `png/reels-cover-02-kas-gelisimi-tr.png`
-   - Konu: Kas gelisimi, antrenman, protein, ilerleme.
+2. `png/reels-cover-02-antrenman-tr.png`
+   - Konu: Antrenman programi, set, tekrar, dinlenme.
    - Paylasim zamani: Yarin 12:15.
 
-3. `png/reels-cover-03-wellness-tr.png`
-   - Konu: Yoga, pilates, reformer, meditasyon.
+3. `png/reels-cover-03-beslenme-tr.png`
+   - Konu: Beslenme, kalori, makro, su takibi.
    - Paylasim zamani: Yarin 20:30.
 
 4. `png/pin-01-6-modul-tr.png`
    - Pinterest ana pin.
 
-5. `png/pin-02-kas-gelisimi-tr.png`
-   - Pinterest kas gelisimi pini.
+5. `png/pin-02-antrenman-tr.png`
+   - Pinterest antrenman pini.
 
-6. `png/pin-03-yag-yakimi-tr.png`
-   - Pinterest yag yakimi pini.
+6. `png/pin-03-beslenme-tr.png`
+   - Pinterest beslenme pini.
 
-### 15 Saniyelik Animasyonlu Video Dosyalari
+### 15 Saniyelik MP4 Video Dosyalari
 
-1. `videos/video-01-6-modul-tr.svg`
-2. `videos/video-02-kas-gelisimi-tr.svg`
-3. `videos/video-03-wellness-tr.svg`
+1. `mp4/video-01-6-modul-tr.mp4`
+2. `mp4/video-02-antrenman-tr.mp4`
+3. `mp4/video-03-beslenme-tr.mp4`
 
-Bu dosyalar 15 saniyelik animasyonlu dikey SVG'dir. Tarayicida acildiginda video gibi oynar. TikTok/Reels icin MP4 gerekiyorsa SVG'yi Canva/CapCut'a aktarip MP4 olarak disari al veya ekrani 15 saniye kaydet.
+Bu dosyalar TikTok, Instagram Reels ve Pinterest video pin icin dogrudan kullanilabilir 1080x1920 MP4 dosyalaridir.
 
 ### Kaynak SVG Dosyalari
 
 Metin veya renk degistirmek gerekirse kaynak dosyalar:
 
 - `assets/reels-cover-01-6-modul-tr.svg`
-- `assets/reels-cover-02-kas-gelisimi-tr.svg`
-- `assets/reels-cover-03-wellness-tr.svg`
+- `assets/reels-cover-02-antrenman-tr.svg`
+- `assets/reels-cover-03-beslenme-tr.svg`
 - `assets/pin-01-6-modul-tr.svg`
-- `assets/pin-02-kas-gelisimi-tr.svg`
-- `assets/pin-03-yag-yakimi-tr.svg`
+- `assets/pin-02-antrenman-tr.svg`
+- `assets/pin-03-beslenme-tr.svg`
 
 ## Ilk 3 Gun Paylasim Sirasi
 
 ### Gun 1
 
-- 20:30 TikTok + Reels: `video-01-6-modul-tr.svg`
+- 20:30 TikTok + Reels: `mp4/video-01-6-modul-tr.mp4`
 - Kapak: `png/reels-cover-01-6-modul-tr.png`
 - Pinterest: `png/pin-01-6-modul-tr.png`
 
@@ -68,27 +68,27 @@ Hashtag:
 
 ### Gun 2
 
-- 12:15 TikTok + Reels: `video-02-kas-gelisimi-tr.svg`
-- Kapak: `png/reels-cover-02-kas-gelisimi-tr.png`
-- Pinterest: `png/pin-02-kas-gelisimi-tr.png`
+- 12:15 TikTok + Reels: `mp4/video-02-antrenman-tr.mp4`
+- Kapak: `png/reels-cover-02-antrenman-tr.png`
+- Pinterest: `png/pin-02-antrenman-tr.png`
 
 Caption:
-"Kas gelişimi sadece antrenman listesi değil. Protein, antrenman, uyku, su ve ilerlemeyi tek yerde takip et."
+"Antrenman programı karışmasın. Günün egzersizlerini, setleri, tekrarları ve dinlenme sürelerini tek ekranda takip et."
 
 Hashtag:
-`#kasgelisimi #fitnessprogrami #protein #fullbalance`
+`#antrenmanprogrami #fitnessprogrami #fullbalance`
 
 ### Gun 3
 
-- 20:30 TikTok + Reels: `video-03-wellness-tr.svg`
-- Kapak: `png/reels-cover-03-wellness-tr.png`
-- Pinterest: `png/pin-03-yag-yakimi-tr.png`
+- 20:30 TikTok + Reels: `mp4/video-03-beslenme-tr.mp4`
+- Kapak: `png/reels-cover-03-beslenme-tr.png`
+- Pinterest: `png/pin-03-beslenme-tr.png`
 
 Caption:
-"Full Balance sadece fitness değil. Yoga, pilates, reformer, meditasyon ve günlük alışkanlık takibi de var."
+"Beslenme takibi sade olsun. Kalori, makro, su ve günlük hedeflerini Full Balance içinde takip et."
 
 Hashtag:
-`#yoga #pilates #meditasyon #wellness #fullbalance`
+`#beslenmeprogrami #kaloritakibi #fitnessuygulamasi #fullbalance`
 
 ## Neden Bu Paket Daha Dogru?
 

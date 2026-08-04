@@ -1,25 +1,30 @@
 {
-  "generatedAt": "2026-08-04T19:19:11.426Z",
-  "staticAssets": [
-    "assets/reels-cover-01-6-modul-tr.svg",
-    "assets/reels-cover-02-kas-gelisimi-tr.svg",
-    "assets/reels-cover-03-wellness-tr.svg",
-    "assets/pin-01-6-modul-tr.svg",
-    "assets/pin-02-kas-gelisimi-tr.svg",
-    "assets/pin-03-yag-yakimi-tr.svg"
-  ],
+  "generatedAt": "2026-08-04T19:32:52.456Z",
   "pngExports": [
     "png/reels-cover-01-6-modul-tr.png",
-    "png/reels-cover-02-kas-gelisimi-tr.png",
-    "png/reels-cover-03-wellness-tr.png",
+    "png/reels-cover-02-antrenman-tr.png",
+    "png/reels-cover-03-beslenme-tr.png",
     "png/pin-01-6-modul-tr.png",
-    "png/pin-02-kas-gelisimi-tr.png",
-    "png/pin-03-yag-yakimi-tr.png"
+    "png/pin-02-antrenman-tr.png",
+    "png/pin-03-beslenme-tr.png"
   ],
-  "animatedVideos": [
-    "videos/video-01-6-modul-tr.svg",
-    "videos/video-02-kas-gelisimi-tr.svg",
-    "videos/video-03-wellness-tr.svg"
+  "sourceSvgs": [
+    "assets/reels-cover-01-6-modul-tr.svg",
+    "assets/reels-cover-02-antrenman-tr.svg",
+    "assets/reels-cover-03-beslenme-tr.svg",
+    "assets/pin-01-6-modul-tr.svg",
+    "assets/pin-02-antrenman-tr.svg",
+    "assets/pin-03-beslenme-tr.svg"
   ],
-  "note": "SVG video files are 15-second animated vertical creatives. Open in a browser, screen-record, or import into a design/video tool for MP4 export."
+  "videoHtml": [
+    "videos/video-01-6-modul-tr.html",
+    "videos/video-02-antrenman-tr.html",
+    "videos/video-03-beslenme-tr.html"
+  ],
+  "mp4Exports": [
+    "mp4/video-01-6-modul-tr.mp4",
+    "mp4/video-02-antrenman-tr.mp4",
+    "mp4/video-03-beslenme-tr.mp4"
+  ],
+  "note": "Use png/ for static posts and mp4/ for TikTok, Instagram Reels and Pinterest video pins. The videos/ HTML files are editable motion sources."
 }
