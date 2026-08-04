@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Dumbbell, UtensilsCrossed, TrendingUp, Timer, Award,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import { trackShare } from '../lib/analytics';
 
 /* ── animation presets ── */
 const fadeUp = {
@@ -87,6 +89,7 @@ function SectionHeader({ tag, title, titleAccent, desc, idx = 0 }) {
    ──────────────────────────────────────────── */
 export default function LandingPage({ onStart }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
+  const [shareCopied, setShareCopied] = useState(false);
   const tx = (key, fallback) => {
     const value = t(key);
     return value && value !== key ? value : fallback;
@@ -175,13 +178,44 @@ export default function LandingPage({ onStart }) {
 
   const seoTopics = [
     { to: '/ucretsiz-fitness-uygulamasi', label: 'Ücretsiz fitness uygulaması' },
+    { to: '/kas-gelisimi-programi', label: 'Kas gelişimi programı' },
+    { to: '/yag-yakimi-programi', label: 'Yağ yakımı programı' },
+    { to: '/ucretsiz-beslenme-programi', label: 'Ücretsiz beslenme programı' },
     { to: '/kalori-makro-takibi', label: 'Kalori ve makro takibi' },
+    { to: '/protein-ihtiyaci-hesaplama', label: 'Protein ihtiyacı hesaplama' },
+    { to: '/bmi-hesaplama', label: 'BMI hesaplama' },
     { to: '/antrenman-programi', label: 'Kişisel antrenman programı' },
     { to: '/ilerleme-takibi', label: 'İlerleme ve gelişim takibi' },
     { to: '/su-uyku-kilo-takibi', label: 'Su, uyku ve kilo takibi' },
+    { to: '/yoga-uygulamasi', label: 'Yoga uygulaması' },
+    { to: '/pilates-programi', label: 'Pilates programı' },
+    { to: '/reformer-pilates-programi', label: 'Reformer pilates programı' },
+    { to: '/meditasyon-uygulamasi', label: 'Meditasyon uygulaması' },
+    { to: '/alerjiye-gore-beslenme-programi', label: 'Alerjiye göre beslenme' },
     { to: '/yoga-pilates-reformer', label: 'Yoga, pilates ve reformer' },
     { to: '/excel-rapor-disari-aktarma', label: 'Excel ve rapor dışa aktarma' },
   ];
+
+  const handleShare = async () => {
+    const shareData = {
+      title: 'Full Balance',
+      text: 'Tamamen ücretsiz kişisel fitness, beslenme, yoga, pilates, reformer, meditasyon ve ilerleme takip uygulaması.',
+      url: 'https://fullbalance.app/',
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        trackShare('native_landing');
+        return;
+      }
+      await navigator.clipboard?.writeText(shareData.url);
+      setShareCopied(true);
+      trackShare('copy_landing');
+      setTimeout(() => setShareCopied(false), 2200);
+    } catch (err) {
+      console.warn('[LandingPage]', err?.message || err);
+    }
+  };
 
   /* ── 6 goals ── */
   const goals = [
@@ -386,6 +420,14 @@ export default function LandingPage({ onStart }) {
               {t('landing.ctaStart') || 'Ücretsiz Başla'}
               <ChevronRight size={16} />
             </motion.button>
+            <button
+              type="button"
+              onClick={handleShare}
+              className="flex items-center gap-2 px-6 py-4 rounded-xl border border-slate-700/70 bg-slate-900/60 text-slate-200 text-sm font-bold font-outfit hover:border-blue-500/40 hover:text-blue-300 transition-colors"
+            >
+              <ArrowRight size={15} />
+              {shareCopied ? 'Link kopyalandı' : 'Arkadaşına gönder'}
+            </button>
             <span className="flex items-center gap-1.5 text-slate-500 text-xs">
               <Shield size={12} />
               {tx('landing.noCard', 'Kredi kartı yok · premium duvarı yok')}
@@ -982,6 +1024,13 @@ export default function LandingPage({ onStart }) {
           >
             {t('landing.ctaGenerate') || 'Ücretsiz Başla — Hemen'}
           </motion.button>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="mt-4 block mx-auto rounded-xl border border-slate-700/60 px-7 py-3 text-xs font-outfit font-bold text-slate-300 hover:border-blue-500/40 hover:text-blue-300 transition-colors"
+          >
+            {shareCopied ? 'Paylaşım linki kopyalandı' : 'Full Balance linkini paylaş'}
+          </button>
 
           <motion.div custom={5} variants={fadeUp}
             initial="hidden" whileInView="visible" viewport={{ once: true }}

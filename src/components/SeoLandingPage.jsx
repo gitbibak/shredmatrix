@@ -3,11 +3,13 @@ import { Link, Navigate } from 'react-router-dom';
 import {
   Award,
   BarChart3,
+  Brain,
   CheckCircle2,
   ChevronRight,
   Dumbbell,
   FileDown,
   Flame,
+  Leaf,
   Moon,
   Scale,
   Shield,
@@ -162,6 +164,206 @@ const pages = {
       ['Hangi veriler aktarılır?', 'Kilo, ölçümler, su, uyku, antrenman ve ilerleme verileri aktarılabilir.'],
     ],
   },
+  'kas-gelisimi-programi': {
+    icon: Dumbbell,
+    accent: '#f97316',
+    title: 'Kas Gelişimi',
+    titleAccent: 'Programı',
+    metaTitle: 'Kas Gelişimi Programı | Ücretsiz Full Balance',
+    description: 'Kas gelişimi için hedefe göre antrenman, kalori fazlası, protein hedefi, progresif yüklenme ve ilerleme takibi sunan ücretsiz uygulama.',
+    keywords: 'kas gelişimi programı, hipertrofi programı, kas yapmak için uygulama, protein hedefi, bulk programı',
+    heroCopy: 'Kas kazanmak isteyen kullanıcılar için antrenman, beslenme ve ölçüm takibini tek ücretsiz planda birleştir.',
+    sections: [
+      { title: 'Hedefe göre hipertrofi planı', body: 'Deneyim seviyesine göre set, tekrar, dinlenme ve haftalık split yapısı daha anlaşılır hale gelir.' },
+      { title: 'Kalori fazlası ve protein hedefi', body: 'BMR, TDEE ve günlük kalori hesabı üzerinden kas gelişimini destekleyen makro hedefleri oluşturulur.' },
+      { title: 'Ölçüm ve güç takibi', body: 'Kilo, vücut ölçüleri ve antrenman kayıtlarıyla gelişim sadece hisse değil veriye bağlanır.' },
+    ],
+    faqs: [
+      ['Kas yapmak için ne takip edilmeli?', 'Antrenman devamlılığı, progresif yüklenme, protein hedefi, kalori fazlası, uyku ve ölçüm değişimi birlikte takip edilmelidir.'],
+      ['Yeni başlayanlar kullanabilir mi?', 'Evet. Full Balance başlangıç, orta, ileri ve usta fazlarına göre program mantığı sunar.'],
+      ['Kas gelişimi planı ücretsiz mi?', 'Evet. Kas gelişimi hedefi ve takip özellikleri ücretsizdir.'],
+    ],
+  },
+  'yag-yakimi-programi': {
+    icon: Flame,
+    accent: '#ef4444',
+    title: 'Yağ Yakımı',
+    titleAccent: 'Programı',
+    metaTitle: 'Yağ Yakımı Programı | Ücretsiz Full Balance',
+    description: 'Yağ yakımı için kalori açığı, antrenman planı, su, uyku, kilo trendi ve haftalık ilerleme takibi sunan ücretsiz uygulama.',
+    keywords: 'yağ yakımı programı, kilo verme uygulaması, kalori açığı, yağ kaybı, ücretsiz diyet takip',
+    heroCopy: 'Kilo verme sürecini tek günlük tartı sonucuna değil; kalori, antrenman, uyku, su ve trend verisine göre yönet.',
+    sections: [
+      { title: 'Kalori açığı mantığı', body: 'Günlük enerji ihtiyacına göre sürdürülebilir hedef oluşturulur; aşırı kısıtlama yerine takip edilebilir düzen kurulur.' },
+      { title: 'Direnç + kondisyon dengesi', body: 'Yağ yakımı hedefinde kas kaybını azaltmak için direnç antrenmanı ve kondisyon birlikte düşünülür.' },
+      { title: 'Haftalık trend takibi', body: 'Kilo dalgalanmaları yerine haftalık değişim, su, uyku ve antrenman devamlılığı birlikte görünür.' },
+    ],
+    faqs: [
+      ['Yağ yakımı için sadece kardiyo yeterli mi?', 'Genellikle hayır. Direnç antrenmanı, kalori açığı, protein hedefi ve uyku birlikte daha sürdürülebilir sonuç verir.'],
+      ['Kalori hedefi kişisel mi?', 'Evet. Boy, kilo, yaş, cinsiyet, aktivite ve hedef bilgilerine göre hesaplanır.'],
+      ['Yağ yakımı programı ücretsiz mi?', 'Evet. Full Balance yağ yakımı programını ücretsiz sunar.'],
+    ],
+  },
+  'yoga-uygulamasi': {
+    icon: Leaf,
+    accent: '#22c55e',
+    title: 'Yoga',
+    titleAccent: 'Uygulaması',
+    metaTitle: 'Ücretsiz Yoga Uygulaması | Full Balance',
+    description: 'Yoga, mobilite, esneklik, nefes ve toparlanma odağıyla kişisel wellness planı sunan ücretsiz Full Balance uygulaması.',
+    keywords: 'ücretsiz yoga uygulaması, yoga programı, esneklik uygulaması, mobilite programı, nefes egzersizi',
+    heroCopy: 'Yoga pratiğini sadece video izlemekten çıkar; hedef, süre, devamlılık ve toparlanma takibiyle düzenli hale getir.',
+    sections: [
+      { title: 'Esneklik ve mobilite', body: 'Günlük akışlar vücudu hazırlama, hareket açıklığı ve kontrollü nefes odağıyla planlanır.' },
+      { title: 'Düzenli pratik takibi', body: 'Haftalık seri ve günlük görevlerle yoga alışkanlığı daha görünür hale gelir.' },
+      { title: 'Wellness ile birleşir', body: 'Uyku, su, meditasyon ve toparlanma takibi yoga hedefini destekler.' },
+    ],
+    faqs: [
+      ['Full Balance yoga için uygun mu?', 'Evet. Yoga hedefi; esneklik, mobilite, nefes ve düzenli pratik odağıyla desteklenir.'],
+      ['Yoga uygulaması ücretsiz mi?', 'Evet. Yoga hedefi ücretsizdir.'],
+      ['Yeni başlayanlar yoga yapabilir mi?', 'Evet. Başlangıç seviyesine uygun akış mantığı desteklenir.'],
+    ],
+  },
+  'pilates-programi': {
+    icon: Target,
+    accent: '#ec4899',
+    title: 'Pilates',
+    titleAccent: 'Programı',
+    metaTitle: 'Ücretsiz Pilates Programı | Full Balance',
+    description: 'Pilates için core, postür, kontrollü hareket, devamlılık ve gelişim takibini birleştiren ücretsiz Full Balance programı.',
+    keywords: 'pilates programı, ücretsiz pilates uygulaması, mat pilates, core programı, postür egzersizleri',
+    heroCopy: 'Pilates hedefini core, postür ve kontrollü ilerleme odağıyla takip edilebilir bir programa dönüştür.',
+    sections: [
+      { title: 'Core ve postür odağı', body: 'Pilates planı merkez bölge, denge, kontrollü hareket ve duruş farkındalığı üzerine kurulur.' },
+      { title: 'Başlangıçtan ileri seviyeye', body: 'Faz mantığıyla kullanıcı kapasitesine göre kademeli ilerleme sağlanır.' },
+      { title: 'Takip ve motivasyon', body: 'Seri, hedef kartları ve ölçüm takibi pilates alışkanlığını canlı tutar.' },
+    ],
+    faqs: [
+      ['Pilates programı kimler için uygun?', 'Core, postür, denge ve kontrollü hareket geliştirmek isteyen kullanıcılar için uygundur.'],
+      ['Mat pilates destekleniyor mu?', 'Evet. Pilates hedefi mat pilates mantığıyla kullanılabilir.'],
+      ['Pilates programı ücretsiz mi?', 'Evet. Full Balance pilates programını ücretsiz sunar.'],
+    ],
+  },
+  'reformer-pilates-programi': {
+    icon: Target,
+    accent: '#06b6d4',
+    title: 'Reformer Pilates',
+    titleAccent: 'Programı',
+    metaTitle: 'Reformer Pilates Programı | Full Balance',
+    description: 'Reformer pilates hedefi için direnç, kontrollü progresyon, core, postür ve haftalık takip yapısı sunan ücretsiz uygulama.',
+    keywords: 'reformer pilates programı, reformer uygulaması, reformer takip, pilates reformer planı',
+    heroCopy: 'Reformer çalışmalarını rastgele seanslardan çıkarıp direnç, devamlılık ve hedef takibiyle daha planlı hale getir.',
+    sections: [
+      { title: 'Direnç ve kontrol', body: 'Reformer hedefinde hareket kontrolü, core stabilitesi ve direnç progresyonu öne çıkar.' },
+      { title: 'Haftalık plan mantığı', body: 'Kullanıcı seanslarını ve toparlanmasını haftalık düzende görebilir.' },
+      { title: 'Wellness ile destek', body: 'Uyku, su, ölçüm ve gelişim takibi reformer sürecini tamamlar.' },
+    ],
+    faqs: [
+      ['Reformer hedefi var mı?', 'Evet. Full Balance içinde reformer hedefi bulunur.'],
+      ['Reformer programı ücretsiz mi?', 'Evet. Reformer hedefi ücretsizdir.'],
+      ['Takip yapılabilir mi?', 'Evet. Antrenman, su, uyku, kilo ve ölçüm takibi yapılabilir.'],
+    ],
+  },
+  'meditasyon-uygulamasi': {
+    icon: Brain,
+    accent: '#8b5cf6',
+    title: 'Meditasyon',
+    titleAccent: 'Uygulaması',
+    metaTitle: 'Ücretsiz Meditasyon Uygulaması | Full Balance',
+    description: 'Meditasyon, nefes, uyku, stres yönetimi ve günlük devamlılık takibini destekleyen ücretsiz wellness uygulaması.',
+    keywords: 'ücretsiz meditasyon uygulaması, nefes egzersizi, stres yönetimi, uyku meditasyonu, mindfulness',
+    heroCopy: 'Zihinsel denge hedefini nefes, uyku, günlük seri ve wellness alışkanlıklarıyla takip edilebilir hale getir.',
+    sections: [
+      { title: 'Nefes ve farkındalık', body: 'Meditasyon hedefi nefes, odak ve zihinsel toparlanma alışkanlığı oluşturmayı destekler.' },
+      { title: 'Uyku ile bağlantı', body: 'Uyku kaydı ve toparlanma takibi meditasyon pratiğinin etkisini daha görünür hale getirir.' },
+      { title: 'Günlük devamlılık', body: 'Challenge, seri ve motivasyon kartları düzenli pratik oluşturmayı kolaylaştırır.' },
+    ],
+    faqs: [
+      ['Meditasyon hedefi fitness uygulamasında neden var?', 'Full Balance sadece kas veya kilo değil; beden, zihin, uyku ve devamlılığı birlikte ele alır.'],
+      ['Nefes egzersizleri destekleniyor mu?', 'Evet. Meditasyon hedefi nefes ve farkındalık pratiğiyle desteklenir.'],
+      ['Meditasyon uygulaması ücretsiz mi?', 'Evet. Meditasyon hedefi ücretsizdir.'],
+    ],
+  },
+  'bmi-hesaplama': {
+    icon: Scale,
+    accent: '#0ea5e9',
+    title: 'BMI',
+    titleAccent: 'Hesaplama',
+    metaTitle: 'BMI Hesaplama ve Kilo Takibi | Full Balance',
+    description: 'BMI, kilo, vücut ölçüsü, yağ oranı ve hedefe göre ilerleme takibini ücretsiz yapan Full Balance sağlık ve fitness uygulaması.',
+    keywords: 'BMI hesaplama, vücut kitle indeksi, kilo takip uygulaması, ideal kilo takibi',
+    heroCopy: 'BMI tek başına yeterli değildir; kilo, ölçü, yağ oranı, uyku, su ve antrenman verileriyle daha anlamlı takip yap.',
+    sections: [
+      { title: 'BMI başlangıç göstergesi', body: 'Boy ve kilo bilgisiyle vücut kitle indeksi hesaplanır; ancak karar tek metrikle verilmez.' },
+      { title: 'Kilo ve ölçü birlikte', body: 'Kullanıcı kilo trendini vücut ölçüleri ve yağ oranı ile birlikte takip eder.' },
+      { title: 'Hedefe göre yorumlama', body: 'Kas gelişimi, yağ yakımı veya wellness hedefi BMI yorumunu farklılaştırır.' },
+    ],
+    faqs: [
+      ['BMI tek başına yeterli mi?', 'Hayır. BMI genel bir göstergedir; yağ oranı, kas kütlesi, ölçüler ve sağlık durumu birlikte değerlendirilmelidir.'],
+      ['Full Balance BMI hesaplar mı?', 'Evet. Profil bilgileriyle BMI, BMR ve TDEE gibi temel değerler hesaplanır.'],
+      ['BMI hesaplama ücretsiz mi?', 'Evet. Full Balance ücretsizdir.'],
+    ],
+  },
+  'protein-ihtiyaci-hesaplama': {
+    icon: UtensilsCrossed,
+    accent: '#22c55e',
+    title: 'Protein İhtiyacı',
+    titleAccent: 'Hesaplama',
+    metaTitle: 'Protein İhtiyacı Hesaplama | Full Balance',
+    description: 'Kas gelişimi ve yağ yakımı hedeflerine göre protein, kalori ve makro hedefleri oluşturan ücretsiz beslenme takip uygulaması.',
+    keywords: 'protein ihtiyacı hesaplama, günlük protein hedefi, makro hesaplama, kas gelişimi beslenme',
+    heroCopy: 'Günlük protein hedefini tahmine bırakma; hedef, kilo ve aktiviteye göre makro planına bağla.',
+    sections: [
+      { title: 'Hedefe göre protein', body: 'Kas gelişimi ve yağ yakımı hedeflerinde protein ihtiyacı farklı önceliklerle ele alınır.' },
+      { title: 'Makro planıyla birlikte', body: 'Protein, karbonhidrat ve yağ hedefleri günlük kalori ihtiyacına göre dengelenir.' },
+      { title: 'Beslenme planına dönüşür', body: 'Hesaplanan hedefler 7 günlük menü ve takip mantığına bağlanır.' },
+    ],
+    faqs: [
+      ['Protein hedefi kişisel mi?', 'Evet. Kilo, hedef ve aktivite bilgileri dikkate alınır.'],
+      ['Sadece protein mi hesaplanır?', 'Hayır. Kalori, karbonhidrat, yağ, BMR, TDEE ve BMI de desteklenir.'],
+      ['Protein hesaplama ücretsiz mi?', 'Evet. Ücretsizdir.'],
+    ],
+  },
+  'ucretsiz-beslenme-programi': {
+    icon: UtensilsCrossed,
+    accent: '#16a34a',
+    title: 'Ücretsiz Beslenme',
+    titleAccent: 'Programı',
+    metaTitle: 'Ücretsiz Beslenme Programı | Full Balance',
+    description: 'Hedefe, bütçeye, alerji ve sağlık bilgilerine göre kişisel beslenme planı oluşturmaya yardımcı ücretsiz Full Balance uygulaması.',
+    keywords: 'ücretsiz beslenme programı, diyet programı ücretsiz, makro takip, alerjiye göre beslenme',
+    heroCopy: 'Beslenmeyi sadece kalori hesabı olarak değil; hedef, bütçe, alerji, sağlık bilgisi ve sürdürülebilirlik ile planla.',
+    sections: [
+      { title: 'Bütçeye göre öneriler', body: 'Ekonomik, orta ve premium tercihlere göre daha uygulanabilir yemek seçenekleri sunulur.' },
+      { title: 'Alerji ve sağlık bilgisi', body: 'Kullanıcının işaretlediği alerji ve sağlık durumları plan üretiminde dikkate alınır.' },
+      { title: 'Makro takibi', body: 'Protein, karbonhidrat ve yağ hedefleri günlük plana bağlanır.' },
+    ],
+    faqs: [
+      ['Beslenme programı ücretsiz mi?', 'Evet. Full Balance ücretsizdir.'],
+      ['Alerji bilgisi soruluyor mu?', 'Evet. Onboarding içinde sağlık ve alerji bilgileri alınır.'],
+      ['Bütçeye göre plan yapılır mı?', 'Evet. Bütçe tercihi planlamaya dahil edilir.'],
+    ],
+  },
+  'alerjiye-gore-beslenme-programi': {
+    icon: Shield,
+    accent: '#f59e0b',
+    title: 'Alerjiye Göre',
+    titleAccent: 'Beslenme Programı',
+    metaTitle: 'Alerjiye Göre Beslenme Programı | Full Balance',
+    description: 'Alerji ve sağlık bilgilerini dikkate alarak daha güvenli beslenme planı oluşturmaya yardımcı ücretsiz uygulama.',
+    keywords: 'alerjiye göre beslenme, laktoz intoleransı beslenme, gluten hassasiyeti, beslenme planı',
+    heroCopy: 'Kullanıcının alerji ve sağlık bilgilerini programa dahil ederek daha güvenli ve uygulanabilir öneriler oluştur.',
+    sections: [
+      { title: 'Alerji seçimi', body: 'Kullanıcı gluten, laktoz, kuruyemiş, deniz ürünü gibi bilgileri işaretleyebilir.' },
+      { title: 'Sağlık koşulları', body: 'Bel, diz, omuz, kalp/tansiyon gibi bilgiler egzersiz ve beslenme önerilerini etkiler.' },
+      { title: 'Uyarı ve güvenlik', body: 'Full Balance tıbbi tavsiye değildir; ciddi durumlarda uzman görüşü önerilir.' },
+    ],
+    faqs: [
+      ['Alerji bilgisi plana dahil mi?', 'Evet. Kullanıcının seçtiği alerjiler plan üretiminde dikkate alınır.'],
+      ['Bu tıbbi tavsiye mi?', 'Hayır. Full Balance tıbbi teşhis veya tedavi aracı değildir.'],
+      ['Alerjiye göre beslenme ücretsiz mi?', 'Evet. Ücretsizdir.'],
+    ],
+  },
 };
 
 const supportCards = [
@@ -171,6 +373,20 @@ const supportCards = [
   { icon: Scale, text: 'Kişisel metrikler' },
   { icon: Moon, text: 'Uyku ve toparlanma' },
   { icon: Flame, text: 'Hedef odaklı plan' },
+];
+
+const relatedLinks = [
+  ['kas-gelisimi-programi', 'Kas gelişimi'],
+  ['yag-yakimi-programi', 'Yağ yakımı'],
+  ['ucretsiz-beslenme-programi', 'Beslenme programı'],
+  ['protein-ihtiyaci-hesaplama', 'Protein hesabı'],
+  ['bmi-hesaplama', 'BMI hesabı'],
+  ['yoga-uygulamasi', 'Yoga'],
+  ['pilates-programi', 'Pilates'],
+  ['reformer-pilates-programi', 'Reformer'],
+  ['meditasyon-uygulamasi', 'Meditasyon'],
+  ['ilerleme-takibi', 'İlerleme takibi'],
+  ['excel-rapor-disari-aktarma', 'Rapor dışa aktar'],
 ];
 
 function upsertMeta(selector, createAttrs, content) {
@@ -238,6 +454,39 @@ function useSeo(page, slug) {
               text: answer,
             },
           })),
+        },
+        {
+          '@type': 'BreadcrumbList',
+          '@id': `${url}#breadcrumb`,
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Full Balance',
+              item: BASE_URL,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: page.metaTitle,
+              item: url,
+            },
+          ],
+        },
+        {
+          '@type': ['WebApplication', 'SoftwareApplication'],
+          '@id': `${BASE_URL}/#app`,
+          name: 'Full Balance',
+          url: BASE_URL,
+          applicationCategory: 'HealthApplication',
+          operatingSystem: 'Web, iOS, Android, PWA',
+          isAccessibleForFree: true,
+          description: 'Full Balance is a free fitness, wellness, nutrition and progress tracking app for muscle growth, fat loss, yoga, pilates, reformer and meditation.',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+          },
         },
       ],
     });
@@ -334,6 +583,35 @@ export default function SeoLandingPage({ slug }) {
               <p className="mt-3 text-sm leading-relaxed text-slate-400">{section.body}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="px-4 py-14">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-7 text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-400">Daha Fazla Arama</p>
+            <h2 className="mt-3 font-outfit text-3xl font-extrabold text-white">Hedefine Göre Devam Et</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-500">
+              Full Balance sadece tek bir fitness aracı değil; beslenme, antrenman, wellness ve ilerleme takibini aynı ücretsiz deneyimde birleştirir.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedLinks
+              .filter(([linkSlug]) => linkSlug !== canonicalSlug)
+              .slice(0, 8)
+              .map(([linkSlug, label]) => (
+                <Link
+                  key={linkSlug}
+                  to={`/${linkSlug}`}
+                  className="group rounded-2xl border border-slate-800/70 bg-slate-900/45 p-4 transition-colors hover:border-orange-500/45 hover:bg-slate-900"
+                >
+                  <span className="font-outfit text-sm font-bold text-white group-hover:text-orange-300">{label}</span>
+                  <span className="mt-3 flex items-center gap-1 text-xs font-semibold text-slate-500 group-hover:text-blue-300">
+                    Sayfayı aç <ChevronRight size={13} />
+                  </span>
+                </Link>
+              ))}
+          </div>
         </div>
       </section>
 

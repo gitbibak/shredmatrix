@@ -31,6 +31,16 @@ const SEO_PAGE_SLUGS = [
   'su-uyku-kilo-takibi',
   'yoga-pilates-reformer',
   'excel-rapor-disari-aktarma',
+  'kas-gelisimi-programi',
+  'yag-yakimi-programi',
+  'yoga-uygulamasi',
+  'pilates-programi',
+  'reformer-pilates-programi',
+  'meditasyon-uygulamasi',
+  'bmi-hesaplama',
+  'protein-ihtiyaci-hesaplama',
+  'ucretsiz-beslenme-programi',
+  'alerjiye-gore-beslenme-programi',
 ];
 
 // ── Error Boundary (P1-3) ────────────────────────────────────
