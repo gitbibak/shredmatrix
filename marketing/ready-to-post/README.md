@@ -5,6 +5,19 @@ Bu klasor onceki uzun pazarlama planinin sade, kullanima hazir halidir.
 Ilk bakilacak dosya:
 - `review.html` — tum kapaklari, pinleri ve video dosyalarini tek sayfada gosterir.
 
+## En Iyi Yeni Set
+
+Premium arka plan + gercek uygulama ekranli telefon mockup iceren final set:
+
+- `premium-final/png/premium-01-6-modul-tr.png`
+- `premium-final/png/premium-02-antrenman-tr.png`
+- `premium-final/png/premium-03-beslenme-tr.png`
+- `premium-final/mp4/premium-video-01-6-modul-tr.mp4`
+- `premium-final/mp4/premium-video-02-antrenman-tr.mp4`
+- `premium-final/mp4/premium-video-03-beslenme-tr.mp4`
+
+Ilk paylasimda once bu seti kullan. Eski `png/` ve `mp4/` klasorleri daha cok ekran kaniti icindir.
+
 ## Hemen Kullanilacak Dosyalar
 
 ### Dogrudan Paylasilabilir PNG Gorseller
