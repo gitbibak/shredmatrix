@@ -66,38 +66,52 @@ def draw_wrapped(draw, text, xy, max_width, fnt, fill, spacing=8):
     return y + fnt.size
 
 def chip(draw, text, x, y, color):
-    f = font(28)
+    f = font(32)
     tw = draw.textbbox((0, 0), text, font=f)[2]
-    draw.rounded_rectangle((x, y, x + tw + 48, y + 58), radius=29, fill=(13, 22, 39, 215), outline=color, width=2)
-    draw.text((x + 24, y + 13), text, font=f, fill=(238, 246, 255, 255))
-    return x + tw + 66
+    draw.rounded_rectangle((x, y, x + tw + 58, y + 66), radius=33, fill=(2, 7, 17, 245), outline=color, width=3)
+    draw.text((x + 29, y + 14), text, font=f, fill=(255, 255, 255, 255))
+    return x + tw + 78
 
 def make_card(name, title, subtitle, screen, chips, badge):
-    bg = cover(Image.open(BG), (W, H)).convert("RGBA")
-    overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    od = ImageDraw.Draw(overlay)
-    od.rectangle((0, 0, W, H), fill=(0, 0, 0, 38))
-    od.rectangle((0, 0, W, 620), fill=(0, 0, 0, 52))
-    bg.alpha_composite(overlay)
+    bg = Image.new("RGBA", (W, H), (4, 8, 20, 255))
+    base = ImageDraw.Draw(bg)
+    for y in range(H):
+        t = y / H
+        r = int(5 + 4 * t)
+        g = int(9 + 10 * t)
+        b = int(22 + 18 * t)
+        base.line((0, y, W, y), fill=(r, g, b, 255))
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    gd.ellipse((-220, 80, 520, 820), fill=(255, 122, 0, 58))
+    gd.ellipse((680, -120, 1320, 680), fill=(18, 216, 255, 42))
+    gd.ellipse((620, 910, 1260, 1690), fill=(139, 92, 246, 38))
+    glow = glow.filter(ImageFilter.GaussianBlur(70))
+    bg.alpha_composite(glow)
+    panel = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    od = ImageDraw.Draw(panel)
+    od.rounded_rectangle((42, 72, 1038, 590), radius=34, fill=(4, 10, 25, 238), outline=(255, 255, 255, 36), width=2)
+    od.rounded_rectangle((500, 560, 1024, 1668), radius=52, fill=(255, 255, 255, 18), outline=(255, 255, 255, 28), width=2)
+    bg.alpha_composite(panel)
     draw = ImageDraw.Draw(bg)
 
-    draw.text((64, 98), "FULL", font=font(42), fill=(255, 122, 0, 255))
-    draw.text((183, 98), "BALANCE", font=font(42), fill=(170, 205, 222, 255))
-    draw.rounded_rectangle((780, 74, 1018, 132), radius=29, fill=(35, 35, 30, 160), outline=(255, 122, 0, 180), width=2)
-    draw.text((900 - draw.textbbox((0,0), badge, font=font(23))[2] // 2, 92), badge, font=font(23), fill=(255, 220, 180, 255))
+    draw.text((72, 116), "FULL", font=font(46), fill=(255, 122, 0, 255))
+    draw.text((204, 116), "BALANCE", font=font(46), fill=(192, 224, 240, 255))
+    draw.rounded_rectangle((750, 84, 1008, 148), radius=32, fill=(255, 122, 0, 255))
+    draw.text((879 - draw.textbbox((0,0), badge, font=font(25))[2] // 2, 103), badge, font=font(25), fill=(255, 255, 255, 255))
 
-    draw_wrapped(draw, title, (64, 210), 850, font(76), (250, 252, 255, 255), 4)
-    draw_wrapped(draw, subtitle, (64, 405), 780, font(35), (194, 204, 222, 255), 8)
+    draw_wrapped(draw, title, (72, 220), 900, font(88), (255, 255, 255, 255), 4)
+    draw_wrapped(draw, subtitle, (76, 425), 870, font(38), (225, 234, 246, 255), 10)
 
-    paste_phone(bg, SRC / screen, 570, 560, 405, 878)
+    paste_phone(bg, SRC / screen, 520, 615, 470, 1018)
 
     x = 64
     for text, color in chips:
-        x = chip(draw, text, x, 1500, color)
+        x = chip(draw, text, x, 1582, color)
 
-    draw.rounded_rectangle((64, 1738, 1016, 1846), radius=30, fill=(255, 86, 0, 255))
+    draw.rounded_rectangle((64, 1742, 1016, 1856), radius=32, fill=(255, 86, 0, 255))
     cta = "Ücretsiz başla · fullbalance.app"
-    draw.text((540 - draw.textbbox((0,0), cta, font=font(38))[2] // 2, 1773), cta, font=font(38), fill=(255,255,255,255))
+    draw.text((540 - draw.textbbox((0,0), cta, font=font(40))[2] // 2, 1777), cta, font=font(40), fill=(255,255,255,255))
 
     path = PNG / name
     bg.convert("RGB").save(path, quality=95)
