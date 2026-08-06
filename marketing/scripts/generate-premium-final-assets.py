@@ -65,14 +65,7 @@ def draw_wrapped(draw, text, xy, max_width, fnt, fill, spacing=8):
         draw.text((x, y), line, font=fnt, fill=fill)
     return y + fnt.size
 
-def chip(draw, text, x, y, color):
-    f = font(32)
-    tw = draw.textbbox((0, 0), text, font=f)[2]
-    draw.rounded_rectangle((x, y, x + tw + 58, y + 66), radius=33, fill=(2, 7, 17, 245), outline=color, width=3)
-    draw.text((x + 29, y + 14), text, font=f, fill=(255, 255, 255, 255))
-    return x + tw + 78
-
-def make_card(name, title, subtitle, screen, chips, badge):
+def make_card(name, title, subtitle, screen, badge):
     bg = Image.new("RGBA", (W, H), (4, 8, 20, 255))
     base = ImageDraw.Draw(bg)
     for y in range(H):
@@ -91,7 +84,7 @@ def make_card(name, title, subtitle, screen, chips, badge):
     panel = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     od = ImageDraw.Draw(panel)
     od.rounded_rectangle((42, 72, 1038, 590), radius=34, fill=(4, 10, 25, 238), outline=(255, 255, 255, 36), width=2)
-    od.rounded_rectangle((500, 560, 1024, 1668), radius=52, fill=(255, 255, 255, 18), outline=(255, 255, 255, 28), width=2)
+    od.rounded_rectangle((512, 600, 1018, 1652), radius=52, fill=(255, 255, 255, 18), outline=(255, 255, 255, 28), width=2)
     bg.alpha_composite(panel)
     draw = ImageDraw.Draw(bg)
 
@@ -103,11 +96,7 @@ def make_card(name, title, subtitle, screen, chips, badge):
     draw_wrapped(draw, title, (72, 220), 900, font(88), (255, 255, 255, 255), 4)
     draw_wrapped(draw, subtitle, (76, 425), 870, font(38), (225, 234, 246, 255), 10)
 
-    paste_phone(bg, SRC / screen, 520, 615, 470, 1018)
-
-    x = 64
-    for text, color in chips:
-        x = chip(draw, text, x, 1582, color)
+    paste_phone(bg, SRC / screen, 535, 632, 438, 950)
 
     draw.rounded_rectangle((64, 1742, 1016, 1856), radius=32, fill=(255, 86, 0, 255))
     cta = "Ücretsiz başla · fullbalance.app"
@@ -123,7 +112,6 @@ cards = [
         "Sadece fitness değil",
         "Kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates tek uygulamada.",
         "dashboard-nutrition-mobile.png",
-        [("6 modül", (255,122,0,210)), ("ücretsiz", (18,216,255,210)), ("kredi kartı yok", (24,224,163,210))],
         "ÜCRETSİZ",
     ),
     make_card(
@@ -131,7 +119,6 @@ cards = [
         "Planı aç, bugünü tamamla",
         "Günün egzersizleri, set, tekrar ve dinlenme süreleri tek ekranda.",
         "dashboard-workout-mobile.png",
-        [("antrenman", (255,122,0,210)), ("set", (18,216,255,210)), ("dinlenme", (24,224,163,210))],
         "ANTRENMAN",
     ),
     make_card(
@@ -139,7 +126,6 @@ cards = [
         "Beslenme takibi sade olsun",
         "Kalori, makro, su ve uyku hedeflerini aynı akışta gör.",
         "dashboard-nutrition-mobile.png",
-        [("kalori", (255,122,0,210)), ("makro", (18,216,255,210)), ("su", (24,224,163,210))],
         "BESLENME",
     ),
 ]
