@@ -6,7 +6,10 @@ const STRAVA_AUTH_URL = 'https://www.strava.com/oauth/authorize';
 const STRAVA_API_BASE = 'https://api-v3.strava.com';
 const EDGE_FUNCTION_URL = 'https://ildknnvlhpipzakiadys.supabase.co/functions/v1/strava-auth';
 const STORAGE_KEY = 'fullbalance_strava';
-const REDIRECT_URI = `${window.location.origin}/strava/callback`;
+const REDIRECT_URI = import.meta.env.VITE_STRAVA_REDIRECT_URI
+  || (window.location.hostname === 'localhost'
+    ? `${window.location.origin}/strava/callback`
+    : 'https://fullbalance.app/strava/callback');
 
 // ── Token Storage ───────────────────────────────────────
 function getStoredTokens() {
@@ -35,8 +38,8 @@ export function startStravaAuth() {
     client_id: STRAVA_CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     response_type: 'code',
-    approval_prompt: 'auto',
-    scope: 'read,activity:read_all',
+    approval_prompt: 'force',
+    scope: 'read,activity:read',
   });
   window.location.href = `${STRAVA_AUTH_URL}?${params}`;
 }
@@ -50,7 +53,9 @@ export async function handleStravaCallback(code) {
 
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.error || 'Token exchange failed');
+    const detail = err?.details?.errors?.[0];
+    const detailMessage = detail ? `${detail.resource || 'Strava'} ${detail.field || ''} ${detail.code || ''}`.trim() : '';
+    throw new Error(err.message || err.error || detailMessage || 'Token exchange failed');
   }
 
   const data = await res.json();
