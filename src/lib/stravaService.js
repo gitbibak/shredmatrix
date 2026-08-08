@@ -1,9 +1,9 @@
 // ── Strava Integration Service ──────────────────────────
 // Handles OAuth flow, token management, and API calls
 
-const STRAVA_CLIENT_ID = '260461';
+const STRAVA_CLIENT_ID = import.meta.env.VITE_STRAVA_CLIENT_ID || '270765';
 const STRAVA_AUTH_URL = 'https://www.strava.com/oauth/authorize';
-const STRAVA_API_BASE = 'https://www.strava.com/api/v3';
+const STRAVA_API_BASE = 'https://api-v3.strava.com';
 const EDGE_FUNCTION_URL = 'https://ildknnvlhpipzakiadys.supabase.co/functions/v1/strava-auth';
 const STORAGE_KEY = 'fullbalance_strava';
 const REDIRECT_URI = `${window.location.origin}/strava/callback`;
