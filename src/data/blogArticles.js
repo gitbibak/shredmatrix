@@ -5,8 +5,11 @@ export const blogArticles = [
     description: 'Longevity kavramını, sağlıklı yaş alma yaklaşımını ve hareket, kuvvet, mobilite, uyku ile beslenme alışkanlıklarını sade bir rehberle öğrenin.',
     category: 'Longevity',
     publishedAt: '2026-08-10',
+    updatedAt: '2026-08-10',
     readTime: '7 dk',
     accent: '#10b981',
+    image: '/images/blog/longevity-habits.jpg',
+    imageAlt: 'Hareket, kuvvet, mobilite, su ve dengeli beslenme alışkanlıklarını birlikte uygulayan yetişkin',
     intro: 'Longevity, yalnızca daha uzun yaşama fikri değildir. Asıl amaç; günlük işlevleri, bağımsızlığı, hareket kabiliyetini ve yaşam kalitesini mümkün olduğunca uzun süre korumaktır.',
     sections: [
       {
@@ -70,8 +73,11 @@ export const blogArticles = [
     description: 'Kuvvet antrenmanının sağlıklı yaş alma planındaki yerini, başlangıç sıklığını, progresyonu ve güvenli uygulama ilkelerini öğrenin.',
     category: 'Antrenman',
     publishedAt: '2026-08-10',
+    updatedAt: '2026-08-10',
     readTime: '6 dk',
     accent: '#f97316',
+    image: '/images/blog/strength-healthy-aging.jpg',
+    imageAlt: 'Kontrollü kuvvet antrenmanı yapan yetişkin ve hareketini takip eden eğitmen',
     intro: 'Kuvvet antrenmanı yalnızca kas görünümü için değildir. Günlük hareketleri sürdürebilmek, yük taşıyabilmek ve hareket kapasitesini korumak için de önemli bir araçtır.',
     sections: [
       {
@@ -113,8 +119,11 @@ export const blogArticles = [
     description: 'Uyku ve toparlanma takibinde tek gecelik sonuçlar yerine haftalık eğilimi nasıl değerlendirebileceğinizi öğrenin.',
     category: 'Toparlanma',
     publishedAt: '2026-08-10',
+    updatedAt: '2026-08-10',
     readTime: '5 dk',
     accent: '#8b5cf6',
+    image: '/images/blog/sleep-recovery.jpg',
+    imageAlt: 'Düzenli uyku ve toparlanmayı temsil eden sakin bir yatak odasında uyuyan yetişkin',
     intro: 'Toparlanma, antrenmanın dışında kalan pasif bir dönem değildir. Uyku düzeni, günlük enerji ve dinlenme ihtiyacı programın uygulanabilirliğini doğrudan etkiler.',
     sections: [
       {
@@ -149,8 +158,11 @@ export const blogArticles = [
     description: 'Yoga, pilates, reformer ve mobilite çalışmalarını kuvvet ve toparlanma planıyla dengeli biçimde birleştirin.',
     category: 'Mobilite',
     publishedAt: '2026-08-10',
+    updatedAt: '2026-08-10',
     readTime: '6 dk',
     accent: '#06b6d4',
+    image: '/images/blog/yoga-pilates-mobility.jpg',
+    imageAlt: 'Aydınlık bir stüdyoda kontrollü mobilite ve denge çalışması yapan iki yetişkin',
     intro: 'Hareket kapasitesi yalnızca kuvvetten oluşmaz. Kontrollü hareket aralığı, denge, koordinasyon ve nefes çalışmaları da sürdürülebilir bir programın parçalarıdır.',
     sections: [
       {

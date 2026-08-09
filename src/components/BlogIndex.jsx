@@ -5,11 +5,11 @@ import { blogArticles } from '../data/blogArticles';
 
 const BASE_URL = 'https://fullbalance.app';
 
-function setMeta(name, content) {
-  let element = document.head.querySelector(`meta[name="${name}"]`);
+function setMeta(attribute, name, content) {
+  let element = document.head.querySelector(`meta[${attribute}="${name}"]`);
   if (!element) {
     element = document.createElement('meta');
-    element.setAttribute('name', name);
+    element.setAttribute(attribute, name);
     document.head.appendChild(element);
   }
   element.setAttribute('content', content);
@@ -19,8 +19,20 @@ export default function BlogIndex() {
   useEffect(() => {
     const previousTitle = document.title;
     document.title = 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance';
-    setMeta('description', 'Antrenman, beslenme, uyku, mobilite ve longevity hakkında uygulanabilir, kaynaklı ve ücretsiz Full Balance rehberleri.');
-    setMeta('robots', 'index, follow, max-image-preview:large');
+    const description = 'Antrenman, beslenme, uyku, mobilite ve longevity hakkında uygulanabilir, kaynaklı ve ücretsiz Full Balance rehberleri.';
+    const url = `${BASE_URL}/blog`;
+    const image = `${BASE_URL}/images/blog/longevity-habits.jpg`;
+    setMeta('name', 'description', description);
+    setMeta('name', 'robots', 'index, follow, max-image-preview:large');
+    setMeta('property', 'og:type', 'website');
+    setMeta('property', 'og:title', 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance');
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:url', url);
+    setMeta('property', 'og:image', image);
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance');
+    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:image', image);
 
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
@@ -28,7 +40,7 @@ export default function BlogIndex() {
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = `${BASE_URL}/blog`;
+    canonical.href = url;
 
     const schema = document.createElement('script');
     schema.type = 'application/ld+json';
@@ -85,7 +97,11 @@ export default function BlogIndex() {
       <section className="px-5 py-12">
         <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2">
           {blogArticles.map((article) => (
-            <article key={article.slug} className="flex min-h-[280px] flex-col border border-slate-800 bg-slate-900/55 p-6">
+            <article key={article.slug} className="overflow-hidden border border-slate-800 bg-slate-900/55">
+              <Link to={`/blog/${article.slug}`} aria-label={`${article.title} rehberini oku`}>
+                <img src={article.image} alt={article.imageAlt} width="1600" height="900" loading="lazy" className="aspect-video w-full object-cover" />
+              </Link>
+              <div className="flex min-h-[260px] flex-col p-6">
               <div className="mb-5 flex items-center justify-between gap-3 text-xs">
                 <span className="font-bold" style={{ color: article.accent }}>{article.category}</span>
                 <span className="flex items-center gap-1.5 text-slate-500"><Clock size={14} /> {article.readTime}</span>
@@ -95,6 +111,7 @@ export default function BlogIndex() {
               <Link to={`/blog/${article.slug}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white transition-colors hover:text-emerald-400">
                 Rehberi oku <ArrowRight size={17} />
               </Link>
+              </div>
             </article>
           ))}
         </div>
@@ -108,6 +125,11 @@ export default function BlogIndex() {
           </div>
           <Link to="/auth" className="inline-flex min-h-12 items-center gap-2 bg-orange-500 px-6 py-3 font-outfit text-sm font-bold text-white transition-colors hover:bg-orange-400">
             Ücretsiz başla <ArrowRight size={17} />
+          </Link>
+        </div>
+        <div className="mx-auto mt-8 max-w-4xl border-t border-slate-800/60 pt-5 text-sm text-slate-500">
+          <Link to="/editorial-policy" className="underline decoration-slate-700 underline-offset-4 transition-colors hover:text-emerald-400">
+            Yayın ilkeleri ve içerik süreci
           </Link>
         </div>
       </section>

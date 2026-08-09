@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, Clock, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Clock, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { blogArticles, getBlogArticle } from '../data/blogArticles';
 
@@ -24,13 +24,23 @@ export default function BlogArticle() {
 
     const previousTitle = document.title;
     const url = `${BASE_URL}/blog/${article.slug}`;
+    const imageUrl = `${BASE_URL}${article.image}`;
     document.title = `${article.title} | Full Balance`;
     upsertMeta('name', 'description', article.description);
     upsertMeta('name', 'robots', 'index, follow, max-image-preview:large');
+    upsertMeta('name', 'author', 'Full Balance Editör Ekibi');
     upsertMeta('property', 'og:type', 'article');
     upsertMeta('property', 'og:title', article.title);
     upsertMeta('property', 'og:description', article.description);
     upsertMeta('property', 'og:url', url);
+    upsertMeta('property', 'og:image', imageUrl);
+    upsertMeta('property', 'og:image:alt', article.imageAlt);
+    upsertMeta('property', 'article:published_time', `${article.publishedAt}T09:00:00+03:00`);
+    upsertMeta('property', 'article:modified_time', `${article.updatedAt}T09:00:00+03:00`);
+    upsertMeta('name', 'twitter:card', 'summary_large_image');
+    upsertMeta('name', 'twitter:title', article.title);
+    upsertMeta('name', 'twitter:description', article.description);
+    upsertMeta('name', 'twitter:image', imageUrl);
 
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
@@ -47,14 +57,21 @@ export default function BlogArticle() {
       '@context': 'https://schema.org',
       '@graph': [
         {
-          '@type': 'Article',
+          '@type': 'BlogPosting',
           headline: article.title,
           description: article.description,
-          datePublished: article.publishedAt,
-          dateModified: article.publishedAt,
+          image: [imageUrl],
+          datePublished: `${article.publishedAt}T09:00:00+03:00`,
+          dateModified: `${article.updatedAt}T09:00:00+03:00`,
           mainEntityOfPage: url,
-          author: { '@type': 'Organization', name: 'Full Balance' },
-          publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL },
+          inLanguage: 'tr-TR',
+          author: { '@type': 'Organization', name: 'Full Balance Editör Ekibi', url: `${BASE_URL}/editorial-policy` },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Full Balance',
+            url: BASE_URL,
+            logo: { '@type': 'ImageObject', url: `${BASE_URL}/icon-512.png` },
+          },
         },
         {
           '@type': 'BreadcrumbList',
@@ -99,9 +116,26 @@ export default function BlogArticle() {
             </div>
             <h1 className="mt-5 max-w-3xl font-outfit text-4xl font-black leading-tight sm:text-6xl">{article.title}</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-400">{article.intro}</p>
-            <p className="mt-5 text-xs text-slate-600">10 Ağustos 2026 · Full Balance editör ekibi</p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+              <time dateTime={article.publishedAt}>10 Ağustos 2026</time>
+              <span aria-hidden="true">·</span>
+              <Link to="/editorial-policy" className="font-semibold text-slate-400 underline decoration-slate-700 underline-offset-4 hover:text-emerald-400">
+                Full Balance Editör Ekibi
+              </Link>
+            </div>
           </div>
         </header>
+
+        <div className="mx-auto max-w-5xl px-5 pt-8">
+          <img
+            src={article.image}
+            alt={article.imageAlt}
+            width="1600"
+            height="900"
+            fetchPriority="high"
+            className="aspect-video w-full object-cover"
+          />
+        </div>
 
         <div className="mx-auto grid max-w-5xl gap-10 px-5 py-12 lg:grid-cols-[minmax(0,1fr)_240px]">
           <div className="min-w-0">
@@ -116,6 +150,19 @@ export default function BlogArticle() {
 
             <aside className="mt-12 border-l-2 border-amber-500 bg-slate-900/60 p-5 text-sm leading-6 text-slate-400">
               Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir. Sağlık durumunuza uygun kararlar için doktorunuza danışın.
+            </aside>
+
+            <aside className="mt-6 flex items-start gap-3 border border-emerald-500/20 bg-emerald-500/5 p-5">
+              <ShieldCheck size={20} className="mt-0.5 shrink-0 text-emerald-400" />
+              <div>
+                <h2 className="text-sm font-bold text-white">Bu rehber nasıl hazırlandı?</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  İçerik birincil ve kurumsal sağlık kaynakları temel alınarak hazırlanır; tıbbi vaat içermez ve önemli güncellemelerde yeniden değerlendirilir.
+                </p>
+                <Link to="/editorial-policy" className="mt-2 inline-block text-sm font-semibold text-emerald-400 underline underline-offset-4">
+                  Yayın ilkelerimizi incele
+                </Link>
+              </div>
             </aside>
 
             <section className="mt-12 border-t border-slate-800 pt-8">

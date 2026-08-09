@@ -27,6 +27,7 @@ const ContactPage = lazy(() => import('./components/ContactPage'));
 const SupportResolutionNotice = lazy(() => import('./components/SupportResolutionNotice'));
 const BlogIndex = lazy(() => import('./components/BlogIndex'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
+const EditorialPolicy = lazy(() => import('./components/EditorialPolicy'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
@@ -49,7 +50,7 @@ const SEO_PAGE_SLUGS = [
 ];
 
 function isPublicContentPath(pathname) {
-  return ['/privacy', '/terms', '/contact', '/blog'].includes(pathname)
+  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy'].includes(pathname)
     || pathname.startsWith('/blog/')
     || SEO_PAGE_SLUGS.some((slug) => pathname === `/${slug}`);
 }
@@ -679,6 +680,12 @@ function AppContent() {
             <Route path="/blog/:slug" element={
               <motion.div key="blog-article" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                 <BlogArticle />
+              </motion.div>
+            } />
+
+            <Route path="/editorial-policy" element={
+              <motion.div key="editorial-policy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <EditorialPolicy />
               </motion.div>
             } />
 
