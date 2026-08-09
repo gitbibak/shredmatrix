@@ -8,6 +8,7 @@ import { isSupabaseReady } from './lib/supabase';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
+import InstallPrompt from './components/InstallPrompt';
 import { initAnalytics } from './lib/analytics';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
@@ -710,6 +711,7 @@ export default function App() {
       <BrowserRouter>
         <ToastProvider>
           <AppContent />
+          <InstallPrompt />
         </ToastProvider>
       </BrowserRouter>
     </ErrorBoundary>

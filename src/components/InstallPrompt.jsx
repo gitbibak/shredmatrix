@@ -1,94 +1,207 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Download, X, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Download, Share, Smartphone, SquarePlus, X } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 
-const DISMISS_KEY = 'shredmatrix_install_dismissed';
+const DISMISS_KEY = 'fullbalance_install_dismissed';
+const INSTALLED_KEY = 'fullbalance_install_confirmed';
+const DISMISS_DURATION_MS = 14 * 24 * 60 * 60 * 1000;
+
+function getStoredValue(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function setStoredValue(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Installation can still continue when storage is unavailable.
+  }
+}
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function isMobileDevice() {
+  return isIOS() || /Android/i.test(navigator.userAgent) || window.matchMedia('(pointer: coarse)').matches;
+}
 
 export default function InstallPrompt() {
   const { t } = useTranslation();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [showIOSSteps, setShowIOSSteps] = useState(false);
 
   useEffect(() => {
-    // Don't show if already installed or dismissed recently
-    const dismissed = localStorage.getItem(DISMISS_KEY);
-    if (dismissed) {
-      const dismissedAt = new Date(dismissed).getTime();
-      // Show again after 7 days
-      if (Date.now() - dismissedAt < 7 * 24 * 60 * 60 * 1000) return;
-    }
+    if (!isMobileDevice() || isStandalone() || getStoredValue(INSTALLED_KEY)) return undefined;
 
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      // Delay showing to not interrupt initial load
-      setTimeout(() => setVisible(true), 3000);
+    const dismissedAt = Number(getStoredValue(DISMISS_KEY));
+    if (dismissedAt && Date.now() - dismissedAt < DISMISS_DURATION_MS) return undefined;
+
+    let showTimer;
+    const reveal = () => {
+      window.clearTimeout(showTimer);
+      showTimer = window.setTimeout(() => setVisible(true), 2500);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    const handleInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+      reveal();
+    };
+
+    const handleInstalled = () => {
+      setStoredValue(INSTALLED_KEY, 'true');
+      setDeferredPrompt(null);
+      setVisible(false);
+    };
+
+    const standaloneQuery = window.matchMedia('(display-mode: standalone)');
+    const handleDisplayMode = (event) => {
+      if (event.matches) handleInstalled();
+    };
+
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+    window.addEventListener('appinstalled', handleInstalled);
+    standaloneQuery.addEventListener?.('change', handleDisplayMode);
+
+    if (isIOS()) reveal();
+
+    return () => {
+      window.clearTimeout(showTimer);
+      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
+      standaloneQuery.removeEventListener?.('change', handleDisplayMode);
+    };
   }, []);
 
   const handleInstall = async () => {
+    if (isIOS()) {
+      setShowIOSSteps(true);
+      return;
+    }
+
     if (!deferredPrompt) return;
-    deferredPrompt.prompt();
+    await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
+      setStoredValue(INSTALLED_KEY, 'true');
+      setVisible(false);
+    } else {
+      setStoredValue(DISMISS_KEY, String(Date.now()));
       setVisible(false);
     }
     setDeferredPrompt(null);
   };
 
   const handleDismiss = () => {
+    setStoredValue(DISMISS_KEY, String(Date.now()));
     setVisible(false);
-    localStorage.setItem(DISMISS_KEY, new Date().toISOString());
+  };
+
+  const handleIOSInstalled = () => {
+    setStoredValue(INSTALLED_KEY, 'true');
+    setVisible(false);
   };
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 60 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-20 lg:bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-[60] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-2xl shadow-black/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[10000] flex items-end justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:items-center"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="install-title"
         >
-          <button
-            onClick={handleDismiss}
-            className="absolute top-3 right-3 w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 hover:text-white cursor-pointer transition-colors"
+          <motion.div
+            initial={{ opacity: 0, y: 36, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+            className="relative w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-5 text-white shadow-2xl shadow-black/60"
           >
-            <X size={12} />
-          </button>
-
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center shrink-0">
-              <Sparkles size={18} className="text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-bold font-outfit text-white mb-0.5">{t('install.title')}</h4>
-              <p className="text-[10px] text-slate-400 leading-relaxed">{t('install.desc')}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 mt-3">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleInstall}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold cursor-pointer shadow-lg shadow-orange-500/20"
-            >
-              <Download size={13} />
-              {t('install.btn')}
-            </motion.button>
             <button
+              type="button"
               onClick={handleDismiss}
-              className="px-3 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-medium cursor-pointer hover:text-white transition-colors"
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-800 hover:text-white"
+              aria-label={t('install.close')}
             >
-              {t('install.dismiss')}
+              <X size={17} />
             </button>
-          </div>
+
+            <div className="flex items-start gap-3 pr-8">
+              <img
+                src="/icon-192.png?v=5"
+                alt=""
+                className="h-14 w-14 shrink-0 rounded-xl border border-slate-700 object-cover shadow-lg"
+              />
+              <div className="min-w-0 pt-0.5">
+                <p className="text-[10px] font-bold uppercase text-orange-400">Full Balance</p>
+                <h2 id="install-title" className="mt-0.5 text-lg font-extrabold font-outfit leading-tight">
+                  {showIOSSteps ? t('install.iosTitle') : t('install.title')}
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">
+                  {showIOSSteps ? t('install.iosDesc') : t('install.desc')}
+                </p>
+              </div>
+            </div>
+
+            {showIOSSteps ? (
+              <>
+                <ol className="mt-5 space-y-2">
+                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
+                    <Share size={18} className="shrink-0 text-blue-300" />
+                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep1')}</span>
+                  </li>
+                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
+                    <SquarePlus size={18} className="shrink-0 text-orange-300" />
+                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep2')}</span>
+                  </li>
+                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
+                    <Smartphone size={18} className="shrink-0 text-emerald-300" />
+                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep3')}</span>
+                  </li>
+                </ol>
+                <button
+                  type="button"
+                  onClick={handleIOSInstalled}
+                  className="mt-4 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-extrabold text-white transition-colors hover:bg-orange-400"
+                >
+                  {t('install.done')}
+                </button>
+              </>
+            ) : (
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={handleDismiss}
+                  className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-3 text-xs font-bold text-slate-300 transition-colors hover:text-white"
+                >
+                  {t('install.dismiss')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleInstall}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-3 py-3 text-xs font-extrabold text-white shadow-lg shadow-orange-950/30 transition-colors hover:bg-orange-400"
+                >
+                  <Download size={15} />
+                  {t('install.btn')}
+                </button>
+              </div>
+            )}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

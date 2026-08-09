@@ -14,7 +14,6 @@ const MonthlyReport = lazy(() => import('./MonthlyReport'));
 const Achievements = lazy(() => import('./Achievements'));
 const SupplementGuide = lazy(() => import('./SupplementGuide'));
 const ShareCard = lazy(() => import('./ShareCard'));
-const InstallPrompt = lazy(() => import('./InstallPrompt'));
 const BodyMeasurements = lazy(() => import('./BodyMeasurements'));
 const SleepTracker = lazy(() => import('./SleepTracker'));
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
@@ -605,9 +604,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           </Suspense>
         )}
       </AnimatePresence>
-
-      {/* ── PWA Install Prompt ── */}
-      <InstallPrompt />
     </>
   );
 }
