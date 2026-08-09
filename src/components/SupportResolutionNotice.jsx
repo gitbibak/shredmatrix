@@ -21,7 +21,19 @@ export default function SupportResolutionNotice({ user }) {
 
     try {
       const latest = await getLatestResolvedSupportTicket();
-      if (!latest || localStorage.getItem(seenKey) === latest.id) {
+      if (!latest) {
+        setTicket(null);
+        return;
+      }
+
+      const latestId = String(latest.id);
+      if (location.pathname === '/contact') {
+        localStorage.setItem(seenKey, latestId);
+        setTicket(null);
+        return;
+      }
+
+      if (localStorage.getItem(seenKey) === latestId) {
         setTicket(null);
         return;
       }
@@ -31,14 +43,14 @@ export default function SupportResolutionNotice({ user }) {
         await sendLocalNotification(
           t('contact.resolvedNoticeTitle'),
           latest.admin_note || t('contact.resolvedNoticeBody'),
-          `support-resolved-${latest.id}`,
-          '/contact',
+          `support-resolved-${latestId}`,
+          `/contact?resolved=${encodeURIComponent(latestId)}`,
         );
       }
     } catch (error) {
       console.warn('[Support] Resolution check failed:', error?.message || error);
     }
-  }, [seenKey, t, user?.id]);
+  }, [location.pathname, seenKey, t, user?.id]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -58,7 +70,7 @@ export default function SupportResolutionNotice({ user }) {
   }, [checkResolvedTicket, user?.id]);
 
   const markSeen = () => {
-    if (ticket?.id && seenKey) localStorage.setItem(seenKey, ticket.id);
+    if (ticket?.id && seenKey) localStorage.setItem(seenKey, String(ticket.id));
     setTicket(null);
   };
 
