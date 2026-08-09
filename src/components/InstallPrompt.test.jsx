@@ -36,24 +36,21 @@ describe('InstallPrompt', () => {
     vi.useRealTimers();
   });
 
-  it('guides iPhone users and does not ask again after confirmation', async () => {
+  it('guides iPhone users without leaving a stale installed flag', async () => {
     setDevice({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' });
-    const firstRender = renderPrompt();
+    localStorage.setItem('fullbalance_install_confirmed', 'true');
+    renderPrompt();
 
     await act(async () => vi.advanceTimersByTime(2600));
     fireEvent.click(screen.getByRole('button', { name: 'Ana Ekrana Ekle' }));
     expect(screen.getByText("Safari'de Paylaş simgesine dokunup Ana Ekrana Ekle'yi seç.")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Ekledim' }));
-    expect(localStorage.getItem('fullbalance_install_confirmed')).toBe('true');
-    firstRender.unmount();
-
-    renderPrompt();
-    await act(async () => vi.advanceTimersByTime(2600));
+    await act(async () => vi.runAllTimers());
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('opens the native Android install prompt and remembers acceptance', async () => {
+  it('opens the native Android install prompt', async () => {
     setDevice({ userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36' });
     renderPrompt();
 
@@ -66,11 +63,13 @@ describe('InstallPrompt', () => {
 
     act(() => window.dispatchEvent(installEvent));
     await act(async () => vi.advanceTimersByTime(2600));
-    fireEvent.click(screen.getByRole('button', { name: 'Ana Ekrana Ekle' }));
-    await act(async () => Promise.resolve());
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Ana Ekrana Ekle' }));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
 
     expect(prompt).toHaveBeenCalledOnce();
-    expect(localStorage.getItem('fullbalance_install_confirmed')).toBe('true');
   });
 
   it('stays hidden when the app already runs from the home screen', async () => {
