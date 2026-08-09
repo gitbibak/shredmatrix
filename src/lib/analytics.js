@@ -1,6 +1,6 @@
 const CONSENT_KEY = 'fullbalance_analytics_consent';
 const LOCAL_KEY = 'fb_analytics';
-const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-FEVV3EFSW2';
 const SENSITIVE_PARAM_PATTERN = /name|email|phone|weight|bmi|body|fat|allerg|health|condition|sleep_hours|message|subject|user_id/i;
 
 let configured = false;
