@@ -919,10 +919,10 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: 'Kullanım analizine izin ver',
-      desc: 'Uygulamayı iyileştirmek için sayfa görüntüleme, kullanılan özellik, cihaz/tarayıcı türü ve yaklaşık bölge gibi sınırlı verileri Google Analytics ile ölçmek istiyoruz.',
-      private: 'Sağlık, alerji, kilo, ad ve e-posta gönderilmez.',
-      decline: 'Reddet',
+      title: "Full Balance'ı birlikte geliştirelim",
+      desc: 'Hangi özelliklerin faydalı olduğunu ölçmemize izin verir misin? Sağlık ve hesap bilgilerin paylaşılmaz.',
+      details: 'Ayrıntıları gör',
+      decline: 'Hayır, teşekkürler',
       allow: 'İzin Ver',
     },
 
@@ -1929,10 +1929,10 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: 'Allow usage analytics',
-      desc: 'To improve the app, we would like Google Analytics to measure limited data such as page views, feature usage, device/browser type and approximate region.',
-      private: 'Health, allergy, weight, name and email data are never sent.',
-      decline: 'Decline',
+      title: 'Help us improve Full Balance',
+      desc: 'May we measure which features are useful? Your health and account information is never shared.',
+      details: 'View details',
+      decline: 'No, thanks',
       allow: 'Allow',
     },
     install: {
@@ -2929,10 +2929,10 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: 'Permitir análisis de uso',
-      desc: 'Para mejorar la aplicación, queremos que Google Analytics mida datos limitados como vistas, funciones usadas, tipo de dispositivo/navegador y región aproximada.',
-      private: 'Nunca se envían datos de salud, alergias, peso, nombre o correo.',
-      decline: 'Rechazar',
+      title: 'Ayúdanos a mejorar Full Balance',
+      desc: '¿Nos permites medir qué funciones son útiles? Tu información de salud y de cuenta nunca se comparte.',
+      details: 'Ver detalles',
+      decline: 'No, gracias',
       allow: 'Permitir',
     },
     install: {

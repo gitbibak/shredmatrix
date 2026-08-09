@@ -5,6 +5,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 
 const DISMISS_KEY = 'fullbalance_install_dismissed';
 const INSTALLED_KEY = 'fullbalance_install_confirmed';
+const ANALYTICS_CONSENT_KEY = 'fullbalance_analytics_consent';
 const DISMISS_DURATION_MS = 14 * 24 * 60 * 60 * 1000;
 
 function getStoredValue(key) {
@@ -42,7 +43,7 @@ export default function InstallPrompt() {
   const [showIOSSteps, setShowIOSSteps] = useState(false);
 
   useEffect(() => {
-    if (!isMobileDevice() || isStandalone() || getStoredValue(INSTALLED_KEY) === 'true') return undefined;
+    if (!isMobileDevice() || isStandalone() || getStoredValue(INSTALLED_KEY) === 'true' || !getStoredValue(ANALYTICS_CONSENT_KEY)) return undefined;
 
     const dismissedAt = Number(getStoredValue(DISMISS_KEY));
     if (dismissedAt && Date.now() - dismissedAt < DISMISS_DURATION_MS) return undefined;

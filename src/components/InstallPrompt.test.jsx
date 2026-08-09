@@ -30,6 +30,7 @@ describe('InstallPrompt', () => {
   beforeEach(() => {
     localStorage.clear();
     localStorage.setItem('shredmatrix_lang', 'tr');
+    localStorage.setItem('fullbalance_analytics_consent', 'denied');
     vi.useFakeTimers();
   });
 
@@ -94,6 +95,15 @@ describe('InstallPrompt', () => {
 
   it('stays hidden when the app already runs from the home screen', async () => {
     setDevice({ userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1', standalone: true });
+    renderPrompt();
+
+    await act(async () => vi.advanceTimersByTime(3000));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('does not overlap the analytics choice on a first visit', async () => {
+    localStorage.removeItem('fullbalance_analytics_consent');
+    setDevice({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' });
     renderPrompt();
 
     await act(async () => vi.advanceTimersByTime(3000));
