@@ -193,8 +193,9 @@ CREATE INDEX IF NOT EXISTS idx_support_tickets_created ON public.support_tickets
 CREATE INDEX IF NOT EXISTS idx_support_tickets_status ON public.support_tickets(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_support_tickets_user ON public.support_tickets(user_id, created_at DESC);
 
-GRANT INSERT ON public.support_tickets TO anon, authenticated;
-GRANT SELECT, UPDATE, DELETE ON public.support_tickets TO authenticated;
+REVOKE ALL ON TABLE public.support_tickets FROM anon, authenticated;
+GRANT INSERT ON TABLE public.support_tickets TO anon, authenticated;
+GRANT SELECT, UPDATE, DELETE ON TABLE public.support_tickets TO authenticated;
 
 -- ── RLS ─────────────────────────────────────
 
