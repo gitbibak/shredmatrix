@@ -558,6 +558,68 @@ export async function getSleep(limit = 30) {
 }
 
 // ══════════════════════════════════════════════
+// WELLBEING CHECK-INS
+// ══════════════════════════════════════════════
+
+const WELLBEING_STORAGE_KEY = 'fullbalance_wellbeing_checkins';
+
+function saveLocalWellbeingCheckin(entry) {
+  const entries = lsGet(WELLBEING_STORAGE_KEY, []);
+  const index = entries.findIndex((item) => item.date === entry.date);
+  if (index >= 0) entries[index] = { ...entries[index], ...entry };
+  else entries.push(entry);
+  entries.sort((a, b) => b.date.localeCompare(a.date));
+  lsSet(WELLBEING_STORAGE_KEY, entries.slice(0, 90));
+}
+
+export async function saveWellbeingCheckin({ date, energy, nutritionAligned }) {
+  const normalized = {
+    date,
+    energy: Math.max(1, Math.min(3, Math.round(Number(energy) || 2))),
+    nutrition_aligned: Boolean(nutritionAligned),
+  };
+  const userId = getUserId();
+
+  if (!isSupabaseReady() || !userId) {
+    saveLocalWellbeingCheckin(normalized);
+    return normalized;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('wellbeing_checkins')
+      .upsert({ user_id: userId, ...normalized, updated_at: new Date().toISOString() }, { onConflict: 'user_id,date' })
+      .select('date, energy, nutrition_aligned')
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
+    saveLocalWellbeingCheckin(normalized);
+    return normalized;
+  }
+}
+
+export async function getWellbeingCheckins(limit = 30) {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) return lsGet(WELLBEING_STORAGE_KEY, []).slice(0, limit);
+
+  try {
+    const { data, error } = await supabase
+      .from('wellbeing_checkins')
+      .select('date, energy, nutrition_aligned')
+      .eq('user_id', userId)
+      .order('date', { ascending: false })
+      .limit(Math.min(Math.max(Number(limit) || 30, 1), 90));
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
+    return lsGet(WELLBEING_STORAGE_KEY, []).slice(0, limit);
+  }
+}
+
+// ══════════════════════════════════════════════
 // PROFILE
 // ══════════════════════════════════════════════
 

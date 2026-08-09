@@ -16,6 +16,7 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - Exports progress data as Excel/report files.
 - Supports Strava activity integration and mobile reminders.
 - Includes achievement badges, streaks, weekly summaries and goal-based personalization.
+- Summarizes movement, strength, mobility, recovery and nutrition habits in a transparent longevity view without predicting biological age or lifespan.
 
 ## Important Public Pages
 
@@ -37,6 +38,11 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - Reformer Pilates Program: https://fullbalance.app/reformer-pilates-programi
 - Meditation App: https://fullbalance.app/meditasyon-uygulamasi
 - Excel and Report Export: https://fullbalance.app/excel-rapor-disari-aktarma
+- Health and Longevity Guides: https://fullbalance.app/blog
+- What Is Longevity?: https://fullbalance.app/blog/longevity-nedir-saglikli-yasam-aliskanliklari
+- Strength Training and Healthy Ageing: https://fullbalance.app/blog/kuvvet-antrenmani-ve-saglikli-yaslanma
+- Sleep, Recovery and Longevity: https://fullbalance.app/blog/uyku-toparlanma-ve-longevity
+- Yoga, Pilates, Mobility and Longevity: https://fullbalance.app/blog/yoga-pilates-mobilite-longevity
 - Privacy Policy: https://fullbalance.app/privacy
 - Terms of Service: https://fullbalance.app/terms
 - Sitemap: https://fullbalance.app/sitemap.xml

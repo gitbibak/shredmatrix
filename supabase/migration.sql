@@ -90,6 +90,17 @@ CREATE TABLE IF NOT EXISTS public.sleep_logs (
   UNIQUE(user_id, date)
 );
 
+CREATE TABLE IF NOT EXISTS public.wellbeing_checkins (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  energy SMALLINT NOT NULL CHECK (energy BETWEEN 1 AND 3),
+  nutrition_aligned BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(user_id, date)
+);
+
 CREATE TABLE IF NOT EXISTS public.reminders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -179,6 +190,7 @@ CREATE INDEX IF NOT EXISTS idx_workout_logs_user ON public.workout_logs(user_id,
 CREATE INDEX IF NOT EXISTS idx_progress_user ON public.progress_entries(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_water_user ON public.water_logs(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_sleep_user ON public.sleep_logs(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_wellbeing_checkins_user_date ON public.wellbeing_checkins(user_id, date DESC);
 CREATE INDEX IF NOT EXISTS idx_measurements_user ON public.measurements(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_push_subs_user ON public.push_subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_leaderboard_week ON public.leaderboard_scores(week_start, workouts DESC);
@@ -206,6 +218,7 @@ ALTER TABLE public.progress_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.measurements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.water_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sleep_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wellbeing_checkins ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reminders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leaderboard_scores ENABLE ROW LEVEL SECURITY;
@@ -216,6 +229,7 @@ ALTER TABLE public.support_tickets ENABLE ROW LEVEL SECURITY;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_invites TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_clients TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.wellbeing_checkins TO authenticated;
 
 -- Drop legacy and current policies before recreating deterministic policies.
 DROP POLICY IF EXISTS "users_own_data" ON public.profiles;
@@ -225,6 +239,7 @@ DROP POLICY IF EXISTS "users_own_data" ON public.progress_entries;
 DROP POLICY IF EXISTS "users_own_data" ON public.measurements;
 DROP POLICY IF EXISTS "users_own_data" ON public.water_logs;
 DROP POLICY IF EXISTS "users_own_data" ON public.sleep_logs;
+DROP POLICY IF EXISTS "users_own_data" ON public.wellbeing_checkins;
 DROP POLICY IF EXISTS "users_own_data" ON public.reminders;
 
 DROP POLICY IF EXISTS "profiles_own_data" ON public.profiles;
@@ -234,6 +249,7 @@ DROP POLICY IF EXISTS "progress_entries_own_data" ON public.progress_entries;
 DROP POLICY IF EXISTS "measurements_own_data" ON public.measurements;
 DROP POLICY IF EXISTS "water_logs_own_data" ON public.water_logs;
 DROP POLICY IF EXISTS "sleep_logs_own_data" ON public.sleep_logs;
+DROP POLICY IF EXISTS "wellbeing_checkins_own_data" ON public.wellbeing_checkins;
 DROP POLICY IF EXISTS "reminders_own_data" ON public.reminders;
 DROP POLICY IF EXISTS "push_subscriptions_own_data" ON public.push_subscriptions;
 DROP POLICY IF EXISTS "leaderboard_read_all" ON public.leaderboard_scores;
@@ -317,6 +333,11 @@ CREATE POLICY "water_logs_own_data" ON public.water_logs
   WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "sleep_logs_own_data" ON public.sleep_logs
+  FOR ALL TO authenticated
+  USING ((SELECT auth.uid()) = user_id)
+  WITH CHECK ((SELECT auth.uid()) = user_id);
+
+CREATE POLICY "wellbeing_checkins_own_data" ON public.wellbeing_checkins
   FOR ALL TO authenticated
   USING ((SELECT auth.uid()) = user_id)
   WITH CHECK ((SELECT auth.uid()) = user_id);

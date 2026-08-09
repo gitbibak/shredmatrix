@@ -53,6 +53,17 @@ describe('dataService local fallback', () => {
     expect(await getWorkoutLogs()).toEqual([log]);
   });
 
+  it('upserts one wellbeing check-in per day in the local fallback', async () => {
+    const { saveWellbeingCheckin, getWellbeingCheckins } = await loadService();
+
+    await saveWellbeingCheckin({ date: '2026-08-10', energy: 1, nutritionAligned: false });
+    await saveWellbeingCheckin({ date: '2026-08-10', energy: 3, nutritionAligned: true });
+
+    expect(await getWellbeingCheckins()).toEqual([
+      { date: '2026-08-10', energy: 3, nutrition_aligned: true },
+    ]);
+  });
+
   it('creates and resolves trainer invite links locally when Supabase is unavailable', async () => {
     const {
       connectTrainerByCode,

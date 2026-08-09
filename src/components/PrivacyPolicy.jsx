@@ -10,8 +10,8 @@ export default function PrivacyPolicy() {
   const sections = [
     { title: t('privacy.s1.title') || 'Toplanan Veriler', content: t('privacy.s1.content') || 'Full Balance, yalnızca uygulamanın çalışması için gerekli olan verileri toplar: ad, e-posta adresi, fiziksel ölçüler (boy, kilo, yaş, cinsiyet), hedef ve tercih bilgileri. Bu veriler kişiselleştirilmiş beslenme ve antrenman planınızı oluşturmak için kullanılır.' },
     { title: t('privacy.s2.title') || 'Verilerin Saklanması', content: t('privacy.s2.content') || 'Verileriniz iki katmanlı güvenlik ile saklanır: (1) Cihazınızın yerel depolaması (localStorage) ve (2) Supabase şifreli bulut sunucuları (AES-256 şifreleme). Verilerinize yalnızca siz erişebilirsiniz.' },
-    { title: t('privacy.s3.title') || 'Üçüncü Taraf Paylaşımı', content: t('privacy.s3.content') || 'Kişisel verileriniz hiçbir koşulda üçüncü taraflarla paylaşılmaz, satılmaz veya kiralanmaz. Reklam ağları, analitik şirketleri veya diğer kurumlarla veri alışverişi yapılmaz.' },
-    { title: t('privacy.s4.title') || 'Çerezler ve Takip', content: t('privacy.s4.content') || 'Full Balance herhangi bir çerez (cookie), takip pikseli veya üçüncü taraf analitik aracı kullanmaz. Uygulama tamamen çevrimdışı çalışabilir.' },
+    { title: t('privacy.s3.title') || 'Üçüncü Taraf Paylaşımı', content: t('privacy.s3.content') || 'Kişisel ve sağlık verileriniz satılmaz veya reklam amacıyla paylaşılmaz. Yalnızca açık izin verirseniz anonim kullanım olayları Google Analytics ile ölçülür; ad, e-posta, sağlık, alerji ve vücut verileri gönderilmez.' },
+    { title: t('privacy.s4.title') || 'Çerezler ve Analitik İzni', content: t('privacy.s4.content') || 'Analitik depolama varsayılan olarak kapalıdır. Google Analytics yalnızca izin verirseniz etkinleşir; tercihiniz cihazınızda saklanır.' },
     { title: t('privacy.s5.title') || 'Veri Silme Hakkı', content: t('privacy.s5.content') || 'Hesabınızı istediğiniz zaman Profil > Hesabı Sil bölümünden kalıcı olarak silebilirsiniz. Silme işlemi tüm verilerinizi hem yerel depolamadan hem de bulut sunucularından geri dönüşümsüz olarak kaldırır.' },
     { title: t('privacy.s6.title') || 'İletişim', content: t('privacy.s6.content') || 'Gizlilik politikamız hakkında sorularınız için info@fullbalance.app adresinden bize ulaşabilirsiniz.' },
   ];
@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
             </div>
             <div>
               <h1 className="text-2xl font-extrabold font-outfit">{t('privacy.title') || 'Gizlilik Politikası'}</h1>
-              <p className="text-xs text-slate-500">{t('privacy.updated') || 'Son güncelleme: Haziran 2026'}</p>
+              <p className="text-xs text-slate-500">{t('privacy.updated') || 'Son güncelleme: Ağustos 2026'}</p>
             </div>
           </div>
 

@@ -25,6 +25,7 @@ describe('supabase migration.sql', () => {
       'measurements',
       'water_logs',
       'sleep_logs',
+      'wellbeing_checkins',
       'reminders',
       'push_subscriptions',
       'leaderboard_scores',
@@ -41,6 +42,14 @@ describe('supabase migration.sql', () => {
     expect(migrationSql).toContain('FOR ALL TO authenticated');
     expect(migrationSql).toContain('WITH CHECK ((SELECT auth.uid()) = user_id)');
     expect(migrationSql).not.toContain('auth.role()');
+  });
+
+  it('protects daily wellbeing check-ins with ownership RLS', () => {
+    expect(migrationSql).toContain('CREATE TABLE IF NOT EXISTS public.wellbeing_checkins');
+    expect(migrationSql).toContain('CHECK (energy BETWEEN 1 AND 3)');
+    expect(migrationSql).toContain('UNIQUE(user_id, date)');
+    expect(migrationSql).toContain('CREATE POLICY "wellbeing_checkins_own_data"');
+    expect(migrationSql).toContain('GRANT SELECT, INSERT, UPDATE, DELETE ON public.wellbeing_checkins TO authenticated');
   });
 
   it('keeps storage private and scoped to the authenticated user folder', () => {

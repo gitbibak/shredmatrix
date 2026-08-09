@@ -174,6 +174,13 @@ export default function LandingPage({ onStart }) {
       desc: tx('landing.modules.mobile.desc', 'Telefon odaklı arayüz, bildirimler, güvenli oturum ve hızlı kullanım.'),
       tags: ['PWA', 'Bildirim', 'Güvenli'],
     },
+    {
+      icon: Heart,
+      color: '#10b981',
+      title: tx('longevity.title', 'Longevity dengesi'),
+      desc: tx('longevity.subtitle', 'Hareket, kuvvet, mobilite, toparlanma ve beslenme alışkanlıklarını tek görünümde izle.'),
+      tags: ['5 alan', 'Kişisel öneri', '30 sn'],
+    },
   ];
 
   const seoTopics = [
@@ -194,6 +201,7 @@ export default function LandingPage({ onStart }) {
     { to: '/alerjiye-gore-beslenme-programi', label: 'Alerjiye göre beslenme' },
     { to: '/yoga-pilates-reformer', label: 'Yoga, pilates ve reformer' },
     { to: '/excel-rapor-disari-aktarma', label: 'Excel ve rapor dışa aktarma' },
+    { to: '/blog/longevity-nedir-saglikli-yasam-aliskanliklari', label: 'Longevity ve sağlıklı yaşam rehberi' },
   ];
 
   const handleShare = async () => {
@@ -1078,6 +1086,10 @@ export default function LandingPage({ onStart }) {
             <span className="text-slate-800">•</span>
             <Link to="/contact" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
               {t('contact.link')}
+            </Link>
+            <span className="text-slate-800">•</span>
+            <Link to="/blog" className="text-[10px] text-slate-600 hover:text-emerald-400 transition-colors">
+              Rehber
             </Link>
           </div>
         </div>

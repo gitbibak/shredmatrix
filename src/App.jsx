@@ -9,7 +9,8 @@ import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
-import { initAnalytics } from './lib/analytics';
+import { initAnalytics, trackPageView } from './lib/analytics';
+import AnalyticsConsent from './components/AnalyticsConsent';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -24,6 +25,8 @@ const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const ContactPage = lazy(() => import('./components/ContactPage'));
 const SupportResolutionNotice = lazy(() => import('./components/SupportResolutionNotice'));
+const BlogIndex = lazy(() => import('./components/BlogIndex'));
+const BlogArticle = lazy(() => import('./components/BlogArticle'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
@@ -44,6 +47,12 @@ const SEO_PAGE_SLUGS = [
   'ucretsiz-beslenme-programi',
   'alerjiye-gore-beslenme-programi',
 ];
+
+function isPublicContentPath(pathname) {
+  return ['/privacy', '/terms', '/contact', '/blog'].includes(pathname)
+    || pathname.startsWith('/blog/')
+    || SEO_PAGE_SLUGS.some((slug) => pathname === `/${slug}`);
+}
 
 // ── Error Boundary (P1-3) ────────────────────────────────────
 class ErrorBoundary extends Component {
@@ -440,9 +449,9 @@ function AppContent() {
           const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
             upgradePlanIfNeeded(savedPlan, u.email);
-            if (!['/dashboard', '/admin', '/contact'].includes(currentPath)) navigate('/dashboard', { replace: true });
+            if (!['/dashboard', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/dashboard', { replace: true });
           } else {
-            if (!['/onboarding', '/loading', '/admin', '/contact'].includes(currentPath)) navigate('/onboarding', { replace: true });
+            if (!['/onboarding', '/loading', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/onboarding', { replace: true });
           }
         } else if (!isSupabaseReady()) {
           // Offline/local-only fallback when Supabase is not configured.
@@ -453,9 +462,9 @@ function AppContent() {
               const savedPlan = await loadPlan(cachedUser.email);
               if (savedPlan) {
                 upgradePlanIfNeeded(savedPlan, cachedUser.email);
-                if (!['/dashboard', '/admin', '/contact'].includes(currentPath)) navigate('/dashboard', { replace: true });
+                if (!['/dashboard', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/dashboard', { replace: true });
               } else {
-                if (!['/onboarding', '/loading', '/admin', '/contact'].includes(currentPath)) navigate('/onboarding', { replace: true });
+                if (!['/onboarding', '/loading', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/onboarding', { replace: true });
               }
             }
           } catch (err) { console.warn('[App]', err?.message || err); }
@@ -486,6 +495,10 @@ function AppContent() {
 
     return () => subscription?.unsubscribe?.();
   }, []);
+
+  useEffect(() => {
+    trackPageView(document.title, location.pathname);
+  }, [location.pathname]);
 
   // Regenerate plan when language changes
   useEffect(() => {
@@ -657,6 +670,18 @@ function AppContent() {
               </motion.div>
             } />
 
+            <Route path="/blog" element={
+              <motion.div key="blog" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <BlogIndex />
+              </motion.div>
+            } />
+
+            <Route path="/blog/:slug" element={
+              <motion.div key="blog-article" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <BlogArticle />
+              </motion.div>
+            } />
+
             {SEO_PAGE_SLUGS.map((slug) => (
               <Route
                 key={slug}
@@ -712,6 +737,7 @@ export default function App() {
         <ToastProvider>
           <AppContent />
           <InstallPrompt />
+          <AnalyticsConsent />
         </ToastProvider>
       </BrowserRouter>
     </ErrorBoundary>

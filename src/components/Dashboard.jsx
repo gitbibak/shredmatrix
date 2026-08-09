@@ -23,6 +23,8 @@ const NudgeCards = lazy(() => import('./NudgeCards'));
 const TodayFocusPanel = lazy(() => import('./TodayFocusPanel'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
+const LongevityPanel = lazy(() => import('./LongevityPanel'));
+const LongevityTodayCard = lazy(() => import('./LongevityPanel').then((module) => ({ default: module.LongevityTodayCard })));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -385,6 +387,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+                  <LongevityTodayCard plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     {todayActions.map((action) => (
                       <TodayActionCard
@@ -472,6 +475,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             >
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                <div className="mb-6">
+                  <LongevityPanel plan={plan} />
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2">
                     <ProgressTracker userName={plan.userName} />
