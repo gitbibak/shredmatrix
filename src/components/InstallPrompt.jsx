@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Download, Share, Smartphone, SquarePlus, X } from 'lucide-react';
+import { Download, Share, X } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 
 const DISMISS_KEY = 'fullbalance_install_dismissed';
@@ -160,20 +160,12 @@ export default function InstallPrompt() {
 
             {showIOSSteps ? (
               <>
-                <ol className="mt-5 space-y-2">
-                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
-                    <Share size={18} className="shrink-0 text-blue-300" />
-                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep1')}</span>
-                  </li>
-                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
-                    <SquarePlus size={18} className="shrink-0 text-orange-300" />
-                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep2')}</span>
-                  </li>
-                  <li className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-3">
-                    <Smartphone size={18} className="shrink-0 text-emerald-300" />
-                    <span className="text-xs font-semibold text-slate-200">{t('install.iosStep3')}</span>
-                  </li>
-                </ol>
+                <div className="mt-5 flex items-center gap-3 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-3.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-500/15 text-blue-300">
+                    <Share size={18} />
+                  </span>
+                  <p className="text-xs font-semibold leading-relaxed text-slate-200">{t('install.iosAction')}</p>
+                </div>
                 <button
                   type="button"
                   onClick={handleIOSInstalled}

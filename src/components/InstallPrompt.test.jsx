@@ -42,7 +42,7 @@ describe('InstallPrompt', () => {
 
     await act(async () => vi.advanceTimersByTime(2600));
     fireEvent.click(screen.getByRole('button', { name: 'Ana Ekrana Ekle' }));
-    expect(screen.getByText('Safari araç çubuğundaki Paylaş simgesine dokun.')).toBeInTheDocument();
+    expect(screen.getByText("Safari'de Paylaş simgesine dokunup Ana Ekrana Ekle'yi seç.")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Ekledim' }));
     expect(localStorage.getItem('fullbalance_install_confirmed')).toBe('true');

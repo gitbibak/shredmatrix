@@ -890,9 +890,7 @@ export const translations = {
       close: 'Kurulum penceresini kapat',
       iosTitle: "iPhone'a ekle",
       iosDesc: 'Apple, ana ekrana ekleme işlemini Safari menüsünden tamamlamanı ister.',
-      iosStep1: 'Safari araç çubuğundaki Paylaş simgesine dokun.',
-      iosStep2: 'Ana Ekrana Ekle seçeneğini seç.',
-      iosStep3: 'Sağ üstteki Ekle düğmesine dokun.',
+      iosAction: "Safari'de Paylaş simgesine dokunup Ana Ekrana Ekle'yi seç.",
       done: 'Ekledim',
     },
 
@@ -1856,9 +1854,7 @@ export const translations = {
       close: 'Close install prompt',
       iosTitle: 'Add to iPhone',
       iosDesc: 'Apple requires you to complete this from the Safari menu.',
-      iosStep1: 'Tap the Share icon in the Safari toolbar.',
-      iosStep2: 'Choose Add to Home Screen.',
-      iosStep3: 'Tap Add in the top-right corner.',
+      iosAction: 'In Safari, tap Share and choose Add to Home Screen.',
       done: 'I added it',
     },
     leaderboard: {
@@ -2814,9 +2810,7 @@ export const translations = {
       close: 'Cerrar instalación',
       iosTitle: 'Añadir al iPhone',
       iosDesc: 'Apple requiere completar el proceso desde el menú de Safari.',
-      iosStep1: 'Toca el icono Compartir en Safari.',
-      iosStep2: 'Elige Añadir a pantalla de inicio.',
-      iosStep3: 'Toca Añadir en la esquina superior derecha.',
+      iosAction: 'En Safari, toca Compartir y elige Añadir a pantalla de inicio.',
       done: 'Ya la añadí',
     },
     leaderboard: {
