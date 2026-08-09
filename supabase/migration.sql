@@ -249,6 +249,7 @@ DROP POLICY IF EXISTS "trainer_clients_linked_select" ON public.trainer_clients;
 DROP POLICY IF EXISTS "trainer_clients_linked_delete" ON public.trainer_clients;
 DROP POLICY IF EXISTS "support_tickets_insert_public" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_select_admin" ON public.support_tickets;
+DROP POLICY IF EXISTS "support_tickets_select_access" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_update_admin" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_delete_admin" ON public.support_tickets;
 
@@ -521,9 +522,12 @@ CREATE POLICY "Admin can delete plans" ON public.plans
   FOR DELETE TO authenticated
   USING (public.is_admin());
 
-CREATE POLICY "support_tickets_select_admin" ON public.support_tickets
+CREATE POLICY "support_tickets_select_access" ON public.support_tickets
   FOR SELECT TO authenticated
-  USING (public.is_admin());
+  USING (
+    public.is_admin()
+    OR ((SELECT auth.uid()) IS NOT NULL AND (SELECT auth.uid()) = user_id)
+  );
 
 CREATE POLICY "support_tickets_update_admin" ON public.support_tickets
   FOR UPDATE TO authenticated

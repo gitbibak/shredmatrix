@@ -241,8 +241,8 @@ export async function unsubscribeFromPush() {
 /**
  * Send a local notification (for testing / instant feedback)
  */
-export async function sendLocalNotification(title, body, tag = 'fb-local') {
-  if (Notification.permission !== 'granted') return;
+export async function sendLocalNotification(title, body, tag = 'fb-local', url = '/dashboard') {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
   try {
     const registration = await navigator.serviceWorker.ready;
@@ -252,7 +252,7 @@ export async function sendLocalNotification(title, body, tag = 'fb-local') {
       badge: '/favicon-32.png',
       tag,
       vibrate: [100, 50, 100],
-      data: { url: '/dashboard' },
+      data: { url },
     });
   } catch (err) {
     console.warn('[Push] Local notification failed:', err?.message || err);

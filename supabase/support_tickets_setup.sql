@@ -37,6 +37,7 @@ ALTER TABLE public.support_tickets ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "support_tickets_insert_public" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_select_admin" ON public.support_tickets;
+DROP POLICY IF EXISTS "support_tickets_select_access" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_update_admin" ON public.support_tickets;
 DROP POLICY IF EXISTS "support_tickets_delete_admin" ON public.support_tickets;
 
@@ -44,9 +45,12 @@ CREATE POLICY "support_tickets_insert_public" ON public.support_tickets
   FOR INSERT TO anon, authenticated
   WITH CHECK (user_id IS NULL OR (SELECT auth.uid()) = user_id);
 
-CREATE POLICY "support_tickets_select_admin" ON public.support_tickets
+CREATE POLICY "support_tickets_select_access" ON public.support_tickets
   FOR SELECT TO authenticated
-  USING (public.is_admin());
+  USING (
+    public.is_admin()
+    OR ((SELECT auth.uid()) IS NOT NULL AND (SELECT auth.uid()) = user_id)
+  );
 
 CREATE POLICY "support_tickets_update_admin" ON public.support_tickets
   FOR UPDATE TO authenticated

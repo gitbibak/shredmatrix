@@ -214,6 +214,7 @@ export default function AdminPanel({ user }) {
   const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
   const [supportFilter, setSupportFilter] = useState('open');
   const [updatingTicketId, setUpdatingTicketId] = useState(null);
+  const [supportNotes, setSupportNotes] = useState({});
 
   const PAGE_SIZE = 15;
 
@@ -288,6 +289,7 @@ export default function AdminPanel({ user }) {
     try {
       const updated = await updateSupportTicket(ticketId, updates);
       setSupportTickets((tickets) => tickets.map((ticket) => ticket.id === ticketId ? updated : ticket));
+      setSupportNotes((notes) => ({ ...notes, [ticketId]: updated.admin_note || '' }));
       setSupportStats(await getSupportStats());
       if (updates.status && supportFilter !== 'all' && updates.status !== supportFilter) {
         setSupportTickets((tickets) => tickets.filter((ticket) => ticket.id !== ticketId));
@@ -297,6 +299,15 @@ export default function AdminPanel({ user }) {
     } finally {
       setUpdatingTicketId(null);
     }
+  };
+
+  const handleResolveTicket = async (ticket) => {
+    const adminNote = (supportNotes[ticket.id] ?? ticket.admin_note ?? '').trim();
+    if (!adminNote) {
+      alert('Kullanıcının çözümü anlayabilmesi için kısa bir yanıt yaz.');
+      return;
+    }
+    await handleTicketUpdate(ticket.id, { status: 'resolved', admin_note: adminNote });
   };
 
   return (
@@ -625,7 +636,7 @@ export default function AdminPanel({ user }) {
                           <p className="text-xs text-slate-500 mt-1">{timeAgo(ticket.created_at)}</p>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          {['open', 'reviewing', 'resolved'].map((status) => (
+                          {['open', 'reviewing'].map((status) => (
                             <button
                               key={status}
                               onClick={() => handleTicketUpdate(ticket.id, { status })}
@@ -640,6 +651,38 @@ export default function AdminPanel({ user }) {
 
                       <div className="mt-4 rounded-xl border border-slate-800/70 bg-slate-950/50 p-4">
                         <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap break-words">{ticket.message}</p>
+                      </div>
+
+                      <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/70 p-3">
+                        <label className="mb-2 block text-[10px] font-bold uppercase text-slate-500">
+                          Kullanıcıya çözüm yanıtı
+                        </label>
+                        <textarea
+                          value={supportNotes[ticket.id] ?? ticket.admin_note ?? ''}
+                          onChange={(event) => setSupportNotes((notes) => ({ ...notes, [ticket.id]: event.target.value }))}
+                          rows={3}
+                          maxLength={2000}
+                          placeholder="Neyin düzeldiğini ve kullanıcının ne yapması gerektiğini kısa ve net yaz."
+                          className="w-full resize-none rounded-xl border border-slate-800 bg-slate-900 px-3 py-2.5 text-xs leading-relaxed text-white outline-none placeholder:text-slate-600 focus:border-emerald-500/50"
+                        />
+                        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleTicketUpdate(ticket.id, { admin_note: (supportNotes[ticket.id] ?? ticket.admin_note ?? '').trim() || null })}
+                            disabled={updatingTicketId === ticket.id}
+                            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-[10px] font-bold text-slate-300 transition-colors hover:text-white disabled:opacity-40"
+                          >
+                            Yanıtı Kaydet
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleResolveTicket(ticket)}
+                            disabled={updatingTicketId === ticket.id || ticket.status === 'resolved'}
+                            className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[10px] font-bold text-emerald-300 transition-colors hover:bg-emerald-500/15 disabled:opacity-40"
+                          >
+                            Yanıtı Gönder ve Çöz
+                          </button>
+                        </div>
                       </div>
 
                       <div className="mt-4 grid sm:grid-cols-2 gap-2 text-xs text-slate-500">

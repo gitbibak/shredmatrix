@@ -22,6 +22,7 @@ const StravaCallback = lazy(() => import('./components/StravaCallback'));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
 const ContactPage = lazy(() => import('./components/ContactPage'));
+const SupportResolutionNotice = lazy(() => import('./components/SupportResolutionNotice'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
@@ -438,9 +439,9 @@ function AppContent() {
           const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
             upgradePlanIfNeeded(savedPlan, u.email);
-            if (currentPath !== '/dashboard' && currentPath !== '/admin') navigate('/dashboard', { replace: true });
+            if (!['/dashboard', '/admin', '/contact'].includes(currentPath)) navigate('/dashboard', { replace: true });
           } else {
-            if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
+            if (!['/onboarding', '/loading', '/admin', '/contact'].includes(currentPath)) navigate('/onboarding', { replace: true });
           }
         } else if (!isSupabaseReady()) {
           // Offline/local-only fallback when Supabase is not configured.
@@ -451,9 +452,9 @@ function AppContent() {
               const savedPlan = await loadPlan(cachedUser.email);
               if (savedPlan) {
                 upgradePlanIfNeeded(savedPlan, cachedUser.email);
-                if (currentPath !== '/dashboard' && currentPath !== '/admin') navigate('/dashboard', { replace: true });
+                if (!['/dashboard', '/admin', '/contact'].includes(currentPath)) navigate('/dashboard', { replace: true });
               } else {
-                if (currentPath !== '/onboarding' && currentPath !== '/loading' && currentPath !== '/admin') navigate('/onboarding', { replace: true });
+                if (!['/onboarding', '/loading', '/admin', '/contact'].includes(currentPath)) navigate('/onboarding', { replace: true });
               }
             }
           } catch (err) { console.warn('[App]', err?.message || err); }
@@ -651,7 +652,7 @@ function AppContent() {
 
             <Route path="/contact" element={
               <motion.div key="contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-                <ContactPage />
+                <ContactPage user={user} />
               </motion.div>
             } />
 
@@ -683,6 +684,12 @@ function AppContent() {
           </Routes>
         </AnimatePresence>
       </Suspense>
+
+      {user && (
+        <Suspense fallback={null}>
+          <SupportResolutionNotice user={user} />
+        </Suspense>
+      )}
 
       {/* Onboarding Tour Overlay */}
       <AnimatePresence>

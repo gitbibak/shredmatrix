@@ -80,10 +80,11 @@ describe('supabase migration.sql', () => {
     expect(migrationSql).toContain('CREATE TABLE IF NOT EXISTS public.support_tickets');
     expect(migrationSql).toContain('CREATE POLICY "support_tickets_insert_public"');
     expect(migrationSql).toContain('FOR INSERT TO anon, authenticated');
-    expect(migrationSql).toContain('CREATE POLICY "support_tickets_select_admin"');
+    expect(migrationSql).toContain('CREATE POLICY "support_tickets_select_access"');
     expect(migrationSql).toContain('CREATE POLICY "support_tickets_update_admin"');
     expect(migrationSql).toContain('CREATE POLICY "support_tickets_delete_admin"');
     expect(migrationSql).toContain('USING (public.is_admin())');
+    expect(migrationSql).toContain('(SELECT auth.uid()) = user_id');
   });
 
   it('keeps profile admin metadata available for the admin panel', () => {

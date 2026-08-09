@@ -49,3 +49,39 @@ export async function submitSupportTicket(input) {
   if (error) throw error;
   return { ok: true };
 }
+
+export async function getMySupportTickets(limit = 20) {
+  if (!isSupabaseReady()) return [];
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('support_tickets')
+    .select('id, category, subject, message, status, admin_note, resolved_at, created_at, updated_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(Math.min(Math.max(Number(limit) || 20, 1), 50));
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function getLatestResolvedSupportTicket() {
+  if (!isSupabaseReady()) return null;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from('support_tickets')
+    .select('id, subject, admin_note, resolved_at')
+    .eq('user_id', user.id)
+    .eq('status', 'resolved')
+    .order('resolved_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data || null;
+}

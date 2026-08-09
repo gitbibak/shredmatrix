@@ -1,14 +1,20 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { ArrowLeft, Mail, MessageSquare, Shield, Sparkles, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { ArrowLeft, Mail, MessageSquare, Shield, Sparkles, Send, CheckCircle2, AlertCircle, Clock, LoaderCircle } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { submitSupportTicket } from '../lib/supportService';
+import { getMySupportTickets, submitSupportTicket } from '../lib/supportService';
 
 const CONTACT_EMAIL = 'info@fullbalance.app';
 const CATEGORY_OPTIONS = ['support', 'bug', 'idea', 'account', 'privacy', 'partnership'];
 
-export default function ContactPage() {
-  const { t } = useTranslation();
+const STATUS_STYLES = {
+  open: 'border-red-500/25 bg-red-500/10 text-red-300',
+  reviewing: 'border-amber-500/25 bg-amber-500/10 text-amber-300',
+  resolved: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-300',
+};
+
+export default function ContactPage({ user }) {
+  const { t, lang } = useTranslation();
   const subject = encodeURIComponent(t('contact.mailSubject') || 'Full Balance Support');
   const body = encodeURIComponent(t('contact.mailBody') || 'Hello Full Balance team,');
   const [form, setForm] = useState({
@@ -20,6 +26,38 @@ export default function ContactPage() {
   });
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
+  const [tickets, setTickets] = useState([]);
+  const [ticketsLoading, setTicketsLoading] = useState(Boolean(user?.id));
+
+  const loadTickets = useCallback(async () => {
+    if (!user?.id) {
+      setTickets([]);
+      setTicketsLoading(false);
+      return;
+    }
+
+    setTicketsLoading(true);
+    try {
+      setTickets(await getMySupportTickets());
+    } catch (loadError) {
+      console.warn('[Support] Tickets could not be loaded:', loadError?.message || loadError);
+    } finally {
+      setTicketsLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    loadTickets();
+  }, [loadTickets]);
+
+  useEffect(() => {
+    if (!user) return;
+    setForm((current) => ({
+      ...current,
+      name: current.name || user.name || '',
+      email: current.email || user.email || '',
+    }));
+  }, [user]);
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -37,7 +75,14 @@ export default function ContactPage() {
     try {
       await submitSupportTicket(form);
       setStatus('success');
-      setForm({ category: 'support', name: '', email: '', subject: '', message: '' });
+      setForm({
+        category: 'support',
+        name: user?.name || '',
+        email: user?.email || '',
+        subject: '',
+        message: '',
+      });
+      await loadTickets();
     } catch (err) {
       setStatus('error');
       setError(err?.message || t('contact.formError'));
@@ -48,7 +93,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-slate-950 bg-grid text-white px-4 py-8">
       <div className="max-w-3xl mx-auto">
         <Link
-          to="/"
+          to={user ? '/dashboard' : '/'}
           className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-orange-400 transition-colors mb-8"
         >
           <ArrowLeft size={16} />
@@ -195,6 +240,57 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        {user && (
+          <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 shadow-xl shadow-black/10">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-extrabold font-outfit">{t('contact.myRequests')}</h2>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500">{t('contact.myRequestsDesc')}</p>
+              </div>
+              <MessageSquare size={20} className="mt-1 shrink-0 text-cyan-300" />
+            </div>
+
+            {ticketsLoading ? (
+              <div className="flex items-center justify-center gap-2 py-8 text-xs text-slate-500">
+                <LoaderCircle size={16} className="animate-spin" />
+                {t('contact.loadingRequests')}
+              </div>
+            ) : tickets.length === 0 ? (
+              <div className="rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-6 text-center text-xs text-slate-500">
+                {t('contact.noRequests')}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {tickets.map((ticket) => (
+                  <article key={ticket.id} className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="break-words text-sm font-bold text-white">{ticket.subject}</h3>
+                        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-slate-600">
+                          <Clock size={11} />
+                          <span>{new Intl.DateTimeFormat(lang || 'tr', { dateStyle: 'medium' }).format(new Date(ticket.created_at))}</span>
+                        </div>
+                      </div>
+                      <span className={`shrink-0 rounded-lg border px-2 py-1 text-[10px] font-bold ${STATUS_STYLES[ticket.status] || STATUS_STYLES.open}`}>
+                        {t(`contact.status.${ticket.status}`)}
+                      </span>
+                    </div>
+
+                    {ticket.status === 'resolved' && (
+                      <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3">
+                        <p className="text-[10px] font-bold uppercase text-emerald-300">{t('contact.adminResponse')}</p>
+                        <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-emerald-100/80">
+                          {ticket.admin_note || t('contact.resolvedNoticeBody')}
+                        </p>
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );
