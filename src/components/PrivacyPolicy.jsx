@@ -1,11 +1,19 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Shield } from 'lucide-react';
+import { ArrowLeft, BarChart3, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
+import { getAnalyticsConsent, setAnalyticsConsent } from '../lib/analytics';
 
 export default function PrivacyPolicy() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [analyticsChoice, setAnalyticsChoice] = useState(() => getAnalyticsConsent());
+
+  const updateAnalyticsChoice = (choice) => {
+    setAnalyticsConsent(choice);
+    setAnalyticsChoice(choice);
+  };
 
   const sections = [
     { title: t('privacy.s1.title') || 'Toplanan Veriler', content: t('privacy.s1.content') || 'Full Balance, yalnızca uygulamanın çalışması için gerekli olan verileri toplar: ad, e-posta adresi, fiziksel ölçüler (boy, kilo, yaş, cinsiyet), hedef ve tercih bilgileri. Bu veriler kişiselleştirilmiş beslenme ve antrenman planınızı oluşturmak için kullanılır.' },
@@ -58,6 +66,37 @@ export default function PrivacyPolicy() {
               </motion.div>
             ))}
           </div>
+
+          <section className="mt-6 rounded-2xl border border-blue-500/20 bg-slate-900 p-5" aria-labelledby="analytics-settings-title">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-300">
+                <BarChart3 size={18} />
+              </span>
+              <div>
+                <h2 id="analytics-settings-title" className="text-sm font-bold font-outfit text-white">{t('privacy.analyticsSettings.title')}</h2>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">{t('privacy.analyticsSettings.desc')}</p>
+                <p className="mt-2 text-[10px] font-semibold text-slate-500">
+                  {t('privacy.analyticsSettings.current')}: {analyticsChoice === 'granted' ? t('privacy.analyticsSettings.allowed') : analyticsChoice === 'denied' ? t('privacy.analyticsSettings.denied') : t('privacy.analyticsSettings.unset')}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => updateAnalyticsChoice('denied')}
+                className={`rounded-xl border px-3 py-3 text-xs font-bold ${analyticsChoice === 'denied' ? 'border-slate-500 bg-slate-700 text-white' : 'border-slate-700 bg-slate-800 text-slate-400'}`}
+              >
+                {t('privacy.analyticsSettings.reject')}
+              </button>
+              <button
+                type="button"
+                onClick={() => updateAnalyticsChoice('granted')}
+                className={`rounded-xl px-3 py-3 text-xs font-bold ${analyticsChoice === 'granted' ? 'bg-blue-400 text-slate-950' : 'bg-blue-500 text-white'}`}
+              >
+                {t('privacy.analyticsSettings.allow')}
+              </button>
+            </div>
+          </section>
         </motion.div>
       </div>
     </div>

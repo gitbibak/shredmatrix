@@ -429,6 +429,12 @@ export const translations = {
       s4: { title: 'Çerezler ve Analitik İzni', content: 'Analitik depolama varsayılan olarak kapalıdır. İzin verirseniz Google Analytics etkinleşir; reddederseniz üçüncü taraf analitik yüklenmez. Tercihiniz cihazınızda saklanır.' },
       s5: { title: 'Veri Silme Hakkı', content: 'Hesabınızı istediğiniz zaman Profil > Hesabı Sil bölümünden kalıcı olarak silebilirsiniz.' },
       s6: { title: 'İletişim', content: 'Gizlilik politikamız hakkında sorularınız için info@fullbalance.app adresinden bize ulaşabilirsiniz.' },
+      analyticsSettings: {
+        title: 'Analitik tercihi',
+        desc: 'Anonim kullanım ölçümüne verdiğiniz izni istediğiniz zaman değiştirebilirsiniz.',
+        current: 'Mevcut tercih', allowed: 'İzin verildi', denied: 'Reddedildi', unset: 'Henüz seçilmedi',
+        reject: 'Analitiği Reddet', allow: 'Analitiğe İzin Ver',
+      },
     },
 
     // ── Terms of Service ──
@@ -1499,6 +1505,12 @@ export const translations = {
       s4: { title: 'Cookies and Analytics Consent', content: 'Analytics storage is disabled by default. Google Analytics is enabled only if you consent; if you decline, third-party analytics is not loaded. Your choice is stored on your device.' },
       s5: { title: 'Right to Delete', content: 'You can permanently delete your account at any time from Profile > Delete Account.' },
       s6: { title: 'Contact', content: 'For questions about our privacy policy, contact us at info@fullbalance.app.' },
+      analyticsSettings: {
+        title: 'Analytics preference',
+        desc: 'You can change your anonymous usage analytics consent at any time.',
+        current: 'Current choice', allowed: 'Allowed', denied: 'Declined', unset: 'Not selected',
+        reject: 'Decline Analytics', allow: 'Allow Analytics',
+      },
     },
     terms: {
       title: 'Terms of Service',
@@ -2493,6 +2505,12 @@ export const translations = {
       s4: { title: 'Cookies y Consentimiento Analítico', content: 'El almacenamiento analítico está desactivado por defecto. Google Analytics solo se activa si das permiso; si lo rechazas, no se carga analítica de terceros. Tu elección se guarda en tu dispositivo.' },
       s5: { title: 'Derecho a Eliminar', content: 'Puedes eliminar tu cuenta permanentemente en cualquier momento desde Perfil > Eliminar Cuenta.' },
       s6: { title: 'Contacto', content: 'Para preguntas sobre nuestra política de privacidad, contáctanos en info@fullbalance.app.' },
+      analyticsSettings: {
+        title: 'Preferencia de analítica',
+        desc: 'Puedes cambiar tu consentimiento para la analítica de uso anónimo en cualquier momento.',
+        current: 'Elección actual', allowed: 'Permitida', denied: 'Rechazada', unset: 'Sin seleccionar',
+        reject: 'Rechazar Analítica', allow: 'Permitir Analítica',
+      },
     },
     terms: {
       title: 'Términos de Servicio',
