@@ -4,9 +4,10 @@ import { LanguageProvider } from '../i18n/LanguageContext';
 import InstallPrompt from './InstallPrompt';
 
 function setDevice({ userAgent, standalone = false }) {
+  const iphone = userAgent.includes('iPhone');
   Object.defineProperty(navigator, 'userAgent', { value: userAgent, configurable: true });
-  Object.defineProperty(navigator, 'platform', { value: 'iPhone', configurable: true });
-  Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, configurable: true });
+  Object.defineProperty(navigator, 'platform', { value: iphone ? 'iPhone' : 'Linux armv8l', configurable: true });
+  Object.defineProperty(navigator, 'maxTouchPoints', { value: iphone ? 5 : 1, configurable: true });
   Object.defineProperty(navigator, 'standalone', { value: standalone, configurable: true });
 
   window.matchMedia = vi.fn((query) => ({
@@ -36,10 +37,9 @@ describe('InstallPrompt', () => {
     vi.useRealTimers();
   });
 
-  it('guides iPhone users without leaving a stale installed flag', async () => {
+  it('does not ask again after an iPhone user confirms installation', async () => {
     setDevice({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' });
-    localStorage.setItem('fullbalance_install_confirmed', 'true');
-    renderPrompt();
+    const firstRender = renderPrompt();
 
     await act(async () => vi.advanceTimersByTime(2600));
     fireEvent.click(screen.getByRole('button', { name: 'Ana Ekrana Ekle' }));
@@ -47,6 +47,25 @@ describe('InstallPrompt', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Ekledim' }));
     await act(async () => vi.runAllTimers());
+    expect(localStorage.getItem('fullbalance_install_confirmed')).toBe('true');
+    firstRender.unmount();
+
+    renderPrompt();
+    await act(async () => vi.advanceTimersByTime(3000));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('snoozes the prompt after an iPhone user chooses not now', async () => {
+    setDevice({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1' });
+    const firstRender = renderPrompt();
+
+    await act(async () => vi.advanceTimersByTime(2600));
+    fireEvent.click(screen.getByRole('button', { name: 'Şimdi değil' }));
+    expect(Number(localStorage.getItem('fullbalance_install_dismissed'))).toBeGreaterThan(0);
+    firstRender.unmount();
+
+    renderPrompt();
+    await act(async () => vi.advanceTimersByTime(3000));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -70,6 +89,7 @@ describe('InstallPrompt', () => {
     });
 
     expect(prompt).toHaveBeenCalledOnce();
+    expect(localStorage.getItem('fullbalance_install_confirmed')).toBe('true');
   });
 
   it('stays hidden when the app already runs from the home screen', async () => {
