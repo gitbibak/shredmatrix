@@ -151,6 +151,28 @@ CREATE TABLE IF NOT EXISTS public.trainer_clients (
   CONSTRAINT trainer_clients_unique_pair UNIQUE (trainer_id, client_id)
 );
 
+CREATE TABLE IF NOT EXISTS public.support_tickets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  name TEXT,
+  email TEXT,
+  category TEXT NOT NULL DEFAULT 'support',
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'open',
+  priority TEXT NOT NULL DEFAULT 'normal',
+  source TEXT NOT NULL DEFAULT 'contact_form',
+  page_url TEXT,
+  user_agent TEXT,
+  admin_note TEXT,
+  resolved_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT support_tickets_status_check CHECK (status IN ('open', 'reviewing', 'resolved')),
+  CONSTRAINT support_tickets_priority_check CHECK (priority IN ('low', 'normal', 'high')),
+  CONSTRAINT support_tickets_category_check CHECK (category IN ('support', 'bug', 'idea', 'account', 'privacy', 'partnership'))
+);
+
 -- ── Indexes ─────────────────────────────────
 
 CREATE INDEX IF NOT EXISTS idx_workout_logs_user ON public.workout_logs(user_id, date);
@@ -167,6 +189,12 @@ CREATE INDEX IF NOT EXISTS idx_trainer_invites_trainer ON public.trainer_invites
 CREATE INDEX IF NOT EXISTS idx_trainer_invites_code ON public.trainer_invites(code);
 CREATE INDEX IF NOT EXISTS idx_trainer_clients_trainer ON public.trainer_clients(trainer_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_trainer_clients_client ON public.trainer_clients(client_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_created ON public.support_tickets(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_status ON public.support_tickets(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_user ON public.support_tickets(user_id, created_at DESC);
+
+GRANT INSERT ON public.support_tickets TO anon, authenticated;
+GRANT SELECT, UPDATE, DELETE ON public.support_tickets TO authenticated;
 
 -- ── RLS ─────────────────────────────────────
 
@@ -183,6 +211,7 @@ ALTER TABLE public.leaderboard_scores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.referrals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trainer_invites ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trainer_clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.support_tickets ENABLE ROW LEVEL SECURITY;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_invites TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainer_clients TO authenticated;
@@ -217,6 +246,10 @@ DROP POLICY IF EXISTS "referrals_referred_update" ON public.referrals;
 DROP POLICY IF EXISTS "trainer_invites_own_data" ON public.trainer_invites;
 DROP POLICY IF EXISTS "trainer_clients_linked_select" ON public.trainer_clients;
 DROP POLICY IF EXISTS "trainer_clients_linked_delete" ON public.trainer_clients;
+DROP POLICY IF EXISTS "support_tickets_insert_public" ON public.support_tickets;
+DROP POLICY IF EXISTS "support_tickets_select_admin" ON public.support_tickets;
+DROP POLICY IF EXISTS "support_tickets_update_admin" ON public.support_tickets;
+DROP POLICY IF EXISTS "support_tickets_delete_admin" ON public.support_tickets;
 
 DROP POLICY IF EXISTS "profiles_select" ON public.profiles;
 DROP POLICY IF EXISTS "profiles_insert" ON public.profiles;
@@ -335,6 +368,10 @@ CREATE POLICY "trainer_clients_linked_select" ON public.trainer_clients
 CREATE POLICY "trainer_clients_linked_delete" ON public.trainer_clients
   FOR DELETE TO authenticated
   USING ((SELECT auth.uid()) = trainer_id OR (SELECT auth.uid()) = client_id);
+
+CREATE POLICY "support_tickets_insert_public" ON public.support_tickets
+  FOR INSERT TO anon, authenticated
+  WITH CHECK (user_id IS NULL OR (SELECT auth.uid()) = user_id);
 
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
@@ -464,6 +501,8 @@ DROP POLICY IF EXISTS "Admin can view all profiles" ON public.profiles;
 DROP POLICY IF EXISTS "Admin can delete profiles" ON public.profiles;
 DROP POLICY IF EXISTS "Admin can view all plans" ON public.plans;
 DROP POLICY IF EXISTS "Admin can delete plans" ON public.plans;
+DROP POLICY IF EXISTS "Admin can view support tickets" ON public.support_tickets;
+DROP POLICY IF EXISTS "Admin can update support tickets" ON public.support_tickets;
 
 CREATE POLICY "Admin can view all profiles" ON public.profiles
   FOR SELECT TO authenticated
@@ -478,6 +517,19 @@ CREATE POLICY "Admin can view all plans" ON public.plans
   USING (public.is_admin() OR (SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Admin can delete plans" ON public.plans
+  FOR DELETE TO authenticated
+  USING (public.is_admin());
+
+CREATE POLICY "support_tickets_select_admin" ON public.support_tickets
+  FOR SELECT TO authenticated
+  USING (public.is_admin());
+
+CREATE POLICY "support_tickets_update_admin" ON public.support_tickets
+  FOR UPDATE TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "support_tickets_delete_admin" ON public.support_tickets
   FOR DELETE TO authenticated
   USING (public.is_admin());
 

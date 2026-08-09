@@ -31,6 +31,7 @@ describe('supabase migration.sql', () => {
       'referrals',
       'trainer_invites',
       'trainer_clients',
+      'support_tickets',
     ];
 
     for (const table of tables) {
@@ -73,6 +74,16 @@ describe('supabase migration.sql', () => {
     expect(migrationSql).toContain('REVOKE ALL ON FUNCTION public.connect_trainer_by_code(TEXT) FROM anon');
     expect(migrationSql).toContain('GRANT EXECUTE ON FUNCTION public.create_trainer_invite() TO authenticated');
     expect(migrationSql).toContain('GRANT EXECUTE ON FUNCTION public.connect_trainer_by_code(TEXT) TO authenticated');
+  });
+
+  it('adds protected support inbox infrastructure for admin follow-up', () => {
+    expect(migrationSql).toContain('CREATE TABLE IF NOT EXISTS public.support_tickets');
+    expect(migrationSql).toContain('CREATE POLICY "support_tickets_insert_public"');
+    expect(migrationSql).toContain('FOR INSERT TO anon, authenticated');
+    expect(migrationSql).toContain('CREATE POLICY "support_tickets_select_admin"');
+    expect(migrationSql).toContain('CREATE POLICY "support_tickets_update_admin"');
+    expect(migrationSql).toContain('CREATE POLICY "support_tickets_delete_admin"');
+    expect(migrationSql).toContain('USING (public.is_admin())');
   });
 
   it('keeps profile admin metadata available for the admin panel', () => {

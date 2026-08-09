@@ -89,6 +89,11 @@ export async function getAdminStats() {
       .from('plans')
       .select('*', { count: 'exact', head: true });
 
+    const { count: openSupportTickets } = await supabase
+      .from('support_tickets')
+      .select('*', { count: 'exact', head: true })
+      .neq('status', 'resolved');
+
     return {
       totalUsers: totalUsers || 0,
       todayRegistrations: todayRegistrations || 0,
@@ -96,6 +101,7 @@ export async function getAdminStats() {
       monthRegistrations: monthRegistrations || 0,
       monthlyGrowth: growth,
       usersWithPlans: usersWithPlans || 0,
+      openSupportTickets: openSupportTickets || 0,
     };
   } catch (err) {
     console.error('[Admin] Stats error:', err);
@@ -260,11 +266,84 @@ export async function getRecentUsers() {
 export async function deleteUser(userId) {
   if (!isSupabaseReady()) throw new Error('Supabase not ready');
 
+  await supabase.from('support_tickets').update({ user_id: null }).eq('user_id', userId);
   // Delete plan first
   await supabase.from('plans').delete().eq('user_id', userId);
   // Delete profile
   const { error } = await supabase.from('profiles').delete().eq('id', userId);
   if (error) throw error;
+}
+
+// ── Support Inbox ───────────────────────────────
+export async function getSupportTickets(status = 'open') {
+  if (!isSupabaseReady()) return [];
+
+  try {
+    let query = supabase
+      .from('support_tickets')
+      .select('id, user_id, name, email, category, subject, message, status, priority, source, page_url, admin_note, resolved_at, created_at, updated_at')
+      .order('created_at', { ascending: false })
+      .limit(60);
+
+    if (status !== 'all') {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('[Admin] Support tickets error:', err);
+    return [];
+  }
+}
+
+export async function getSupportStats() {
+  if (!isSupabaseReady()) return { open: 0, reviewing: 0, resolved: 0, total: 0 };
+
+  try {
+    const statuses = ['open', 'reviewing', 'resolved'];
+    const counts = {};
+
+    await Promise.all(statuses.map(async (status) => {
+      const { count } = await supabase
+        .from('support_tickets')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', status);
+      counts[status] = count || 0;
+    }));
+
+    const total = statuses.reduce((sum, status) => sum + (counts[status] || 0), 0);
+    return { open: counts.open || 0, reviewing: counts.reviewing || 0, resolved: counts.resolved || 0, total };
+  } catch (err) {
+    console.error('[Admin] Support stats error:', err);
+    return { open: 0, reviewing: 0, resolved: 0, total: 0 };
+  }
+}
+
+export async function updateSupportTicket(ticketId, updates) {
+  if (!isSupabaseReady()) throw new Error('Supabase not ready');
+
+  const payload = {
+    ...updates,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (updates.status === 'resolved') {
+    payload.resolved_at = new Date().toISOString();
+  } else if (updates.status) {
+    payload.resolved_at = null;
+  }
+
+  const { data, error } = await supabase
+    .from('support_tickets')
+    .update(payload)
+    .eq('id', ticketId)
+    .select('id, user_id, name, email, category, subject, message, status, priority, source, page_url, admin_note, resolved_at, created_at, updated_at')
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
 // ── Activity Stats ──────────────────────────────

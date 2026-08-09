@@ -41,4 +41,13 @@ export default [
       },
     },
   },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2024,
+      },
+    },
+  },
 ];

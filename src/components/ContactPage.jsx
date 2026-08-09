@@ -1,13 +1,48 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Mail, MessageSquare, Shield, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Mail, MessageSquare, Shield, Sparkles, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { submitSupportTicket } from '../lib/supportService';
 
 const CONTACT_EMAIL = 'info@fullbalance.app';
+const CATEGORY_OPTIONS = ['support', 'bug', 'idea', 'account', 'privacy', 'partnership'];
 
 export default function ContactPage() {
   const { t } = useTranslation();
   const subject = encodeURIComponent(t('contact.mailSubject') || 'Full Balance Support');
   const body = encodeURIComponent(t('contact.mailBody') || 'Hello Full Balance team,');
+  const [form, setForm] = useState({
+    category: 'support',
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState('');
+
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+    if (status !== 'submitting') {
+      setStatus('idle');
+      setError('');
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setStatus('submitting');
+    setError('');
+
+    try {
+      await submitSupportTicket(form);
+      setStatus('success');
+      setForm({ category: 'support', name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      setStatus('error');
+      setError(err?.message || t('contact.formError'));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 bg-grid text-white px-4 py-8">
@@ -39,18 +74,110 @@ export default function ContactPage() {
             {t('contact.desc')}
           </p>
 
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`}
-            className="flex items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-4 hover:bg-emerald-500/15 transition-colors"
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <Mail size={20} className="text-emerald-300 shrink-0" />
-              <div className="min-w-0">
-                <p className="text-xs text-slate-400">{t('contact.emailLabel')}</p>
-                <p className="text-sm font-bold text-white truncate">{CONTACT_EMAIL}</p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 mb-2">{t('contact.categoryLabel')}</label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {CATEGORY_OPTIONS.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => updateField('category', category)}
+                    className={`rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
+                      form.category === category
+                        ? 'border-orange-500/60 bg-orange-500/15 text-orange-300'
+                        : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'
+                    }`}
+                  >
+                    {t(`contact.categories.${category}`)}
+                  </button>
+                ))}
               </div>
             </div>
-            <span className="text-xs font-semibold text-emerald-300 shrink-0">
+
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2">{t('contact.nameLabel')}</label>
+                <input
+                  value={form.name}
+                  onChange={(event) => updateField('name', event.target.value)}
+                  placeholder={t('contact.namePlaceholder')}
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-orange-500/60"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2">{t('contact.emailInputLabel')}</label>
+                <input
+                  value={form.email}
+                  onChange={(event) => updateField('email', event.target.value)}
+                  placeholder={t('contact.emailPlaceholder')}
+                  type="email"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-orange-500/60"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 mb-2">{t('contact.subjectLabel')}</label>
+              <input
+                value={form.subject}
+                onChange={(event) => updateField('subject', event.target.value)}
+                placeholder={t('contact.subjectPlaceholder')}
+                required
+                maxLength={160}
+                className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-orange-500/60"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 mb-2">{t('contact.messageLabel')}</label>
+              <textarea
+                value={form.message}
+                onChange={(event) => updateField('message', event.target.value)}
+                placeholder={t('contact.messagePlaceholder')}
+                required
+                rows={6}
+                maxLength={4000}
+                className="w-full resize-none rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-orange-500/60"
+              />
+            </div>
+
+            {status === 'success' && (
+              <div className="flex items-start gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
+                <span>{t('contact.formSuccess')}</span>
+              </div>
+            )}
+
+            {status === 'error' && (
+              <div className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <AlertCircle size={18} className="mt-0.5 shrink-0" />
+                <span>{error || t('contact.formError')}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-orange-950/30 transition-transform active:scale-[0.98] disabled:opacity-60"
+            >
+              <Send size={18} />
+              {status === 'submitting' ? t('contact.sending') : t('contact.submit')}
+            </button>
+          </form>
+
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`}
+            className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-3 hover:bg-slate-950/70 transition-colors"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <Mail size={18} className="text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-slate-500">{t('contact.emailLabel')}</p>
+                <p className="text-xs font-bold text-slate-300 truncate">{CONTACT_EMAIL}</p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-slate-400 shrink-0">
               {t('contact.sendMail')}
             </span>
           </a>

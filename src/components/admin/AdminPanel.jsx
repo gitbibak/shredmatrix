@@ -4,7 +4,7 @@ import {
   BarChart3, Users, PieChart, Activity, Search,
   TrendingUp, UserPlus, Calendar, Target, ChevronLeft, ChevronRight,
   Trash2, Eye, X, Shield, RefreshCw, Menu, ArrowLeft, Clock, Zap,
-  Dumbbell, Droplets, Scale, Ruler
+  Dumbbell, Droplets, Scale, Ruler, MessageSquare, Mail, CheckCircle2, AlertCircle
 } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
@@ -14,7 +14,8 @@ import {
 import {
   isAdmin, getAdminStats, getAdminUsers, getPlanDistribution,
   getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers,
-  getActivityStats, getWorkoutTrend
+  getActivityStats, getWorkoutTrend, getSupportTickets, getSupportStats,
+  updateSupportTicket
 } from '../../lib/adminService';
 
 // ── Colors ───────────────────────────────────────
@@ -25,6 +26,24 @@ const GOAL_COLORS = {
 };
 const EXP_COLORS = { 'Başlangıç': '#00e676', 'Orta': '#ffab00', 'İleri': '#ff4081' };
 const GENDER_COLORS = { 'Erkek': '#00b0ff', 'Kadın': '#ff4081', 'Bilinmiyor': '#64748b' };
+const SUPPORT_CATEGORY_LABELS = {
+  support: 'Destek',
+  bug: 'Hata',
+  idea: 'Öneri',
+  account: 'Hesap',
+  privacy: 'Gizlilik',
+  partnership: 'İş Birliği',
+};
+const SUPPORT_STATUS_LABELS = {
+  open: 'Açık',
+  reviewing: 'İnceleniyor',
+  resolved: 'Çözüldü',
+};
+const SUPPORT_STATUS_COLORS = {
+  open: 'border-red-500/30 bg-red-500/10 text-red-300',
+  reviewing: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+  resolved: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+};
 
 // ── Stat Card ────────────────────────────────────
 function StatCard({ icon: Icon, label, value, sub, color = '#ff6d00', delay = 0 }) {
@@ -191,18 +210,23 @@ export default function AdminPanel({ user }) {
   const [refreshing, setRefreshing] = useState(false);
   const [activityStats, setActivityStats] = useState(null);
   const [workoutTrend, setWorkoutTrend] = useState([]);
+  const [supportTickets, setSupportTickets] = useState([]);
+  const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
+  const [supportFilter, setSupportFilter] = useState('open');
+  const [updatingTicketId, setUpdatingTicketId] = useState(null);
 
   const PAGE_SIZE = 15;
 
   const loadData = useCallback(async () => {
     if (!isAllowed) return;
-    const [s, d, t, r, a, w] = await Promise.all([
+    const [s, d, t, r, a, w, support] = await Promise.all([
       getAdminStats(),
       getPlanDistribution(),
       getRegistrationTrend(),
       getRecentUsers(),
       getActivityStats(),
       getWorkoutTrend(),
+      getSupportStats(),
     ]);
     if (s) setStats(s);
     if (d) setDistribution(d);
@@ -210,6 +234,7 @@ export default function AdminPanel({ user }) {
     if (r) setRecentUsers(r);
     if (a) setActivityStats(a);
     if (w) setWorkoutTrend(w);
+    if (support) setSupportStats(support);
   }, [isAllowed]);
 
   const loadUsers = useCallback(async () => {
@@ -221,11 +246,16 @@ export default function AdminPanel({ user }) {
 
   useEffect(() => { loadData(); }, [loadData]);
   useEffect(() => { loadUsers(); }, [loadUsers]);
+  useEffect(() => {
+    if (!isAllowed) return;
+    getSupportTickets(supportFilter).then(setSupportTickets);
+  }, [isAllowed, supportFilter]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     await loadData();
     await loadUsers();
+    setSupportTickets(await getSupportTickets(supportFilter));
     setRefreshing(false);
   };
 
@@ -247,10 +277,27 @@ export default function AdminPanel({ user }) {
     { id: 'users', icon: Users, label: 'Kullanıcılar' },
     { id: 'analytics', icon: PieChart, label: 'Analizler' },
     { id: 'activity', icon: Activity, label: 'Aktivite' },
+    { id: 'support', icon: MessageSquare, label: 'Destek' },
   ];
 
   const totalPages = Math.ceil(usersTotal / PAGE_SIZE);
   const adminName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Admin';
+
+  const handleTicketUpdate = async (ticketId, updates) => {
+    setUpdatingTicketId(ticketId);
+    try {
+      const updated = await updateSupportTicket(ticketId, updates);
+      setSupportTickets((tickets) => tickets.map((ticket) => ticket.id === ticketId ? updated : ticket));
+      setSupportStats(await getSupportStats());
+      if (updates.status && supportFilter !== 'all' && updates.status !== supportFilter) {
+        setSupportTickets((tickets) => tickets.filter((ticket) => ticket.id !== ticketId));
+      }
+    } catch (err) {
+      alert('Destek kaydı güncellenemedi: ' + err.message);
+    } finally {
+      setUpdatingTicketId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white flex">
@@ -366,10 +413,11 @@ export default function AdminPanel({ user }) {
                 </motion.div>
 
                 {/* Quick stats */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   <StatCard icon={Target} label="Plan Oluşturanlar" value={stats?.usersWithPlans ?? '—'}
                     sub={stats ? `%${stats.totalUsers > 0 ? Math.round((stats.usersWithPlans / stats.totalUsers) * 100) : 0} dönüşüm` : ''} color="#7c4dff" delay={0.25} />
                   <StatCard icon={Zap} label="Aktif Kullanan (7 gün)" value={activityStats?.activeUsers ?? '—'} sub="Son 7 günde antrenman yapan" color="#00e676" delay={0.3} />
+                  <StatCard icon={MessageSquare} label="Açık Destek" value={stats?.openSupportTickets ?? '—'} sub="Kullanıcı mesajları" color="#ff4081" delay={0.35} />
                 </div>
 
                 {/* Recent Users */}
@@ -515,6 +563,108 @@ export default function AdminPanel({ user }) {
                       </ResponsiveContainer>
                     </div>
                   </motion.div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ═══ SUPPORT ═══ */}
+            {activeTab === 'support' && (
+              <motion.div key="support" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <StatCard icon={AlertCircle} label="Açık" value={supportStats.open} color="#ff4081" delay={0} />
+                  <StatCard icon={Clock} label="İnceleniyor" value={supportStats.reviewing} color="#ffab00" delay={0.05} />
+                  <StatCard icon={CheckCircle2} label="Çözüldü" value={supportStats.resolved} color="#00e676" delay={0.1} />
+                  <StatCard icon={MessageSquare} label="Toplam" value={supportStats.total} color="#00b0ff" delay={0.15} />
+                </div>
+
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {[
+                    ['open', 'Açık'],
+                    ['reviewing', 'İnceleniyor'],
+                    ['resolved', 'Çözüldü'],
+                    ['all', 'Tümü'],
+                  ].map(([value, label]) => (
+                    <button
+                      key={value}
+                      onClick={() => setSupportFilter(value)}
+                      className={`px-3 py-2 rounded-xl border text-xs font-bold whitespace-nowrap transition-colors ${
+                        supportFilter === value
+                          ? 'border-orange-500/50 bg-orange-500/15 text-orange-300'
+                          : 'border-slate-800 bg-slate-900 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  {supportTickets.map((ticket) => (
+                    <motion.div
+                      key={ticket.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="rounded-2xl border border-slate-800 bg-slate-900 p-4 sm:p-5"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className={`px-2 py-1 rounded-lg border text-[10px] font-bold ${SUPPORT_STATUS_COLORS[ticket.status] || SUPPORT_STATUS_COLORS.open}`}>
+                              {SUPPORT_STATUS_LABELS[ticket.status] || ticket.status}
+                            </span>
+                            <span className="px-2 py-1 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-300 text-[10px] font-bold">
+                              {SUPPORT_CATEGORY_LABELS[ticket.category] || ticket.category}
+                            </span>
+                            {ticket.priority === 'high' && (
+                              <span className="px-2 py-1 rounded-lg border border-red-500/20 bg-red-500/10 text-red-300 text-[10px] font-bold">
+                                Öncelikli
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="text-base font-bold font-outfit text-white break-words">{ticket.subject}</h3>
+                          <p className="text-xs text-slate-500 mt-1">{timeAgo(ticket.created_at)}</p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {['open', 'reviewing', 'resolved'].map((status) => (
+                            <button
+                              key={status}
+                              onClick={() => handleTicketUpdate(ticket.id, { status })}
+                              disabled={updatingTicketId === ticket.id || ticket.status === status}
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 text-[10px] text-slate-300 hover:text-white disabled:opacity-40 transition-colors"
+                            >
+                              {SUPPORT_STATUS_LABELS[status]}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 rounded-xl border border-slate-800/70 bg-slate-950/50 p-4">
+                        <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap break-words">{ticket.message}</p>
+                      </div>
+
+                      <div className="mt-4 grid sm:grid-cols-2 gap-2 text-xs text-slate-500">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Mail size={14} className="text-slate-600 shrink-0" />
+                          <span className="truncate">{ticket.email || 'E-posta yok'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Users size={14} className="text-slate-600 shrink-0" />
+                          <span className="truncate">{ticket.name || 'İsim yok'}</span>
+                        </div>
+                      </div>
+
+                      {ticket.page_url && (
+                        <p className="mt-2 text-[10px] text-slate-600 truncate">{ticket.page_url}</p>
+                      )}
+                    </motion.div>
+                  ))}
+
+                  {supportTickets.length === 0 && (
+                    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-10 text-center">
+                      <MessageSquare size={28} className="mx-auto text-slate-600 mb-3" />
+                      <p className="text-sm text-slate-500">Bu filtrede destek kaydı yok.</p>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
