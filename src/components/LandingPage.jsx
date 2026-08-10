@@ -1,215 +1,147 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Dumbbell, UtensilsCrossed, TrendingUp, Timer, Award,
-  Droplets, Target, ChevronRight, Shield, Smartphone, BarChart3,
-  Heart, Flame, Brain, Sun, CircleDot, Cog, Star,
-  Camera, Scale, Trophy, Globe, CreditCard, Download, ArrowRight,
-  CheckCircle2, Quote, Sparkles, Lock, Languages, MonitorSmartphone,
-  RefreshCw, FileDown, Apple, Calculator, ShoppingBag, Image,
-  Activity, Clock, Volume2, BookOpen, UserCheck,
+  Activity, ArrowRight, BarChart3, BookOpen, Brain, Check,
+  ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
+  HeartPulse, Languages, Leaf, Lock, Salad, ShieldCheck,
+  Sparkles, Sun, Target, TrendingUp,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackShare } from '../lib/analytics';
 
-/* ── animation presets ── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  hidden: { opacity: 0, y: 24 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: delay * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
-const fadeIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: (i = 0) => ({
-    opacity: 1, scale: 1,
-    transition: { delay: i * 0.12, duration: 0.5, ease: 'easeOut' },
-  }),
+const copy = {
+  tr: {
+    navCta: 'Ücretsiz başla',
+    freeBadge: 'Tamamen ücretsiz · Kredi kartı gerekmez',
+    heroTitle: 'Ücretsiz kişisel fitness ve wellness uygulaması',
+    heroDesc: 'Kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için kişisel planlar; beslenme, ilerleme ve longevity dengesiyle tek yerde.',
+    primaryCta: 'Ücretsiz hesabını oluştur',
+    share: 'Arkadaşına gönder',
+    copied: 'Bağlantı kopyalandı',
+    freeNote: 'Abonelik yok · premium duvarı yok · gizli ücret yok',
+    previewEyebrow: 'Tek sakin akış',
+    previewTitle: 'Planını uygula, alışkanlıklarını gör, ilerlemeni takip et.',
+    previewDesc: 'Full Balance farklı araçlara dağılmadan antrenman, öğün, su, uyku ve vücut gelişimini aynı kişisel panelde birleştirir.',
+    goalsEyebrow: '6 kişisel hedef',
+    goalsTitle: 'Sana uygun başlangıç noktasını seç',
+    goalsDesc: 'Her hedef başlangıç, orta, ileri ve usta seviyelerine göre farklı planlanır. Hedefini daha sonra değiştirebilirsin.',
+    includedEyebrow: 'Programdan fazlası',
+    includedTitle: 'Beslenme, ilerleme ve longevity birlikte çalışır',
+    includedDesc: 'Yeni formlar doldurmak yerine mevcut günlük kayıtların anlamlı bir görünümde birleşir.',
+    nutritionTitle: 'Kişisel beslenme',
+    nutritionDesc: 'Kalori ve makro hedefleri, 7 günlük menü, bütçe seçenekleri, sağlık ve alerji bilgilerine göre uyarlama.',
+    progressTitle: 'Anlaşılır ilerleme',
+    progressDesc: 'Kilo, ölçü, fotoğraf, antrenman, su ve uyku eğilimleri; Excel ve rapor çıktısı dahil.',
+    longevityTitle: 'Longevity dengesi',
+    longevityDesc: 'Hareket, kuvvet, mobilite, toparlanma ve beslenme alışkanlıklarını beş şeffaf başlıkta izle.',
+    longevityNote: 'Biyolojik yaş veya yaşam süresi tahmini yapmaz; yalnızca kaydettiğin alışkanlıkları anlamlandırır.',
+    freeTitle: 'Gerçekten ücretsiz ne demek?',
+    freeDesc: 'Temel özellikleri göstermek için ödeme istemiyoruz. Full Balance’ın kişisel planları ve takip araçları ücretsiz kullanılabilir.',
+    freeItems: ['Kredi kartı istenmez', 'Abonelik ve deneme süresi yok', '6 hedefin tamamı açık', 'Beslenme ve longevity dahil', 'Verilerini dışa aktarabilirsin', 'Türkçe, İngilizce ve İspanyolca'],
+    stepsEyebrow: 'Basit başlangıç',
+    stepsTitle: 'Üç adımda kişisel planın hazır',
+    steps: [
+      ['Hedefini seç', 'Altı hedeften birini ve deneyim seviyeni seç.'],
+      ['Temel bilgilerini gir', 'Plan için gereken kısa bilgileri, sağlık ve alerji tercihlerini tamamla.'],
+      ['Bugünden başla', 'Antrenmanını ve beslenmeni gör; ilerledikçe önerilerin güncellensin.'],
+    ],
+    guidesEyebrow: 'Kaynaklı rehberler',
+    guidesTitle: 'Neyi neden yaptığını da öğren',
+    guidesDesc: 'Longevity, kuvvet, uyku ve mobilite konularını sade, uygulanabilir ve kaynaklı içeriklerle açıklıyoruz.',
+    readGuide: 'Rehberi oku',
+    finalTitle: 'Sağlıklı rutinini bugün ücretsiz kur',
+    finalDesc: 'Tek hedef seç, kısa bilgilerini gir ve kişisel planını kullanmaya başla.',
+    footerMedical: 'Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık durumuna uygun kararlar için sağlık uzmanına danış.',
+  },
+  en: {
+    navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your free personal fitness and wellness app',
+    heroDesc: 'Personal plans for muscle growth, fat loss, yoga, meditation, reformer and pilates, combined with nutrition, progress and longevity balance.',
+    primaryCta: 'Create your free account', share: 'Share with a friend', copied: 'Link copied', freeNote: 'No subscription · no paywall · no hidden fees',
+    previewEyebrow: 'One calm flow', previewTitle: 'Follow your plan, understand your habits and track progress.', previewDesc: 'Full Balance brings workouts, meals, water, sleep and body progress into one personal dashboard.',
+    goalsEyebrow: '6 personal goals', goalsTitle: 'Choose the right place to begin', goalsDesc: 'Each goal has foundation, intermediate, advanced and master plans. You can change your goal later.',
+    includedEyebrow: 'More than a program', includedTitle: 'Nutrition, progress and longevity work together', includedDesc: 'Your existing daily records become one meaningful view without extra forms.',
+    nutritionTitle: 'Personal nutrition', nutritionDesc: 'Calories, macros, weekly menus, budget options and adjustments for health and allergy information.',
+    progressTitle: 'Clear progress', progressDesc: 'Weight, measurements, photos, workouts, water and sleep trends, including Excel and report export.',
+    longevityTitle: 'Longevity balance', longevityDesc: 'Track movement, strength, mobility, recovery and nutrition across five transparent pillars.', longevityNote: 'It does not predict biological age or lifespan; it only helps you understand recorded habits.',
+    freeTitle: 'What does truly free mean?', freeDesc: 'We do not ask for payment to reveal essential features. Personal plans and tracking tools are free to use.',
+    freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
+    stepsEyebrow: 'Simple start', stepsTitle: 'Your personal plan in three steps', steps: [['Choose your goal', 'Select one of six goals and your experience level.'], ['Add the essentials', 'Complete the short profile, health and allergy preferences.'], ['Start today', 'See your workout and nutrition plan; recommendations adapt as you progress.']],
+    guidesEyebrow: 'Sourced guides', guidesTitle: 'Understand why each habit matters', guidesDesc: 'Clear, practical and sourced guides on longevity, strength, sleep and mobility.', readGuide: 'Read guide',
+    finalTitle: 'Build your healthy routine for free today', finalDesc: 'Choose one goal, add the essentials and start using your personal plan.', footerMedical: 'Full Balance is not a medical diagnosis or treatment tool. Consult a health professional for decisions related to your condition.',
+  },
+  es: {
+    navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu aplicación personal gratuita de fitness y bienestar',
+    heroDesc: 'Planes para ganar músculo, perder grasa, yoga, meditación, reformer y pilates, junto con nutrición, progreso y equilibrio de longevidad.',
+    primaryCta: 'Crea tu cuenta gratis', share: 'Compartir', copied: 'Enlace copiado', freeNote: 'Sin suscripción · sin muro de pago · sin costes ocultos',
+    previewEyebrow: 'Un flujo sencillo', previewTitle: 'Sigue tu plan, comprende tus hábitos y controla tu progreso.', previewDesc: 'Full Balance reúne entrenamiento, comidas, agua, sueño y progreso corporal en un panel personal.',
+    goalsEyebrow: '6 objetivos personales', goalsTitle: 'Elige el punto de partida adecuado', goalsDesc: 'Cada objetivo incluye niveles inicial, intermedio, avanzado y maestro. Puedes cambiarlo después.',
+    includedEyebrow: 'Más que un programa', includedTitle: 'Nutrición, progreso y longevidad unidos', includedDesc: 'Tus registros diarios forman una vista útil sin formularios adicionales.',
+    nutritionTitle: 'Nutrición personal', nutritionDesc: 'Calorías, macros, menú semanal, presupuesto y ajustes según salud y alergias.',
+    progressTitle: 'Progreso claro', progressDesc: 'Peso, medidas, fotos, entrenamientos, agua y sueño, con exportación Excel e informes.',
+    longevityTitle: 'Equilibrio de longevidad', longevityDesc: 'Observa movimiento, fuerza, movilidad, recuperación y nutrición en cinco pilares transparentes.', longevityNote: 'No predice edad biológica ni longevidad; solo interpreta los hábitos registrados.',
+    freeTitle: '¿Qué significa realmente gratis?', freeDesc: 'No pedimos pagos para mostrar funciones esenciales. Los planes y herramientas de seguimiento son gratuitos.',
+    freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
+    stepsEyebrow: 'Inicio sencillo', stepsTitle: 'Tu plan personal en tres pasos', steps: [['Elige tu objetivo', 'Selecciona uno de seis objetivos y tu nivel.'], ['Añade lo esencial', 'Completa el perfil breve y tus preferencias de salud y alergias.'], ['Empieza hoy', 'Consulta entrenamiento y nutrición; las recomendaciones se adaptan a tu progreso.']],
+    guidesEyebrow: 'Guías con fuentes', guidesTitle: 'Comprende por qué importa cada hábito', guidesDesc: 'Guías claras y prácticas sobre longevidad, fuerza, sueño y movilidad.', readGuide: 'Leer guía',
+    finalTitle: 'Crea hoy tu rutina saludable gratis', finalDesc: 'Elige un objetivo, añade lo esencial y empieza tu plan personal.', footerMedical: 'Full Balance no es una herramienta de diagnóstico ni tratamiento. Consulta a un profesional de salud.',
+  },
 };
 
-const stagger = {
-  visible: { transition: { staggerChildren: 0.08 } },
+const goalAssets = {
+  muscle: '/images/workouts/chest.png',
+  fatburn: '/images/workouts/legs.png',
+  yoga: '/images/blog/yoga-pilates-mobility.jpg',
+  meditation: '/images/blog/sleep-recovery.jpg',
+  reformer: '/images/blog/strength-healthy-aging.jpg',
+  pilates: '/images/workouts/back.png',
 };
 
-/* ── section wrapper helper ── */
-function Section({ children, className = '', dark = false, id }) {
+function Eyebrow({ children }) {
+  return <p className="mb-3 text-xs font-bold uppercase text-emerald-400">{children}</p>;
+}
+
+function SectionTitle({ eyebrow, title, desc }) {
   return (
-    <section
-      id={id}
-      className={[
-        'py-20 sm:py-28 px-4',
-        dark ? 'bg-slate-900/30 border-y border-slate-800/40' : '',
-        className,
-      ].join(' ')}
-    >
-      {children}
-    </section>
+    <div className="mb-9 max-w-3xl">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="font-outfit text-3xl font-extrabold leading-tight text-white sm:text-4xl">{title}</h2>
+      {desc && <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">{desc}</p>}
+    </div>
   );
 }
 
-function SectionHeader({ tag, title, titleAccent, desc, idx = 0 }) {
-  return (
-    <motion.div
-      initial="hidden" whileInView="visible" viewport={{ once: true }}
-      className="text-center mb-16"
-    >
-      {tag && (
-        <motion.span custom={idx} variants={fadeUp}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-5"
-        >
-          <Sparkles size={12} /> {tag}
-        </motion.span>
-      )}
-      <motion.h2 custom={idx + 1} variants={fadeUp}
-        className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-outfit mb-4"
-      >
-        {title}{' '}
-        {titleAccent && (
-          <span className="bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-transparent">
-            {titleAccent}
-          </span>
-        )}
-      </motion.h2>
-      {desc && (
-        <motion.p custom={idx + 2} variants={fadeUp}
-          className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
-        >
-          {desc}
-        </motion.p>
-      )}
-    </motion.div>
-  );
-}
-
-/* ────────────────────────────────────────────
-   MAIN COMPONENT
-   ──────────────────────────────────────────── */
 export default function LandingPage({ onStart }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
   const [shareCopied, setShareCopied] = useState(false);
-  const tx = (key, fallback) => {
-    const value = t(key);
-    return value && value !== key ? value : fallback;
-  };
+  const c = copy[lang] || copy.tr;
 
-  /* ── stats data ── */
-  const stats = [
-    { value: '%100', label: tx('landing.stats.free', 'Ücretsiz') },
-    { value: '6', label: tx('landing.stats.goals', 'Hedef modu') },
-    { value: '24', label: tx('landing.stats.programs', 'Program') },
-    { value: 'Rapor', label: tx('landing.stats.trainer', 'Gelişim özeti') },
-    { value: 'Excel', label: tx('landing.stats.export', 'Dışa aktar') },
+  const goals = [
+    { key: 'muscle', icon: Dumbbell, color: '#f97316', fallback: 'Kas Gelişimi' },
+    { key: 'fatburn', icon: Flame, color: '#ef4444', fallback: 'Yağ Yakımı' },
+    { key: 'yoga', icon: Sun, color: '#eab308', fallback: 'Yoga' },
+    { key: 'meditation', icon: Brain, color: '#a855f7', fallback: 'Meditasyon' },
+    { key: 'reformer', icon: Cog, color: '#22c55e', fallback: 'Reformer' },
+    { key: 'pilates', icon: CircleDot, color: '#06b6d4', fallback: 'Pilates' },
   ];
 
-  const heroHighlights = [
-    {
-      icon: CreditCard,
-      color: '#22c55e',
-      title: tx('landing.heroHighlights.free.title', 'Tamamen ücretsiz'),
-      desc: tx('landing.heroHighlights.free.desc', 'Kredi kartı, premium duvarı ve gizli ücret yok.'),
-    },
-    {
-      icon: Target,
-      color: '#f97316',
-      title: tx('landing.heroHighlights.goal.title', 'Hedefe göre kişisel plan'),
-      desc: tx('landing.heroHighlights.goal.desc', 'Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon.'),
-    },
-    {
-      icon: BarChart3,
-      color: '#06b6d4',
-      title: tx('landing.heroHighlights.pt.title', 'Gelişim raporu'),
-      desc: tx('landing.heroHighlights.pt.desc', 'Kilo, ölçü, su, uyku ve antrenman verilerini anlaşılır özete dönüştür.'),
-    },
-    {
-      icon: FileDown,
-      color: '#3b82f6',
-      title: tx('landing.heroHighlights.export.title', 'Excel ve rapor çıktısı'),
-      desc: tx('landing.heroHighlights.export.desc', 'Kilo, ölçü, su, uyku ve antrenman verilerini dışa aktar.'),
-    },
-  ];
-
-  const appModules = [
-    {
-      icon: UtensilsCrossed,
-      color: '#22c55e',
-      title: tx('landing.modules.nutrition.title', 'Beslenme'),
-      desc: tx('landing.modules.nutrition.desc', 'BMR, TDEE, BMI, günlük kalori, makro hedefleri ve 7 günlük menü önerileri.'),
-      tags: ['Kalori', 'Makro', 'Menü'],
-    },
-    {
-      icon: Dumbbell,
-      color: '#f97316',
-      title: tx('landing.modules.training.title', 'Antrenman'),
-      desc: tx('landing.modules.training.desc', 'Hedefe ve faza göre program, set/tekrar/dinlenme detayları ve form rehberi.'),
-      tags: ['24 program', 'Timer', 'Split'],
-    },
-    {
-      icon: TrendingUp,
-      color: '#06b6d4',
-      title: tx('landing.modules.progress.title', 'İlerleme'),
-      desc: tx('landing.modules.progress.desc', 'Kilo, yağ oranı, ölçüler, su, uyku ve fotoğraf takibini tek panelde gör.'),
-      tags: ['Grafikler', 'Fotoğraf', 'Strava'],
-    },
-    {
-      icon: Award,
-      color: '#eab308',
-      title: tx('landing.modules.achievements.title', 'Başarım'),
-      desc: tx('landing.modules.achievements.desc', 'Seri, rozet ve hedef kartlarıyla devamlılığı takip et.'),
-      tags: ['Rozet', 'Seri', 'Hedef'],
-    },
-    {
-      icon: UserCheck,
-      color: '#a855f7',
-      title: tx('landing.modules.profile.title', 'Profil ve hedef'),
-      desc: tx('landing.modules.profile.desc', 'Boy, kilo, yaş, aktivite, deneyim ve hedef bilgilerine göre kişiselleştirme.'),
-      tags: ['BMI', 'BMR', 'TDEE'],
-    },
-    {
-      icon: Smartphone,
-      color: '#3b82f6',
-      title: tx('landing.modules.mobile.title', 'Mobil hazır'),
-      desc: tx('landing.modules.mobile.desc', 'Telefon odaklı arayüz, bildirimler, güvenli oturum ve hızlı kullanım.'),
-      tags: ['PWA', 'Bildirim', 'Güvenli'],
-    },
-    {
-      icon: Heart,
-      color: '#10b981',
-      title: tx('longevity.title', 'Longevity dengesi'),
-      desc: tx('longevity.subtitle', 'Hareket, kuvvet, mobilite, toparlanma ve beslenme alışkanlıklarını tek görünümde izle.'),
-      tags: ['5 alan', 'Kişisel öneri', '30 sn'],
-    },
-  ];
-
-  const seoTopics = [
-    { to: '/ucretsiz-fitness-uygulamasi', label: 'Ücretsiz fitness uygulaması' },
-    { to: '/kas-gelisimi-programi', label: 'Kas gelişimi programı' },
-    { to: '/yag-yakimi-programi', label: 'Yağ yakımı programı' },
-    { to: '/ucretsiz-beslenme-programi', label: 'Ücretsiz beslenme programı' },
-    { to: '/kalori-makro-takibi', label: 'Kalori ve makro takibi' },
-    { to: '/protein-ihtiyaci-hesaplama', label: 'Protein ihtiyacı hesaplama' },
-    { to: '/bmi-hesaplama', label: 'BMI hesaplama' },
-    { to: '/antrenman-programi', label: 'Kişisel antrenman programı' },
-    { to: '/ilerleme-takibi', label: 'İlerleme ve gelişim takibi' },
-    { to: '/su-uyku-kilo-takibi', label: 'Su, uyku ve kilo takibi' },
-    { to: '/yoga-uygulamasi', label: 'Yoga uygulaması' },
-    { to: '/pilates-programi', label: 'Pilates programı' },
-    { to: '/reformer-pilates-programi', label: 'Reformer pilates programı' },
-    { to: '/meditasyon-uygulamasi', label: 'Meditasyon uygulaması' },
-    { to: '/alerjiye-gore-beslenme-programi', label: 'Alerjiye göre beslenme' },
-    { to: '/yoga-pilates-reformer', label: 'Yoga, pilates ve reformer' },
-    { to: '/excel-rapor-disari-aktarma', label: 'Excel ve rapor dışa aktarma' },
-    { to: '/blog/longevity-nedir-saglikli-yasam-aliskanliklari', label: 'Longevity ve sağlıklı yaşam rehberi' },
+  const guides = [
+    { slug: 'longevity-nedir-saglikli-yasam-aliskanliklari', image: '/images/blog/longevity-habits.jpg', title: 'Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık' },
+    { slug: 'kuvvet-antrenmani-ve-saglikli-yaslanma', image: '/images/blog/strength-healthy-aging.jpg', title: 'Kuvvet Antrenmanı ve Sağlıklı Yaş Alma' },
+    { slug: 'uyku-toparlanma-ve-longevity', image: '/images/blog/sleep-recovery.jpg', title: 'Uyku, Toparlanma ve Longevity' },
   ];
 
   const handleShare = async () => {
-    const shareData = {
-      title: 'Full Balance',
-      text: 'Tamamen ücretsiz kişisel fitness, beslenme, yoga, pilates, reformer, meditasyon ve ilerleme takip uygulaması.',
-      url: 'https://fullbalance.app/',
-    };
+    const shareData = { title: 'Full Balance', text: c.heroDesc, url: 'https://fullbalance.app/' };
     try {
       if (navigator.share) {
         await navigator.share(shareData);
@@ -220,878 +152,177 @@ export default function LandingPage({ onStart }) {
       setShareCopied(true);
       trackShare('copy_landing');
       setTimeout(() => setShareCopied(false), 2200);
-    } catch (err) {
-      console.warn('[LandingPage]', err?.message || err);
+    } catch (error) {
+      console.warn('[LandingPage]', error?.message || error);
     }
   };
 
-  /* ── 6 goals ── */
-  const goals = [
-    {
-      emoji: '💪', key: 'muscle',
-      icon: Dumbbell, color: '#f97316',
-      bullets: [
-        t('landing.goals.muscle.b1') || 'Hypertrophy & strength split',
-        t('landing.goals.muscle.b2') || 'Progressive overload tracking',
-        t('landing.goals.muscle.b3') || 'Bulk & lean gain meal plans',
-      ],
-    },
-    {
-      emoji: '⚡', key: 'fatburn',
-      icon: Flame, color: '#ef4444',
-      bullets: [
-        t('landing.goals.fatburn.b1') || 'HIIT & Tabata protocols',
-        t('landing.goals.fatburn.b2') || 'Calorie deficit calculator',
-        t('landing.goals.fatburn.b3') || 'Cardio + resistance combos',
-      ],
-    },
-    {
-      emoji: '🧘', key: 'meditation',
-      icon: Brain, color: '#a855f7',
-      bullets: [
-        t('landing.goals.meditation.b1') || 'Breathwork & mindfulness',
-        t('landing.goals.meditation.b2') || 'Zen & Vipassana sessions',
-        t('landing.goals.meditation.b3') || 'Stress & sleep programs',
-      ],
-    },
-    {
-      emoji: '☀️', key: 'yoga',
-      icon: Sun, color: '#eab308',
-      bullets: [
-        t('landing.goals.yoga.b1') || 'Sun Salutation to Ashtanga',
-        t('landing.goals.yoga.b2') || 'Flexibility & mobility flows',
-        t('landing.goals.yoga.b3') || 'Guided sessions with cues',
-      ],
-    },
-    {
-      emoji: '🎯', key: 'pilates',
-      icon: CircleDot, color: '#06b6d4',
-      bullets: [
-        t('landing.goals.pilates.b1') || 'Mat Pilates fundamentals',
-        t('landing.goals.pilates.b2') || 'Core stability & posture',
-        t('landing.goals.pilates.b3') || 'Beginner to advanced flows',
-      ],
-    },
-    {
-      emoji: '🔧', key: 'reformer',
-      icon: Cog, color: '#22c55e',
-      bullets: [
-        t('landing.goals.reformer.b1') || 'Machine-based resistance',
-        t('landing.goals.reformer.b2') || 'Spring tension progressions',
-        t('landing.goals.reformer.b3') || 'Full-body sculpt routines',
-      ],
-    },
-  ];
-
-  /* ── adaptive phases ── */
-  const phases = [
-    { phase: 0, label: t('landing.adaptive.phase0') || 'Foundation', color: '#22c55e', icon: UserCheck },
-    { phase: 1, label: t('landing.adaptive.phase1') || 'Intermediate', color: '#3b82f6', icon: TrendingUp },
-    { phase: 2, label: t('landing.adaptive.phase2') || 'Advanced', color: '#f97316', icon: Flame },
-    { phase: 3, label: t('landing.adaptive.phase3') || 'Master', color: '#a855f7', icon: Trophy },
-  ];
-
-  /* ── nutrition features ── */
-  const nutritionFeatures = [
-    { icon: Calculator, color: '#f97316', title: t('landing.nutrition.calorie.title') || 'BMR, TDEE & BMI', desc: t('landing.nutrition.calorie.desc') || 'Kişisel kalori hesaplama ile hedefine uygun beslenme' },
-    { icon: Apple, color: '#22c55e', title: t('landing.nutrition.meal.title') || '7 Günlük Menü', desc: t('landing.nutrition.meal.desc') || 'Makro takipli günlük yemek planları' },
-    { icon: ShoppingBag, color: '#06b6d4', title: t('landing.nutrition.budget.title') || 'Bütçeye Uygun', desc: t('landing.nutrition.budget.desc') || 'Ekonomik, Orta ve Premium seçenekler' },
-    { icon: Camera, color: '#eab308', title: t('landing.nutrition.photo.title') || 'Fotoğrafla Kalori', desc: t('landing.nutrition.photo.desc') || 'Yemek fotoğrafı yükle, kaloriyi gör' },
-  ];
-
-  /* ── tracking features ── */
-  const trackingFeatures = [
-    { icon: Droplets, color: '#06b6d4', title: t('landing.tracking.water.title') || 'Su Takibi', desc: t('landing.tracking.water.desc') || 'Günlük su hedefi ve hatırlatmalar' },
-    { icon: Image, color: '#a855f7', title: t('landing.tracking.photos.title') || 'İlerleme Fotoğrafları', desc: t('landing.tracking.photos.desc') || 'Öncesi-sonrası galeri karşılaştırma' },
-    { icon: Scale, color: '#22c55e', title: t('landing.tracking.weight.title') || 'Kilo & Ölçü Takibi', desc: t('landing.tracking.weight.desc') || 'Ağırlık ve vücut ölçümlerini kaydet' },
-    { icon: Award, color: '#f59e0b', title: t('landing.tracking.badges.title') || 'Başarı Rozetleri', desc: t('landing.tracking.badges.desc') || 'Kilometre taşları ve ödül sistemi' },
-  ];
-
-  /* ── workout features ── */
-  const workoutFeatures = [
-    { icon: Dumbbell, color: '#f97316', title: t('landing.workouts.programs.title') || '24 Program', desc: t('landing.workouts.programs.desc') || '6 hedef × 4 faz = 24 benzersiz program' },
-    { icon: Activity, color: '#3b82f6', title: t('landing.workouts.split.title') || 'Gün Gün Split', desc: t('landing.workouts.split.desc') || 'Set, tekrar ve dinlenme süreleri' },
-    { icon: Clock, color: '#22c55e', title: t('landing.workouts.timer.title') || 'Dinlenme Zamanlayıcı', desc: t('landing.workouts.timer.desc') || 'Sesli uyarılı rest timer' },
-    { icon: BookOpen, color: '#a855f7', title: t('landing.workouts.form.title') || 'Form Rehberi', desc: t('landing.workouts.form.desc') || 'Egzersiz açıklamaları ve ipuçları' },
-  ];
-
-  /* ── free features ── */
-  const freeFeatures = [
-    { icon: CreditCard, text: t('landing.free.noCost') || '%100 ücretsiz — gizli ücret yok' },
-    { icon: UserCheck, text: t('landing.free.noPT') || 'PT\'ye gerek yok — aynı kalite programlar' },
-    { icon: Languages, text: t('landing.free.langs') || '3 dil desteği (TR, EN, ES)' },
-    { icon: MonitorSmartphone, text: t('landing.free.device') || 'Her cihazda çalışır (mobile-first)' },
-    { icon: RefreshCw, text: t('landing.free.switch') || 'Profil ve hedef değiştirme her zaman' },
-    { icon: FileDown, text: t('landing.free.export') || 'Veri dışa aktarma' },
-  ];
-
-  /* ── steps ── */
-  const stepKeys = ['s1', 's2', 's3'];
-  const stepIcons = [UserCheck, BarChart3, Sparkles];
-
-  /* ── comparison: PT vs Full Balance ── */
-  const comparisons = [
-    { icon: CreditCard, pt: t('landing.compare.c1.pt') || '₺2.000-5.000/ay', fb: t('landing.compare.c1.fb') || '%100 Ücretsiz', label: t('landing.compare.c1.label') || 'Maliyet' },
-    { icon: Target, pt: t('landing.compare.c2.pt') || 'Tek odak (fitness)', fb: t('landing.compare.c2.fb') || 'Fitness + Yoga + Meditasyon + Beslenme', label: t('landing.compare.c2.label') || 'Kapsam' },
-    { icon: Clock, pt: t('landing.compare.c3.pt') || 'Randevuya bağlı', fb: t('landing.compare.c3.fb') || '7/24 her yerden erişim', label: t('landing.compare.c3.label') || 'Erişim' },
-    { icon: RefreshCw, pt: t('landing.compare.c4.pt') || 'Standart program', fb: t('landing.compare.c4.fb') || 'AI destekli adaptif planlar', label: t('landing.compare.c4.label') || 'Program' },
-    { icon: BarChart3, pt: t('landing.compare.c5.pt') || 'Kağıt/WhatsApp takip', fb: t('landing.compare.c5.fb') || 'Akıllı ilerleme analizi', label: t('landing.compare.c5.label') || 'Takip' },
-    { icon: Globe, pt: t('landing.compare.c6.pt') || 'Tek dil', fb: t('landing.compare.c6.fb') || '3 dil desteği (TR/EN/ES)', label: t('landing.compare.c6.label') || 'Dil' },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-
-      {/* ═══════════════════ NAV ═══════════════════ */}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-slate-950/70 border-b border-slate-800/40 safe-area-top"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <div className="min-h-screen overflow-x-hidden bg-slate-950 text-white">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl safe-area-top">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
+          <Link to="/" className="flex shrink-0 items-center gap-1.5" aria-label="Full Balance ana sayfa">
+            <Sparkles size={18} className="text-orange-500" />
+            <span className="whitespace-nowrap font-outfit text-xs font-extrabold text-white sm:text-base">FULL <span className="text-cyan-400">BALANCE</span></span>
+          </Link>
           <div className="flex items-center gap-2">
-            <Sparkles className="text-[#ff6d00]" size={20} />
-            <span className="font-outfit font-bold text-base tracking-tight bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-              FULL BALANCE
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Language switcher */}
-            <div className="flex items-center gap-0.5 mr-1">
+            <div className="flex items-center" aria-label="Language">
               {SUPPORTED.map((code) => (
-                <button
-                  key={code}
-                  onClick={() => setLang(code)}
-                  className={[
-                    'text-sm px-1 py-0.5 rounded transition-all cursor-pointer',
-                    lang === code ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70',
-                  ].join(' ')}
-                  title={code.toUpperCase()}
-                >
-                  {langFlags[code]}
-                </button>
+                <button key={code} onClick={() => setLang(code)} className={`h-8 w-7 text-xs sm:w-8 sm:text-sm ${lang === code ? 'opacity-100' : 'opacity-40 hover:opacity-75'}`} title={code.toUpperCase()}>{langFlags[code]}</button>
               ))}
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onStart}
-              className="px-4 py-2 text-xs font-bold font-outfit rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/20 cursor-pointer"
-            >
-              {t('landing.startNow') || 'Başla'}
-            </motion.button>
+            <button onClick={onStart} className="min-h-10 bg-orange-500 px-3 font-outfit text-xs font-bold text-white hover:bg-orange-400 sm:px-4">{c.navCta}</button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* ═══════════════════ SECTION 1: HERO ═══════════════════ */}
-      <section className="relative pt-28 pb-20 sm:pt-40 sm:pb-32 px-4 overflow-hidden">
-        {/* Background glows */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[min(700px,100vw)] h-[500px] bg-gradient-radial from-orange-500/10 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-40 right-0 w-[min(400px,50vw)] h-[400px] bg-gradient-radial from-blue-500/8 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[min(300px,40vw)] h-[300px] bg-gradient-radial from-purple-500/6 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium mb-6">
-              <Sparkles size={12} />
-              {tx('landing.badge', '%100 ücretsiz fitness, wellness ve rapor uygulaması')}
-            </span>
+      <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
+        <img src="/images/blog/longevity-habits.jpg" alt="Full Balance ile hareket, beslenme ve sağlıklı yaşam alışkanlıkları" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
+        <div className="absolute inset-0 bg-slate-950/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/20" />
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-6 sm:pb-24">
+          <motion.div initial="hidden" animate="visible" className="max-w-4xl">
+            <motion.p custom={0} variants={fadeUp} className="mb-5 inline-flex items-center gap-2 border border-emerald-400/40 bg-emerald-950/75 px-3 py-2 text-xs font-bold text-emerald-300">
+              <CreditCard size={15} /> {c.freeBadge}
+            </motion.p>
+            <motion.h1 custom={1} variants={fadeUp} className="max-w-4xl break-words font-outfit text-4xl font-black leading-[1.06] text-white sm:text-6xl lg:text-7xl">{c.heroTitle}</motion.h1>
+            <motion.p custom={2} variants={fadeUp} className="mt-6 max-w-3xl text-base leading-8 text-slate-200 sm:text-xl">{c.heroDesc}</motion.p>
+            <motion.div custom={3} variants={fadeUp} className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <button onClick={onStart} className="inline-flex min-h-14 w-full items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400 sm:w-auto">{c.primaryCta}<ChevronRight size={18} /></button>
+              <button onClick={handleShare} className="inline-flex min-h-14 w-full items-center justify-center gap-2 border border-white/25 bg-slate-950/55 px-6 font-outfit text-sm font-bold text-white hover:border-cyan-400/60 sm:w-auto"><ArrowRight size={17} />{shareCopied ? c.copied : c.share}</button>
+            </motion.div>
+            <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="text-emerald-400" /> {c.freeNote}</motion.p>
           </motion.div>
+        </div>
+      </header>
 
-          <motion.h1
-            custom={1} variants={fadeUp} initial="hidden" animate="visible"
-            className="text-4xl sm:text-5xl md:text-7xl font-extrabold font-outfit leading-[1.08] tracking-tight mb-6"
-          >
-            {tx('landing.heroTitle1', 'Tek Uygulamada')}{' '}
-            <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-              {tx('landing.heroTitle2', 'Ücretsiz Kişisel Koçluk')}
-            </span>
-          </motion.h1>
-
-          <motion.p
-            custom={2} variants={fadeUp} initial="hidden" animate="visible"
-            className="text-slate-400 text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed"
-          >
-            {tx('landing.heroDesc', 'Full Balance; beslenme, antrenman, ilerleme, başarımlar, Excel/rapor dışa aktarımı ve mobil hatırlatmaları tek yerde toplayan tamamen ücretsiz kişisel fitness uygulaması.')}
-          </motion.p>
-
-          <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(249,115,22,0.35)' }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onStart}
-              className="flex items-center gap-2 px-10 py-4 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold font-outfit shadow-xl shadow-orange-500/25 cursor-pointer"
-            >
-              {t('landing.ctaStart') || 'Ücretsiz Başla'}
-              <ChevronRight size={16} />
-            </motion.button>
-            <button
-              type="button"
-              onClick={handleShare}
-              className="flex items-center gap-2 px-6 py-4 rounded-xl border border-slate-700/70 bg-slate-900/60 text-slate-200 text-sm font-bold font-outfit hover:border-blue-500/40 hover:text-blue-300 transition-colors"
-            >
-              <ArrowRight size={15} />
-              {shareCopied ? 'Link kopyalandı' : 'Arkadaşına gönder'}
-            </button>
-            <span className="flex items-center gap-1.5 text-slate-500 text-xs">
-              <Shield size={12} />
-              {tx('landing.noCard', 'Kredi kartı yok · premium duvarı yok')}
-            </span>
-          </motion.div>
-
-          <motion.div
-            custom={4}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left"
-          >
-            {heroHighlights.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className="min-w-0 rounded-2xl border border-slate-800/70 bg-slate-900/65 p-4 backdrop-blur"
-                >
-                  <div
-                    className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: `${item.color}18` }}
-                  >
-                    <Icon size={20} style={{ color: item.color }} />
-                  </div>
-                  <h3 className="font-outfit text-sm font-bold text-white">{item.title}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-500">{item.desc}</p>
-                </div>
-              );
-            })}
-          </motion.div>
+      <section className="border-b border-white/10 py-16 sm:py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <div>
+            <Eyebrow>{c.previewEyebrow}</Eyebrow>
+            <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.previewTitle}</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.previewDesc}</p>
+            <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-800 pt-5 text-center">
+              <div><strong className="block text-xl text-white">6</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'hedef' : 'goals'}</span></div>
+              <div><strong className="block text-xl text-white">24</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'program' : 'programs'}</span></div>
+              <div><strong className="block text-xl text-emerald-400">%100</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'ücretsiz' : 'free'}</span></div>
+            </div>
+          </div>
+          <img src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" width="1200" height="630" className="w-full border border-slate-800 object-cover" />
         </div>
       </section>
 
-      {/* ═══════════════════ STATS BAR ═══════════════════ */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="border-y border-slate-800/50 bg-slate-900/30"
-      >
-        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-wrap justify-center gap-6 sm:grid sm:grid-cols-5">
-          {stats.map((s, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="text-center w-[calc(50%-12px)] sm:w-auto"
-            >
-              <p className="text-2xl sm:text-3xl font-extrabold font-outfit bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-transparent">
-                {s.value}
-              </p>
-              <p className="text-xs text-slate-500 mt-1">{s.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* ═══════════════════ APP MODULES OVERVIEW ═══════════════════ */}
-      <Section id="modules" className="pt-16 sm:pt-24">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader
-            tag={tx('landing.modules.tag', 'Uygulamada Neler Var?')}
-            title={tx('landing.modules.title', 'Tüm Ana Modüller')}
-            titleAccent={tx('landing.modules.titleAccent', 'Ücretsiz Dahil')}
-            desc={tx('landing.modules.desc', 'Girişten itibaren kullanıcıya ne kazanacağını net göster: hedefe göre plan, günlük takip, gelişim raporu, dışa aktarma ve mobil kullanım tek akışta çalışır.')}
-          />
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
-            {appModules.map((module) => {
-              const Icon = module.icon;
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionTitle eyebrow={c.goalsEyebrow} title={c.goalsTitle} desc={c.goalsDesc} />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {goals.map((goal, index) => {
+              const Icon = goal.icon;
+              const translated = t(`landing.goals.${goal.key}.title`);
               return (
-                <motion.div
-                  key={module.title}
-                  variants={fadeUp}
-                  whileHover={{ y: -4, borderColor: `${module.color}55` }}
-                  className="min-w-0 rounded-2xl border border-slate-800/60 bg-slate-900/60 p-5 transition-all"
-                >
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-                      style={{ backgroundColor: `${module.color}16` }}
-                    >
-                      <Icon size={24} style={{ color: module.color }} />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-outfit text-base font-bold text-white">{module.title}</h3>
-                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{module.desc}</p>
-                    </div>
+                <motion.article key={goal.key} custom={index} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group overflow-hidden border border-slate-800 bg-slate-900/55">
+                  <img src={goalAssets[goal.key]} alt="" width="1024" height="1024" loading="lazy" className="aspect-[4/3] w-full object-cover opacity-75 transition-opacity group-hover:opacity-100" />
+                  <div className="p-4">
+                    <Icon size={19} style={{ color: goal.color }} />
+                    <h3 className="mt-3 break-words font-outfit text-sm font-bold text-white">{translated && translated !== `landing.goals.${goal.key}.title` ? translated : goal.fallback}</h3>
                   </div>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {module.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-lg border border-slate-700/50 bg-slate-950/45 px-2.5 py-1 text-[11px] font-semibold text-slate-400"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
+                </motion.article>
               );
             })}
-          </motion.div>
+          </div>
         </div>
-      </Section>
+      </section>
 
-      {/* ═══════════════════ SEARCH INTENT LINKS ═══════════════════ */}
-      <Section dark id="popular-searches" className="py-14 sm:py-20">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeader
-            tag="Popüler Aramalar"
-            title="Full Balance ile"
-            titleAccent="Neler Yapabilirsin?"
-            desc="Google ve AI arama sistemlerinin de anlayabileceği net konu sayfaları: ücretsiz kullanım, kalori takibi, antrenman, ilerleme, alışkanlık takibi ve dışa aktarma."
-          />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {seoTopics.map((topic) => (
-              <Link
-                key={topic.to}
-                to={topic.to}
-                className="group min-w-0 rounded-2xl border border-slate-800/70 bg-slate-950/45 p-4 transition-all hover:border-orange-500/45 hover:bg-slate-900/80"
-              >
-                <span className="text-sm font-bold text-slate-200 group-hover:text-orange-300">{topic.label}</span>
-                <span className="mt-3 flex items-center gap-1 text-xs font-semibold text-slate-500 group-hover:text-blue-300">
-                  Detayları gör <ArrowRight size={13} />
-                </span>
+      <section className="border-y border-slate-800 bg-slate-900/35 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionTitle eyebrow={c.includedEyebrow} title={c.includedTitle} desc={c.includedDesc} />
+          <div className="grid gap-px overflow-hidden border border-slate-800 bg-slate-800 md:grid-cols-3">
+            {[
+              { icon: Salad, color: 'text-emerald-400', title: c.nutritionTitle, desc: c.nutritionDesc },
+              { icon: TrendingUp, color: 'text-cyan-400', title: c.progressTitle, desc: c.progressDesc },
+              { icon: HeartPulse, color: 'text-rose-400', title: c.longevityTitle, desc: c.longevityDesc },
+            ].map((item) => (
+              <article key={item.title} className="bg-slate-950 p-6 sm:p-8">
+                <item.icon size={26} className={item.color} />
+                <h3 className="mt-5 font-outfit text-xl font-bold">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-400">{item.desc}</p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-5 flex items-start gap-3 border-l-2 border-emerald-500 bg-emerald-500/5 p-4 text-sm leading-6 text-slate-400">
+            <Activity size={19} className="mt-0.5 shrink-0 text-emerald-400" />
+            <p>{c.longevityNote} <Link to="/blog/longevity-nedir-saglikli-yasam-aliskanliklari" className="font-semibold text-emerald-400 underline underline-offset-4">{c.readGuide}</Link></p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <Eyebrow>{lang === 'tr' ? '%100 ücretsiz' : lang === 'es' ? '100% gratis' : '100% free'}</Eyebrow>
+            <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.freeTitle}</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.freeDesc}</p>
+            <button onClick={onStart} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {c.freeItems.map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border border-slate-800 bg-slate-900/45 px-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={17} className="text-emerald-400" /></span><span className="text-sm text-slate-300">{item}</span></div>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-800 bg-slate-900/35 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionTitle eyebrow={c.stepsEyebrow} title={c.stepsTitle} />
+          <div className="grid gap-4 md:grid-cols-3">
+            {c.steps.map(([title, desc], index) => (
+              <article key={title} className="border-t-2 border-orange-500 bg-slate-950 p-6">
+                <span className="text-xs font-black text-orange-400">0{index + 1}</span>
+                <h3 className="mt-5 font-outfit text-xl font-bold">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-400">{desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <SectionTitle eyebrow={c.guidesEyebrow} title={c.guidesTitle} desc={c.guidesDesc} />
+            <Link to="/blog" className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">{lang === 'tr' ? 'Tüm rehberler' : 'All guides'}<ArrowRight size={16} /></Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {guides.map((guide) => (
+              <Link key={guide.slug} to={`/blog/${guide.slug}`} className="group overflow-hidden border border-slate-800 bg-slate-900/50">
+                <img src={guide.image} alt="" width="1600" height="900" loading="lazy" className="aspect-video w-full object-cover opacity-80 transition-opacity group-hover:opacity-100" />
+                <div className="p-5"><BookOpen size={18} className="text-emerald-400" /><h3 className="mt-3 font-outfit text-lg font-bold leading-snug text-white">{guide.title}</h3><span className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-emerald-400">{c.readGuide}<ArrowRight size={14} /></span></div>
               </Link>
             ))}
           </div>
         </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 2: 6 GOAL CATEGORIES ═══════════════════ */}
-      <Section id="goals">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader
-            tag={t('landing.goals.tag') || '6 Hedef Kategorisi'}
-            title={t('landing.goals.title') || 'Hedefini Seç,'}
-            titleAccent={t('landing.goals.titleAccent') || 'Yolculuğuna Başla'}
-            desc={t('landing.goals.desc') || 'Fitness, wellness ve zihinsel sağlık — hepsi tek platformda. Hedefine özel program ve beslenme planı.'}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {goals.map((g, i) => {
-              const Icon = g.icon;
-              return (
-                <motion.div
-                  key={g.key}
-                  custom={i}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4, borderColor: `${g.color}50` }}
-                  className="relative p-6 rounded-2xl bg-slate-900/60 border border-slate-800/60 transition-all group overflow-hidden"
-                >
-                  {/* Accent glow */}
-                  <div
-                    className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
-                    style={{ backgroundColor: g.color }}
-                  />
-
-                  <div className="relative">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">{g.emoji}</span>
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: `${g.color}15` }}
-                      >
-                        <Icon size={20} style={{ color: g.color }} />
-                      </div>
-                    </div>
-                    <h3 className="font-outfit font-bold text-white text-lg mb-3">
-                      {t(`landing.goals.${g.key}.title`) || g.key}
-                    </h3>
-                    <ul className="space-y-2">
-                      {g.bullets.map((b, bi) => (
-                        <li key={bi} className="flex items-start gap-2 text-slate-400 text-xs leading-relaxed">
-                          <CheckCircle2 size={14} className="mt-0.5 shrink-0" style={{ color: g.color }} />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 3: ADAPTIVE TRAINING SYSTEM ═══════════════════ */}
-      <Section dark id="adaptive">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeader
-            tag={t('landing.adaptive.tag') || 'Akıllı İlerleme'}
-            title={t('landing.adaptive.title') || 'Akıllı Faz Sistemi'}
-            titleAccent={t('landing.adaptive.titleAccent') || '— 4 Aşama'}
-            desc={t('landing.adaptive.desc') || 'AI ilerlemenizi analiz eder ve ne zaman bir sonraki faza geçmeniz gerektiğini otomatik önerir. Plato tespiti ve stagnasyon uyarıları ile sürekli gelişim.'}
-          />
-
-          {/* Phase timeline */}
-          <div className="relative max-w-3xl mx-auto">
-            {/* Connecting line */}
-            <div className="absolute top-8 left-8 right-8 h-0.5 bg-gradient-to-r from-green-500/40 via-blue-500/40 via-orange-500/40 to-purple-500/40 hidden sm:block" />
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4 mb-12">
-              {phases.map((p, i) => {
-                const PhaseIcon = p.icon;
-                return (
-                  <motion.div
-                    key={p.phase}
-                    custom={i}
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    className="relative text-center"
-                  >
-                    <div
-                      className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3 border border-slate-700/50 relative z-10"
-                      style={{ backgroundColor: `${p.color}12` }}
-                    >
-                      <PhaseIcon size={28} style={{ color: p.color }} />
-                    </div>
-                    <div className="text-xs font-bold font-outfit mb-1" style={{ color: p.color }}>
-                      {t('landing.adaptive.phaseLabel') || 'FAZ'} {p.phase}
-                    </div>
-                    <div className="text-sm font-outfit font-semibold text-white">
-                      {p.label}
-                    </div>
-                    {i < 3 && (
-                      <div className="hidden sm:flex absolute top-8 -right-4 z-20 text-slate-600">
-                        <ArrowRight size={16} />
-                      </div>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* AI feature callouts */}
-            <motion.div
-              initial="hidden" whileInView="visible" viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-            >
-              {[
-                { icon: Brain, text: t('landing.adaptive.ai') || 'AI ilerleme analizi', color: '#3b82f6' },
-                { icon: Target, text: t('landing.adaptive.plateau') || 'Plato tespiti', color: '#f97316' },
-                { icon: TrendingUp, text: t('landing.adaptive.auto') || 'Otomatik faz önerisi', color: '#22c55e' },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  custom={i + 4}
-                  variants={fadeUp}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/40 border border-slate-700/30"
-                >
-                  <item.icon size={20} style={{ color: item.color }} />
-                  <span className="text-sm text-slate-300">{item.text}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 4: NUTRITION & CALORIE ═══════════════════ */}
-      <Section id="nutrition">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader
-            tag={t('landing.nutrition.tag') || 'Kişisel Beslenme'}
-            title={t('landing.nutrition.title') || 'Kişisel Beslenme'}
-            titleAccent={t('landing.nutrition.titleAccent') || '& Kalori Takibi'}
-            desc={t('landing.nutrition.desc') || 'BMR, TDEE ve BMI hesaplamaları ile kişiselleştirilmiş beslenme planları. Bütçene uygun seçeneklerle makro hedeflerine ulaş.'}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-            {nutritionFeatures.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <motion.div
-                  key={i}
-                  custom={i}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="flex gap-4 p-6 rounded-2xl bg-slate-900/60 border border-slate-800/60 transition-all"
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `${f.color}15` }}
-                  >
-                    <Icon size={24} style={{ color: f.color }} />
-                  </div>
-                  <div>
-                    <h3 className="font-outfit font-bold text-white text-sm mb-1">{f.title}</h3>
-                    <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 5: SMART TRACKING ═══════════════════ */}
-      <Section dark id="tracking">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader
-            tag={t('landing.tracking.tag') || 'Gelişimini Gör'}
-            title={t('landing.tracking.title') || 'Akıllı Takip'}
-            titleAccent={t('landing.tracking.titleAccent') || 'Sistemi'}
-            desc={t('landing.tracking.desc') || 'Su, kilo, vücut ölçüleri ve ilerleme fotoğrafları — tüm verilerini tek yerde takip et, başarı rozetleri kazan.'}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-            {trackingFeatures.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <motion.div
-                  key={i}
-                  custom={i}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="flex gap-4 p-6 rounded-2xl bg-slate-800/40 border border-slate-700/30 transition-all"
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `${f.color}15` }}
-                  >
-                    <Icon size={24} style={{ color: f.color }} />
-                  </div>
-                  <div>
-                    <h3 className="font-outfit font-bold text-white text-sm mb-1">{f.title}</h3>
-                    <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 6: WORKOUT FEATURES ═══════════════════ */}
-      <Section id="workouts">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader
-            tag={t('landing.workouts.tag') || 'Profesyonel Programlar'}
-            title={t('landing.workouts.title') || 'Profesyonel Antrenman'}
-            titleAccent={t('landing.workouts.titleAccent') || 'Programları'}
-            desc={t('landing.workouts.desc') || '6 hedef × 4 faz = 24 benzersiz program. Gün gün egzersiz planı, set/tekrar/dinlenme detayları ve sesli zamanlayıcı.'}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-            {workoutFeatures.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <motion.div
-                  key={i}
-                  custom={i}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className="flex gap-4 p-6 rounded-2xl bg-slate-900/60 border border-slate-800/60 transition-all"
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `${f.color}15` }}
-                  >
-                    <Icon size={24} style={{ color: f.color }} />
-                  </div>
-                  <div>
-                    <h3 className="font-outfit font-bold text-white text-sm mb-1">{f.title}</h3>
-                    <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 7: FREE & ACCESSIBLE ═══════════════════ */}
-      <Section dark id="free">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            tag={t('landing.free.tag') || 'Sıfır Maliyet'}
-            title={t('landing.free.title') || 'Tamamen Ücretsiz,'}
-            titleAccent={t('landing.free.titleAccent') || 'Sonsuza Kadar'}
-            desc={t('landing.free.desc') || 'Gizli ücret yok, premium duvarı yok, reklam yok. Profesyonel kalitede fitness programları herkes için erişilebilir olmalı.'}
-          />
-
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto"
-          >
-            {freeFeatures.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/40 border border-slate-700/30"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                    <Icon size={18} className="text-green-400" />
-                  </div>
-                  <span className="text-sm text-slate-300">{f.text}</span>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 8: HOW IT WORKS ═══════════════════ */}
-      <Section id="steps">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            title={t('landing.stepsTitle1') || 'Nasıl'}
-            titleAccent={t('landing.stepsTitle2') || 'Çalışır?'}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {stepKeys.map((key, i) => {
-              const StepIcon = stepIcons[i];
-              return (
-                <motion.div
-                  key={key}
-                  custom={i + 1}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="relative text-center p-8 rounded-2xl bg-slate-900/40 border border-slate-800/40"
-                >
-                  <div className="text-5xl font-extrabold font-outfit bg-gradient-to-b from-orange-500/25 to-transparent bg-clip-text text-transparent mb-2">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <div className="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-orange-500/10 to-blue-500/10 border border-slate-800 flex items-center justify-center mb-4">
-                    <StepIcon size={22} className="text-orange-400" />
-                  </div>
-                  <h3 className="font-outfit font-bold text-white text-base mb-2">
-                    {t(`landing.steps.${key}.title`) || ['Kayıt Ol', 'Bilgilerini Gir', 'Planını Al'][i]}
-                  </h3>
-                  <p className="text-slate-500 text-xs leading-relaxed">
-                    {t(`landing.steps.${key}.desc`) || ['Hızlı ve ücretsiz kayıt', 'Boy, kilo, hedef ve deneyim seviyeni gir', 'Kişiselleştirilmiş program ve beslenme planın hazır'][i]}
-                  </p>
-                  {i < 2 && (
-                    <div className="hidden sm:block absolute top-1/2 -right-3 text-slate-700">
-                      <ChevronRight size={20} />
-                    </div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 9: PT vs FULL BALANCE ═══════════════════ */}
-      <Section dark id="compare">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeader
-            tag={t('landing.compare.tag') || 'Neden Full Balance?'}
-            title={t('landing.compare.title') || 'Personal Trainer vs'}
-            titleAccent={t('landing.compare.titleAccent') || 'Full Balance'}
-          />
-
-          {/* comparison table */}
-          <motion.div
-            variants={fadeIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="rounded-2xl border border-slate-700/30 overflow-hidden"
-          >
-            {/* table header */}
-            <div className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.2fr_1fr_1fr] text-center">
-              <div className="p-3 sm:p-4 bg-slate-800/60 border-b border-r border-slate-700/30" />
-              <div className="p-3 sm:p-4 bg-slate-800/60 border-b border-r border-slate-700/30">
-                <p className="font-outfit font-bold text-slate-400 text-xs sm:text-sm">🏋️ PT</p>
-              </div>
-              <div className="p-3 sm:p-4 bg-gradient-to-r from-orange-500/10 to-blue-500/10 border-b border-slate-700/30">
-                <p className="font-outfit font-bold text-transparent bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-xs sm:text-sm">✨ Full Balance</p>
-              </div>
-            </div>
-
-            {/* table rows */}
-            {comparisons.map((c, i) => (
-              <motion.div
-                key={i}
-                custom={i}
-                variants={fadeIn}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className={`grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.2fr_1fr_1fr] items-center ${i < comparisons.length - 1 ? 'border-b border-slate-700/20' : ''}`}
-              >
-                {/* label */}
-                <div className="flex items-center gap-2 p-3 sm:p-4 border-r border-slate-700/20">
-                  <c.icon size={16} className="text-orange-400 shrink-0 hidden sm:block" />
-                  <span className="text-xs sm:text-sm font-outfit font-medium text-white">{c.label}</span>
-                </div>
-                {/* PT */}
-                <div className="p-3 sm:p-4 text-center border-r border-slate-700/20">
-                  <span className="text-xs sm:text-sm text-slate-500">{c.pt}</span>
-                </div>
-                {/* Full Balance */}
-                <div className="p-3 sm:p-4 text-center bg-gradient-to-r from-orange-500/5 to-blue-500/5">
-                  <span className="text-xs sm:text-sm text-emerald-400 font-medium">{c.fb}</span>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* bottom highlight */}
-          <motion.div
-            variants={fadeIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mt-6 text-center"
-          >
-            <p className="text-sm text-slate-500 font-inter">
-              {t('landing.compare.bottomText') || 'Aynı kalite, sıfır maliyet. Hemen başla.'}
-            </p>
-          </motion.div>
-        </div>
-      </Section>
-
-      {/* ═══════════════════ SECTION 10: FINAL CTA ═══════════════════ */}
-      <section className="relative py-24 sm:py-32 px-4 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-slate-950 to-blue-500/5 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-orange-500/8 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
-
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="relative max-w-3xl mx-auto text-center"
-        >
-          <motion.div custom={0} variants={fadeUp}>
-            <Sparkles size={32} className="mx-auto text-orange-500 mb-6" />
-          </motion.div>
-
-          <motion.h2 custom={1} variants={fadeUp}
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-outfit mb-4"
-          >
-            {t('landing.readyTitle') || 'Dönüşümün'}
-            <br />
-            <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-blue-500 bg-clip-text text-transparent">
-              {t('landing.readySuffix') || 'Bugün Başlasın'}
-            </span>
-          </motion.h2>
-
-          <motion.p custom={2} variants={fadeUp}
-            className="text-slate-400 text-sm sm:text-base mb-4 max-w-lg mx-auto leading-relaxed"
-          >
-            {t('landing.readyDesc') || 'Profesyonel antrenman programları, kişisel beslenme planları ve akıllı takip araçları — hepsi ücretsiz.'}
-          </motion.p>
-
-          <motion.p custom={3} variants={fadeUp}
-            className="text-orange-400/80 text-xs sm:text-sm mb-8 italic"
-          >
-            {t('landing.readyQuote') || '"PT\'lere verdiğin parayı artık kendin için kullan."'}
-          </motion.p>
-
-          <motion.button
-            custom={4} variants={fadeUp}
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            whileHover={{ scale: 1.05, boxShadow: '0 0 70px rgba(249,115,22,0.3)' }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onStart}
-            className="px-12 py-5 rounded-xl bg-gradient-to-r from-orange-500 to-blue-500 text-white text-base font-bold font-outfit shadow-2xl shadow-orange-500/20 cursor-pointer"
-          >
-            {t('landing.ctaGenerate') || 'Ücretsiz Başla — Hemen'}
-          </motion.button>
-          <button
-            type="button"
-            onClick={handleShare}
-            className="mt-4 block mx-auto rounded-xl border border-slate-700/60 px-7 py-3 text-xs font-outfit font-bold text-slate-300 hover:border-blue-500/40 hover:text-blue-300 transition-colors"
-          >
-            {shareCopied ? 'Paylaşım linki kopyalandı' : 'Full Balance linkini paylaş'}
-          </button>
-
-          <motion.div custom={5} variants={fadeUp}
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="flex items-center justify-center gap-6 mt-6 text-xs text-slate-600"
-          >
-            <span className="flex items-center gap-1"><Shield size={12} /> {t('landing.noCard') || 'Kredi kartı gerekmez'}</span>
-            <span className="flex items-center gap-1"><Lock size={12} /> {t('landing.safe') || 'Güvenli'}</span>
-            <span className="flex items-center gap-1"><Globe size={12} /> {t('landing.global') || '3 dil'}</span>
-          </motion.div>
-        </motion.div>
       </section>
 
-      {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="border-t border-slate-800/40 py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Medical Disclaimer */}
-          <div className="max-w-2xl mx-auto mb-4">
-            <p className="text-[9px] text-slate-600 text-center leading-relaxed">
-              ⚕️ {t('disclaimer.medical')}
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
-            <div className="flex items-center gap-2">
-              <Sparkles size={14} className="text-orange-500" />
-              <span className="font-outfit font-bold text-xs text-slate-600">FULL BALANCE</span>
+      <section className="border-t border-slate-800 bg-slate-900/35 px-5 py-16 text-center sm:py-24">
+        <Leaf size={30} className="mx-auto text-emerald-400" />
+        <h2 className="mx-auto mt-5 max-w-3xl font-outfit text-3xl font-extrabold leading-tight sm:text-5xl">{c.finalTitle}</h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">{c.finalDesc}</p>
+        <button onClick={onStart} className="mt-8 inline-flex min-h-14 items-center gap-2 bg-orange-500 px-8 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
+        <p className="mt-4 text-xs text-emerald-400">{c.freeNote}</p>
+      </section>
+
+      <footer className="border-t border-slate-800 px-5 py-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2"><Sparkles size={16} className="text-orange-500" /><span className="font-outfit text-sm font-bold">FULL BALANCE</span></div>
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
+              <Link to="/privacy" className="hover:text-white">{t('auth.privacyLink') || 'Gizlilik'}</Link>
+              <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>
+              <Link to="/contact" className="hover:text-white">{t('contact.link') || 'İletişim'}</Link>
+              <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : 'Editorial policy'}</Link>
             </div>
-            <p className="text-[10px] text-slate-700">
-              {t('landing.footer') || '© 2025 Full Balance. Tüm hakları saklıdır.'}
-            </p>
           </div>
-          <div className="flex items-center justify-center gap-1.5 pt-3 border-t border-slate-800/20">
-            <Lock size={10} className="text-slate-700" />
-            <p className="text-[9px] text-slate-700">
-              {t('landing.footerPrivacy') || 'Verileriniz cihazınızda ve şifreli bulut sunucusunda güvende saklanır. Üçüncü taraflarla paylaşılmaz.'}
-            </p>
-          </div>
-          <div className="flex items-center justify-center gap-3 pt-3">
-            <Link to="/privacy" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
-              {t('auth.privacyLink') || 'Gizlilik Politikası'}
-            </Link>
-            <span className="text-slate-800">•</span>
-            <Link to="/terms" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
-              {t('auth.termsLink') || 'Kullanım Şartları'}
-            </Link>
-            <span className="text-slate-800">•</span>
-            <Link to="/contact" className="text-[10px] text-slate-600 hover:text-orange-400 transition-colors">
-              {t('contact.link')}
-            </Link>
-            <span className="text-slate-800">•</span>
-            <Link to="/blog" className="text-[10px] text-slate-600 hover:text-emerald-400 transition-colors">
-              Rehber
-            </Link>
-          </div>
+          <div className="mt-6 flex items-start gap-2 border-t border-slate-800 pt-5 text-xs leading-5 text-slate-600"><Lock size={13} className="mt-0.5 shrink-0" /><p>{c.footerMedical}</p></div>
+          <div className="mt-4 flex items-center gap-2 text-xs text-slate-700"><Languages size={13} /> TR · EN · ES</div>
         </div>
       </footer>
     </div>
