@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generatePlan, PLAN_VERSION } from './planGenerator';
+import { generatePlan, personalizeMealItems, PLAN_VERSION } from './planGenerator';
 
 describe('planGenerator safety personalization', () => {
   const baseMetrics = {
@@ -103,6 +103,40 @@ describe('planGenerator safety personalization', () => {
     }
   });
 
+  it('generates complete training and nutrition data for every module, level and language', () => {
+    const goals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
+
+    for (const lang of ['tr', 'en', 'es']) {
+      for (const goal of goals) {
+        for (const phase of [0, 1, 2, 3]) {
+          const plan = generatePlan({
+            ...baseMetrics,
+            primaryGoal: goal,
+            experience: phase === 0 ? 'beginner' : 'advanced',
+          }, phase, lang);
+
+          expect(plan.workoutSplit).toHaveLength(7);
+          expect(plan.dailyNutrition).toHaveLength(7);
+          expect(Number.isFinite(plan.dailyCalories)).toBe(true);
+          expect(Number.isFinite(plan.bmr)).toBe(true);
+          expect(Number.isFinite(plan.tdee)).toBe(true);
+
+          plan.workoutSplit.forEach((day) => {
+            expect(day.day).toEqual(expect.any(String));
+            expect(day.focus).toEqual(expect.any(String));
+            expect(Array.isArray(day.exercises)).toBe(true);
+          });
+
+          plan.dailyNutrition.forEach((day) => {
+            expect(day.calories).toBeGreaterThan(0);
+            expect(day.meals.length).toBeGreaterThan(0);
+            expect(day.meals.every((meal) => meal.items.length > 0)).toBe(true);
+          });
+        }
+      }
+    }
+  });
+
   it('assigns a discipline-specific image to every active day', () => {
     const expectedImages = {
       fat_loss: '/images/modules/fat-loss.jpg',
@@ -126,6 +160,84 @@ describe('planGenerator safety personalization', () => {
       expect(activeDays.length).toBeGreaterThan(0);
       activeDays.forEach((day) => expect(day.image).toBe(expectedImage));
     }
+  });
+
+  it('does not invent a body-fat measurement and uses the matching calorie method', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      bodyFatPercentage: undefined,
+    }, 0, 'tr');
+
+    expect(plan.userBodyFat).toBeNull();
+    expect(plan.personalization.calorieMethod).toBe('mifflin_st_jeor');
+  });
+
+  it('keeps the weekly calorie average aligned with the personal target', () => {
+    for (const goal of ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation']) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal: goal }, 0, 'tr');
+      const weeklyAverage = Math.round(
+        plan.dailyNutrition.reduce((sum, day) => sum + day.calories, 0) / plan.dailyNutrition.length,
+      );
+
+      expect(Math.abs(weeklyAverage - plan.dailyCalories)).toBeLessThanOrEqual(1);
+      expect(plan.macros.protein).toBeGreaterThanOrEqual(Math.round(baseMetrics.weight * 1.2));
+      expect(plan.macros.fat).toBeGreaterThanOrEqual(Math.round(baseMetrics.weight * 0.8));
+      expect(plan.macros.carbs).toBeGreaterThan(0);
+    }
+  });
+
+  it('changes food choices for economy plans instead of only changing prices', () => {
+    const moderate = generatePlan({ ...baseMetrics, budget: 'moderate' }, 0, 'tr');
+    const economy = generatePlan({ ...baseMetrics, budget: 'economy' }, 0, 'tr');
+    const moderateFoods = moderate.dailyNutrition.flatMap((day) => day.meals.flatMap((meal) => meal.items));
+    const economyFoods = economy.dailyNutrition.flatMap((day) => day.meals.flatMap((meal) => meal.items));
+
+    expect(economyFoods).not.toEqual(moderateFoods);
+    expect(economyFoods.some((item) => /mercimek|nohut|kuru fasulye/i.test(item))).toBe(true);
+    expect(economy.personalization.budgetAdjusted).toBe(true);
+  });
+
+  it('shifts meal timing for night schedules', () => {
+    const flexible = generatePlan({ ...baseMetrics, workSchedule: ['flexible'] }, 0, 'tr');
+    const night = generatePlan({ ...baseMetrics, workSchedule: ['night_shift'] }, 0, 'tr');
+
+    expect(night.dailyNutrition[0].meals[0].time).not.toBe(flexible.dailyNutrition[0].meals[0].time);
+    expect(night.dailyNutrition[0].meals.every((meal) => meal.scheduleAdjusted)).toBe(true);
+    expect(night.personalization.scheduleAdjusted).toBe(true);
+  });
+
+  it('caps intensity and requires clearance for heart conditions', () => {
+    const plan = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'fat_loss',
+      experience: 'expert',
+      healthConditions: ['heart_condition'],
+    }, 3, 'tr');
+    const exerciseText = plan.workoutSplit
+      .flatMap((day) => day.exercises || [])
+      .map((exercise) => exercise.name)
+      .join(' ')
+      .toLowerCase();
+
+    expect(plan.phase).toBe(0);
+    expect(plan.personalization.requestedPhase).toBe(3);
+    expect(plan.personalization.requiresMedicalClearance).toBe(true);
+    expect(plan.planQuality.medicalNotice).toContain('sağlık uzmanı');
+    ['sprint', 'hiit', 'tabata', 'amrap', 'emom', 'burpee', 'box jump'].forEach((term) => {
+      expect(exerciseText).not.toContain(term);
+    });
+  });
+
+  it('keeps replacement meal choices inside allergy and diet rules', () => {
+    const items = personalizeMealItems(
+      ['Whey protein shake', 'Salmon with wheat toast', 'Egg omelet'],
+      { allergies: ['vegan', 'gluten'], budget: 'economy', lang: 'en' },
+    );
+    const text = items.join(' ').toLowerCase();
+
+    ['whey', 'milk', 'yogurt', 'salmon', 'egg', 'wheat', 'toast', 'chicken'].forEach((term) => {
+      expect(text).not.toContain(term);
+    });
   });
 
   it('keeps beginner fat-loss plans low impact and strength-retention focused', () => {

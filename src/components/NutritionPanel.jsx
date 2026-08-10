@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { mealNameMap, getMealAlternatives, currencyMap, recipeSearchSuffix, MEAL_KEYS } from '../data/mealDatabase';
+import { personalizeMealItems } from '../data/planGenerator';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Utensils,
@@ -104,21 +105,22 @@ function MacroCard({ icon: Icon, label, grams, percentage, color }) {
   );
 }
 
-function getAlternativeItems(meal, altIndex, lang) {
+function getAlternativeItems(meal, altIndex, lang, allergies, budget) {
   const mealAlternatives = getMealAlternatives(lang);
   const key = meal.mealKey;
   if (key && mealAlternatives[key]) {
-    return mealAlternatives[key][altIndex % mealAlternatives[key].length] || null;
+    const items = mealAlternatives[key][altIndex % mealAlternatives[key].length] || null;
+    return items ? personalizeMealItems(items, { allergies, budget, lang }) : null;
   }
   return null;
 }
 
 /* ─── meal card with image ─── */
-function MealCard({ meal, index, t, lang, currency }) {
+function MealCard({ meal, index, t, lang, currency, allergies, budget }) {
   const MealIcon = mealIconsByKey[meal.mealKey] || Utensils;
   const [altIndex, setAltIndex] = useState(0);
   const isSwapped = altIndex > 0;
-  const altItems = isSwapped ? getAlternativeItems(meal, altIndex - 1, lang) : null;
+  const altItems = isSwapped ? getAlternativeItems(meal, altIndex - 1, lang, allergies, budget) : null;
   const displayItems = altItems || meal.items;
 
   return (
@@ -240,6 +242,9 @@ export default function NutritionPanel({ plan }) {
     macroPercentages = { protein: 30, carbs: 40, fat: 30 },
     dailyNutrition,
     goal,
+    allergies = [],
+    userBudget = 'moderate',
+    personalization,
   } = plan;
 
   // Default to today's day of the week
@@ -401,6 +406,21 @@ export default function NutritionPanel({ plan }) {
         <span className="rounded-full border border-orange-500/30 bg-orange-500/10 px-2.5 py-0.5 text-[11px] font-medium text-orange-400">
           {goal}
         </span>
+        {personalization?.budgetAdjusted && (
+          <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] text-emerald-400">
+            {lang === 'tr' ? 'Ekonomik seçimler' : lang === 'es' ? 'Opciones económicas' : 'Budget-friendly choices'}
+          </span>
+        )}
+        {personalization?.scheduleAdjusted && (
+          <span className="rounded-full border border-blue-500/25 bg-blue-500/10 px-2.5 py-0.5 text-[11px] text-blue-400">
+            {lang === 'tr' ? 'Saatlere göre uyarlandı' : lang === 'es' ? 'Horario adaptado' : 'Schedule adjusted'}
+          </span>
+        )}
+        {allergies.some((allergy) => allergy !== 'none') && (
+          <span className="rounded-full border border-violet-500/25 bg-violet-500/10 px-2.5 py-0.5 text-[11px] text-violet-400">
+            {lang === 'tr' ? 'Alerji filtresi etkin' : lang === 'es' ? 'Filtro de alergias activo' : 'Allergy filter active'}
+          </span>
+        )}
       </motion.div>
 
       {/* ── donut chart ── */}
@@ -521,7 +541,16 @@ export default function NutritionPanel({ plan }) {
             className="flex flex-col gap-4"
           >
             {meals.map((meal, idx) => (
-              <MealCard key={meal.id ?? idx} meal={meal} index={idx} t={t} lang={lang} currency={currencyMap[lang] || '₺'} />
+              <MealCard
+                key={meal.id ?? idx}
+                meal={meal}
+                index={idx}
+                t={t}
+                lang={lang}
+                currency={currencyMap[lang] || '₺'}
+                allergies={allergies}
+                budget={userBudget}
+              />
             ))}
           </motion.div>
         </AnimatePresence>

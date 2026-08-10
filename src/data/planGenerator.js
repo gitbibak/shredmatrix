@@ -9,15 +9,10 @@ import { getWorkoutDayImage } from './moduleAssets';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 15;
+export const PLAN_VERSION = 16;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
-  // Birincil: Katch-McArdle (yağsız kütle üzerinden)
-  const leanMass = weight * (1 - bodyFat / 100);
-  const katchBMR = 370 + 21.6 * leanMass;
-
-  // İkincil: Mifflin-St Jeor (yaş/boy/cinsiyet ile doğrulama)
   let mifflinBMR;
   if (gender === 'female') {
     mifflinBMR = 10 * weight + 6.25 * height - 5 * age - 161;
@@ -25,8 +20,9 @@ function calculateBMR(weight, bodyFat, age, height, gender) {
     mifflinBMR = 10 * weight + 6.25 * height - 5 * age + 5;
   }
 
-  // İkisinin ortalaması daha doğru sonuç verir
-  return (katchBMR + mifflinBMR) / 2;
+  if (!Number.isFinite(bodyFat)) return mifflinBMR;
+  const leanMass = weight * (1 - bodyFat / 100);
+  return 370 + 21.6 * leanMass;
 }
 
 const activityMultipliers = {
@@ -38,34 +34,45 @@ const activityMultipliers = {
 };
 
 // ── Makro Dağılımları ────────────────────────────────────
-function calculateMacros(calories, goal) {
-  const ratios = {
-    muscle:     { p: 0.35, c: 0.40, f: 0.25 },
-    fat_loss:   { p: 0.40, c: 0.25, f: 0.35 },
-    meditation: { p: 0.25, c: 0.45, f: 0.30 },
-    yoga:       { p: 0.28, c: 0.42, f: 0.30 },
-    pilates:    { p: 0.30, c: 0.40, f: 0.30 },
-    reformer:   { p: 0.32, c: 0.38, f: 0.30 },
+function calculateMacros(calories, goal, weight) {
+  const proteinPerKg = {
+    muscle: 1.8,
+    fat_loss: 1.8,
+    meditation: 1.2,
+    yoga: 1.4,
+    pilates: 1.5,
+    reformer: 1.5,
   };
-  const r = ratios[goal] || ratios.muscle;
+  const targetProtein = Math.round(weight * (proteinPerKg[goal] || 1.6));
+  const protein = Math.min(targetProtein, Math.floor((calories * 0.35) / 4));
+  const minimumFat = Math.round(weight * 0.8);
+  const fat = Math.min(
+    Math.max(minimumFat, Math.round((calories * 0.25) / 9)),
+    Math.floor((calories * 0.35) / 9),
+  );
+  const carbs = Math.max(0, Math.round((calories - protein * 4 - fat * 9) / 4));
+
   return {
-    protein: Math.round((calories * r.p) / 4),
-    carbs: Math.round((calories * r.c) / 4),
-    fat: Math.round((calories * r.f) / 9),
+    protein,
+    carbs,
+    fat,
   };
 }
 
-// ── Antrenman Tipine Göre Kalori Ayarlama ─────────────────
-function adjustCaloriesForDay(baseCalories, dayType, goal) {
-  switch (dayType) {
-    case 'upper':      return Math.round(baseCalories * 1.05);  // Üst vücut +%5
-    case 'back':       return Math.round(baseCalories * 1.08);  // Sırt (deadlift vb.) +%8
-    case 'lower':      return Math.round(baseCalories * 1.10);  // Alt vücut +%10 (daha yorucu)
-    case 'hiit':       return Math.round(baseCalories * 1.08);  // HIIT +%8
-    case 'active_rest': return Math.round(baseCalories * 0.90); // Aktif dinlenme -%10
-    case 'rest':       return Math.round(baseCalories * 0.85);  // Tam dinlenme -%15
-    default:           return baseCalories;
-  }
+const DAY_ENERGY_WEIGHTS = {
+  upper: 1.02,
+  shoulders: 1.02,
+  back: 1.03,
+  lower: 1.05,
+  hiit: 1.04,
+  active_rest: 0.98,
+  rest: 0.94,
+};
+
+function buildDailyCalorieTargets(baseCalories, dayTypes) {
+  const weights = dayTypes.map((type) => DAY_ENERGY_WEIGHTS[type] || 1);
+  const averageWeight = weights.reduce((sum, value) => sum + value, 0) / Math.max(1, weights.length);
+  return weights.map((weight) => Math.round((baseCalories * weight) / averageWeight));
 }
 
 // ── Öğün Veritabanı (Antrenman Tipine Göre — Dil Destekli) ──
@@ -1057,6 +1064,18 @@ function getSafeFoodReplacement(item, triggeredAllergy, allergies, lang) {
   return candidates.find((candidate) => !itemConflictsWithAllergies(candidate, allergies)) || item;
 }
 
+export function personalizeMealItems(items, { allergies = [], budget = 'moderate', lang = 'tr' } = {}) {
+  return (items || []).map((originalItem) => {
+    let item = budget === 'economy' ? applyEconomyFoodSwap(originalItem, lang) : originalItem;
+    for (const allergy of allergies) {
+      if (allergy !== 'none' && itemMatchesAllergy(item, allergy)) {
+        item = getSafeFoodReplacement(item, allergy, allergies, lang);
+      }
+    }
+    return item;
+  });
+}
+
 function getHealthExerciseReplacement(exerciseName, filter) {
   const normalized = String(exerciseName || '').toLowerCase();
   const matched = filter.exclude.find((blocked) => {
@@ -1065,6 +1084,37 @@ function getHealthExerciseReplacement(exerciseName, filter) {
   });
   if (!matched) return undefined;
   return filter.replace[exerciseName] || filter.replace[matched] || null;
+}
+
+function applyMedicalIntensityGuard(workoutSplit, healthConditions, lang) {
+  if (!healthConditions.includes('heart_condition')) return workoutSplit;
+  const lowIntensityLabel = {
+    tr: 'Rahat tempolu yürüyüş',
+    en: 'Comfortable-paced walk',
+    es: 'Caminata a ritmo cómodo',
+  }[lang] || 'Rahat tempolu yürüyüş';
+  const blockedIntensity = /sprint|hiit|tabata|amrap|emom|burpee|box jump|battle rope|devil press|finisher/i;
+
+  return workoutSplit.map((day) => {
+    if (isRestLikeDay(day)) return day;
+    const guardedExercises = [];
+    for (const exercise of day.exercises || []) {
+      if (blockedIntensity.test(exercise.name || '')) {
+        if (!guardedExercises.some((item) => item.name === lowIntensityLabel)) {
+          guardedExercises.push({ name: lowIntensityLabel, sets: 1, reps: '20-30 dk', rest: '-' });
+        }
+        continue;
+      }
+      const parsedSets = parseInt(exercise.sets);
+      const parsedRest = parseInt(exercise.rest);
+      guardedExercises.push({
+        ...exercise,
+        sets: Number.isFinite(parsedSets) ? Math.min(3, parsedSets) : exercise.sets,
+        rest: Number.isFinite(parsedRest) ? `${Math.max(90, parsedRest)}s` : exercise.rest,
+      });
+    }
+    return { ...day, exercises: guardedExercises, cardioNote: lowIntensityLabel };
+  });
 }
 
 // ── Antrenman Programı — Fazlı Sistem ─────────────────────
@@ -2220,16 +2270,81 @@ const workoutPhases = {
 
 // ── Bütçe çarpanı ────────────────────────────────────────
 const budgetMultipliers = {
-  economy: 0.7,
+  economy: 0.72,
   moderate: 1.0,
-  premium: 1.5,
+  premium: 1.18,
 };
 
-function applyBudgetToMeals(meals, budget) {
+const ECONOMY_FOOD_SWAPS = {
+  tr: [
+    [/somon|levrek|palamut|ton balık/iu, 'Mercimek + nohut bowl'],
+    [/dana bonfile|köfte/iu, 'Tavuk but veya kuru fasulye'],
+    [/whey protein|protein bar|protein shake/iu, 'Yoğurt + yulaf'],
+    [/kinoa/iu, 'Bulgur veya pirinç'],
+    [/avokado/iu, 'Zeytinyağlı mevsim salatası'],
+  ],
+  en: [
+    [/salmon|tuna|sea bass|mackerel/iu, 'Lentil and chickpea bowl'],
+    [/beef|steak|meatball/iu, 'Chicken thighs or beans'],
+    [/whey protein|protein bar|protein shake/iu, 'Yogurt and oats'],
+    [/quinoa/iu, 'Brown rice'],
+    [/avocado/iu, 'Seasonal salad with olive oil'],
+  ],
+  es: [
+    [/salmón|atún|lubina|caballa/iu, 'Bowl de lentejas y garbanzos'],
+    [/ternera|bistec|albóndiga/iu, 'Pollo o alubias'],
+    [/proteína whey|barra de proteína|batido de proteína/iu, 'Yogur con avena'],
+    [/quinoa/iu, 'Arroz integral'],
+    [/aguacate/iu, 'Ensalada de temporada con aceite de oliva'],
+  ],
+};
+
+function applyEconomyFoodSwap(item, lang) {
+  const swaps = ECONOMY_FOOD_SWAPS[lang] || ECONOMY_FOOD_SWAPS.tr;
+  const match = swaps.find(([pattern]) => pattern.test(item));
+  return match ? match[1] : item;
+}
+
+function applyBudgetToMeals(meals, budget, lang) {
   const mult = budgetMultipliers[budget] || 1.0;
   return meals.map((m) => ({
     ...m,
+    items: budget === 'economy' ? m.items.map((item) => applyEconomyFoodSwap(item, lang)) : m.items,
     price: Math.round((m.price || 0) * mult),
+    budgetAdjusted: budget === 'economy',
+  }));
+}
+
+function parseClock(value) {
+  const [hours, minutes] = String(value || '00:00').split(':').map(Number);
+  return (hours * 60 + minutes) % 1440;
+}
+
+function formatClock(totalMinutes) {
+  const normalized = ((totalMinutes % 1440) + 1440) % 1440;
+  const hours = Math.floor(normalized / 60);
+  const minutes = normalized % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+function getScheduleOffset(workSchedule) {
+  const schedule = (Array.isArray(workSchedule) ? workSchedule : [workSchedule])
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  if (/night|gece|noche/.test(schedule)) return 240;
+  if (/early|sabah|morning|mañana/.test(schedule)) return -60;
+  if (/late|akşam|evening|tarde/.test(schedule)) return 120;
+  return 0;
+}
+
+function applyMealTiming(meals, workSchedule) {
+  const offset = getScheduleOffset(workSchedule);
+  if (!offset) return meals;
+  return meals.map((meal) => ({
+    ...meal,
+    time: formatClock(parseClock(meal.time) + offset),
+    scheduleAdjusted: true,
   }));
 }
 
@@ -2246,28 +2361,27 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   const age = Math.max(14, Math.min(80, Number(rawAge) || 25));
   const height = Math.max(100, Math.min(250, Number(rawHeight) || 175));
   const weight = Math.max(30, Math.min(300, Number(rawWeight) || 75));
-  const bodyFatPercentage = Math.max(3, Math.min(60, Number(rawBF) || 20));
+  const parsedBodyFat = Number(rawBF);
+  const bodyFatPercentage = Number.isFinite(parsedBodyFat) && parsedBodyFat >= 3 && parsedBodyFat <= 60
+    ? parsedBodyFat
+    : null;
 
   // Faz sınırlarını kontrol et + otomatik faz seçimi
   const maxPhase = (workoutPhases[primaryGoal] || workoutPhases.muscle).length - 1;
   // phase === 0 ve ilk oluşturma ise deneyim seviyesine göre otomatik faz seç
   const autoPhase = phase === 0 ? getAutoPhase(experience, maxPhase) : phase;
-  const safePhase = Math.max(0, Math.min(autoPhase, maxPhase));
+  const requestedPhase = Math.max(0, Math.min(autoPhase, maxPhase));
+  const requiresMedicalClearance = healthConditions.includes('heart_condition');
+  const safePhase = requiresMedicalClearance ? Math.min(requestedPhase, 0) : requestedPhase;
 
   const bmr = calculateBMR(weight, bodyFatPercentage, age || 25, height || 175, gender || 'male');
   const tdee = bmr * (activityMultipliers[activityLevel] || 1.55);
 
-  let baseCalories;
-  if (primaryGoal === 'muscle') {
-    baseCalories = Math.round(tdee + 350);
-  } else if (primaryGoal === 'fat_loss') {
-    baseCalories = Math.round(tdee - 500);
-  } else if (primaryGoal === 'meditation') {
-    baseCalories = Math.round(tdee); // maintenance
-  } else if (primaryGoal === 'yoga') {
-    baseCalories = Math.round(tdee * 0.95); // slight deficit
-  } else {
-    baseCalories = Math.round(tdee * 1.02); // pilates/reformer slight surplus
+  let baseCalories = Math.round(tdee);
+  if (age >= 18 && primaryGoal === 'muscle') {
+    baseCalories = Math.round(tdee + Math.min(250, tdee * 0.08));
+  } else if (age >= 18 && primaryGoal === 'fat_loss') {
+    baseCalories = Math.round(tdee - Math.min(500, tdee * 0.15));
   }
 
   const rawSplit = (workoutPhases[primaryGoal] || workoutPhases.muscle)[safePhase];
@@ -2321,28 +2435,26 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       }).filter(Boolean);
     });
   }
+  workoutSplit = applyMedicalIntensityGuard(workoutSplit, healthConditions, lang);
 
   // ── Egzersiz-Focus doğrulaması ──
   // Her günün egzersizlerinin focus alanıyla uyumlu olmasını garanti et
   workoutSplit = validateAndFixExercises(workoutSplit);
   workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
 
-  // Her gün için özel beslenme planı oluştur
-  const dailyNutrition = workoutSplit.map((day) => {
-    const mealType = getDayMealType(day.focus);
-    const dayType = mealType === 'rest' ? 'rest'
-      : mealType === 'active_rest' ? 'active_rest'
-      : mealType === 'lower' ? 'lower'
-      : mealType === 'hiit' ? 'hiit'
-      : mealType === 'back' ? 'back'
-      : 'upper';
+  const mealTypes = workoutSplit.map((day) => getDayMealType(day.focus));
+  const dailyCalorieTargets = buildDailyCalorieTargets(baseCalories, mealTypes);
 
-    const dayCalories = adjustCaloriesForDay(baseCalories, dayType, primaryGoal);
-    const dayMacros = calculateMacros(dayCalories, primaryGoal);
+  // Her gün için özel beslenme planı oluştur
+  const dailyNutrition = workoutSplit.map((day, dayIndex) => {
+    const mealType = getDayMealType(day.focus);
+    const dayCalories = dailyCalorieTargets[dayIndex];
+    const dayMacros = calculateMacros(dayCalories, primaryGoal, weight);
     const templates = getMealTemplates(lang);
     const template = templates[mealType] || templates.rest;
     const rawMeals = template.meals(dayMacros, dayCalories);
-    const meals = applyBudgetToMeals(rawMeals, budget);
+    const budgetMeals = applyBudgetToMeals(rawMeals, budget, lang);
+    const meals = applyMealTiming(budgetMeals, workSchedule);
     const totalPrice = meals.reduce((sum, m) => sum + (m.price || 0), 0);
 
     return {
@@ -2390,27 +2502,48 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     userActivityLevel: activityLevel,
     userBudget: budget,
     userWorkSchedule: workSchedule,
+    primaryGoal,
     // Faz bilgisi
     phase: safePhase,
-    planQuality: buildPlanQualitySummary(primaryGoal, safePhase),
+    planQuality: {
+      ...buildPlanQualitySummary(primaryGoal, safePhase),
+      requiresMedicalClearance,
+      medicalNotice: requiresMedicalClearance
+        ? {
+          tr: 'Kalp veya dolaşım sistemiyle ilgili durumlarda programa başlamadan önce sağlık uzmanı onayı gerekir.',
+          en: 'Medical clearance is required before starting this plan with a heart or circulatory condition.',
+          es: 'Se requiere autorización médica antes de iniciar este plan si existe una afección cardíaca o circulatoria.',
+        }[lang]
+        : null,
+    },
     // Hesaplanan değerler
     dailyCalories: baseCalories,
     bmr: Math.round(bmr),
     tdee: Math.round(tdee),
     bmi: parseFloat((weight / ((height / 100) ** 2)).toFixed(1)),
-    macros: calculateMacros(baseCalories, primaryGoal),
-    macroPercentages: {
-      muscle: { protein: 35, carbs: 40, fat: 25 },
-      fat_loss: { protein: 40, carbs: 25, fat: 35 },
-      meditation: { protein: 25, carbs: 45, fat: 30 },
-      yoga: { protein: 28, carbs: 42, fat: 30 },
-      pilates: { protein: 30, carbs: 40, fat: 30 },
-      reformer: { protein: 32, carbs: 38, fat: 30 },
-    }[primaryGoal] || { protein: 30, carbs: 40, fat: 30 },
+    macros: calculateMacros(baseCalories, primaryGoal, weight),
+    macroPercentages: (() => {
+      const macros = calculateMacros(baseCalories, primaryGoal, weight);
+      const macroCalories = macros.protein * 4 + macros.carbs * 4 + macros.fat * 9;
+      return {
+        protein: Math.round((macros.protein * 4 * 100) / macroCalories),
+        carbs: Math.round((macros.carbs * 4 * 100) / macroCalories),
+        fat: Math.round((macros.fat * 9 * 100) / macroCalories),
+      };
+    })(),
     dailyNutrition,
     workoutSplit,
     healthConditions,
     allergies,
+    personalization: {
+      calorieMethod: bodyFatPercentage === null ? 'mifflin_st_jeor' : 'katch_mcardle',
+      weeklyAverageCalories: Math.round(dailyCalorieTargets.reduce((sum, calories) => sum + calories, 0) / dailyCalorieTargets.length),
+      budgetAdjusted: budget === 'economy',
+      scheduleAdjusted: getScheduleOffset(workSchedule) !== 0,
+      requiresMedicalClearance,
+      requestedPhase,
+      appliedPhase: safePhase,
+    },
     goal: {
       tr: { muscle: 'Kas Gelişimi', fat_loss: 'Yağ Yakımı', meditation: 'Meditasyon', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' },
       en: { muscle: 'Muscle Growth', fat_loss: 'Fat Loss', meditation: 'Meditation', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' },

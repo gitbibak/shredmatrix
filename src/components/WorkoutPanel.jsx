@@ -21,6 +21,7 @@ import {
   Info,
   BookOpen,
   Pill,
+  TriangleAlert,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -557,6 +558,15 @@ export default function WorkoutPanel({ plan }) {
           </span>
         </div>
       </div>
+
+      {plan.planQuality?.requiresMedicalClearance && plan.planQuality.medicalNotice && (
+        <div className="flex items-start gap-2.5 rounded-lg border border-amber-500/25 bg-amber-500/10 px-3 py-2.5">
+          <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-400" />
+          <p className="text-[11px] leading-relaxed text-amber-200">
+            {plan.planQuality.medicalNotice}
+          </p>
+        </div>
+      )}
 
       {/* ─── Program age warning ─── */}
       {showProgramWarning && (
