@@ -103,6 +103,31 @@ describe('planGenerator safety personalization', () => {
     }
   });
 
+  it('assigns a discipline-specific image to every active day', () => {
+    const expectedImages = {
+      fat_loss: '/images/modules/fat-loss.jpg',
+      yoga: '/images/modules/yoga.jpg',
+      pilates: '/images/modules/pilates.jpg',
+      reformer: '/images/modules/reformer.jpg',
+      meditation: '/images/modules/meditation.jpg',
+    };
+
+    for (const [goal, expectedImage] of Object.entries(expectedImages)) {
+      const plan = generatePlan({
+        ...baseMetrics,
+        primaryGoal: goal,
+      }, 0, 'tr');
+
+      const activeDays = plan.workoutSplit.filter((day) => {
+        const focus = day.focus.toLowerCase();
+        return !['dinlenme', 'rest', 'off', 'descanso'].some((label) => focus.includes(label));
+      });
+
+      expect(activeDays.length).toBeGreaterThan(0);
+      activeDays.forEach((day) => expect(day.image).toBe(expectedImage));
+    }
+  });
+
   it('keeps beginner fat-loss plans low impact and strength-retention focused', () => {
     const plan = generatePlan({
       ...baseMetrics,

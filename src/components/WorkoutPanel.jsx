@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
 import { buildSupplements, resolveGoalKey } from './SupplementGuide';
+import { getWorkoutDayImage } from '../data/moduleAssets';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -197,9 +198,10 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
   );
 }
 
-function DayCard({ day, index, isOpen, onToggle, t, onShowDemo }) {
+function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
   const rest = isRestDay(day);
   const exerciseCount = day.exercises?.length ?? 0;
+  const dayImage = getWorkoutDayImage(goalKey, day.image);
 
   return (
     <motion.div variants={cardVariants}>
@@ -214,7 +216,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo }) {
       >
         {/* Workout image — shown when card is open and has an image */}
         <AnimatePresence initial={false}>
-          {isOpen && !rest && day.image && (
+          {isOpen && !rest && dayImage && (
             <motion.div
               key="image"
               initial={{ height: 0, opacity: 0 }}
@@ -224,7 +226,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo }) {
               className="relative overflow-hidden"
             >
               <img
-                src={day.image}
+                src={dayImage}
                 alt={day.focus}
                 loading="lazy"
                 className="h-full w-full object-cover"
@@ -454,6 +456,7 @@ export default function WorkoutPanel({ plan }) {
   );
 
   const { workoutSplit = [], goal = '' } = plan;
+  const goalKey = resolveGoalKey(goal);
 
   const handleToggle = (index) => {
     setOpenIndex((prev) => (prev === index ? -1 : index));
@@ -584,6 +587,7 @@ export default function WorkoutPanel({ plan }) {
                 onToggle={handleToggle}
                 t={t}
                 onShowDemo={setDemoExercise}
+                goalKey={goalKey}
               />
               {/* Complete workout button — only for training days when card is open */}
               {openIndex === index && !rest && (

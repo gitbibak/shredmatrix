@@ -5,10 +5,11 @@
  */
 
 import { buildMealTemplates, dayLabelMap } from './mealDatabase';
+import { getWorkoutDayImage } from './moduleAssets';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 14;
+export const PLAN_VERSION = 15;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -2278,7 +2279,10 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     const rest = f.includes('dinlenme') || f.includes('rest') || f.includes('off') || f.includes('descanso');
     if (rest) return { ...day };
 
-    const enriched = { ...day };
+    const enriched = {
+      ...day,
+      image: getWorkoutDayImage(primaryGoal, day.image),
+    };
 
     // ── Deneyim seviyesine göre egzersiz ayarlama ──
     enriched.exercises = applyExperienceModifiers(

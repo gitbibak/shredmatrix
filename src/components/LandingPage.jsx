@@ -9,6 +9,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackShare } from '../lib/analytics';
+import { MODULE_IMAGES } from '../data/moduleAssets';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -98,12 +99,12 @@ const copy = {
 };
 
 const goalAssets = {
-  muscle: '/images/workouts/chest.png',
-  fatburn: '/images/workouts/legs.png',
-  yoga: '/images/blog/yoga-pilates-mobility.jpg',
-  meditation: '/images/blog/sleep-recovery.jpg',
-  reformer: '/images/blog/strength-healthy-aging.jpg',
-  pilates: '/images/workouts/back.png',
+  muscle: MODULE_IMAGES.muscle,
+  fatburn: MODULE_IMAGES.fat_loss,
+  yoga: MODULE_IMAGES.yoga,
+  meditation: MODULE_IMAGES.meditation,
+  reformer: MODULE_IMAGES.reformer,
+  pilates: MODULE_IMAGES.pilates,
 };
 
 function Eyebrow({ children }) {
@@ -219,12 +220,13 @@ export default function LandingPage({ onStart }) {
             {goals.map((goal, index) => {
               const Icon = goal.icon;
               const translated = t(`landing.goals.${goal.key}.title`);
+              const title = translated && translated !== `landing.goals.${goal.key}.title` ? translated : goal.fallback;
               return (
                 <motion.article key={goal.key} custom={index} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group overflow-hidden border border-slate-800 bg-slate-900/55">
-                  <img src={goalAssets[goal.key]} alt="" width="1024" height="1024" loading="lazy" className="aspect-[4/3] w-full object-cover opacity-75 transition-opacity group-hover:opacity-100" />
+                  <img src={goalAssets[goal.key]} alt={title} width="1600" height="900" loading="lazy" className="aspect-[4/3] w-full object-cover opacity-85 transition-opacity group-hover:opacity-100" />
                   <div className="p-4">
                     <Icon size={19} style={{ color: goal.color }} />
-                    <h3 className="mt-3 break-words font-outfit text-sm font-bold text-white">{translated && translated !== `landing.goals.${goal.key}.title` ? translated : goal.fallback}</h3>
+                    <h3 className="mt-3 break-words font-outfit text-sm font-bold text-white">{title}</h3>
                   </div>
                 </motion.article>
               );
