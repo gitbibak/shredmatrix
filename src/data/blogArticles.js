@@ -1,5 +1,81 @@
 export const blogArticles = [
   {
+    slug: 'antrenman-oncesi-sonrasi-ne-yenir',
+    title: 'Antrenman Öncesi ve Sonrası Ne Yenir? Pratik Beslenme Rehberi',
+    description: 'Antrenman öncesi ve sonrası ne yenir, öğün ne zaman planlanır ve su tüketimi nasıl ayarlanır? Hedefe göre uygulanabilir örneklerle öğrenin.',
+    category: 'Beslenme',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    readTime: '9 dk',
+    accent: '#f59e0b',
+    image: '/images/blog/antrenman-oncesi-sonrasi-beslenme.jpg',
+    imageAlt: 'Antrenman öncesi için muzlu yulaf ve yoğurt, sonrası için tavuk, esmer pirinç ve sebzelerden oluşan iki dengeli öğün',
+    intro: 'Antrenman çevresindeki beslenmenin amacı sihirli bir zaman aralığını yakalamak değil; seansa uygun enerji sağlamak, sonrasında toparlanmayı desteklemek ve günün toplam beslenme düzenini sürdürülebilir kılmaktır.',
+    internalLinks: [
+      ['/ucretsiz-beslenme-programi', 'Ücretsiz beslenme programı'],
+      ['/protein-ihtiyaci-hesaplama', 'Protein ihtiyacı hesaplama'],
+      ['/kas-gelisimi-programi', 'Kas gelişimi programı'],
+      ['/yag-yakimi-programi', 'Yağ yakımı programı'],
+    ],
+    sections: [
+      {
+        heading: 'Önce büyük resim: günlük düzen, zamanlamadan önemlidir',
+        paragraphs: [
+          'Tek bir antrenman öğünü, günün geri kalanındaki yetersiz veya dengesiz beslenmeyi telafi etmez. Dünya Sağlık Örgütü sağlıklı beslenmenin yeterlilik, denge, ölçülülük ve çeşitlilik ilkelerine dayanmasını; karbonhidratların ağırlıkla tam tahıl, sebze, meyve ve baklagillerden gelmesini önerir.',
+          'Egzersiz yapan kişiler için toplam enerji ve protein alımını gün içine yaymak temel önceliktir. Öğün zamanlaması özellikle uzun, yoğun veya aynı gün içinde tekrarlanan seanslarda daha önemli hale gelir; sıradan bir seans için dakikası dakikasına bir “anabolik pencere” kovalamak gerekmez.',
+        ],
+      },
+      {
+        heading: 'Antrenman öncesi ne yenir?',
+        paragraphs: [
+          'Seansa iki ila dört saat varsa karbonhidrat kaynağı, protein ve kişisel toleransa uygun az miktarda yağ içeren normal bir öğün seçilebilir. Tavuklu pirinç ve sebze; yoğurt, yulaf ve meyve; yumurta ile tam tahıllı ekmek gibi seçenekler buna örnektir.',
+          'Seansa yaklaşık 30–60 dakika kaldıysa daha küçük, kolay sindirilen ve ağırlıkla karbonhidrat içeren bir ara öğün daha rahat olabilir: muz, yoğurt, küçük bir tost veya kuru meyve gibi. Bu süreler katı kurallar değildir; porsiyon, lif ve yağ miktarını kendi sindirim rahatlığınıza göre ayarlayın.',
+        ],
+      },
+      {
+        heading: 'Aç karnına antrenman yağ yakımını hızlandırır mı?',
+        paragraphs: [
+          'Aç karnına egzersiz sırasında yakıt kullanımı değişebilir; ancak yağ kaybını belirleyen tek unsur seans sırasında kullanılan yakıt değildir. Uzun vadede enerji dengesi, beslenme kalitesi, antrenman devamlılığı ve toparlanma birlikte değerlendirilmelidir.',
+          'Aç antrenman performansınızı, keyfinizi veya seansı tamamlama becerinizi düşürüyorsa küçük bir öğün daha uygulanabilir olabilir. Baş dönmesi, bayılma hissi veya olağandışı belirti yaşarsanız egzersizi durdurun ve sağlık uzmanına başvurun.',
+        ],
+      },
+      {
+        heading: 'Antrenman sonrası ne yenir?',
+        paragraphs: [
+          'Antrenman sonrası öğünde protein kaynağını karbonhidrat ve sebzelerle birleştirin. Tavuk, balık, yumurta, yoğurt, peynir, tofu veya baklagiller; pirinç, bulgur, patates, ekmek ya da meyveyle eşleştirilebilir. Spor beslenmesi pozisyon belgeleri, sağlıklı ve egzersiz yapan yetişkinlerde proteinin gün içine dağıtılmasını; antrenman çevresindeki proteinin kas protein sentezini destekleyebileceğini bildirir.',
+          'Sonraki antrenmana dört saatten az varsa karbonhidrat depolarını daha hızlı yenilemek önem kazanabilir. Çoğu günlük egzersiz planında ise antrenmandan sonraki birkaç saat içinde dengeli bir ana öğün yemek yeterince pratik bir yaklaşımdır.',
+        ],
+      },
+      {
+        heading: 'Kas gelişimi ve yağ yakımı hedeflerinde ne değişir?',
+        paragraphs: [
+          'Kas gelişimi hedefinde yeterli toplam enerji, düzenli direnç antrenmanı ve günlük proteinin dengeli dağılımı öne çıkar. Takviye zorunlu değildir; ihtiyacı karşılayan normal gıdalar kullanılabilir. Protein miktarı sağlık durumu, vücut ağırlığı ve antrenman yüküne göre değişebileceği için böbrek hastalığı veya başka bir klinik durum varsa kişisel hedefi diyetisyen ya da hekimle belirleyin.',
+          'Yağ yakımı hedefinde antrenman öncesi ve sonrası öğünleri atlamak otomatik olarak daha iyi sonuç vermez. Öğünleri günlük enerji planının parçası olarak kurun; tok tutan protein kaynakları, sebze, meyve, baklagil ve tam tahılları tercih edin. Full Balance içindeki kas gelişimi ve yağ yakımı modülleri öğün düzenini seçtiğiniz hedefle birlikte izlemenize yardımcı olur.',
+        ],
+      },
+      {
+        heading: 'Su ve elektrolit planı nasıl kurulabilir?',
+        paragraphs: [
+          'Antrenmana susuz başlamamaya çalışın ve seans sırasında suya erişiminiz olsun. Sıcaklık, nem, egzersiz süresi, kıyafet ve terleme miktarı ihtiyacı değiştirir; bu nedenle herkese uyan tek bir litre hedefi yoktur.',
+          'Sıvı yerine koyma bildirileri hem yetersiz hem aşırı sıvı tüketiminin risk taşıyabileceğini vurgular. Uzun ve yoğun seanslarda veya belirgin ter kaybında plan kişiselleştirilebilir; kısa ve hafif seanslarda çoğu kişi için su pratik başlangıçtır.',
+        ],
+      },
+      {
+        heading: 'Hızlı karar listesi',
+        paragraphs: [
+          'İki ila dört saat önce: normal porsiyon karbonhidrat + protein + sebze. Yaklaşık bir saat önce: tolere ediyorsanız küçük ve kolay sindirilen bir ara öğün. Antrenman sonrası: birkaç saat içinde protein, karbonhidrat ve sebze içeren dengeli öğün. Gün boyunca: yeterli enerji, çeşitli gıdalar ve susama/terleme koşullarına uygun sıvı.',
+          'Full Balance beslenme takibiyle öğünlerinizi antrenman günleriyle birlikte kaydedebilir, protein hesaplama aracını kullanabilir ve hedefinize uygun modülde devamlılığınızı görebilirsiniz. Kayıt ücretsizdir; uygulama tıbbi diyet veya tedavi yerine geçmez.',
+        ],
+      },
+    ],
+    sources: [
+      ['Dünya Sağlık Örgütü: Sağlıklı beslenme (2026)', 'https://www.who.int/news-room/fact-sheets/detail/healthy-diet'],
+      ['ACSM, Academy of Nutrition and Dietetics ve Dietitians of Canada: Nutrition and Athletic Performance', 'https://pubmed.ncbi.nlm.nih.gov/26891166/'],
+      ['ISSN pozisyon bildirisi: Besin zamanlaması', 'https://pubmed.ncbi.nlm.nih.gov/28919842/'],
+      ['National Athletic Trainers’ Association: Fiziksel aktif kişilerde sıvı yerine koyma', 'https://pubmed.ncbi.nlm.nih.gov/28985128/'],
+    ],
+  },
+  {
     slug: 'longevity-nedir-saglikli-yasam-aliskanliklari',
     title: 'Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık',
     description: 'Longevity kavramını, sağlıklı yaş alma yaklaşımını ve hareket, kuvvet, mobilite, uyku ile beslenme alışkanlıklarını sade bir rehberle öğrenin.',

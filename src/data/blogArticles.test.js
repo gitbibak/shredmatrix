@@ -15,7 +15,18 @@ describe('blog article catalogue', () => {
       expect(article.sections.length).toBeGreaterThanOrEqual(3);
       expect(article.sources.length).toBeGreaterThanOrEqual(2);
       expect(article.sources.every(([, url]) => url.startsWith('https://'))).toBe(true);
+      expect(article.imageAlt.length).toBeGreaterThan(30);
+      expect(article.updatedAt >= article.publishedAt).toBe(true);
     });
+  });
+
+  it('connects the nutrition guide to relevant Full Balance pages', () => {
+    const article = getBlogArticle('antrenman-oncesi-sonrasi-ne-yenir');
+    expect(article?.internalLinks).toEqual(expect.arrayContaining([
+      ['/protein-ihtiyaci-hesaplama', 'Protein ihtiyacı hesaplama'],
+      ['/kas-gelisimi-programi', 'Kas gelişimi programı'],
+      ['/yag-yakimi-programi', 'Yağ yakımı programı'],
+    ]));
   });
 
   it('finds an article by slug', () => {

@@ -94,6 +94,8 @@ export default function BlogArticle() {
   if (!article) return <Navigate to="/blog" replace />;
 
   const related = blogArticles.filter((item) => item.slug !== article.slug).slice(0, 2);
+  const publishedLabel = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${article.publishedAt}T12:00:00`));
+  const updatedLabel = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${article.updatedAt}T12:00:00`));
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -117,7 +119,8 @@ export default function BlogArticle() {
             <h1 className="mt-5 max-w-3xl font-outfit text-4xl font-black leading-tight sm:text-6xl">{article.title}</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-400">{article.intro}</p>
             <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
-              <time dateTime={article.publishedAt}>10 Ağustos 2026</time>
+              <time dateTime={article.publishedAt}>Yayın: {publishedLabel}</time>
+              {article.updatedAt !== article.publishedAt && <><span aria-hidden="true">·</span><time dateTime={article.updatedAt}>Güncelleme: {updatedLabel}</time></>}
               <span aria-hidden="true">·</span>
               <Link to="/editorial-policy" className="font-semibold text-slate-400 underline decoration-slate-700 underline-offset-4 hover:text-emerald-400">
                 Full Balance Editör Ekibi
@@ -147,6 +150,17 @@ export default function BlogArticle() {
                 ))}
               </section>
             ))}
+
+            {article.internalLinks?.length > 0 && (
+              <nav aria-label="İlgili Full Balance araçları" className="mt-12 border border-slate-800 bg-slate-900/45 p-5">
+                <h2 className="font-outfit text-xl font-bold">İlgili araçlar ve programlar</h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {article.internalLinks.map(([href, label]) => (
+                    <li key={href}><Link to={href} className="text-sm font-semibold text-emerald-400 underline underline-offset-4">{label}</Link></li>
+                  ))}
+                </ul>
+              </nav>
+            )}
 
             <aside className="mt-12 border-l-2 border-amber-500 bg-slate-900/60 p-5 text-sm leading-6 text-slate-400">
               Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir. Sağlık durumunuza uygun kararlar için doktorunuza danışın.
