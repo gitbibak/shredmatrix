@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { mealNameMap, getMealAlternatives, currencyMap, recipeSearchSuffix, MEAL_KEYS } from '../data/mealDatabase';
 import { personalizeMealItems } from '../data/planGenerator';
+import { buildShoppingList } from '../utils/shoppingList';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Utensils,
@@ -262,22 +263,24 @@ export default function NutritionPanel({ plan }) {
 
   /* ── Shopping List State ── */
   const [showShoppingList, setShowShoppingList] = useState(false);
+  const [shoppingScope, setShoppingScope] = useState('day');
   const [checkedItems, setCheckedItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('fb_shopping_checked') || '{}'); } catch { return {}; }
   });
   const [copied, setCopied] = useState(false);
 
   const shoppingItems = useMemo(() => {
-    if (!meals?.length) return [];
-    const items = new Set();
-    meals.forEach(meal => {
-      meal.items?.forEach(item => items.add(item));
-    });
-    return [...items];
-  }, [meals]);
+    const indexes = shoppingScope === 'week'
+      ? dailyNutrition.map((_, index) => index)
+      : [selectedDayIdx];
+    return buildShoppingList(dailyNutrition, indexes);
+  }, [dailyNutrition, selectedDayIdx, shoppingScope]);
+
+  const checkedKey = (item) => `${shoppingScope}:${shoppingScope === 'day' ? selectedDayIdx : 'all'}:${item.id}`;
 
   const toggleItem = (item) => {
-    const next = { ...checkedItems, [item]: !checkedItems[item] };
+    const key = checkedKey(item);
+    const next = { ...checkedItems, [key]: !checkedItems[key] };
     setCheckedItems(next);
     localStorage.setItem('fb_shopping_checked', JSON.stringify(next));
   };
@@ -288,13 +291,16 @@ export default function NutritionPanel({ plan }) {
   };
 
   const copyList = () => {
-    const text = shoppingItems.map(i => `${checkedItems[i] ? '✅' : '⬜'} ${i}`).join('\n');
+    const text = shoppingItems.map(item => {
+      const suffix = item.count > 1 ? ` ×${item.count}` : '';
+      return `${checkedItems[checkedKey(item)] ? '✅' : '⬜'} ${item.label}${suffix}`;
+    }).join('\n');
     navigator.clipboard.writeText(`🛒 ${t('nutrition.shoppingList')}:\n${text}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const checkedCount = shoppingItems.filter(i => checkedItems[i]).length;
+  const checkedCount = shoppingItems.filter(item => checkedItems[checkedKey(item)]).length;
 
   if (!dailyNutrition || !dailyNutrition.length) return (
     <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1rem',textAlign:'center',color:'#94a3b8'}}>
@@ -589,31 +595,44 @@ export default function NutritionPanel({ plan }) {
                 className="overflow-hidden"
               >
                 <div className="mt-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+                  <div className="mb-3 grid grid-cols-2 rounded-lg bg-slate-950 p-1">
+                    {['day', 'week'].map(scope => (
+                      <button
+                        key={scope}
+                        type="button"
+                        onClick={() => setShoppingScope(scope)}
+                        className={`rounded-md px-3 py-2 text-xs font-bold transition-colors ${shoppingScope === scope ? 'bg-orange-500 text-slate-950' : 'text-slate-500 hover:text-white'}`}
+                      >
+                        {t(`nutrition.shopping${scope === 'day' ? 'Day' : 'Week'}`)}
+                      </button>
+                    ))}
+                  </div>
                   {shoppingItems.length === 0 ? (
                     <p className="text-xs text-slate-500 text-center py-2">{t('nutrition.emptyList')}</p>
                   ) : (
                     <>
                       <ul className="space-y-1.5 mb-3">
-                        {shoppingItems.map((item, i) => (
+                        {shoppingItems.map(item => (
                           <li
-                            key={i}
+                            key={item.id}
                             onClick={() => toggleItem(item)}
                             className={[
                               'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm cursor-pointer transition-all',
-                              checkedItems[item]
+                              checkedItems[checkedKey(item)]
                                 ? 'bg-green-500/8 text-slate-500 line-through'
                                 : 'bg-slate-800/50 text-slate-300 hover:bg-slate-800',
                             ].join(' ')}
                           >
                             <span className={[
                               'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors',
-                              checkedItems[item]
+                              checkedItems[checkedKey(item)]
                                 ? 'border-green-500/50 bg-green-500/20 text-green-400'
                                 : 'border-slate-600 bg-slate-800',
                             ].join(' ')}>
-                              {checkedItems[item] && <Check size={10} />}
+                              {checkedItems[checkedKey(item)] && <Check size={10} />}
                             </span>
-                            {item}
+                            <span className="min-w-0 flex-1">{item.label}</span>
+                            {item.count > 1 && <span className="shrink-0 text-[10px] font-bold text-orange-400">×{item.count}</span>}
                           </li>
                         ))}
                       </ul>

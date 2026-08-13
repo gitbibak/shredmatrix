@@ -24,7 +24,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const VIEW_SIZE = (RADIUS + STROKE_WIDTH) * 2;
 const CENTER = VIEW_SIZE / 2;
 
-export default function WaterTracker() {
+export default function WaterTracker({ compact = false }) {
   const { t } = useTranslation();
   const [glasses, setGlasses] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -76,6 +76,58 @@ export default function WaterTracker() {
   const mlConsumed = glasses * ML_PER_GLASS;
   const dashOffset = CIRCUMFERENCE - (CIRCUMFERENCE * Math.min(percentage, 100)) / 100;
   const message = getMessage(percentage);
+
+  if (compact) {
+    return (
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex min-h-[132px] flex-col rounded-2xl border border-blue-500/20 bg-slate-900 p-4"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10">
+              <Droplets size={18} className="text-[#00b0ff]" />
+            </span>
+            <div>
+              <h3 className="text-sm font-bold text-white font-outfit">{t('water.title')}</h3>
+              <p className="text-[10px] text-slate-500">{mlConsumed} ml</p>
+            </div>
+          </div>
+          <p className="text-lg font-extrabold text-white font-outfit">
+            {glasses}<span className="text-xs font-medium text-slate-500">/{TARGET_GLASSES}</span>
+          </p>
+        </div>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
+          <motion.div
+            animate={{ width: `${Math.min(percentage, 100)}%` }}
+            className="h-full rounded-full bg-[#00b0ff]"
+          />
+        </div>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+          <button
+            type="button"
+            onClick={remove}
+            disabled={glasses <= 0}
+            aria-label="-1"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-slate-400 disabled:opacity-30"
+          >
+            <Minus size={15} />
+          </button>
+          <span className="truncate text-[10px] text-slate-500">{message}</span>
+          <button
+            type="button"
+            onClick={add}
+            disabled={glasses >= TARGET_GLASSES}
+            aria-label="+1"
+            className="flex h-9 w-12 shrink-0 items-center justify-center gap-1 rounded-xl bg-blue-500 text-sm font-bold text-white disabled:opacity-40"
+          >
+            <Plus size={15} />1
+          </button>
+        </div>
+      </motion.section>
+    );
+  }
 
   return (
     <motion.div

@@ -19,12 +19,10 @@ const SleepTracker = lazy(() => import('./SleepTracker'));
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const DataExport = lazy(() => import('./DataExport'));
 const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
-const NudgeCards = lazy(() => import('./NudgeCards'));
 const TodayFocusPanel = lazy(() => import('./TodayFocusPanel'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
 const LongevityPanel = lazy(() => import('./LongevityPanel'));
-const LongevityTodayCard = lazy(() => import('./LongevityPanel').then((module) => ({ default: module.LongevityTodayCard })));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -33,7 +31,7 @@ const StravaActivitiesPanel = lazy(() => import('./StravaPanel').then(m => ({ de
 
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
-  LogOut, Target, CalendarCheck, Share2, ChevronDown, ArrowRight,
+  LogOut, Target, CalendarCheck, Share2, ChevronDown,
 } from 'lucide-react';
 
 
@@ -100,30 +98,6 @@ function WelcomeOverlay({ name, onClose, t }) {
   );
 }
 
-function TodayActionCard({ icon: Icon, title, desc, accent, onClick }) {
-  const accentClass = {
-    orange: 'border-orange-500/25 bg-orange-500/10 text-orange-300 hover:bg-orange-500/15',
-    emerald: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15',
-    blue: 'border-blue-500/25 bg-blue-500/10 text-blue-300 hover:bg-blue-500/15',
-    violet: 'border-violet-500/25 bg-violet-500/10 text-violet-300 hover:bg-violet-500/15',
-  }[accent] || 'border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800';
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`group min-h-[96px] rounded-2xl border p-4 text-left transition-colors ${accentClass}`}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <Icon size={20} className="shrink-0" />
-        <ArrowRight size={16} className="shrink-0 opacity-50 transition-transform group-hover:translate-x-0.5" />
-      </div>
-      <p className="mt-3 text-sm font-outfit font-bold text-white">{title}</p>
-      <p className="mt-1 text-[11px] leading-snug text-slate-400">{desc}</p>
-    </button>
-  );
-}
-
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
@@ -144,37 +118,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     { id: 'today', label: t('dashboard.tabs.today'), icon: CalendarCheck },
     { id: 'progress', label: t('dashboard.tabs.progress'), icon: TrendingUp },
     { id: 'profile', label: t('dashboard.tabs.profile'), icon: User },
-  ];
-
-  const todayActions = [
-    {
-      id: 'workout',
-      icon: Dumbbell,
-      title: t('dashboard.todayActions.workout.title'),
-      desc: t('dashboard.todayActions.workout.desc'),
-      accent: 'orange',
-    },
-    {
-      id: 'nutrition',
-      icon: UtensilsCrossed,
-      title: t('dashboard.todayActions.nutrition.title'),
-      desc: t('dashboard.todayActions.nutrition.desc'),
-      accent: 'emerald',
-    },
-    {
-      id: 'progress',
-      icon: TrendingUp,
-      title: t('dashboard.todayActions.progress.title'),
-      desc: t('dashboard.todayActions.progress.desc'),
-      accent: 'blue',
-    },
-    {
-      id: 'profile',
-      icon: User,
-      title: t('dashboard.todayActions.profile.title'),
-      desc: t('dashboard.todayActions.profile.desc'),
-      accent: 'violet',
-    },
   ];
 
   // Show welcome on first visit
@@ -387,20 +330,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-                  <LongevityTodayCard plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    {todayActions.map((action) => (
-                      <TodayActionCard
-                        key={action.id}
-                        icon={action.icon}
-                        title={action.title}
-                        desc={action.desc}
-                        accent={action.accent}
-                        onClick={() => setActiveTab(action.id)}
-                      />
-                    ))}
+                  <div className="grid grid-cols-2 gap-3">
+                    <WaterTracker compact />
+                    <SleepTracker compact />
                   </div>
-                  <NudgeCards plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
                   <DailyChallenge />
                 </motion.div>
               </motion.div>
@@ -426,8 +359,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
                     <CalorieCalc />
-                    <WaterTracker />
-                    <SleepTracker />
                   </motion.div>
                 </div>
               </motion.div>
@@ -504,6 +435,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                         <Achievements plan={plan} user={user} />
                       </div>
                       <div className="space-y-6">
+                        <WaterTracker />
+                        <SleepTracker />
                         <BodyMeasurements />
                         <StravaActivitiesPanel />
                         <Leaderboard plan={plan} />

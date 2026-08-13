@@ -9,7 +9,7 @@ import { useToast } from './ToastProvider';
 
 function todayISO() { return new Date().toISOString().split('T')[0]; }
 
-export default function SleepTracker() {
+export default function SleepTracker({ compact = false }) {
   const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
   const [hours, setHours] = useState('');
@@ -58,6 +58,57 @@ export default function SleepTracker() {
 
   // Mini bar chart data
   const barMax = 12;
+
+  if (compact) {
+    return (
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex min-h-[132px] flex-col rounded-2xl border border-indigo-500/20 bg-slate-900 p-4"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10">
+              <Moon size={18} className="text-indigo-400" />
+            </span>
+            <div>
+              <h3 className="text-sm font-bold text-white font-outfit">{t('sleep.title')}</h3>
+              <p className="text-[10px] text-slate-500">{t('sleep.today')}</p>
+            </div>
+          </div>
+          <p className="text-lg font-extrabold text-white font-outfit">
+            {todayEntry ? `${todayEntry.hours}h` : '–'}
+          </p>
+        </div>
+        <div className="mt-auto pt-4">
+          <label className="sr-only" htmlFor="compact-sleep-hours">{t('sleep.inputLabel')}</label>
+          <div className="flex gap-2">
+            <input
+              id="compact-sleep-hours"
+              type="number"
+              min="0"
+              max="24"
+              step="0.5"
+              inputMode="decimal"
+              placeholder="7.5"
+              value={hours}
+              onChange={(event) => setHours(event.target.value)}
+              className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder-slate-600 focus:border-indigo-500/50"
+            />
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={!hours}
+              aria-label={t('sleep.inputLabel')}
+              className="flex h-10 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-500 text-white disabled:opacity-40"
+            >
+              <Save size={15} />
+            </button>
+          </div>
+        </div>
+      </motion.section>
+    );
+  }
 
   return (
     <motion.div

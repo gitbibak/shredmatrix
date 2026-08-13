@@ -1,7 +1,7 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calculator, Search, Upload, X } from 'lucide-react';
+import { Calculator, Search, Plus, Trash2, RotateCcw } from 'lucide-react';
 
 // ═══════════════════════════════════════════════════════════
 // 200+ foods database — per 100g values
@@ -218,8 +218,7 @@ export default function CalorieCalc() {
   const [selectedCat, setSelectedCat] = useState(null);
   const [grams, setGrams] = useState(100);
   const [selectedFood, setSelectedFood] = useState(null);
-  const [photoUrl, setPhotoUrl] = useState(null);
-  const fileRef = useRef(null);
+  const [mealItems, setMealItems] = useState([]);
 
   const filtered = useMemo(() => {
     let items = FOODS;
@@ -241,12 +240,28 @@ export default function CalorieCalc() {
     f: ((selectedFood.f * grams) / 100).toFixed(1),
   } : null;
 
-  const handlePhoto = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setPhotoUrl(ev.target.result);
-    reader.readAsDataURL(file);
+  const totals = useMemo(() => mealItems.reduce((sum, item) => ({
+    cal: sum.cal + item.cal,
+    p: sum.p + item.p,
+    c: sum.c + item.c,
+    f: sum.f + item.f,
+  }), { cal: 0, p: 0, c: 0, f: 0 }), [mealItems]);
+
+  const addToMeal = () => {
+    if (!selectedFood || grams < 1) return;
+    const multiplier = grams / 100;
+    setMealItems(items => [...items, {
+      id: `${Date.now()}-${items.length}`,
+      food: selectedFood,
+      grams,
+      cal: Math.round(selectedFood.cal * multiplier),
+      p: selectedFood.p * multiplier,
+      c: selectedFood.c * multiplier,
+      f: selectedFood.f * multiplier,
+    }]);
+    setSelectedFood(null);
+    setGrams(100);
+    setSearch('');
   };
 
   return (
@@ -255,7 +270,7 @@ export default function CalorieCalc() {
       className="bg-slate-900 border border-slate-800 rounded-2xl p-5"
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Calculator size={16} className="text-emerald-400" />
           <h3 className="text-sm font-bold font-outfit text-white">{t('calorieCalc.title')}</h3>
@@ -263,34 +278,8 @@ export default function CalorieCalc() {
             {FOODS.length}+
           </span>
         </div>
-        {/* Photo button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-          onClick={() => fileRef.current?.click()}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-[10px] font-medium cursor-pointer hover:bg-orange-500/20 transition-colors"
-        >
-          <Upload size={12} />
-          {t('calorieCalc.photoScan')}
-        </motion.button>
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
       </div>
-
-      {/* Photo preview */}
-      <AnimatePresence>
-        {photoUrl && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-            className="mb-3 relative"
-          >
-            <img src={photoUrl} alt="Food" className="w-full h-32 object-cover rounded-xl border border-slate-800" />
-            <button onClick={() => setPhotoUrl(null)}
-              className="absolute top-2 right-2 w-6 h-6 rounded-full bg-slate-900/80 flex items-center justify-center text-white cursor-pointer hover:bg-red-500/50 transition-colors">
-              <X size={12} />
-            </button>
-            <p className="text-[9px] text-slate-500 mt-1 text-center">{t('calorieCalc.photoHint')}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <p className="mb-4 text-[10px] leading-relaxed text-slate-500">{t('calorieCalc.helper')}</p>
 
       {/* Search */}
       <div className="relative mb-3">
@@ -327,7 +316,7 @@ export default function CalorieCalc() {
           const isSelected = selectedFood === food;
           return (
             <button
-              key={i} onClick={() => setSelectedFood(food)}
+              key={i} onClick={() => { setSelectedFood(food); setGrams(100); }}
               className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-between ${isSelected ? 'bg-emerald-500/15 border border-emerald-500/30 text-white' : 'bg-slate-950 border border-slate-800 text-slate-300 hover:border-slate-700'}`}
             >
               <span className="font-medium truncate mr-2">{name}</span>
@@ -348,7 +337,7 @@ export default function CalorieCalc() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex flex-wrap items-center gap-2 mb-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
               <label className="text-[10px] text-slate-500 shrink-0">{t('calorieCalc.grams')}:</label>
               <input
                 type="number" min="1" max="2000" step="10" value={grams}
@@ -356,9 +345,16 @@ export default function CalorieCalc() {
                 className="w-20 rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5 text-sm text-white text-center focus:border-emerald-500/50 transition-colors"
               />
               <span className="text-[10px] text-slate-500">g</span>
-              <span className="text-[10px] text-emerald-400 ml-auto font-semibold">
+              <span className="min-w-0 flex-1 truncate text-right text-[10px] text-emerald-400 font-semibold">
                 {selectedFood.name[lang] || selectedFood.name.tr}
               </span>
+              <button
+                type="button"
+                onClick={addToMeal}
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-slate-950 transition-colors hover:bg-emerald-400"
+              >
+                <Plus size={14} /> {t('calorieCalc.add')}
+              </button>
             </div>
 
             {calc && (
@@ -384,6 +380,43 @@ export default function CalorieCalc() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {mealItems.length > 0 && (
+        <div className="mt-4 border-t border-slate-800 pt-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h4 className="text-xs font-bold text-white">{t('calorieCalc.mealTotal')}</h4>
+            <button type="button" onClick={() => setMealItems([])} className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 hover:text-red-400">
+              <RotateCcw size={12} /> {t('calorieCalc.clear')}
+            </button>
+          </div>
+          <div className="mb-3 space-y-1.5">
+            {mealItems.map(item => (
+              <div key={item.id} className="flex items-center gap-2 rounded-lg bg-slate-950/70 px-3 py-2">
+                <span className="min-w-0 flex-1 truncate text-xs text-slate-300">{item.food.name[lang] || item.food.name.tr}</span>
+                <span className="text-[10px] text-slate-500">{item.grams}g</span>
+                <span className="w-14 text-right text-[10px] font-semibold text-white">{item.cal} kcal</span>
+                <button type="button" aria-label={t('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-4 gap-1.5">
+            {[
+              [t('calorieCalc.cal'), Math.round(totals.cal), 'text-white', ''],
+              [t('calorieCalc.protein'), totals.p.toFixed(1), 'text-orange-400', 'g'],
+              [t('calorieCalc.carbs'), totals.c.toFixed(1), 'text-blue-400', 'g'],
+              [t('calorieCalc.fat'), totals.f.toFixed(1), 'text-purple-400', 'g'],
+            ].map(([label, value, color, unit]) => (
+              <div key={label} className="rounded-xl border border-slate-800/50 bg-slate-950/60 p-2 text-center">
+                <p className="text-[8px] text-slate-500">{label}</p>
+                <p className={`text-sm font-bold font-outfit ${color}`}>{value}{unit}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{t('calorieCalc.disclaimer')}</p>
+        </div>
+      )}
     </motion.div>
   );
 }
