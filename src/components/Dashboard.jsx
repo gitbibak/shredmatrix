@@ -1,12 +1,14 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
+import { preloadProfilePhoto } from '../lib/dataService';
 
 // ── Lazy-loaded Dashboard sub-components ──
 const NutritionPanel = lazy(() => import('./NutritionPanel'));
 const WorkoutPanel = lazy(() => import('./WorkoutPanel'));
 const ProgressTracker = lazy(() => import('./ProgressTracker'));
-const ProfilePage = lazy(() => import('./ProfilePage'));
+const loadProfilePage = () => import('./ProfilePage');
+const ProfilePage = lazy(loadProfilePage);
 const WaterTracker = lazy(() => import('./WaterTracker'));
 const WorkoutTimer = lazy(() => import('./WorkoutTimer'));
 const WeeklyReport = lazy(() => import('./WeeklyReport'));
@@ -51,6 +53,11 @@ const columnVariants = {
     transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   },
 };
+
+function warmProfileAssets() {
+  loadProfilePage().catch(() => {});
+  preloadProfilePhoto().catch(() => {});
+}
 
 // ── Welcome Modal ────────────────────────────────────────
 function WelcomeOverlay({ name, onClose, t }) {
@@ -135,6 +142,16 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   }, [plan, user]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(warmProfileAssets, { timeout: 1500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+    const timeoutId = window.setTimeout(warmProfileAssets, 400);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return undefined;
     const initialHeight = window.visualViewport.height;
     const updateKeyboardState = () => {
@@ -193,6 +210,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   key={tab.id}
                   role="tab"
                   aria-selected={active}
+                  onPointerEnter={tab.id === 'profile' ? warmProfileAssets : undefined}
+                  onFocus={tab.id === 'profile' ? warmProfileAssets : undefined}
                   onClick={() => setActiveTab(tab.id)}
                   className={[
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer',
@@ -501,6 +520,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 key={tab.id}
                 role="tab"
                 aria-selected={active}
+                onPointerDown={tab.id === 'profile' ? warmProfileAssets : undefined}
+                onFocus={tab.id === 'profile' ? warmProfileAssets : undefined}
                 onClick={() => setActiveTab(tab.id)}
                 className={[
                   'flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all cursor-pointer min-w-0',

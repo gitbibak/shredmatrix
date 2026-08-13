@@ -13,6 +13,7 @@ import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, del
 import { useToast } from './ToastProvider';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
+const PHOTO_EXPIRY_KEY = 'shredmatrix_profile_photo_expires';
 const GALLERY_KEY = 'shredmatrix_progress_photos';
 const LOCALE_MAP = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
 
@@ -58,10 +59,24 @@ function Badge({ children }) {
 }
 
 function loadPhoto() {
-  try { return localStorage.getItem(PHOTO_KEY) || null; } catch (err) { console.warn('[Profile]', err?.message || err); return null; }
+  try {
+    const raw = localStorage.getItem(PHOTO_KEY);
+    if (!raw) return null;
+    let photo = raw;
+    try { photo = JSON.parse(raw); } catch { /* Legacy raw value. */ }
+    if (typeof photo !== 'string') return null;
+    if (photo.startsWith('data:')) return photo;
+    const expiresRaw = localStorage.getItem(PHOTO_EXPIRY_KEY);
+    const expiresAt = expiresRaw ? Number(JSON.parse(expiresRaw)) : 0;
+    return expiresAt > Date.now() + 30_000 ? photo : null;
+  } catch (err) { console.warn('[Profile]', err?.message || err); return null; }
 }
 function savePhoto(dataUrl) {
-  try { localStorage.setItem(PHOTO_KEY, dataUrl); } catch (err) { console.warn('[Profile]', err?.message || err); }
+  try {
+    localStorage.setItem(PHOTO_KEY, JSON.stringify(dataUrl));
+    if (dataUrl?.startsWith('data:')) localStorage.removeItem(PHOTO_EXPIRY_KEY);
+    else localStorage.setItem(PHOTO_EXPIRY_KEY, JSON.stringify(Date.now() + 55 * 60 * 1000));
+  } catch (err) { console.warn('[Profile]', err?.message || err); }
 }
 
 function loadGallery() {
@@ -207,6 +222,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
 
   const [profilePhoto, setProfilePhoto] = useState(loadPhoto);
   const [gallery, setGallery] = useState(loadGallery);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [galleryLoaded, setGalleryLoaded] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [showProgressPhotos, setShowProgressPhotos] = useState(false);
   const [showGoalChange, setShowGoalChange] = useState(false);
@@ -239,7 +256,10 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       try {
         const photo = await getProfilePhoto();
         if (cancelled) return;
-        if (photo) setProfilePhoto(photo);
+        if (photo) {
+          setProfilePhoto(photo);
+          savePhoto(photo);
+        }
       } catch (err) {
         console.warn('[Profile]', err?.message || err);
       }
@@ -251,21 +271,27 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   }, []);
 
   useEffect(() => {
+    if (!showProgressPhotos || galleryLoaded) return undefined;
     let cancelled = false;
     async function loadProgressPhotos() {
+      setGalleryLoading(true);
       try {
         const photos = await getProgressPhotos();
         if (cancelled) return;
         setGallery(photos || []);
+        saveGallery(photos || []);
+        setGalleryLoaded(true);
       } catch (err) {
         console.warn('[Profile]', err?.message || err);
+      } finally {
+        if (!cancelled) setGalleryLoading(false);
       }
     }
     loadProgressPhotos();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [showProgressPhotos, galleryLoaded]);
 
   const goalOptions = [
     { value: 'muscle', icon: TrendingUp, label: t('onboarding.fields.muscle'), color: '#ff6d00' },
@@ -356,14 +382,19 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const handleProfilePhoto = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const previousPhoto = profilePhoto;
+    const previewUrl = URL.createObjectURL(file);
+    setProfilePhoto(previewUrl);
     try {
       const url = await uploadPhoto(file, 'profile');
       setProfilePhoto(url);
       savePhoto(url);
       toast.success(t('errors.saveSuccess'));
     } catch (err) {
+      setProfilePhoto(previousPhoto);
       toast.error(t('errors.uploadFailed'));
     } finally {
+      URL.revokeObjectURL(previewUrl);
       e.target.value = '';
     }
   };
@@ -376,6 +407,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       const updated = await getProgressPhotos();
       setGallery(updated || []);
       saveGallery(updated || []);
+      setGalleryLoaded(true);
       setShowProgressPhotos(true);
       toast.success(t('errors.saveSuccess'));
     } catch (err) {
@@ -435,7 +467,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 src={profilePhoto}
                 alt="Profile"
                 loading="eager"
-                decoding="async"
+                decoding="sync"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             )}
@@ -493,22 +525,9 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
               <p className="text-[10px] leading-relaxed text-slate-500">
                 {gallery.length > 0
                   ? `${gallery.length} ${lang === 'tr' ? 'fotoğraf kayıtlı' : 'photos saved'}`
-                  : (lang === 'tr' ? 'İsteğe bağlı. Profil akışını kalabalıklaştırmaz.' : 'Optional. Kept out of the main profile flow.')}
+                  : (lang === 'tr' ? 'İsteğe bağlı · Karşılaştırmak için aç' : 'Optional · Open to compare')}
               </p>
             </button>
-            {gallery.length > 0 && (
-              <div className="hidden shrink-0 items-center gap-1 sm:flex">
-                {gallery.slice(0, 3).map((photo) => (
-                  <img
-                    key={photo.id}
-                    src={photo.src}
-                    alt=""
-                    className="h-8 w-8 rounded-lg border border-slate-700 object-cover"
-                    loading="lazy"
-                  />
-                ))}
-              </div>
-            )}
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
@@ -538,7 +557,12 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 transition={{ duration: 0.22, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                {gallery.length === 0 ? (
+                {galleryLoading ? (
+                  <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-4">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-orange-500/30 border-t-orange-500" />
+                    <p className="text-xs text-slate-500">{lang === 'tr' ? 'Fotoğraflar yükleniyor' : 'Loading photos'}</p>
+                  </div>
+                ) : gallery.length === 0 ? (
                   <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-4 text-center">
                     <p className="text-xs text-slate-500">{t('profile.noPhotos')}</p>
                   </div>
@@ -628,111 +652,6 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
         )}
       </AnimatePresence>
 
-      {/* ── Goal Change Section ── */}
-      <motion.div variants={itemV}>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold font-outfit text-white flex items-center gap-2">
-            <Target size={14} className="text-orange-400" />
-            {t('profile.goalChange') || 'Hedef Değiştir'}
-          </h3>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowGoalChange(!showGoalChange)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
-              showGoalChange
-                ? 'bg-slate-700 text-white'
-                : 'bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20'
-            }`}
-          >
-            {showGoalChange ? (t('profile.close') || 'Kapat') : (t('profile.changeGoal') || 'Değiştir')}
-          </motion.button>
-        </div>
-
-        {/* Current goal badge */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 mb-3 flex items-center gap-3">
-          {(() => {
-            const current = goalOptions.find(g => g.value === currentGoalKey);
-            const Icon = current?.icon || Dumbbell;
-            return (
-              <>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${current?.color || '#ff6d00'}15` }}>
-                  <Icon size={20} style={{ color: current?.color || '#ff6d00' }} />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-slate-400">{t('profile.currentGoal') || 'Mevcut Hedef'}</p>
-                  <p className="text-sm font-bold text-white font-outfit">{plan.goal}</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5">{goalProfile.focus}</p>
-                </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ backgroundColor: `${current?.color || '#ff6d00'}15`, color: current?.color || '#ff6d00' }}>
-                  {t('profile.active') || 'Aktif'}
-                </span>
-              </>
-            );
-          })()}
-        </div>
-
-        {/* Goal selection grid */}
-        <AnimatePresence>
-          {showGoalChange && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="grid grid-cols-3 gap-2 mb-2">
-                {goalOptions.map((goal) => {
-                  const Icon = goal.icon;
-                  const isActive = goal.value === currentGoalKey;
-                  const isChanging = changingGoal === goal.value;
-                  return (
-                    <motion.button
-                      key={goal.value}
-                      whileHover={{ scale: isActive ? 1 : 1.03 }}
-                      whileTap={{ scale: isActive ? 1 : 0.97 }}
-                      onClick={() => !isActive && handleGoalChange(goal.value)}
-                      disabled={isActive || changingGoal !== null}
-                      className={[
-                        'flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all duration-200',
-                        isActive
-                          ? 'bg-slate-800/50 border-slate-700 opacity-50 cursor-not-allowed'
-                          : isChanging
-                            ? 'bg-green-500/10 border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.15)]'
-                            : 'bg-slate-900 border-slate-800 hover:border-slate-600 cursor-pointer',
-                      ].join(' ')}
-                    >
-                      {isChanging ? (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1, rotate: 360 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <BadgeCheck size={22} className="text-green-400" />
-                        </motion.div>
-                      ) : (
-                        <div className={`p-2 rounded-xl ${isActive ? 'bg-slate-700' : ''}`} style={{ backgroundColor: isActive ? undefined : `${goal.color}10` }}>
-                          <Icon size={20} style={{ color: isActive ? '#475569' : goal.color }} />
-                        </div>
-                      )}
-                      <span className={`text-xs font-medium font-outfit ${
-                        isChanging ? 'text-green-400' : isActive ? 'text-slate-500' : 'text-slate-300'
-                      }`}>
-                        {isChanging ? (t('profile.switching') || 'Geçiliyor...') : goal.label}
-                      </span>
-                    </motion.button>
-                  );
-                })}
-              </div>
-              <p className="text-[10px] text-slate-500 text-center">
-                {t('profile.goalChangeNote') || 'Hedef değiştirildiğinde program sıfırlanır ve Faz 0\'dan başlanır.'}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
       {/* ── Goal Intelligence ── */}
       <motion.div variants={itemV}>
         <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4 overflow-hidden relative">
@@ -745,8 +664,17 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
               <h3 className="text-base font-bold font-outfit text-white">{goalProfile.title}</h3>
               <p className="text-[11px] leading-relaxed text-slate-400 mt-1">{goalProfile.focus}</p>
             </div>
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${goalProfile.color}18` }}>
-              <Target size={21} style={{ color: goalProfile.color }} />
+            <div className="flex shrink-0 flex-col items-end gap-2">
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${goalProfile.color}18` }}>
+                <Target size={21} style={{ color: goalProfile.color }} />
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowGoalChange((value) => !value)}
+                className="rounded-lg border border-orange-500/20 bg-orange-500/10 px-2.5 py-1.5 text-[10px] font-semibold text-orange-400 transition-colors hover:bg-orange-500/20"
+              >
+                {showGoalChange ? (t('profile.close') || 'Kapat') : (t('profile.changeGoal') || 'Değiştir')}
+              </button>
             </div>
           </div>
 
@@ -767,6 +695,40 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
               {goalProfile.action}
             </p>
           </div>
+
+          <AnimatePresence initial={false}>
+            {showGoalChange && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  {goalOptions.map((goal) => {
+                    const Icon = goal.icon;
+                    const isActive = goal.value === currentGoalKey;
+                    const isChanging = changingGoal === goal.value;
+                    return (
+                      <button
+                        key={goal.value}
+                        type="button"
+                        onClick={() => !isActive && handleGoalChange(goal.value)}
+                        disabled={isActive || changingGoal !== null}
+                        className={`flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-xl border p-2 text-center transition-colors ${isActive ? 'cursor-not-allowed border-slate-700 bg-slate-800/50 opacity-50' : 'border-slate-800 bg-slate-950/60 hover:border-slate-600'}`}
+                      >
+                        {isChanging ? <BadgeCheck size={19} className="text-green-400" /> : <Icon size={19} style={{ color: goal.color }} />}
+                        <span className="text-[10px] font-medium text-slate-300">{isChanging ? (t('profile.switching') || 'Geçiliyor...') : goal.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-center text-[9px] text-slate-500">
+                  {t('profile.goalChangeNote') || 'Hedef değiştirildiğinde program yeniden oluşturulur.'}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 

@@ -8,6 +8,11 @@ import { supabase, isSupabaseReady } from './supabase';
 // ── Helpers ──────────────────────────────────
 
 let activeUserId = null;
+let profilePhotoCache = null;
+let profilePhotoRequest = null;
+
+const PROFILE_PHOTO_KEY = 'shredmatrix_profile_photo';
+const PROFILE_PHOTO_EXPIRY_KEY = 'shredmatrix_profile_photo_expires';
 
 function lsGet(key, fallback = null) {
   try {
@@ -23,6 +28,39 @@ function lsSet(key, value) {
 
 function lsRemove(key) {
   try { localStorage.removeItem(key); } catch (err) { console.warn('[DataService]', err?.message || err); }
+}
+
+function getLocalProfilePhoto() {
+  let value = lsGet(PROFILE_PHOTO_KEY, null);
+  if (!value) {
+    try {
+      const raw = localStorage.getItem(PROFILE_PHOTO_KEY);
+      value = raw && !raw.startsWith('"') ? raw : null;
+    } catch (err) {
+      console.warn('[DataService]', err?.message || err);
+    }
+  }
+  if (!value || typeof value !== 'string') return null;
+  if (value.startsWith('data:')) return value;
+
+  const expiresAt = Number(lsGet(PROFILE_PHOTO_EXPIRY_KEY, 0));
+  if (expiresAt > Date.now() + 30_000) return value;
+  lsRemove(PROFILE_PHOTO_KEY);
+  lsRemove(PROFILE_PHOTO_EXPIRY_KEY);
+  return null;
+}
+
+function cacheProfilePhoto(userId, value, expiresAt = null) {
+  profilePhotoCache = { userId: userId || 'local', value: value || null };
+  if (!value) return;
+  lsSet(PROFILE_PHOTO_KEY, value);
+  if (expiresAt) lsSet(PROFILE_PHOTO_EXPIRY_KEY, expiresAt);
+  else lsRemove(PROFILE_PHOTO_EXPIRY_KEY);
+}
+
+function clearProfilePhotoCache() {
+  profilePhotoCache = null;
+  profilePhotoRequest = null;
 }
 
 function normalizeWaterLog(entry) {
@@ -107,6 +145,7 @@ export async function signOut() {
     await supabase.auth.signOut();
   }
   activeUserId = null;
+  clearProfilePhotoCache();
   lsRemove('shredmatrix_session');
 }
 
@@ -809,7 +848,7 @@ export async function uploadPhoto(file, type = 'profile') {
       const reader = new FileReader();
       reader.onload = () => {
         if (type === 'profile') {
-          lsSet('shredmatrix_profile_photo', reader.result);
+          cacheProfilePhoto(userId, reader.result);
         } else {
           const photos = lsGet('shredmatrix_progress_photos', []);
           photos.push({ id: Date.now(), date: new Date().toISOString(), src: reader.result });
@@ -838,6 +877,7 @@ export async function uploadPhoto(file, type = 'profile') {
 
     if (type === 'profile') {
       await updateProfile({ avatar_url: path });
+      cacheProfilePhoto(userId, data.signedUrl, Date.now() + 55 * 60 * 1000);
     }
 
     return data.signedUrl;
@@ -848,7 +888,7 @@ export async function uploadPhoto(file, type = 'profile') {
       const reader = new FileReader();
       reader.onload = () => {
         if (type === 'profile') {
-          lsSet('shredmatrix_profile_photo', reader.result);
+          cacheProfilePhoto(userId, reader.result);
         } else {
           const photos = lsGet('shredmatrix_progress_photos', []);
           photos.push({ id: Date.now(), date: new Date().toISOString(), src: reader.result });
@@ -864,22 +904,60 @@ export async function uploadPhoto(file, type = 'profile') {
 
 export async function getProfilePhoto() {
   const userId = getUserId();
+  const cacheKey = userId || 'local';
+
+  if (profilePhotoCache?.userId === cacheKey) return profilePhotoCache.value;
+  if (profilePhotoRequest?.userId === cacheKey) return profilePhotoRequest.promise;
 
   if (!isSupabaseReady() || !userId) {
-    return lsGet('shredmatrix_profile_photo', null);
+    const localPhoto = getLocalProfilePhoto();
+    profilePhotoCache = { userId: cacheKey, value: localPhoto };
+    return localPhoto;
   }
 
+  const promise = (async () => {
+    try {
+      const profile = await getProfile();
+      if (!profile?.avatar_url) {
+        const localPhoto = getLocalProfilePhoto();
+        profilePhotoCache = { userId: cacheKey, value: localPhoto };
+        return localPhoto;
+      }
+      const { data, error } = await supabase.storage
+        .from('user-photos')
+        .createSignedUrl(profile.avatar_url, 3600);
+      if (error) throw error;
+      const photo = data?.signedUrl || null;
+      cacheProfilePhoto(userId, photo, Date.now() + 55 * 60 * 1000);
+      return photo;
+    } catch (err) {
+      console.warn('[DataService]', err?.message || err);
+      const localPhoto = getLocalProfilePhoto();
+      profilePhotoCache = { userId: cacheKey, value: localPhoto };
+      return localPhoto;
+    }
+  })();
+
+  profilePhotoRequest = { userId: cacheKey, promise };
   try {
-    const profile = await getProfile();
-    if (!profile?.avatar_url) return null;
-    const { data } = await supabase.storage
-      .from('user-photos')
-      .createSignedUrl(profile.avatar_url, 3600);
-    return data?.signedUrl || profile.avatar_url;
-  } catch (err) {
-    console.warn('[DataService]', err?.message || err);
-    return lsGet('shredmatrix_profile_photo', null);
+    return await promise;
+  } finally {
+    if (profilePhotoRequest?.promise === promise) profilePhotoRequest = null;
   }
+}
+
+export async function preloadProfilePhoto() {
+  const photo = await getProfilePhoto();
+  if (!photo || typeof Image === 'undefined') return photo;
+
+  await new Promise((resolve) => {
+    const image = new Image();
+    image.onload = resolve;
+    image.onerror = resolve;
+    image.src = photo;
+    if (image.complete) resolve();
+  });
+  return photo;
 }
 
 export async function getProgressPhotos() {
@@ -1041,12 +1119,14 @@ export async function deleteAllUserData(email) {
     'shredmatrix_progress', 'shredmatrix_water', 'shredmatrix_water_history',
     'shredmatrix_workout_log', 'shredmatrix_measurements', 'shredmatrix_sleep',
     'shredmatrix_profile_photo', 'shredmatrix_progress_photos',
+    PROFILE_PHOTO_EXPIRY_KEY,
     'shredmatrix_reminder', 'shredmatrix_current_phase', 'shredmatrix_plan_created',
     'shredmatrix_first_login', `shredmatrix_tour_seen_${email}`,
     'shredmatrix_install_dismissed', 'shredmatrix_trainer_invite',
     'shredmatrix_trainer_connections',
   ];
   allKeys.forEach(k => lsRemove(k));
+  clearProfilePhotoCache();
 
   // Remove from users list
   const users = lsGet('shredmatrix_users', []);
