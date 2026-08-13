@@ -1,4 +1,4 @@
-const CACHE = 'fb-v8';
+const CACHE = 'fb-v9';
 const PRE_CACHE = [
   '/',
   '/index.html',
@@ -87,10 +87,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For JS/CSS assets with hashed names — network only, don't serve stale
-  if (url.pathname.match(/\/assets\/.*-[a-zA-Z0-9]{8}\./)) {
+  // Build assets are hashed. Always try the network first, including CSS hashes
+  // containing underscores or dashes, then use the exact cached asset offline.
+  if (url.pathname.startsWith('/assets/')) {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: 'no-store' })
         .then((res) => {
           if (res && res.status === 200) {
             const clone = res.clone();
