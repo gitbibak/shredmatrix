@@ -59,57 +59,10 @@ function warmProfileAssets() {
   preloadProfilePhoto().catch(() => {});
 }
 
-// ── Welcome Modal ────────────────────────────────────────
-function WelcomeOverlay({ name, onClose, t }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 2000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.7, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-        className="text-center"
-      >
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-5xl mb-3"
-        >
-          ⚡
-        </motion.div>
-        <h1 className="text-2xl md:text-3xl font-extrabold font-outfit text-white mb-1">
-          {t('dashboard.welcome.hi')} <span className="gradient-text">{name}</span>!
-        </h1>
-        <p className="text-slate-400 text-xs font-outfit">
-          {t('dashboard.welcome.subtitle')}
-        </p>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: '100%' }}
-          transition={{ duration: 1.8, ease: 'linear' }}
-          className="h-0.5 bg-gradient-to-r from-orange-500 to-blue-500 rounded-full mt-4 mx-auto max-w-[200px]"
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
-
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
   const [activeTab, setActiveTab] = useState('today');
-  const [showWelcome, setShowWelcome] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
   const [showProgressDetails, setShowProgressDetails] = useState(false);
@@ -127,19 +80,13 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     { id: 'profile', label: t('dashboard.tabs.profile'), icon: User },
   ];
 
-  // Show welcome on first visit
+  // Record the first login for achievement calculations.
   useEffect(() => {
     if (!plan) return;
-    const key = `shredmatrix_welcomed_${user?.email || 'guest'}`;
-    if (!sessionStorage.getItem(key)) {
-      setShowWelcome(true);
-      sessionStorage.setItem(key, '1');
-    }
-    // Record first login for achievements
     if (!localStorage.getItem('shredmatrix_first_login')) {
       localStorage.setItem('shredmatrix_first_login', new Date().toISOString());
     }
-  }, [plan, user]);
+  }, [plan]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return undefined;
@@ -163,17 +110,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   return (
     <>
     <div className="min-h-screen bg-grid pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0 overflow-x-hidden w-full">
-      {/* ── Welcome Overlay ── */}
-      <AnimatePresence>
-        {showWelcome && (
-          <WelcomeOverlay
-            name={plan.userName || t('dashboard.athlete') || 'Athlete'}
-            onClose={() => setShowWelcome(false)}
-            t={t}
-          />
-        )}
-      </AnimatePresence>
-
       {/* ── Top Nav ──────────────────────────────────── */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}

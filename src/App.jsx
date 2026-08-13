@@ -168,11 +168,10 @@ const GOAL_THEMES = {
 };
 
 // ── Loading Screen ───────────────────────────────────────
-function LoadingScreen({ goal = 'muscle', userName = '' }) {
+function LoadingScreen({ goal = 'muscle' }) {
   const { t } = useTranslation();
   const steps = t('loading.steps') || [];
   const [currentStep, setCurrentStep] = useState(0);
-  const [showWelcome, setShowWelcome] = useState(false);
 
   const theme = GOAL_THEMES[goal] || GOAL_THEMES.muscle;
   const GoalIcon = theme.icon;
@@ -182,7 +181,6 @@ function LoadingScreen({ goal = 'muscle', userName = '' }) {
       setCurrentStep((prev) => {
         if (prev >= steps.length - 1) {
           clearInterval(interval);
-          setShowWelcome(true);
           return prev;
         }
         return prev + 1;
@@ -192,8 +190,6 @@ function LoadingScreen({ goal = 'muscle', userName = '' }) {
   }, []);
 
   const progress = ((currentStep + 1) / steps.length) * 100;
-  const firstName = userName?.split(' ')[0] || '';
-
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4 relative overflow-hidden">
 
@@ -320,50 +316,28 @@ function LoadingScreen({ goal = 'muscle', userName = '' }) {
 
         {/* Step Text */}
         <AnimatePresence mode="wait">
-          {!showWelcome ? (
-            <motion.p
-              key={currentStep}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="text-xs text-slate-500 font-outfit h-5"
-            >
-              {steps[currentStep]}
-            </motion.p>
-          ) : (
-            <motion.div
-              key="welcome"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <p className="text-lg font-bold font-outfit text-white">
-                {t('dashboard.welcome.hi')}{' '}
-                <span className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
-                  {firstName}!
-                </span>
-              </p>
-              <p className="text-xs text-slate-400 mt-1.5 font-outfit">
-                {t('dashboard.welcome.subtitle')}
-              </p>
-            </motion.div>
-          )}
+          <motion.p
+            key={currentStep}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="text-xs text-slate-500 font-outfit h-5"
+          >
+            {steps[currentStep]}
+          </motion.p>
         </AnimatePresence>
 
         {/* Loading Dots */}
-        {!showWelcome && (
-          <div className="flex items-center gap-1.5 mt-5">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                className={`w-1.5 h-1.5 rounded-full ${theme.dotColor}`}
-                animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
-                transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
-              />
-            ))}
-          </div>
-        )}
+        <div className="flex items-center gap-1.5 mt-5">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full ${theme.dotColor}`}
+              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
+              transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -549,7 +523,7 @@ function AppContent() {
           setShowTour(true);
           localStorage.setItem(tourKey, '1');
         }
-      }, 3200);
+      }, 250);
 
       return () => clearTimeout(timer);
     }
@@ -654,7 +628,7 @@ function AppContent() {
 
             <Route path="/loading" element={
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={pageTransition}>
-                <LoadingScreen goal={pendingFormData?.primaryGoal || 'muscle'} userName={user?.name || pendingFormData?.name || ''} />
+                <LoadingScreen goal={pendingFormData?.primaryGoal || 'muscle'} />
               </motion.div>
             } />
 
