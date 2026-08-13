@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
+import { internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(rootDir, 'dist');
@@ -29,7 +30,7 @@ function replaceMeta(html, attribute, key, content) {
     : html.replace('</head>', `    <meta ${attribute}="${key}" content="${escapeHtml(content)}" />\n  </head>`);
 }
 
-function buildDocument({ title, description, canonical, image, type = 'website', schema, body }) {
+function buildDocument({ title, description, canonical, image, type = 'website', schema, body, lang = 'tr', alternates = null }) {
   let html = template
     .replace(/<title>[^<]*<\/title>/i, `<title>${escapeHtml(title)}</title>`)
     .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/i, `<link rel="canonical" href="${escapeHtml(canonical)}" />`)
@@ -37,6 +38,15 @@ function buildDocument({ title, description, canonical, image, type = 'website',
     .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/i, '')
     .replace(/<noscript>[\s\S]*?<\/noscript>/i, '')
     .replace('<div id="root"></div>', `<div id="root"><div id="seo-static">${body}</div></div>`);
+
+  html = html.replace(/<html lang="[^"]*">/i, `<html lang="${escapeHtml(lang)}">`);
+  if (alternates) {
+    const alternateTags = Object.entries(alternates)
+      .map(([alternateLang, path]) => `<link rel="alternate" hreflang="${escapeHtml(alternateLang)}" href="${BASE_URL}${escapeHtml(path)}" />`)
+      .concat(`<link rel="alternate" hreflang="x-default" href="${BASE_URL}${escapeHtml(alternates.en)}" />`)
+      .join('\n    ');
+    html = html.replace('</head>', `    ${alternateTags}\n  </head>`);
+  }
 
   html = replaceMeta(html, 'name', 'description', description);
   html = replaceMeta(html, 'name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1');
@@ -107,6 +117,7 @@ const blogSchema = { '@context': 'https://schema.org', '@type': 'Blog', name: 'F
 
 for (const page of seoLandingPages) {
   const canonical = `${BASE_URL}/${page.slug}`;
+  const alternates = getAlternatesForTurkishPath(`/${page.slug}`);
   const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header><section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section></article><nav aria-label="İlgili programlar"><a href="/kas-gelisimi-programi">Kas gelişimi</a> · <a href="/yag-yakimi-programi">Yağ yakımı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a> · <a href="/reformer-pilates-programi">Reformer</a> · <a href="/pilates-programi">Pilates</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
@@ -118,7 +129,7 @@ for (const page of seoLandingPages) {
       ] },
     ],
   };
-  await writeRoute(`/${page.slug}`, buildDocument({ title: `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body }));
+  await writeRoute(`/${page.slug}`, buildDocument({ title: `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body, alternates }));
 }
 
 await writeRoute('/blog', buildDocument({ title: 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance', description: blogDescription, canonical: `${BASE_URL}/blog`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: blogSchema, body: blogBody }));
@@ -138,4 +149,21 @@ const editorialBody = `<main class="static-seo"><a href="/blog">Rehbere dön</a>
 const editorialSchema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Yayın İlkeleri ve İçerik Süreci', url: `${BASE_URL}/editorial-policy`, description: editorialDescription, inLanguage: 'tr-TR', publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL } };
 await writeRoute('/editorial-policy', buildDocument({ title: 'Yayın İlkeleri ve İçerik Süreci | Full Balance', description: editorialDescription, canonical: `${BASE_URL}/editorial-policy`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: editorialSchema, body: editorialBody }));
 
-console.log(`Generated ${blogArticles.length + seoLandingPages.length + 2} static SEO pages.`);
+for (const page of internationalSeoPages) {
+  const canonical = `${BASE_URL}${page.path}`;
+  const related = getInternationalRelatedPages(page).slice(0, 8);
+  const relatedLabel = page.lang === 'es' ? 'Explora más objetivos y herramientas' : 'Explore more goals and tools';
+  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header><article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}&amp;source=international-seo">${escapeHtml(page.startLabel)}</a></footer></main>`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', name: page.metaTitle, description: page.description, url: canonical, inLanguage: page.locale, isPartOf: { '@id': `${BASE_URL}/#website` }, about: { '@id': `${BASE_URL}/#app` } },
+      { '@type': 'FAQPage', mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/${page.lang}` }, { '@type': 'ListItem', position: 2, name: page.title, item: canonical }] },
+      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: BASE_URL, applicationCategory: 'HealthApplication', operatingSystem: 'Web, iOS, Android, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    ],
+  };
+  await writeRoute(page.path, buildDocument({ title: page.metaTitle, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-en.png`, schema, body, lang: page.lang, alternates: page.alternates }));
+}
+
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + 2} static SEO pages.`);

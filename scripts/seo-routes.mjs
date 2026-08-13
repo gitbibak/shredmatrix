@@ -1,4 +1,5 @@
 import { blogArticles } from '../src/data/blogArticles.js';
+import { internationalSeoPages } from '../src/data/internationalSeoPages.js';
 
 export const BASE_URL = 'https://fullbalance.app';
 
@@ -27,4 +28,5 @@ export const publicPages = [
   ['/meditasyon-uygulamasi', '2026-08-14'],
   ['/blog', '2026-08-10'],
   ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
+  ...internationalSeoPages.map((page) => [page.path, '2026-08-14']),
 ];

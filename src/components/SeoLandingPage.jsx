@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { getAlternatesForTurkishPath } from '../data/internationalSeoPages';
 import {
   Award,
   BarChart3,
@@ -409,12 +410,28 @@ function upsertCanonical(url) {
   element.setAttribute('href', url);
 }
 
+function upsertAlternate(language, path) {
+  let element = document.head.querySelector(`link[rel="alternate"][hreflang="${language}"]`);
+  if (!element) {
+    element = document.createElement('link');
+    element.setAttribute('rel', 'alternate');
+    element.setAttribute('hreflang', language);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('href', `${BASE_URL}${path}`);
+}
+
 function useSeo(page, slug) {
   useEffect(() => {
     const url = `${BASE_URL}/${slug}`;
+    const alternates = getAlternatesForTurkishPath(`/${slug}`);
     document.documentElement.lang = 'tr';
     document.title = page.metaTitle;
     upsertCanonical(url);
+    if (alternates) {
+      Object.entries(alternates).forEach(([language, path]) => upsertAlternate(language, path));
+      upsertAlternate('x-default', alternates.en);
+    }
     upsertMeta('meta[name="description"]', { name: 'description' }, page.description);
     upsertMeta('meta[name="keywords"]', { name: 'keywords' }, page.keywords);
     upsertMeta('meta[property="og:title"]', { property: 'og:title' }, page.metaTitle);

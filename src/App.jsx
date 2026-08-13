@@ -23,6 +23,7 @@ const TermsOfService = lazy(() => import('./components/TermsOfService'));
 const StravaCallback = lazy(() => import('./components/StravaCallback'));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
 const SeoLandingPage = lazy(() => import('./components/SeoLandingPage'));
+const InternationalLandingPage = lazy(() => import('./components/InternationalLandingPage'));
 const ContactPage = lazy(() => import('./components/ContactPage'));
 const SupportResolutionNotice = lazy(() => import('./components/SupportResolutionNotice'));
 const BlogIndex = lazy(() => import('./components/BlogIndex'));
@@ -52,6 +53,8 @@ const SEO_PAGE_SLUGS = [
 function isPublicContentPath(pathname) {
   return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy'].includes(pathname)
     || pathname.startsWith('/blog/')
+    || pathname === '/en' || pathname.startsWith('/en/')
+    || pathname === '/es' || pathname.startsWith('/es/')
     || SEO_PAGE_SLUGS.some((slug) => pathname === `/${slug}`);
 }
 
@@ -707,6 +710,18 @@ function AppContent() {
                 }
               />
             ))}
+
+            <Route path="/en/*" element={
+              <motion.div key={location.pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <InternationalLandingPage pathname={location.pathname} />
+              </motion.div>
+            } />
+
+            <Route path="/es/*" element={
+              <motion.div key={location.pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                <InternationalLandingPage pathname={location.pathname} />
+              </motion.div>
+            } />
 
             <Route path="/strava/callback" element={
               <motion.div key="strava-cb" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>

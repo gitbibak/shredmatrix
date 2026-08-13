@@ -7,13 +7,22 @@ const SUPPORTED = ['tr', 'en', 'es'];
 const STORAGE_KEY = 'shredmatrix_lang';
 
 function detectLanguage() {
-  // 1. Check saved preference
+  // 1. Explicit language from acquisition links and localized routes
+  try {
+    const queryLanguage = new URLSearchParams(window.location.search).get('lang');
+    if (queryLanguage && SUPPORTED.includes(queryLanguage)) return queryLanguage;
+
+    const routeLanguage = window.location.pathname.split('/').filter(Boolean)[0];
+    if (SUPPORTED.includes(routeLanguage)) return routeLanguage;
+  } catch {}
+
+  // 2. Check saved preference
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && SUPPORTED.includes(saved)) return saved;
   } catch {}
 
-  // 2. Browser/device language preferences
+  // 3. Browser/device language preferences
   const browserLanguages = [
     ...(navigator.languages || []),
     navigator.language,
@@ -25,7 +34,7 @@ function detectLanguage() {
     if (SUPPORTED.includes(language)) return language;
   }
 
-  // 3. Fallback
+  // 4. Fallback
   return 'en';
 }
 
