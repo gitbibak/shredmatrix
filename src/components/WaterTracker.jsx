@@ -61,7 +61,7 @@ export default function WaterTracker({ compact = false }) {
   }, []);
 
   const add = useCallback(() => {
-    setGlasses((g) => Math.min(g + 1, TARGET_GLASSES));
+    setGlasses((g) => g + 1);
   }, []);
 
   const remove = useCallback(() => {
@@ -118,9 +118,8 @@ export default function WaterTracker({ compact = false }) {
           <button
             type="button"
             onClick={add}
-            disabled={glasses >= TARGET_GLASSES}
             aria-label="+1"
-            className="flex h-9 w-12 shrink-0 items-center justify-center gap-1 rounded-xl bg-blue-500 text-sm font-bold text-white disabled:opacity-40"
+            className="flex h-9 w-12 shrink-0 items-center justify-center gap-1 rounded-xl bg-blue-500 text-sm font-bold text-white"
           >
             <Plus size={15} />1
           </button>
@@ -255,9 +254,8 @@ export default function WaterTracker({ compact = false }) {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           onClick={add}
-          disabled={glasses >= TARGET_GLASSES}
           className="flex items-center gap-1 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#ff6d00] to-[#00b0ff] text-white text-xs font-bold
-                     shadow-lg shadow-orange-500/20 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                     shadow-lg shadow-orange-500/20 cursor-pointer transition-colors"
         >
           <Plus size={12} />
           <span>+1</span>
