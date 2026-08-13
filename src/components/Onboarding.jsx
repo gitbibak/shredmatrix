@@ -20,6 +20,9 @@ import {
   Circle,
   Wrench,
   Sparkles,
+  House,
+  Building2,
+  PackageOpen,
 } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 
@@ -194,12 +197,24 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const [experience, setExperience] = useState('intermediate');
   const [activityLevel, setActivityLevel] = useState('moderate');
   const [primaryGoal, setPrimaryGoal] = useState('muscle');
+  const [trainingEnvironment, setTrainingEnvironment] = useState('gym');
   const [healthConditions, setHealthConditions] = useState(['none']);
   const [allergies, setAllergies] = useState(['none']);
 
+  const trainingEnvironmentOptions = primaryGoal === 'reformer'
+    ? [
+      { value: 'studio', icon: Building2, label: t('onboarding.fields.reformerStudio'), desc: t('onboarding.fields.reformerStudioDesc') },
+      { value: 'home_reformer', icon: House, label: t('onboarding.fields.homeReformer'), desc: t('onboarding.fields.homeReformerDesc') },
+    ]
+    : [
+      { value: 'home_bodyweight', icon: House, label: t('onboarding.fields.homeBodyweight'), desc: t('onboarding.fields.homeBodyweightDesc') },
+      { value: 'home_basic', icon: PackageOpen, label: t('onboarding.fields.homeBasic'), desc: t('onboarding.fields.homeBasicDesc') },
+      { value: 'gym', icon: Building2, label: t('onboarding.fields.gym'), desc: t('onboarding.fields.gymDesc') },
+    ];
+
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
-  const DRAFT_VERSION = 2;
+  const DRAFT_VERSION = 3;
 
   // Restore on mount
   useEffect(() => {
@@ -213,6 +228,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       setExperience(initialData.experience || 'intermediate');
       setActivityLevel(initialData.activityLevel || 'moderate');
       setPrimaryGoal(initialData.primaryGoal || 'muscle');
+      setTrainingEnvironment(initialData.trainingEnvironment || (initialData.primaryGoal === 'reformer' ? 'studio' : 'gym'));
       setHealthConditions(Array.isArray(initialData.healthConditions) && initialData.healthConditions.length ? initialData.healthConditions : ['none']);
       setAllergies(Array.isArray(initialData.allergies) && initialData.allergies.length ? initialData.allergies : ['none']);
       setStep(0);
@@ -234,6 +250,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
         if (saved.experience) setExperience(saved.experience);
         if (saved.activityLevel) setActivityLevel(saved.activityLevel);
         if (saved.primaryGoal) setPrimaryGoal(saved.primaryGoal);
+        if (saved.trainingEnvironment) setTrainingEnvironment(saved.trainingEnvironment);
         if (Array.isArray(saved.healthConditions)) setHealthConditions(saved.healthConditions.length ? saved.healthConditions : ['none']);
         if (Array.isArray(saved.allergies)) setAllergies(saved.allergies.length ? saved.allergies : ['none']);
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
@@ -249,17 +266,24 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         draftVersion: DRAFT_VERSION,
         name, age, gender, height, weight,
-        experience, activityLevel, primaryGoal, healthConditions, allergies, step,
+        experience, activityLevel, primaryGoal, trainingEnvironment, healthConditions, allergies, step,
       }));
     } catch (err) { console.warn('[Onboarding] save:', err); }
-  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, healthConditions, allergies, step]);
+  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, trainingEnvironment, healthConditions, allergies, step]);
+
+  const selectGoal = (goal) => {
+    setPrimaryGoal(goal);
+    if (goal === 'reformer') setTrainingEnvironment('studio');
+    else if (['yoga', 'pilates', 'meditation'].includes(goal)) setTrainingEnvironment('home_bodyweight');
+    else setTrainingEnvironment('gym');
+  };
 
   const canNext = () => {
     switch (step) {
       case 0: return primaryGoal;
       case 1: return name.trim().length > 0 && gender;
       case 2: return weight > 0 && height > 0;
-      case 3: return activityLevel && experience;
+      case 3: return activityLevel && experience && trainingEnvironment;
       case 4: return healthConditions.length > 0;
       case 5: return allergies.length > 0;
       default: return true;
@@ -285,6 +309,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       experience,
       activityLevel,
       primaryGoal,
+      trainingEnvironment,
       workSchedule: ['flexible'],
       budget: 'moderate',
       healthConditions,
@@ -418,7 +443,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                         <motion.button
                           type="button"
                           key={goal.value}
-                          onClick={() => setPrimaryGoal(goal.value)}
+                          onClick={() => selectGoal(goal.value)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.97 }}
                           className={[
@@ -578,6 +603,30 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                               {level.label}
                             </span>
                             <span className="text-[9px] text-slate-600 leading-tight">{level.desc}</span>
+                          </SelectCard>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.trainingEnvironment')}</label>
+                    <div className={`grid gap-2 ${trainingEnvironmentOptions.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                      {trainingEnvironmentOptions.map((option) => {
+                        const Icon = option.icon;
+                        const selected = trainingEnvironment === option.value;
+                        return (
+                          <SelectCard
+                            key={option.value}
+                            selected={selected}
+                            onClick={() => setTrainingEnvironment(option.value)}
+                            className="p-3 min-h-[92px]"
+                          >
+                            <Icon size={21} className={selected ? 'text-orange-400' : 'text-slate-500'} />
+                            <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
+                              {option.label}
+                            </span>
+                            <span className="text-[9px] leading-tight text-slate-600">{option.desc}</span>
                           </SelectCard>
                         );
                       })}

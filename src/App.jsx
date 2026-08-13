@@ -413,6 +413,7 @@ function AppContent() {
         bodyFatPercentage: savedPlan.userBodyFat, experience: savedPlan.userExperience,
         activityLevel: savedPlan.userActivityLevel, primaryGoal: goalMap[savedPlan.goal] || 'muscle',
         workSchedule: savedPlan.userWorkSchedule, budget: savedPlan.userBudget,
+        trainingEnvironment: savedPlan.trainingEnvironment,
         healthConditions: savedPlan.healthConditions || ['none'],
         allergies: savedPlan.allergies || ['none'],
       };
@@ -518,6 +519,7 @@ function AppContent() {
       bodyFatPercentage: plan.userBodyFat, experience: plan.userExperience,
       activityLevel: plan.userActivityLevel, primaryGoal: goalMap[plan.goal] || 'muscle',
       workSchedule: plan.userWorkSchedule, budget: plan.userBudget,
+      trainingEnvironment: plan.trainingEnvironment,
       healthConditions: plan.healthConditions || ['none'],
       allergies: plan.allergies || ['none'],
     };
@@ -589,6 +591,7 @@ function AppContent() {
         experience: plan.userExperience,
         activityLevel: plan.userActivityLevel,
         primaryGoal: goalMap[plan.goal] || 'muscle',
+        trainingEnvironment: plan.trainingEnvironment,
         workSchedule: plan.userWorkSchedule || ['flexible'],
         budget: plan.userBudget || 'moderate',
         healthConditions: plan.healthConditions || ['none'],

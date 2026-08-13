@@ -1,6 +1,6 @@
 # Full Balance Training Program Quality Audit
 
-Date: 2026-07-24
+Last reviewed: 2026-08-14
 
 ## Purpose
 
@@ -42,8 +42,8 @@ The redesign should follow these principles:
 2. Too many expert plans rely on flashy exercises.
    Advanced techniques, supersets, dropsets, handstands, full repertoires and long flows appear before the app has verified readiness, mobility, symptoms, equipment or consistency.
 
-3. Health filtering exists, but the program templates should be safer by default.
-   The generator now replaces risky exercises for selected conditions, but the base templates still include movements that are unnecessarily aggressive for many users.
+3. Health filtering and default safety validation are both active.
+   Risky movements are removed after focus validation, with phase-specific guards for yoga, Pilates, Reformer, meditation and fat-loss conditioning.
 
 4. Fat-loss programming mixes conditioning and lifting without enough fatigue control.
    HIIT should not be the default answer for every high-level fat-loss plan. Fat loss should prioritize adherence, strength retention, steps/cardio dose and recovery.
@@ -238,11 +238,23 @@ Phase 2 - Ileri:
 Phase 3 - Usta:
 
 - 30-45 minutes.
-- Longer sits and breath retention only with clear safety warnings.
+- Longer single-technique sits with recovery days; unsupervised breath retention is not generated.
+
+## Implemented Controls
+
+- Training environment is selected inside the existing activity step, without adding a seventh onboarding screen.
+- Muscle-growth and fat-loss plans adapt to gym, basic home equipment, or no-equipment home training.
+- Reformer plans explicitly require studio or home-machine access.
+- Fat-loss plans allow no high-intensity day at foundation level and at most one per week later.
+- Beginner/intermediate Pilates removes premature neck-loaded and rollover skills.
+- Unsupervised yoga removes extreme inversions and forceful or retained breathing at every level.
+- Meditation uses one bounded technique per active day (8, 15, 25, or 35 minutes by level).
+- Reformer plans remove unsupported high-risk skills and non-Reformer apparatus references.
+- Automated tests cover all six modules, four levels, three languages, health/allergy rules, environment feasibility, recovery detection and module guardrails.
 
 ## Implementation Plan
 
-1. Replace static `workoutPhases` with structured phase templates.
+1. Continue migrating static `workoutPhases` toward structured phase templates.
    Each phase should include `duration`, `goal`, `intensity`, `progression`, `regression`, and `safetyNotes`.
 
 2. Add a quality validator.
@@ -255,7 +267,7 @@ Phase 3 - Usta:
    - no progression rule,
    - no health-aware substitutions.
 
-3. Add module-specific readiness logic.
+3. Expand module-specific readiness logic.
    The generator should adjust plans using:
    - experience,
    - age,

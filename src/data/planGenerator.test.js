@@ -16,6 +16,7 @@ describe('planGenerator safety personalization', () => {
     budget: 'moderate',
     healthConditions: ['none'],
     allergies: ['none'],
+    trainingEnvironment: 'gym',
   };
 
   it('carries health and allergy choices into the generated plan', () => {
@@ -308,5 +309,112 @@ describe('planGenerator safety personalization', () => {
     ['tower', 'cadillac', 'wunda chair'].forEach((keyword) => {
       expect(planText).not.toContain(keyword);
     });
+  });
+
+  it('creates equipment-feasible home plans without gym-only movements', () => {
+    for (const goal of ['muscle', 'fat_loss']) {
+      for (const trainingEnvironment of ['home_bodyweight', 'home_basic']) {
+        const plan = generatePlan({
+          ...baseMetrics,
+          primaryGoal: goal,
+          experience: 'advanced',
+          trainingEnvironment,
+        }, 2, 'tr');
+        const exerciseText = plan.workoutSplit
+          .flatMap((day) => day.exercises || [])
+          .map((exercise) => exercise.name)
+          .join(' ')
+          .toLowerCase();
+
+        ['barbell', 'cable', 'machine', 'treadmill', 'rowing', 'ski erg', 'assault bike', 'sled', 'trx', 'battle rope', 'bench press', 'lat pulldown', 'leg press'].forEach((term) => {
+          expect(exerciseText).not.toContain(term);
+        });
+        if (trainingEnvironment === 'home_bodyweight') {
+          ['dumbbell', 'kettlebell', 'medicine ball', 'ab wheel'].forEach((term) => {
+            expect(exerciseText).not.toContain(term);
+          });
+        }
+        expect(plan.trainingEnvironment).toBe(trainingEnvironment);
+        expect(plan.personalization.environmentAdjusted).toBe(true);
+      }
+    }
+  });
+
+  it('limits fat-loss programming to one high-intensity day per week', () => {
+    for (const phase of [0, 1, 2, 3]) {
+      const plan = generatePlan({
+        ...baseMetrics,
+        primaryGoal: 'fat_loss',
+        experience: ['beginner', 'intermediate', 'advanced', 'expert'][phase],
+      }, phase === 0 ? 0 : phase, 'tr');
+      const intenseDays = plan.workoutSplit.filter((day) => {
+        const text = `${day.focus} ${(day.exercises || []).map((exercise) => exercise.name).join(' ')}`;
+        return /hiit|sprint|tabata|amrap|emom|metabolik|conditioning|circuit|interval|burpee|box jump|jump lunge|jump squat/i.test(text);
+      });
+      expect(intenseDays.length).toBeLessThanOrEqual(phase === 0 ? 0 : 1);
+    }
+  });
+
+  it('removes unsupervised extreme yoga skills and long breath holds at every level', () => {
+    for (const phase of [0, 1, 2, 3]) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal: 'yoga' }, phase, 'tr');
+      const text = plan.workoutSplit
+        .flatMap((day) => [day.focus, ...(day.exercises || []).map((exercise) => `${exercise.name} ${exercise.reps}`)])
+        .join(' ')
+        .toLowerCase();
+      ['headstand', 'sirsasana', 'handstand', 'scorpion', 'forearm stand', 'pincha mayurasana', 'peacock', 'mayurasana', 'flying pigeon', 'kumbhaka', 'bandha', 'kapalabhati', '90 dk'].forEach((term) => {
+        expect(text).not.toContain(term);
+      });
+    }
+  });
+
+  it('keeps beginner and intermediate Pilates progression neck-safe', () => {
+    const blockedByPhase = {
+      0: ['roll up', 'rolling like a ball', 'teaser', 'criss cross', 'double leg stretch', 'pilates push-up'],
+      1: ['jackknife', 'neck pull', 'control balance', 'boomerang', 'open leg rocker'],
+    };
+    for (const phase of [0, 1]) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal: 'pilates' }, phase, 'tr');
+      const text = plan.workoutSplit.flatMap((day) => day.exercises || []).map((exercise) => exercise.name).join(' ').toLowerCase();
+      blockedByPhase[phase].forEach((term) => expect(text).not.toContain(term));
+    }
+  });
+
+  it('keeps meditation sessions single-technique, time-bounded and free of breath retention', () => {
+    const durations = ['8 dk', '15 dk', '25 dk', '35 dk'];
+    for (const phase of [0, 1, 2, 3]) {
+      const plan = generatePlan({
+        ...baseMetrics,
+        primaryGoal: 'meditation',
+        experience: ['beginner', 'intermediate', 'advanced', 'expert'][phase],
+      }, phase === 0 ? 0 : phase, 'tr');
+      plan.workoutSplit.filter((day) => !day.isRest).forEach((day) => {
+        expect(day.exercises).toHaveLength(1);
+        expect(day.exercises[0].reps).toBe(durations[phase]);
+      });
+      const text = plan.workoutSplit.flatMap((day) => day.exercises || []).map((exercise) => exercise.name).join(' ').toLowerCase();
+      ['wim hof', 'kapalabhati', 'nefes tutma', 'kumbhaka'].forEach((term) => expect(text).not.toContain(term));
+    }
+  });
+
+  it('keeps remote reformer plans away from high-risk unsupported skills', () => {
+    for (const phase of [1, 2, 3]) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal: 'reformer' }, phase, 'tr');
+      const text = plan.workoutSplit.flatMap((day) => day.exercises || []).map((exercise) => exercise.name).join(' ').toLowerCase();
+      ['long spine', 'snake', 'control balance', 'headstand', 'russian split', 'high bridge', 'tendon stretch', 'horseback'].forEach((term) => {
+        expect(text).not.toContain(term);
+      });
+    }
+  });
+
+  it('does not mistake restorative training for a rest day', () => {
+    for (const goal of ['yoga', 'pilates', 'reformer']) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal: goal }, 1, 'tr');
+      const restorativeDays = plan.workoutSplit.filter((day) => /restore|restoratif/i.test(day.focus));
+      restorativeDays.forEach((day) => {
+        expect(day.isRest).toBe(false);
+        expect(day.exercises.length).toBeGreaterThan(0);
+      });
+    }
   });
 });
