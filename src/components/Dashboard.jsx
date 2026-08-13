@@ -142,16 +142,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   }, [plan, user]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    if ('requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(warmProfileAssets, { timeout: 1500 });
-      return () => window.cancelIdleCallback(idleId);
-    }
-    const timeoutId = window.setTimeout(warmProfileAssets, 400);
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
-  useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return undefined;
     const initialHeight = window.visualViewport.height;
     const updateKeyboardState = () => {

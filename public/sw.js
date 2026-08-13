@@ -1,4 +1,4 @@
-const CACHE = 'fb-v7';
+const CACHE = 'fb-v8';
 const PRE_CACHE = [
   '/',
   '/index.html',
@@ -72,7 +72,7 @@ self.addEventListener('fetch', (event) => {
   // For navigation requests (SPA routes like /dashboard, /auth, etc.)
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: 'no-store' })
         .then((res) => {
           // Cache fresh index.html on every navigation
           if (res && res.status === 200) {
