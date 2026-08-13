@@ -858,6 +858,9 @@ export const translations = {
     },
     referral: {
       invite: 'Arkadaşlarını Davet Et',
+      free: 'Ücretsiz',
+      copyLink: 'Davet Linkini Kopyala',
+      message: 'Full Balance ile 6 kişisel hedef, beslenme, su, uyku ve ilerleme takibi tek yerde tamamen ücretsiz.',
     },
     push: {
       title: 'Bildirimleri Aç',
@@ -1886,6 +1889,9 @@ export const translations = {
     },
     referral: {
       invite: 'Invite Your Friends',
+      free: 'Free',
+      copyLink: 'Copy Invite Link',
+      message: 'Full Balance brings 6 personal goals, nutrition, water, sleep and progress tracking together for free.',
     },
     push: {
       title: 'Enable Notifications',
@@ -2890,6 +2896,9 @@ export const translations = {
     },
     referral: {
       invite: 'Invita a Tus Amigos',
+      free: 'Gratis',
+      copyLink: 'Copiar Enlace',
+      message: 'Full Balance reúne 6 objetivos personales, nutrición, agua, sueño y progreso totalmente gratis.',
     },
     push: {
       title: 'Activar Notificaciones',

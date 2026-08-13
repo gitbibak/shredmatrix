@@ -21,6 +21,7 @@ import {
   Wrench,
   Sparkles,
 } from 'lucide-react';
+import { trackEvent } from '../lib/analytics';
 
 // ── Step Configuration ───────────────────────────────────
 const STEP_IDS = ['goal', 'personal', 'body', 'activity', 'health', 'allergies'];
@@ -123,7 +124,7 @@ function toggleMultiValue(values, value, noneValue = 'none') {
 // ═════════════════════════════════════════════════════════
 // Onboarding Component
 // ═════════════════════════════════════════════════════════
-export default function Onboarding({ onSubmit, initialData = null, resetDraftKey = 0 }) {
+export default function Onboarding({ onSubmit, initialData = null, resetDraftKey = 0, defaultName = '' }) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -185,7 +186,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   ];
 
   // Form state
-  const [name, setName] = useState('');
+  const [name, setName] = useState(defaultName);
   const [age, setAge] = useState(25);
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState(175);
@@ -236,9 +237,11 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
         if (Array.isArray(saved.healthConditions)) setHealthConditions(saved.healthConditions.length ? saved.healthConditions : ['none']);
         if (Array.isArray(saved.allergies)) setAllergies(saved.allergies.length ? saved.allergies : ['none']);
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
+      } else if (defaultName) {
+        setName(defaultName);
       }
     } catch (err) { console.warn('[Onboarding] restore:', err); }
-  }, [initialData, resetDraftKey]);
+  }, [initialData, resetDraftKey, defaultName]);
 
   // Save on every change
   useEffect(() => {
@@ -265,6 +268,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const nextStep = () => {
     if (step < STEPS.length - 1 && canNext()) {
+      trackEvent('onboarding_step_complete', { step_name: STEP_IDS[step], step_number: step + 1 });
       setDirection(1);
       setStep(step + 1);
     }
@@ -272,6 +276,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const submitOnboarding = () => {
     if (STEP_IDS[step] !== 'allergies' || !canNext()) return;
+    trackEvent('onboarding_step_complete', { step_name: 'allergies', step_number: STEP_IDS.length });
+    trackEvent('onboarding_complete');
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
       name, age, gender, height, weight,

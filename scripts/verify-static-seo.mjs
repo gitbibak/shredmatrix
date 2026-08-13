@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
 import { BASE_URL, publicPages } from './seo-routes.mjs';
+import { seoLandingPages } from './seo-static-pages.mjs';
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(rootDir, 'dist');
@@ -32,6 +33,15 @@ for (const article of blogArticles) {
   await access(join(rootDir, 'public', article.image));
 }
 
+for (const page of seoLandingPages) {
+  const html = await readFile(join(distDir, page.slug, 'index.html'), 'utf8');
+  assert(html.includes(`<h1>${page.title}</h1>`), `${page.slug} visible H1 is missing`);
+  assert(html.includes(`rel="canonical" href="${BASE_URL}/${page.slug}"`), `${page.slug} canonical is missing`);
+  assert(html.includes('id="seo-static"'), `${page.slug} static content is missing`);
+  assert(html.includes('/auth?mode=register'), `${page.slug} registration CTA is missing`);
+  assert(occurrences(html, 'type="application/ld+json"') === 1, `${page.slug} has conflicting structured data blocks`);
+}
+
 const blogHtml = await readFile(join(distDir, 'blog', 'index.html'), 'utf8');
 assert(blogHtml.includes('<h1>Sağlıklı yaşamı karmaşıklaştırmadan anlayın</h1>'), 'blog index H1 is missing');
 assert(blogHtml.includes('"@type":"Blog"'), 'blog index schema is missing');
@@ -45,4 +55,4 @@ for (const [path] of publicPages) {
   assert(sitemap.includes(`<loc>${BASE_URL}${path}</loc>`), `${path} is missing from sitemap.xml`);
 }
 
-console.log(`Verified ${blogArticles.length + 2} static SEO pages and ${publicPages.length} sitemap URLs.`);
+console.log(`Verified ${blogArticles.length + seoLandingPages.length + 2} static SEO pages and ${publicPages.length} sitemap URLs.`);

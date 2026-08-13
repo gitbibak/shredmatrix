@@ -515,7 +515,7 @@ export default function SeoLandingPage({ slug }) {
               FULL BALANCE
             </Link>
             <Link
-              to="/auth"
+              to="/auth?mode=register"
               className="rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20"
             >
               Ücretsiz Başla
@@ -542,7 +542,7 @@ export default function SeoLandingPage({ slug }) {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  to="/auth"
+                  to="/auth?mode=register"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-blue-500 px-6 py-4 font-outfit text-sm font-bold text-white shadow-xl shadow-orange-500/20"
                 >
                   Ücretsiz Hesap Oluştur

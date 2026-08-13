@@ -9,7 +9,7 @@ import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
-import { initAnalytics, trackGeneratePlan, trackPageView } from './lib/analytics';
+import { initAnalytics, trackGeneratePlan, trackPageView, trackReferral } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
@@ -428,6 +428,11 @@ function AppContent() {
   // Restore session on mount
   useEffect(() => {
     initAnalytics();
+    const referralCode = new URLSearchParams(window.location.search).get('ref');
+    if (referralCode && /^[A-Z0-9]{4,16}$/i.test(referralCode)) {
+      try { localStorage.setItem('fb_referred_by', referralCode.toUpperCase()); } catch { /* Optional attribution. */ }
+      trackReferral();
+    }
     const restoreSession = async () => {
       const currentPath = window.location.pathname;
       const urlHash = window.location.hash;
@@ -635,6 +640,7 @@ function AppContent() {
                     onSubmit={handleSubmit}
                     initialData={onboardingInitialData}
                     resetDraftKey={onboardingResetKey}
+                    defaultName={user?.name || ''}
                   />
                 </motion.div>
               </ProtectedRoute>

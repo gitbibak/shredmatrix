@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
 import { BASE_URL } from './seo-routes.mjs';
+import { seoLandingPages } from './seo-static-pages.mjs';
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(rootDir, 'dist');
@@ -62,7 +63,7 @@ function articleBody(article) {
   const sources = article.sources.map(([label, href]) => `<li><a href="${escapeHtml(href)}" rel="noreferrer">${escapeHtml(label)}</a></li>`).join('');
   const internalLinks = article.internalLinks?.length ? `<nav aria-label="İlgili Full Balance araçları"><h2>İlgili araçlar ve programlar</h2><ul>${article.internalLinks.map(([href, label]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join('')}</ul></nav>` : '';
   const related = blogArticles.filter((item) => item.slug !== article.slug).slice(0, 3).map((item) => `<li><a href="/blog/${escapeHtml(item.slug)}">${escapeHtml(item.title)}</a></li>`).join('');
-  return `<main class="static-seo"><a href="/blog">Tüm rehberler</a><article><header><p>${escapeHtml(article.category)} · ${escapeHtml(article.readTime)}</p><h1>${escapeHtml(article.title)}</h1><p>${escapeHtml(article.intro)}</p><p>Yayın: <time datetime="${article.publishedAt}">${escapeHtml(article.publishedAt)}</time> · Güncelleme: <time datetime="${article.updatedAt}">${escapeHtml(article.updatedAt)}</time> · <a href="/editorial-policy">Full Balance Editör Ekibi</a></p></header><img src="${escapeHtml(article.image)}" alt="${escapeHtml(article.imageAlt)}" width="1600" height="900">${sections}${internalLinks}<aside><p>Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir.</p><a href="/editorial-policy">Yayın ilkelerimizi incele</a></aside><section><h2>Kaynaklar</h2><ul>${sources}</ul></section></article><nav aria-label="İlgili rehberler"><h2>İlgili rehberler</h2><ul>${related}</ul></nav><footer><a href="/auth">Full Balance'a ücretsiz başla</a></footer></main>`;
+  return `<main class="static-seo"><a href="/blog">Tüm rehberler</a><article><header><p>${escapeHtml(article.category)} · ${escapeHtml(article.readTime)}</p><h1>${escapeHtml(article.title)}</h1><p>${escapeHtml(article.intro)}</p><p>Yayın: <time datetime="${article.publishedAt}">${escapeHtml(article.publishedAt)}</time> · Güncelleme: <time datetime="${article.updatedAt}">${escapeHtml(article.updatedAt)}</time> · <a href="/editorial-policy">Full Balance Editör Ekibi</a></p></header><img src="${escapeHtml(article.image)}" alt="${escapeHtml(article.imageAlt)}" width="1600" height="900">${sections}${internalLinks}<aside><p>Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir.</p><a href="/editorial-policy">Yayın ilkelerimizi incele</a></aside><section><h2>Kaynaklar</h2><ul>${sources}</ul></section></article><nav aria-label="İlgili rehberler"><h2>İlgili rehberler</h2><ul>${related}</ul></nav><footer><a href="/auth?mode=register">Full Balance'a ücretsiz başla</a></footer></main>`;
 }
 
 function articleSchema(article) {
@@ -101,8 +102,24 @@ async function writeRoute(route, html) {
 }
 
 const blogDescription = 'Antrenman, beslenme, uyku, mobilite ve longevity hakkında uygulanabilir, kaynaklı ve ücretsiz Full Balance rehberleri.';
-const blogBody = `<main class="static-seo"><header><a href="/">Full Balance</a><h1>Sağlıklı yaşamı karmaşıklaştırmadan anlayın</h1><p>${escapeHtml(blogDescription)}</p></header><section><h2>Tüm rehberler</h2>${blogArticles.map((article) => `<article><h2><a href="/blog/${escapeHtml(article.slug)}">${escapeHtml(article.title)}</a></h2><p>${escapeHtml(article.description)}</p></article>`).join('')}</section><footer><a href="/auth">Full Balance'a ücretsiz başla</a> · <a href="/editorial-policy">Yayın ilkeleri</a></footer></main>`;
+const blogBody = `<main class="static-seo"><header><a href="/">Full Balance</a><h1>Sağlıklı yaşamı karmaşıklaştırmadan anlayın</h1><p>${escapeHtml(blogDescription)}</p></header><section><h2>Tüm rehberler</h2>${blogArticles.map((article) => `<article><h2><a href="/blog/${escapeHtml(article.slug)}">${escapeHtml(article.title)}</a></h2><p>${escapeHtml(article.description)}</p></article>`).join('')}</section><footer><a href="/auth?mode=register">Full Balance'a ücretsiz başla</a> · <a href="/editorial-policy">Yayın ilkeleri</a></footer></main>`;
 const blogSchema = { '@context': 'https://schema.org', '@type': 'Blog', name: 'Full Balance Rehber', url: `${BASE_URL}/blog`, description: blogDescription, publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL }, blogPost: blogArticles.map((article) => ({ '@type': 'BlogPosting', headline: article.title, image: `${BASE_URL}${article.image}`, url: `${BASE_URL}/blog/${article.slug}`, datePublished: article.publishedAt, dateModified: article.updatedAt })) };
+
+for (const page of seoLandingPages) {
+  const canonical = `${BASE_URL}/${page.slug}`;
+  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header><section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section></article><nav aria-label="İlgili programlar"><a href="/kas-gelisimi-programi">Kas gelişimi</a> · <a href="/yag-yakimi-programi">Yağ yakımı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a> · <a href="/reformer-pilates-programi">Reformer</a> · <a href="/pilates-programi">Pilates</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', name: page.title, description: page.description, url: canonical, inLanguage: 'tr-TR' },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: BASE_URL },
+        { '@type': 'ListItem', position: 2, name: page.title, item: canonical },
+      ] },
+    ],
+  };
+  await writeRoute(`/${page.slug}`, buildDocument({ title: `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body }));
+}
 
 await writeRoute('/blog', buildDocument({ title: 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance', description: blogDescription, canonical: `${BASE_URL}/blog`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: blogSchema, body: blogBody }));
 
@@ -121,4 +138,4 @@ const editorialBody = `<main class="static-seo"><a href="/blog">Rehbere dön</a>
 const editorialSchema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Yayın İlkeleri ve İçerik Süreci', url: `${BASE_URL}/editorial-policy`, description: editorialDescription, inLanguage: 'tr-TR', publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL } };
 await writeRoute('/editorial-policy', buildDocument({ title: 'Yayın İlkeleri ve İçerik Süreci | Full Balance', description: editorialDescription, canonical: `${BASE_URL}/editorial-policy`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: editorialSchema, body: editorialBody }));
 
-console.log(`Generated ${blogArticles.length + 2} static SEO pages.`);
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + 2} static SEO pages.`);

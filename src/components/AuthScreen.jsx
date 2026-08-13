@@ -175,7 +175,9 @@ export default function AuthScreen({ onAuth, onBack }) {
         if (mode === 'register') {
           trackSignUpStart('email');
           const result = await signUp(email.toLowerCase().trim(), password, name.trim());
-          trackSignUp('email');
+          let referred = false;
+          try { referred = Boolean(localStorage.getItem('fb_referred_by')); } catch { /* Optional attribution. */ }
+          trackSignUp(referred ? 'email_referral' : 'email');
           
           // If session exists (email confirmation disabled), proceed directly
           if (result.session) {

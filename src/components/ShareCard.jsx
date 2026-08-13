@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Copy, X, Check, Camera, Download, Image, MessageCircle, Users, Gift } from "lucide-react";
+import { Share2, Copy, X, Check, Camera, Download, Image, MessageCircle, Users } from "lucide-react";
 import { useTranslation } from '../i18n/LanguageContext';
-import { trackShare, trackReferral } from '../lib/analytics';
+import { trackShare } from '../lib/analytics';
 
 /* ── Canvas helper: rounded rectangle ── */
 function roundRect(ctx, x, y, w, h, r) {
@@ -28,11 +28,9 @@ export default function ShareCard({ plan, onClose }) {
   /* ── Referral system state ── */
   const [refCode, setRefCode] = useState('');
   const [refCopied, setRefCopied] = useState(false);
-  const [refCount, setRefCount] = useState(0);
 
   useEffect(() => {
     const REFERRAL_KEY = 'fb_referral_code';
-    const REFERRAL_COUNT_KEY = 'fb_referral_count';
     let c = localStorage.getItem(REFERRAL_KEY);
     if (!c) {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -41,11 +39,10 @@ export default function ShareCard({ plan, onClose }) {
       localStorage.setItem(REFERRAL_KEY, c);
     }
     setRefCode(c);
-    setRefCount(parseInt(localStorage.getItem(REFERRAL_COUNT_KEY) || '0'));
   }, []);
 
   const refShareUrl = `https://fullbalance.app/?ref=${refCode}`;
-  const refShareText = t('share.tagline');
+  const refShareText = t('referral.message');
 
   const {
     userName = t('profile.user'),
@@ -400,10 +397,10 @@ export default function ShareCard({ plan, onClose }) {
                 <div className="bg-gradient-to-r from-orange-500/8 to-amber-500/8 border border-orange-500/15 rounded-xl p-3">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-1.5">
-                      <Gift size={13} className="text-orange-400" />
+                      <Users size={13} className="text-orange-400" />
                       <span className="text-[11px] font-bold font-outfit text-white">{t('referral.invite')}</span>
                     </div>
-                    <span className="text-[9px] text-slate-500 bg-slate-800/60 px-2 py-0.5 rounded-full">{refCount}/3</span>
+                    <span className="text-[9px] text-slate-500">{t('referral.free')}</span>
                   </div>
 
                   {/* Referral code */}
@@ -423,7 +420,7 @@ export default function ShareCard({ plan, onClose }) {
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-slate-800/60 border border-slate-700/30 text-slate-300 hover:text-white hover:border-orange-500/30 transition-colors text-[10px] font-medium cursor-pointer"
                     >
                       {refCopied ? <Check size={11} className="text-green-400" /> : <Copy size={11} />}
-                      {refCopied ? '✓ Kopyalandı' : 'Link Kopyala'}
+                      {refCopied ? t('share.copied') : t('referral.copyLink')}
                     </button>
                     <button
                       onClick={() => {
