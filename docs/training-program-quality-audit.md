@@ -242,6 +242,16 @@ Phase 3 - Usta:
 
 ## Implemented Controls
 
+### Home and gym separation (2026-08-14)
+
+- Muscle-growth and fat-loss plans now have separate generation paths for `gym`, `home_basic`, and `home_bodyweight`; a gym plan is no longer converted by exercise-name guessing.
+- `home_bodyweight` permits only bodyweight, floor work, and a stable household support. Backpacks, dumbbells, bands, cables, machines, and bars are rejected.
+- `home_basic` permits bodyweight, dumbbells, resistance bands, and a stable support.
+- Every home exercise carries structured equipment, target-muscle, and difficulty metadata. Core finishers and health substitutions follow the same equipment validation.
+- Four levels progress through weekly frequency, set volume, tempo, and unilateral control while preserving the selected environment.
+- Existing saved plans regenerate through `PLAN_VERSION = 18`.
+- Evidence basis: ACSM 2026 resistance-training guidance, WHO physical-activity guidance, and NCCIH yoga safety guidance (links in the references section above).
+
 - Training environment is selected inside the existing activity step, without adding a seventh onboarding screen.
 - Muscle-growth and fat-loss plans adapt to gym, basic home equipment, or no-equipment home training.
 - Reformer plans explicitly require studio or home-machine access.

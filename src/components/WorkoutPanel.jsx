@@ -89,8 +89,14 @@ function buildWorkoutSupplementAdvice(supplements) {
 
 function ExerciseRow({ exercise, index, t, onShowDemo }) {
   const [showTip, setShowTip] = useState(false);
-  const info = getExerciseInfo(exercise.name);
-  const diff = info ? getDifficultyLabel(info.difficulty) : null;
+  const databaseInfo = getExerciseInfo(exercise.name);
+  const hasStructuredMetadata = Object.hasOwn(exercise, 'equipment');
+  const info = hasStructuredMetadata
+    ? { ...exercise }
+    : databaseInfo;
+  const muscles = exercise.muscles || info?.muscles;
+  const difficulty = exercise.difficulty || info?.difficulty;
+  const diff = difficulty ? getDifficultyLabel(difficulty) : null;
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' form technique')}`;
   return (
     <motion.div
@@ -108,9 +114,9 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
             <span className="font-semibold text-slate-100 text-sm block truncate">
               {exercise.name}
             </span>
-            {info?.muscles && (
+            {muscles && (
               <div className="flex flex-wrap gap-1 mt-0.5">
-                {info.muscles.map(m => (
+                {muscles.map(m => (
                   <span key={m} className="text-[8px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-medium">
                     {m}
                   </span>
@@ -118,6 +124,16 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
                 {diff && (
                   <span className={`text-[8px] px-1.5 py-0.5 rounded ${diff.bg} ${diff.color} font-medium`}>
                     {diff.text}
+                  </span>
+                )}
+                {exercise.equipment && exercise.equipment !== 'none' && (
+                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-medium">
+                    {{ dumbbell: 'Dumbbell', resistance_band: 'Direnç bandı', stable_surface: 'Sabit destek' }[exercise.equipment] || exercise.equipment}
+                  </span>
+                )}
+                {exercise.tempo && (
+                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 font-medium">
+                    {exercise.tempo}
                   </span>
                 )}
               </div>
@@ -556,6 +572,11 @@ export default function WorkoutPanel({ plan }) {
           <span className="shrink-0 text-[10px] font-semibold bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-full border border-blue-500/20">
             7 {t('workout.split')}
           </span>
+          {plan.planQuality?.equipmentLabel && (
+            <span className="shrink-0 text-[10px] font-semibold bg-emerald-500/10 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/20">
+              {plan.planQuality.equipmentLabel}
+            </span>
+          )}
         </div>
       </div>
 

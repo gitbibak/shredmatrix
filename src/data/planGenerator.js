@@ -6,10 +6,11 @@
 
 import { buildMealTemplates, dayLabelMap } from './mealDatabase';
 import { getWorkoutDayImage } from './moduleAssets';
+import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWorkoutPrograms';
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 17;
+export const PLAN_VERSION = 18;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -145,8 +146,9 @@ const CARDIO_NOTES = {
 function getCardioNote(goal, dayIndex, lang) {
   const notes = CARDIO_NOTES[lang] || CARDIO_NOTES.tr;
   if (goal === 'fat_loss') {
-    // Alternate LISS and HIIT days
-    return dayIndex % 3 === 0 ? notes.fat_loss_hiit : notes.fat_loss_liss;
+    // Intervals are programmed explicitly on the relevant day. Avoid adding a
+    // second, context-free sprint prescription to every third strength day.
+    return notes.fat_loss_liss;
   }
   if (goal === 'muscle') return notes.muscle;
   // meditation, yoga, pilates, reformer → no cardio
@@ -808,38 +810,28 @@ const REFORMER_REMOTE_EXTREME = [
   'high bridge', 'tendon stretch', 'semi circle', 'horseback',
 ];
 
-const HOME_EQUIPMENT_PATTERN = /barbell|cable|machine|treadmill|rowing|ski erg|assault bike|sled|trx|battle rope|bench press|lat pulldown|leg press|hack squat|pec deck|smith|pull-up/i;
-const BODYWEIGHT_EQUIPMENT_PATTERN = /dumbbell|kettlebell|medicine ball|ab wheel|landmine|ez bar|preacher|incline press/i;
-
-function getHomeExercise(exercise, environment) {
-  const name = exercise.name || '';
-  const needsReplacement = HOME_EQUIPMENT_PATTERN.test(name)
-    || (environment === 'home_bodyweight' && BODYWEIGHT_EQUIPMENT_PATTERN.test(name));
-  if (!needsReplacement) return exercise;
-
-  const lower = name.toLowerCase();
-  let replacement = 'Backpack Full Body Carry';
-  if (/row|pulldown|pull-up|back|lat/.test(lower)) replacement = environment === 'home_basic' ? 'Resistance Band Row' : 'Backpack Bent-Over Row';
-  else if (/deadlift|romanian|hinge|good morning/.test(lower)) replacement = environment === 'home_basic' ? 'Dumbbell Romanian Deadlift' : 'Backpack Hip Hinge';
-  else if (/squat|leg press|leg extension|lunge|step-up/.test(lower)) replacement = environment === 'home_basic' ? 'Goblet Squat' : 'Chair Squat';
-  else if (/leg curl|hamstring/.test(lower)) replacement = 'Sliding Hamstring Curl';
-  else if (/shoulder press|overhead|arnold/.test(lower)) replacement = environment === 'home_basic' ? 'Dumbbell Shoulder Press' : 'Pike Push-Up';
-  else if (/press|fly|chest|pec/.test(lower)) replacement = environment === 'home_basic' ? 'Dumbbell Floor Press' : 'Incline Push-Up';
-  else if (/biceps|curl/.test(lower)) replacement = environment === 'home_basic' ? 'Resistance Band Curl' : 'Backpack Curl';
-  else if (/triceps|pushdown|dip/.test(lower)) replacement = 'Close-Grip Incline Push-Up';
-  else if (/raise|rear delt|face pull/.test(lower)) replacement = environment === 'home_basic' ? 'Resistance Band Pull-Apart' : 'Prone Y-T Raise';
-  else if (/treadmill|rowing|ski erg|assault bike|sled|battle rope/.test(lower)) replacement = 'Tempolu Yürüyüş';
-  return { ...exercise, name: replacement, environmentAdjusted: true };
-}
-
-function applyTrainingEnvironment(workoutSplit, goal, environment) {
-  if (!['muscle', 'fat_loss'].includes(goal) || !['home_bodyweight', 'home_basic'].includes(environment)) {
-    return workoutSplit;
-  }
-  return workoutSplit.map((day) => ({
-    ...day,
-    exercises: (day.exercises || []).map((exercise) => getHomeExercise(exercise, environment)),
-  }));
+function applyHomeCoreEnvironment(workoutSplit, environment) {
+  if (environment === 'gym') return workoutSplit;
+  const pools = environment === 'home_basic'
+    ? [
+      [{ name: 'Dumbbell Dead Bug', sets: 3, reps: '8/taraf', rest: '45s', muscles: ['Core'], equipment: 'dumbbell' }],
+      [{ name: 'Reverse Crunch', sets: 3, reps: '10-15', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+      [{ name: 'Suitcase March', sets: 3, reps: '30 sn/taraf', rest: '45s', muscles: ['Core'], equipment: 'dumbbell' }],
+      [{ name: 'Plank', sets: 3, reps: '30-45 sn', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+    ]
+    : [
+      [{ name: 'Dead Bug', sets: 3, reps: '8/taraf', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+      [{ name: 'Reverse Crunch', sets: 3, reps: '10-15', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+      [{ name: 'Side Plank', sets: 3, reps: '20-30 sn/taraf', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+      [{ name: 'Bird Dog', sets: 3, reps: '8/taraf', rest: '45s', muscles: ['Core'], equipment: 'none' }],
+    ];
+  let index = 0;
+  return workoutSplit.map((day) => {
+    if (isRestLikeDay(day) || !day.coreFinisher) return day;
+    const next = { ...day, coreFinisher: pools[index % pools.length].map((item) => ({ ...item })) };
+    index += 1;
+    return next;
+  });
 }
 
 function limitFatLossIntensity(workoutSplit, phase) {
@@ -1239,6 +1231,51 @@ function getHealthExerciseReplacement(exerciseName, filter) {
   });
   if (!matched) return undefined;
   return filter.replace[exerciseName] || filter.replace[matched] || null;
+}
+
+const HOME_HEALTH_REPLACEMENTS = {
+  back_pain: {
+    pattern: /deadlift|romanian|hip hinge|hamstring walkout|back extension|barbell row|pendlay row/i,
+    bodyweight: { name: 'Glute Bridge', sets: 3, reps: '8-12', rest: '75s', muscles: ['Kalça'], equipment: 'none', difficulty: 1 },
+    basic: { name: 'Resistance Band Row', sets: 3, reps: '10-15', rest: '75s', muscles: ['Sırt', 'Biceps'], equipment: 'resistance_band', difficulty: 1 },
+  },
+  knee_issue: {
+    pattern: /squat|lunge|step-up|split squat|jump|pistol/i,
+    bodyweight: { name: 'Glute Bridge', sets: 3, reps: '10-15', rest: '75s', muscles: ['Kalça'], equipment: 'none', difficulty: 1 },
+    basic: { name: 'Dumbbell Glute Bridge', sets: 3, reps: '10-15', rest: '75s', muscles: ['Kalça'], equipment: 'dumbbell', difficulty: 1 },
+  },
+  shoulder_injury: {
+    pattern: /push-up|şınav|shoulder press|pike|overhead|lateral raise|floor press/i,
+    bodyweight: { name: 'Yüzüstü Lat Çekiş', sets: 3, reps: '10-15', rest: '75s', muscles: ['Sırt', 'Arka Omuz'], equipment: 'none', difficulty: 1 },
+    basic: { name: 'Resistance Band Row', sets: 3, reps: '10-15', rest: '75s', muscles: ['Sırt', 'Biceps'], equipment: 'resistance_band', difficulty: 1 },
+  },
+  wrist_issue: {
+    pattern: /push-up|şınav|plank/i,
+    bodyweight: { name: 'Dead Bug', sets: 3, reps: '8/taraf', rest: '45s', muscles: ['Core'], equipment: 'none', difficulty: 1 },
+    basic: { name: 'Dumbbell Floor Press (nötr tutuş)', sets: 3, reps: '8-12', rest: '75s', muscles: ['Göğüs', 'Triceps'], equipment: 'dumbbell', difficulty: 1 },
+  },
+  heart_condition: {
+    pattern: /interval|sprint|hiit|tabata|burpee|jump|battle rope/i,
+    bodyweight: { name: 'Rahat Tempolu Yürüyüş', sets: 1, reps: '20-30 dk', rest: '-', muscles: ['Kardiyo'], equipment: 'none', difficulty: 1 },
+    basic: { name: 'Rahat Tempolu Yürüyüş', sets: 1, reps: '20-30 dk', rest: '-', muscles: ['Kardiyo'], equipment: 'none', difficulty: 1 },
+  },
+};
+
+function applyHomeHealthGuard(workoutSplit, healthConditions, environment) {
+  if (!['home_bodyweight', 'home_basic'].includes(environment)) return workoutSplit;
+  const replacementKey = environment === 'home_basic' ? 'basic' : 'bodyweight';
+  const guardExercises = (exercises = []) => exercises.map((exercise) => {
+    for (const condition of healthConditions) {
+      const rule = HOME_HEALTH_REPLACEMENTS[condition];
+      if (rule?.pattern.test(exercise.name || '')) return { ...rule[replacementKey] };
+    }
+    return exercise;
+  }).filter((exercise, index, items) => items.findIndex((item) => item.name === exercise.name) === index);
+  return workoutSplit.map((day) => ({
+    ...day,
+    exercises: guardExercises(day.exercises),
+    ...(day.coreFinisher ? { coreFinisher: guardExercises(day.coreFinisher) } : {}),
+  }));
 }
 
 function applyMedicalIntensityGuard(workoutSplit, healthConditions, lang) {
@@ -2541,7 +2578,11 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     baseCalories = Math.round(tdee - Math.min(500, tdee * 0.15));
   }
 
-  const rawSplit = (workoutPhases[primaryGoal] || workoutPhases.muscle)[safePhase];
+  const isHomeStrengthPlan = ['muscle', 'fat_loss'].includes(primaryGoal)
+    && ['home_bodyweight', 'home_basic'].includes(trainingEnvironment);
+  const rawSplit = isHomeStrengthPlan
+    ? buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase)
+    : (workoutPhases[primaryGoal] || workoutPhases.muscle)[safePhase];
 
   // Inject core finisher + cardio note into each training day
   let trainingDayCounter = 0;
@@ -2578,7 +2619,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   });
 
   // Apply health condition exercise filters
-  if (healthConditions.length > 0 && !healthConditions.includes('none')) {
+  if (!isHomeStrengthPlan && healthConditions.length > 0 && !healthConditions.includes('none')) {
     workoutSplit.forEach((day) => {
       if (!day.exercises) return;
       day.exercises = day.exercises.map((ex) => {
@@ -2593,12 +2634,24 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     });
   }
   workoutSplit = applyMedicalIntensityGuard(workoutSplit, healthConditions, lang);
+  workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
 
   // ── Egzersiz-Focus doğrulaması ──
   // Her günün egzersizlerinin focus alanıyla uyumlu olmasını garanti et
-  workoutSplit = validateAndFixExercises(workoutSplit);
+  if (!isHomeStrengthPlan) workoutSplit = validateAndFixExercises(workoutSplit);
   workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
-  workoutSplit = applyTrainingEnvironment(workoutSplit, primaryGoal, trainingEnvironment);
+  workoutSplit = applyHomeCoreEnvironment(workoutSplit, trainingEnvironment);
+  workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
+
+  let equipmentViolations = findHomeEquipmentViolations(workoutSplit, trainingEnvironment);
+  if (equipmentViolations.length > 0) {
+    console.error('[PlanGenerator] Home equipment validation failed', equipmentViolations);
+    workoutSplit = buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase);
+    workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
+    workoutSplit = applyHomeCoreEnvironment(workoutSplit, trainingEnvironment);
+    workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
+    equipmentViolations = findHomeEquipmentViolations(workoutSplit, trainingEnvironment);
+  }
 
   const mealTypes = workoutSplit.map((day) => getDayMealType(day.focus));
   const dailyCalorieTargets = buildDailyCalorieTargets(baseCalories, mealTypes);
@@ -2666,6 +2719,11 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     phase: safePhase,
     planQuality: {
       ...buildPlanQualitySummary(primaryGoal, safePhase),
+      equipmentLabel: {
+        tr: { gym: 'Salon ekipmanı', home_basic: 'Dumbbell + direnç bandı', home_bodyweight: 'Ekipmansız ev', studio: 'Reformer cihazı' },
+        en: { gym: 'Gym equipment', home_basic: 'Dumbbells + resistance band', home_bodyweight: 'No-equipment home', studio: 'Reformer machine' },
+        es: { gym: 'Equipo de gimnasio', home_basic: 'Mancuernas + banda', home_bodyweight: 'Casa sin equipo', studio: 'Máquina Reformer' },
+      }[lang]?.[trainingEnvironment] || trainingEnvironment,
       requiresMedicalClearance,
       medicalNotice: requiresMedicalClearance
         ? {
@@ -2704,6 +2762,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       appliedPhase: safePhase,
       trainingEnvironment,
       environmentAdjusted: ['home_bodyweight', 'home_basic'].includes(trainingEnvironment),
+      equipmentValidated: equipmentViolations.length === 0,
     },
     goal: {
       tr: { muscle: 'Kas Gelişimi', fat_loss: 'Yağ Yakımı', meditation: 'Meditasyon', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' },

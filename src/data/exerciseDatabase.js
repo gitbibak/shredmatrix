@@ -200,10 +200,12 @@ export function getExerciseInfo(name) {
   // Exact match
   if (exerciseDB[lower]) return exerciseDB[lower];
 
-  // Partial match — find first key that's included in the name
-  for (const [key, val] of Object.entries(exerciseDB)) {
-    if (lower.includes(key) || key.includes(lower)) return val;
-  }
+  // Prefer the most specific fuzzy match. This prevents e.g. "pike push-up"
+  // from inheriting generic push-up metadata when a specific entry exists.
+  const match = Object.entries(exerciseDB)
+    .filter(([key]) => lower.includes(key) || key.includes(lower))
+    .sort(([first], [second]) => second.length - first.length)[0];
+  if (match) return match[1];
 
   // No match — return generic
   return null;

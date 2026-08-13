@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generatePlan, personalizeMealItems, PLAN_VERSION } from './planGenerator';
+import { findHomeEquipmentViolations } from './homeWorkoutPrograms';
 
 describe('planGenerator safety personalization', () => {
   const baseMetrics = {
@@ -311,31 +312,85 @@ describe('planGenerator safety personalization', () => {
     });
   });
 
-  it('creates equipment-feasible home plans without gym-only movements', () => {
+  it('creates equipment-feasible home plans at every level without gym-only movements', () => {
     for (const goal of ['muscle', 'fat_loss']) {
       for (const trainingEnvironment of ['home_bodyweight', 'home_basic']) {
-        const plan = generatePlan({
-          ...baseMetrics,
-          primaryGoal: goal,
-          experience: 'advanced',
-          trainingEnvironment,
-        }, 2, 'tr');
-        const exerciseText = plan.workoutSplit
-          .flatMap((day) => day.exercises || [])
-          .map((exercise) => exercise.name)
-          .join(' ')
-          .toLowerCase();
+        for (const phase of [0, 1, 2, 3]) {
+          const plan = generatePlan({
+            ...baseMetrics,
+            primaryGoal: goal,
+            experience: ['beginner', 'intermediate', 'advanced', 'expert'][phase],
+            trainingEnvironment,
+          }, phase, 'tr');
+          const allExercises = plan.workoutSplit.flatMap((day) => [
+            ...(day.exercises || []),
+            ...(day.coreFinisher || []),
+          ]);
+          const exerciseText = allExercises.map((exercise) => exercise.name).join(' ').toLowerCase();
 
-        ['barbell', 'cable', 'machine', 'treadmill', 'rowing', 'ski erg', 'assault bike', 'sled', 'trx', 'battle rope', 'bench press', 'lat pulldown', 'leg press'].forEach((term) => {
-          expect(exerciseText).not.toContain(term);
-        });
-        if (trainingEnvironment === 'home_bodyweight') {
-          ['dumbbell', 'kettlebell', 'medicine ball', 'ab wheel'].forEach((term) => {
+          ['barbell', 'cable', 'machine', 'treadmill', 'rowing', 'ski erg', 'assault bike', 'sled', 'trx', 'battle rope', 'bench press', 'lat pulldown', 'leg press', 'pushdown'].forEach((term) => {
             expect(exerciseText).not.toContain(term);
           });
+          if (trainingEnvironment === 'home_bodyweight') {
+            ['dumbbell', 'kettlebell', 'medicine ball', 'ab wheel', 'resistance band', 'backpack'].forEach((term) => {
+              expect(exerciseText).not.toContain(term);
+            });
+          }
+          expect(findHomeEquipmentViolations(plan.workoutSplit, trainingEnvironment)).toEqual([]);
+          expect(allExercises.every((exercise) => Array.isArray(exercise.muscles))).toBe(true);
+          expect(plan.trainingEnvironment).toBe(trainingEnvironment);
+          expect(plan.personalization.environmentAdjusted).toBe(true);
+          expect(plan.personalization.equipmentValidated).toBe(true);
         }
-        expect(plan.trainingEnvironment).toBe(trainingEnvironment);
-        expect(plan.personalization.environmentAdjusted).toBe(true);
+      }
+    }
+  });
+
+  it('keeps home plans equipment-feasible after health substitutions', () => {
+    for (const trainingEnvironment of ['home_bodyweight', 'home_basic']) {
+      for (const condition of ['back_pain', 'knee_issue', 'shoulder_injury', 'wrist_issue', 'heart_condition']) {
+        const plan = generatePlan({
+          ...baseMetrics,
+          primaryGoal: 'muscle',
+          experience: 'advanced',
+          trainingEnvironment,
+          healthConditions: [condition],
+        }, 2, 'tr');
+        expect(findHomeEquipmentViolations(plan.workoutSplit, trainingEnvironment)).toEqual([]);
+        const text = plan.workoutSplit.flatMap((day) => day.exercises || []).map((exercise) => exercise.name).join(' ').toLowerCase();
+        ['cable', 'machine', 'lat pulldown', 'leg curl', 'leg press', 'landmine', 'pushdown'].forEach((term) => {
+          expect(text).not.toContain(term);
+        });
+        if (condition === 'wrist_issue') expect(text).not.toContain('plank');
+      }
+    }
+  });
+
+  it('progresses home levels without losing weekly major-muscle coverage', () => {
+    for (const trainingEnvironment of ['home_bodyweight', 'home_basic']) {
+      for (const phase of [0, 1, 2, 3]) {
+        const plan = generatePlan({
+          ...baseMetrics,
+          primaryGoal: 'muscle',
+          experience: ['beginner', 'intermediate', 'advanced', 'expert'][phase],
+          trainingEnvironment,
+        }, phase, 'tr');
+        const activeDays = plan.workoutSplit.filter((day) => !day.isRest);
+        const muscles = activeDays.flatMap((day) => [
+          ...(day.exercises || []),
+          ...(day.coreFinisher || []),
+        ].flatMap((exercise) => exercise.muscles || []));
+        ['Göğüs', 'Sırt', 'Ön Bacak', 'Kalça', 'Core'].forEach((muscle) => {
+          expect(muscles.filter((item) => item === muscle).length).toBeGreaterThanOrEqual(2);
+        });
+        expect(activeDays.length).toBe(phase === 0 ? 3 : phase === 1 ? 4 : 5);
+        const lowerBodyDays = plan.workoutSplit
+          .map((day, index) => ({ index, hasLowerBody: !day.isRest && day.exercises.some((exercise) => (exercise.muscles || []).some((muscle) => ['Ön Bacak', 'Arka Bacak', 'Kalça'].includes(muscle))) }))
+          .filter((day) => day.hasLowerBody)
+          .map((day) => day.index);
+        if (phase >= 2) {
+          expect(lowerBodyDays.every((dayIndex, index) => index === 0 || dayIndex - lowerBodyDays[index - 1] > 1)).toBe(true);
+        }
       }
     }
   });
