@@ -9,7 +9,7 @@ import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
-import { initAnalytics, trackPageView } from './lib/analytics';
+import { initAnalytics, trackGeneratePlan, trackPageView } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
@@ -563,6 +563,7 @@ function AppContent() {
   };
 
   const handleSubmit = (formData) => {
+    trackGeneratePlan();
     setOnboardingInitialData(null);
     setPendingFormData(formData);
     navigate('/loading', { replace: true });
@@ -616,7 +617,7 @@ function AppContent() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
               <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-                <LandingPage onStart={() => navigate('/auth')} />
+                <LandingPage onStart={() => navigate('/auth?mode=register')} />
               </motion.div>
             } />
 

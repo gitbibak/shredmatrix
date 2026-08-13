@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
-import { trackShare } from '../lib/analytics';
+import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
 
 const fadeUp = {
@@ -158,6 +158,11 @@ export default function LandingPage({ onStart }) {
     }
   };
 
+  const startRegistration = (placement) => {
+    trackLandingCta(placement);
+    onStart();
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-950 text-white">
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl safe-area-top">
@@ -172,7 +177,7 @@ export default function LandingPage({ onStart }) {
                 <button key={code} onClick={() => setLang(code)} className={`h-8 w-7 text-xs sm:w-8 sm:text-sm ${lang === code ? 'opacity-100' : 'opacity-40 hover:opacity-75'}`} title={code.toUpperCase()}>{langFlags[code]}</button>
               ))}
             </div>
-            <button onClick={onStart} className="min-h-10 bg-orange-500 px-3 font-outfit text-xs font-bold text-white hover:bg-orange-400 sm:px-4">{c.navCta}</button>
+            <button onClick={() => startRegistration('navigation')} className="min-h-10 bg-orange-500 px-3 font-outfit text-xs font-bold text-white hover:bg-orange-400 sm:px-4">{c.navCta}</button>
           </div>
         </div>
       </nav>
@@ -189,7 +194,7 @@ export default function LandingPage({ onStart }) {
             <motion.h1 custom={1} variants={fadeUp} className="max-w-4xl break-words font-outfit text-4xl font-black leading-[1.06] text-white sm:text-6xl lg:text-7xl">{c.heroTitle}</motion.h1>
             <motion.p custom={2} variants={fadeUp} className="mt-6 max-w-3xl text-base leading-8 text-slate-200 sm:text-xl">{c.heroDesc}</motion.p>
             <motion.div custom={3} variants={fadeUp} className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <button onClick={onStart} className="inline-flex min-h-14 w-full items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400 sm:w-auto">{c.primaryCta}<ChevronRight size={18} /></button>
+              <button onClick={() => startRegistration('hero')} className="inline-flex min-h-14 w-full items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400 sm:w-auto">{c.primaryCta}<ChevronRight size={18} /></button>
               <button onClick={handleShare} className="inline-flex min-h-14 w-full items-center justify-center gap-2 border border-white/25 bg-slate-950/55 px-6 font-outfit text-sm font-bold text-white hover:border-cyan-400/60 sm:w-auto"><ArrowRight size={17} />{shareCopied ? c.copied : c.share}</button>
             </motion.div>
             <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="text-emerald-400" /> {c.freeNote}</motion.p>
@@ -264,7 +269,7 @@ export default function LandingPage({ onStart }) {
             <Eyebrow>{lang === 'tr' ? '%100 ücretsiz' : lang === 'es' ? '100% gratis' : '100% free'}</Eyebrow>
             <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.freeTitle}</h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.freeDesc}</p>
-            <button onClick={onStart} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
+            <button onClick={() => startRegistration('free_section')} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {c.freeItems.map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border border-slate-800 bg-slate-900/45 px-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={17} className="text-emerald-400" /></span><span className="text-sm text-slate-300">{item}</span></div>)}
@@ -308,7 +313,7 @@ export default function LandingPage({ onStart }) {
         <Leaf size={30} className="mx-auto text-emerald-400" />
         <h2 className="mx-auto mt-5 max-w-3xl font-outfit text-3xl font-extrabold leading-tight sm:text-5xl">{c.finalTitle}</h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">{c.finalDesc}</p>
-        <button onClick={onStart} className="mt-8 inline-flex min-h-14 items-center gap-2 bg-orange-500 px-8 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
+        <button onClick={() => startRegistration('final')} className="mt-8 inline-flex min-h-14 items-center gap-2 bg-orange-500 px-8 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
         <p className="mt-4 text-xs text-emerald-400">{c.freeNote}</p>
       </section>
 

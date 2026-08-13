@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { signUp, signIn, resetPassword, signInWithGoogle } from '../lib/dataService';
+import { trackAuthView, trackEvent, trackLogin, trackSignUp, trackSignUpStart } from '../lib/analytics';
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -93,7 +94,9 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
 // ═════════════════════════════════════════════════════════
 export default function AuthScreen({ onAuth, onBack }) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'forgot'
+  const [mode, setMode] = useState(() => (
+    new URLSearchParams(window.location.search).get('mode') === 'register' ? 'register' : 'login'
+  )); // 'login' | 'register' | 'forgot'
   const [direction, setDirection] = useState(1);
 
   // Form fields
@@ -111,6 +114,10 @@ export default function AuthScreen({ onAuth, onBack }) {
 
   const [resetSent, setResetSent] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
+
+  useEffect(() => {
+    trackAuthView();
+  }, []);
 
   const toggleMode = useCallback(() => {
     setDirection(mode === 'login' ? 1 : -1);
@@ -166,7 +173,9 @@ export default function AuthScreen({ onAuth, onBack }) {
 
       try {
         if (mode === 'register') {
+          trackSignUpStart('email');
           const result = await signUp(email.toLowerCase().trim(), password, name.trim());
+          trackSignUp('email');
           
           // If session exists (email confirmation disabled), proceed directly
           if (result.session) {
@@ -184,10 +193,12 @@ export default function AuthScreen({ onAuth, onBack }) {
           }
         } else {
           const result = await signIn(email.toLowerCase().trim(), password);
+          trackLogin('email');
           const user = result.user;
           onAuth({ name: user.user_metadata?.name || 'User', email: user.email, id: user.id });
         }
       } catch (err) {
+        trackEvent(mode === 'register' ? 'sign_up_error' : 'login_error', { error_type: 'auth_rejected' });
         const msg = err.message || '';
         if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('already been registered')) {
           setFormError(t('auth.errors.emailTaken'));
@@ -577,6 +588,8 @@ export default function AuthScreen({ onAuth, onBack }) {
                 whileTap={{ scale: 0.97 }}
                 onClick={async () => {
                   try {
+                    if (mode === 'register') trackSignUpStart('google');
+                    else trackEvent('login_start', { method: 'google' });
                     await signInWithGoogle();
                   } catch (err) {
                     setFormError(err.message || 'Google sign-in failed');

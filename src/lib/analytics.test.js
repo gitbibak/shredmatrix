@@ -24,6 +24,26 @@ describe('privacy-safe analytics', () => {
     expect(document.head.querySelector('script[data-fullbalance-ga]')).toBeNull();
   });
 
+  it('records the registration funnel locally without sensitive values', async () => {
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.trackLandingCta('hero');
+    analytics.trackAuthView();
+    analytics.trackSignUpStart('email');
+    analytics.trackSignUp('email');
+    analytics.trackGeneratePlan();
+
+    const summary = analytics.getAnalyticsSummary(1);
+    const today = new Date().toISOString().split('T')[0];
+    expect(summary[today]).toMatchObject({
+      landing_cta_click: 1,
+      auth_view: 1,
+      sign_up_start: 1,
+      sign_up: 1,
+      generate_plan: 1,
+    });
+  });
+
   it('loads GA after consent and removes sensitive event parameters', async () => {
     const analytics = await loadAnalytics();
     analytics.initAnalytics();

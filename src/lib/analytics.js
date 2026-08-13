@@ -108,6 +108,9 @@ export function trackPageView(title, path = window.location.pathname) {
 }
 
 export const trackSignUp = (method = 'email') => trackEvent('sign_up', { method });
+export const trackSignUpStart = (method = 'email') => trackEvent('sign_up_start', { method });
+export const trackAuthView = () => trackEvent('auth_view');
+export const trackLandingCta = (placement = 'unknown') => trackEvent('landing_cta_click', { placement });
 export const trackLogin = (method = 'email') => trackEvent('login', { method });
 export const trackGeneratePlan = () => trackEvent('generate_plan');
 export const trackCompleteWorkout = () => trackEvent('complete_workout');
