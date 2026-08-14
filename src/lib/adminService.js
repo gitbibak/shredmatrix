@@ -5,14 +5,21 @@ import { supabase, isSupabaseReady } from './supabase';
 // Only accessible by admin role users
 // ══════════════════════════════════════════════
 
-const ADMIN_EMAILS = [
-  'tlgdvc@gmail.com',
-  'ahmetdeveci3112@gmail.com',
-];
-
 export function isAdmin(user) {
-  if (!user?.email) return false;
-  return ADMIN_EMAILS.includes(user.email.toLowerCase());
+  return user?.role === 'admin' || user?.app_metadata?.role === 'admin';
+}
+
+export async function verifyAdminAccess() {
+  if (!isSupabaseReady()) return false;
+
+  try {
+    const { data, error } = await supabase.rpc('is_admin');
+    if (error) throw error;
+    return data === true;
+  } catch (err) {
+    console.error('[Admin] Access verification error:', err);
+    return false;
+  }
 }
 
 // ── Normalization Maps ──────────────────────────
@@ -42,57 +49,41 @@ export async function getAdminStats() {
   if (!isSupabaseReady()) return null;
 
   try {
-    // Total users
-    const { count: totalUsers } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
-
-    // Today's registrations
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const { count: todayRegistrations } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', today.toISOString());
-
-    // This week registrations
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-    const { count: weekRegistrations } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', weekAgo.toISOString());
-
-    // This month registrations
     const monthAgo = new Date();
     monthAgo.setDate(monthAgo.getDate() - 30);
-    const { count: monthRegistrations } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', monthAgo.toISOString());
-
-    // Previous month for growth calculation
     const twoMonthsAgo = new Date();
     twoMonthsAgo.setDate(twoMonthsAgo.getDate() - 60);
-    const { count: prevMonthRegistrations } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', twoMonthsAgo.toISOString())
-      .lt('created_at', monthAgo.toISOString());
+
+    const results = await Promise.all([
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString()),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', monthAgo.toISOString()),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', twoMonthsAgo.toISOString()).lt('created_at', monthAgo.toISOString()),
+      supabase.from('plans').select('*', { count: 'exact', head: true }),
+      supabase.from('support_tickets').select('*', { count: 'exact', head: true }).neq('status', 'resolved'),
+    ]);
+
+    const failed = results.find((result) => result.error);
+    if (failed?.error) throw failed.error;
+
+    const [
+      { count: totalUsers },
+      { count: todayRegistrations },
+      { count: weekRegistrations },
+      { count: monthRegistrations },
+      { count: prevMonthRegistrations },
+      { count: usersWithPlans },
+      { count: openSupportTickets },
+    ] = results;
 
     const growth = prevMonthRegistrations > 0
       ? Math.round(((monthRegistrations - prevMonthRegistrations) / prevMonthRegistrations) * 100)
       : monthRegistrations > 0 ? 100 : 0;
-
-    // Users with plans
-    const { count: usersWithPlans } = await supabase
-      .from('plans')
-      .select('*', { count: 'exact', head: true });
-
-    const { count: openSupportTickets } = await supabase
-      .from('support_tickets')
-      .select('*', { count: 'exact', head: true })
-      .neq('status', 'resolved');
 
     return {
       totalUsers: totalUsers || 0,
@@ -111,7 +102,7 @@ export async function getAdminStats() {
 
 // ── User List ───────────────────────────────────
 export async function getAdminUsers(page = 0, pageSize = 20, search = '') {
-  if (!isSupabaseReady()) return { users: [], total: 0 };
+  if (!isSupabaseReady()) return { users: [], total: 0, error: new Error('Supabase bağlantısı hazır değil.') };
 
   try {
     let query = supabase
@@ -121,16 +112,17 @@ export async function getAdminUsers(page = 0, pageSize = 20, search = '') {
       .range(page * pageSize, (page + 1) * pageSize - 1);
 
     if (search) {
-      query = query.or(`email.ilike.%${search}%,name.ilike.%${search}%`);
+      const safeSearch = String(search).trim().replace(/[,%().]/g, ' ').slice(0, 80);
+      if (safeSearch) query = query.or(`email.ilike.%${safeSearch}%,name.ilike.%${safeSearch}%`);
     }
 
     const { data, count, error } = await query;
     if (error) throw error;
 
-    return { users: data || [], total: count || 0 };
+    return { users: data || [], total: count || 0, error: null };
   } catch (err) {
     console.error('[Admin] Users error:', err);
-    return { users: [], total: 0 };
+    return { users: [], total: 0, error: err };
   }
 }
 
@@ -264,14 +256,14 @@ export async function getRecentUsers() {
 
 // ── Delete User ─────────────────────────────────
 export async function deleteUser(userId) {
-  if (!isSupabaseReady()) throw new Error('Supabase not ready');
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
 
-  await supabase.from('support_tickets').update({ user_id: null }).eq('user_id', userId);
-  // Delete plan first
-  await supabase.from('plans').delete().eq('user_id', userId);
-  // Delete profile
-  const { error } = await supabase.from('profiles').delete().eq('id', userId);
-  if (error) throw error;
+  const { data, error } = await supabase.functions.invoke('admin-delete-user', {
+    body: { userId },
+  });
+  if (error) throw new Error(error.message || 'Kullanıcı hesabı silinemedi.');
+  if (!data?.ok) throw new Error(data?.error || 'Kullanıcı hesabı silinemedi.');
+  return data;
 }
 
 // ── Support Inbox ───────────────────────────────
@@ -294,7 +286,7 @@ export async function getSupportTickets(status = 'open') {
     return data || [];
   } catch (err) {
     console.error('[Admin] Support tickets error:', err);
-    return [];
+    throw err;
   }
 }
 
@@ -305,13 +297,18 @@ export async function getSupportStats() {
     const statuses = ['open', 'reviewing', 'resolved'];
     const counts = {};
 
-    await Promise.all(statuses.map(async (status) => {
-      const { count } = await supabase
+    const results = await Promise.all(statuses.map(async (status) => {
+      const { count, error } = await supabase
         .from('support_tickets')
         .select('*', { count: 'exact', head: true })
         .eq('status', status);
-      counts[status] = count || 0;
+      if (error) throw error;
+      return { status, count: count || 0 };
     }));
+
+    results.forEach(({ status, count }) => {
+      counts[status] = count;
+    });
 
     const total = statuses.reduce((sum, status) => sum + (counts[status] || 0), 0);
     return { open: counts.open || 0, reviewing: counts.reviewing || 0, resolved: counts.resolved || 0, total };
@@ -354,46 +351,29 @@ export async function getActivityStats() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const weekAgo = new Date(Date.now() - 7 * 86400000);
-    const monthAgo = new Date(Date.now() - 30 * 86400000);
+    const results = await Promise.all([
+      supabase.from('workout_logs').select('*', { count: 'exact', head: true }),
+      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', today.toISOString().split('T')[0]),
+      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', weekAgo.toISOString().split('T')[0]),
+      supabase.from('workout_logs').select('user_id').gte('date', weekAgo.toISOString().split('T')[0]),
+      supabase.from('water_logs').select('*', { count: 'exact', head: true }),
+      supabase.from('progress_entries').select('*', { count: 'exact', head: true }),
+      supabase.from('measurements').select('*', { count: 'exact', head: true }),
+    ]);
 
-    // Workout logs - total
-    const { count: totalWorkouts } = await supabase
-      .from('workout_logs')
-      .select('*', { count: 'exact', head: true });
+    const failed = results.find((result) => result.error);
+    if (failed?.error) throw failed.error;
 
-    // Workout logs - today
-    const { count: todayWorkouts } = await supabase
-      .from('workout_logs')
-      .select('*', { count: 'exact', head: true })
-      .gte('date', today.toISOString().split('T')[0]);
-
-    // Workout logs - this week
-    const { count: weekWorkouts } = await supabase
-      .from('workout_logs')
-      .select('*', { count: 'exact', head: true })
-      .gte('date', weekAgo.toISOString().split('T')[0]);
-
-    // Active users (logged workout in last 7 days)
-    const { data: activeData } = await supabase
-      .from('workout_logs')
-      .select('user_id')
-      .gte('date', weekAgo.toISOString().split('T')[0]);
+    const [
+      { count: totalWorkouts },
+      { count: todayWorkouts },
+      { count: weekWorkouts },
+      { data: activeData },
+      { count: totalWater },
+      { count: totalProgress },
+      { count: totalMeasurements },
+    ] = results;
     const activeUsers = new Set((activeData || []).map(d => d.user_id)).size;
-
-    // Water tracking entries
-    const { count: totalWater } = await supabase
-      .from('water_logs')
-      .select('*', { count: 'exact', head: true });
-
-    // Progress entries
-    const { count: totalProgress } = await supabase
-      .from('progress_entries')
-      .select('*', { count: 'exact', head: true });
-
-    // Measurement entries
-    const { count: totalMeasurements } = await supabase
-      .from('measurements')
-      .select('*', { count: 'exact', head: true });
 
     return {
       totalWorkouts: totalWorkouts || 0,

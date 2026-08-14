@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, Users, PieChart, Activity, Search,
@@ -12,7 +12,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import {
-  isAdmin, getAdminStats, getAdminUsers, getPlanDistribution,
+  verifyAdminAccess, getAdminStats, getAdminUsers, getPlanDistribution,
   getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers,
   getActivityStats, getWorkoutTrend, getSupportTickets, getSupportStats,
   updateSupportTicket
@@ -192,8 +192,8 @@ function timeAgo(dateStr) {
 // Main Admin Panel
 // ═════════════════════════════════════════════════
 export default function AdminPanel({ user }) {
-  const isAllowed = !!user && isAdmin(user);
   const navigate = useNavigate();
+  const [accessState, setAccessState] = useState('checking');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -203,6 +203,7 @@ export default function AdminPanel({ user }) {
   const [usersTotal, setUsersTotal] = useState(0);
   const [usersPage, setUsersPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [distribution, setDistribution] = useState({ goals: [], genders: [], ages: [], experiences: [] });
   const [trend, setTrend] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
@@ -213,57 +214,115 @@ export default function AdminPanel({ user }) {
   const [supportTickets, setSupportTickets] = useState([]);
   const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
   const [supportFilter, setSupportFilter] = useState('open');
+  const [supportSearch, setSupportSearch] = useState('');
   const [updatingTicketId, setUpdatingTicketId] = useState(null);
   const [supportNotes, setSupportNotes] = useState({});
+  const [loadError, setLoadError] = useState('');
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   const PAGE_SIZE = 15;
+  const isAllowed = accessState === 'allowed';
+
+  useEffect(() => {
+    let active = true;
+    if (!user) {
+      setAccessState('denied');
+      return undefined;
+    }
+    setAccessState('checking');
+    verifyAdminAccess().then((allowed) => {
+      if (active) setAccessState(allowed ? 'allowed' : 'denied');
+    });
+    return () => { active = false; };
+  }, [user]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const loadData = useCallback(async () => {
     if (!isAllowed) return;
-    const [s, d, t, r, a, w, support] = await Promise.all([
-      getAdminStats(),
-      getPlanDistribution(),
-      getRegistrationTrend(),
-      getRecentUsers(),
-      getActivityStats(),
-      getWorkoutTrend(),
-      getSupportStats(),
-    ]);
-    if (s) setStats(s);
-    if (d) setDistribution(d);
-    if (t) setTrend(t);
-    if (r) setRecentUsers(r);
-    if (a) setActivityStats(a);
-    if (w) setWorkoutTrend(w);
-    if (support) setSupportStats(support);
+    try {
+      const [s, d, t, r, a, w, support] = await Promise.all([
+        getAdminStats(),
+        getPlanDistribution(),
+        getRegistrationTrend(),
+        getRecentUsers(),
+        getActivityStats(),
+        getWorkoutTrend(),
+        getSupportStats(),
+      ]);
+      if (!s || !a) throw new Error('Bazı yönetim verileri alınamadı.');
+      setStats(s);
+      setDistribution(d);
+      setTrend(t);
+      setRecentUsers(r);
+      setActivityStats(a);
+      setWorkoutTrend(w);
+      setSupportStats(support);
+      setLoadError('');
+      setLastUpdated(new Date());
+    } catch (err) {
+      setLoadError(err.message || 'Yönetim verileri yüklenemedi.');
+    }
   }, [isAllowed]);
 
   const loadUsers = useCallback(async () => {
     if (!isAllowed) return;
-    const result = await getAdminUsers(usersPage, PAGE_SIZE, searchQuery);
+    const result = await getAdminUsers(usersPage, PAGE_SIZE, debouncedSearch);
+    if (result.error) setLoadError('Kullanıcı listesi yüklenemedi. Lütfen yeniden deneyin.');
     setUsers(result.users);
     setUsersTotal(result.total);
-  }, [isAllowed, usersPage, searchQuery]);
+  }, [isAllowed, usersPage, debouncedSearch]);
 
   useEffect(() => { loadData(); }, [loadData]);
   useEffect(() => { loadUsers(); }, [loadUsers]);
   useEffect(() => {
     if (!isAllowed) return;
-    getSupportTickets(supportFilter).then(setSupportTickets);
+    getSupportTickets(supportFilter)
+      .then(setSupportTickets)
+      .catch(() => setLoadError('Destek kayıtları yüklenemedi. Lütfen yeniden deneyin.'));
   }, [isAllowed, supportFilter]);
+
+  const visibleSupportTickets = useMemo(() => {
+    const query = supportSearch.trim().toLocaleLowerCase('tr-TR');
+    const priorityRank = { high: 0, normal: 1, low: 2 };
+    return [...supportTickets]
+      .filter((ticket) => !query || [ticket.subject, ticket.message, ticket.email, ticket.name]
+        .some((value) => String(value || '').toLocaleLowerCase('tr-TR').includes(query)))
+      .sort((a, b) => (priorityRank[a.priority] ?? 1) - (priorityRank[b.priority] ?? 1)
+        || new Date(b.created_at) - new Date(a.created_at));
+  }, [supportTickets, supportSearch]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await loadData();
-    await loadUsers();
-    setSupportTickets(await getSupportTickets(supportFilter));
-    setRefreshing(false);
+    try {
+      await Promise.all([loadData(), loadUsers()]);
+      setSupportTickets(await getSupportTickets(supportFilter));
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('[Admin] Refresh error:', error);
+      setLoadError('Yonetim verileri yenilenemedi. Baglantiyi kontrol edip tekrar deneyin.');
+    } finally {
+      setRefreshing(false);
+    }
   };
 
+  if (accessState === 'checking') {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+        <div className="text-center">
+          <RefreshCw className="mx-auto mb-3 animate-spin text-orange-400" size={24} />
+          <p className="text-sm text-slate-400">Yönetici yetkisi doğrulanıyor...</p>
+        </div>
+      </div>
+    );
+  }
   if (!isAllowed) return <Navigate to="/dashboard" replace />;
 
   const handleDeleteUser = async (userId, name) => {
-    if (!confirm(`"${name}" kullanıcısını silmek istediğine emin misin?`)) return;
+    if (!confirm(`"${name}" hesabı ve tüm uygulama verileri kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam edilsin mi?`)) return;
     try {
       await deleteUser(userId);
       await loadUsers();
@@ -282,7 +341,7 @@ export default function AdminPanel({ user }) {
   ];
 
   const totalPages = Math.ceil(usersTotal / PAGE_SIZE);
-  const adminName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Admin';
+  const adminName = user?.name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Admin';
 
   const handleTicketUpdate = async (ticketId, updates) => {
     setUpdatingTicketId(ticketId);
@@ -345,7 +404,12 @@ export default function AdminPanel({ user }) {
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent'
               }`}>
               <tab.icon size={18} />
-              {tab.label}
+              <span className="flex-1 text-left">{tab.label}</span>
+              {tab.id === 'support' && supportStats.open > 0 && (
+                <span className="min-w-5 rounded-full bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-300">
+                  {supportStats.open}
+                </span>
+              )}
             </button>
           ))}
         </nav>
@@ -379,15 +443,27 @@ export default function AdminPanel({ user }) {
               </button>
               <h2 className="text-lg font-bold font-outfit text-white">{tabs.find(t => t.id === activeTab)?.label}</h2>
             </div>
-            <button onClick={handleRefresh} disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 hover:text-white transition-all cursor-pointer font-inter disabled:opacity-50">
-              <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
-              Yenile
-            </button>
+            <div className="flex items-center gap-3">
+              {lastUpdated && <span className="hidden sm:block text-[10px] text-slate-600">{lastUpdated.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>}
+              <button onClick={handleRefresh} disabled={refreshing}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 hover:text-white transition-all cursor-pointer font-inter disabled:opacity-50">
+                <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
+                Yenile
+              </button>
+            </div>
           </div>
         </header>
 
         <div className="p-4 lg:p-8">
+          {loadError && (
+            <div className="mb-5 flex flex-col gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-2 text-sm text-red-200">
+                <AlertCircle className="mt-0.5 shrink-0" size={16} />
+                <span>{loadError}</span>
+              </div>
+              <button onClick={handleRefresh} className="self-start rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-bold text-red-200 sm:self-auto">Tekrar dene</button>
+            </div>
+          )}
           <AnimatePresence mode="wait">
 
             {/* ═══ DASHBOARD ═══ */}
@@ -493,7 +569,8 @@ export default function AdminPanel({ user }) {
                             <Eye size={16} />
                           </button>
                           <button onClick={() => handleDeleteUser(u.id, u.name || u.email)}
-                            className="p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-colors cursor-pointer" title="Sil">
+                            disabled={u.id === user?.id || u.role === 'admin'}
+                            className="p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-20" title={u.id === user?.id || u.role === 'admin' ? 'Yönetici hesabı buradan silinemez' : 'Hesabı kalıcı sil'}>
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -506,7 +583,7 @@ export default function AdminPanel({ user }) {
                         ) : (
                           <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-500">Plan Yok</span>
                         )}
-                        {isAdmin({ email: u.email }) && (
+                        {u.role === 'admin' && (
                           <>
                             <span>•</span>
                             <span className="px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-400">Admin</span>
@@ -609,8 +686,19 @@ export default function AdminPanel({ user }) {
                   ))}
                 </div>
 
+                <div className="relative">
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <input
+                    type="search"
+                    value={supportSearch}
+                    onChange={(event) => setSupportSearch(event.target.value)}
+                    placeholder="Konu, mesaj, isim veya e-posta ara..."
+                    className="w-full rounded-xl border border-slate-800 bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-orange-500/50"
+                  />
+                </div>
+
                 <div className="space-y-3">
-                  {supportTickets.map((ticket) => (
+                  {visibleSupportTickets.map((ticket) => (
                     <motion.div
                       key={ticket.id}
                       initial={{ opacity: 0, y: 10 }}
@@ -688,7 +776,7 @@ export default function AdminPanel({ user }) {
                       <div className="mt-4 grid sm:grid-cols-2 gap-2 text-xs text-slate-500">
                         <div className="flex items-center gap-2 min-w-0">
                           <Mail size={14} className="text-slate-600 shrink-0" />
-                          <span className="truncate">{ticket.email || 'E-posta yok'}</span>
+                          {ticket.email ? <a href={`mailto:${ticket.email}`} className="truncate hover:text-blue-300">{ticket.email}</a> : <span>E-posta yok</span>}
                         </div>
                         <div className="flex items-center gap-2 min-w-0">
                           <Users size={14} className="text-slate-600 shrink-0" />
@@ -697,15 +785,15 @@ export default function AdminPanel({ user }) {
                       </div>
 
                       {ticket.page_url && (
-                        <p className="mt-2 text-[10px] text-slate-600 truncate">{ticket.page_url}</p>
+                        <a href={ticket.page_url} target="_blank" rel="noreferrer" className="mt-2 block truncate text-[10px] text-slate-600 hover:text-blue-300">{ticket.page_url}</a>
                       )}
                     </motion.div>
                   ))}
 
-                  {supportTickets.length === 0 && (
+                  {visibleSupportTickets.length === 0 && (
                     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-10 text-center">
                       <MessageSquare size={28} className="mx-auto text-slate-600 mb-3" />
-                      <p className="text-sm text-slate-500">Bu filtrede destek kaydı yok.</p>
+                      <p className="text-sm text-slate-500">{supportSearch ? 'Aramayla eşleşen destek kaydı yok.' : 'Bu filtrede destek kaydı yok.'}</p>
                     </div>
                   )}
                 </div>
