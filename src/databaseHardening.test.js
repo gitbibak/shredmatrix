@@ -39,4 +39,17 @@ describe('database hardening migrations', () => {
     );
     expect(migration).not.toMatch(/DROP TABLE\s+(?:IF EXISTS\s+)?public\.trainer_/i);
   });
+
+  it('removes public access to superseded privileged RPCs', () => {
+    const migration = read(
+      'supabase/migrations/20260815003000_retire_legacy_privileged_rpcs.sql',
+    );
+
+    expect(migration).toContain(
+      'REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC, anon, authenticated',
+    );
+    expect(migration).toContain(
+      'REVOKE ALL ON FUNCTION public.delete_current_user() FROM PUBLIC, anon, authenticated',
+    );
+  });
 });
