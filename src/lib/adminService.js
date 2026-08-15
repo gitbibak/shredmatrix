@@ -50,6 +50,30 @@ function normalize(value, map) {
   return map[value] || value;
 }
 
+export function summarizeInternationalAcquisition(profiles = [], planUserIds = [], now = new Date()) {
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - 30);
+  const activatedIds = new Set(planUserIds);
+  const international = profiles.filter((profile) => (
+    ['en', 'es'].includes(profile.app_language)
+    && new Date(profile.created_at) >= cutoff
+  ));
+  const activated = international.filter((profile) => activatedIds.has(profile.id)).length;
+  const attributed = international.filter((profile) => (
+    profile.acquisition_source && profile.acquisition_source !== 'direct'
+  )).length;
+
+  return {
+    registrations: international.length,
+    activated,
+    activationRate: international.length > 0 ? Math.round((activated / international.length) * 100) : 0,
+    english: international.filter((profile) => profile.app_language === 'en').length,
+    spanish: international.filter((profile) => profile.app_language === 'es').length,
+    attributed,
+    direct: international.filter((profile) => profile.acquisition_source === 'direct').length,
+  };
+}
+
 // ── User Statistics ─────────────────────────────
 export async function getAdminStats() {
   if (!isSupabaseReady()) return null;
@@ -151,13 +175,16 @@ export async function getUserPlanDetails(userId) {
 
 // ── Plan Distribution (with normalization) ──────
 export async function getPlanDistribution() {
-  const empty = { goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [] };
+  const empty = {
+    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [],
+    international: summarizeInternationalAcquisition(),
+  };
   if (!isSupabaseReady()) return empty;
 
   try {
     const [planResult, profileResult] = await Promise.all([
-      supabase.from('plans').select('plan_data'),
-      supabase.from('profiles').select('app_language, acquisition_source'),
+      supabase.from('plans').select('user_id, plan_data'),
+      supabase.from('profiles').select('id, created_at, app_language, acquisition_source'),
     ]);
     if (planResult.error) throw planResult.error;
     if (profileResult.error) throw profileResult.error;
@@ -210,6 +237,10 @@ export async function getPlanDistribution() {
       ages: Object.entries(ageBuckets).filter(([, v]) => v > 0).map(([name, value]) => ({ name, value })),
       languages: Object.entries(languageCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       sources: Object.entries(sourceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+      international: summarizeInternationalAcquisition(
+        profileResult.data || [],
+        (planResult.data || []).map((plan) => plan.user_id),
+      ),
     };
   } catch (err) {
     console.error('[Admin] Distribution error:', err);

@@ -205,7 +205,10 @@ export default function AdminPanel({ user }) {
   const [usersPage, setUsersPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [distribution, setDistribution] = useState({ goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [] });
+  const [distribution, setDistribution] = useState({
+    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [],
+    international: { registrations: 0, activated: 0, activationRate: 0, english: 0, spanish: 0, attributed: 0, direct: 0 },
+  });
   const [trend, setTrend] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
   const [detailUserId, setDetailUserId] = useState(null);
@@ -627,6 +630,36 @@ export default function AdminPanel({ user }) {
             {/* ═══ ANALYTICS ═══ */}
             {activeTab === 'analytics' && (
               <motion.div key="analytics" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <StatCard
+                    icon={Users}
+                    label="Yurtdışı Kayıt (30 gün)"
+                    value={distribution.international?.registrations ?? 0}
+                    sub={`EN ${distribution.international?.english ?? 0} · ES ${distribution.international?.spanish ?? 0}`}
+                    color="#00b0ff"
+                  />
+                  <StatCard
+                    icon={Target}
+                    label="Plan Oluşturan"
+                    value={distribution.international?.activated ?? 0}
+                    sub="Yurtdışı kayıtlar"
+                    color="#00e676"
+                  />
+                  <StatCard
+                    icon={TrendingUp}
+                    label="Yurtdışı Aktivasyon"
+                    value={`%${distribution.international?.activationRate ?? 0}`}
+                    sub="Kayıttan kişisel plana"
+                    color="#7c4dff"
+                  />
+                  <StatCard
+                    icon={BarChart3}
+                    label="Kaynağı Belirlenen"
+                    value={distribution.international?.attributed ?? 0}
+                    sub={`${distribution.international?.direct ?? 0} doğrudan geliş`}
+                    color="#ffab00"
+                  />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <MiniDonut data={distribution.goals} colorMap={GOAL_COLORS} title="🎯 Hedef Dağılımı" />
                   <MiniDonut data={distribution.genders} colorMap={GENDER_COLORS} title="👤 Cinsiyet Dağılımı" />
