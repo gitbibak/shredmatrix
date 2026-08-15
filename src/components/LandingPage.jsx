@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
+import { buildTrackedShareUrl } from '../lib/shareLinks';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -142,7 +143,16 @@ export default function LandingPage({ onStart }) {
   ];
 
   const handleShare = async () => {
-    const shareData = { title: 'Full Balance', text: c.heroDesc, url: 'https://fullbalance.app/' };
+    const shareData = {
+      title: 'Full Balance',
+      text: c.heroDesc,
+      url: buildTrackedShareUrl({
+        language: lang,
+        source: 'website_share',
+        medium: 'organic',
+        campaign: `landing_share_${lang}`,
+      }),
+    };
     try {
       if (navigator.share) {
         await navigator.share(shareData);

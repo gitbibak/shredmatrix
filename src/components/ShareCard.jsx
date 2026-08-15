@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, X, Check, Camera, Download, Image, MessageCircle, Users } from "lucide-react";
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackShare } from '../lib/analytics';
+import { buildTrackedShareUrl } from '../lib/shareLinks';
 
 /* ── Canvas helper: rounded rectangle ── */
 function roundRect(ctx, x, y, w, h, r) {
@@ -20,7 +21,7 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 export default function ShareCard({ plan, onClose }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [showScreenshotHint, setShowScreenshotHint] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -41,7 +42,13 @@ export default function ShareCard({ plan, onClose }) {
     setRefCode(c);
   }, []);
 
-  const refShareUrl = `https://fullbalance.app/?ref=${refCode}`;
+  const refShareUrl = buildTrackedShareUrl({
+    language: lang,
+    source: 'member_referral',
+    medium: 'referral',
+    campaign: `invite_${lang}`,
+    referralCode: refCode,
+  });
   const refShareText = t('referral.message');
 
   const {
@@ -250,9 +257,10 @@ export default function ShareCard({ plan, onClose }) {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: 'Full Balance',
-          text: `💪 ${t('share.tagline')}`,
+          text: `💪 ${t('share.tagline')}\n${refShareUrl}`,
           files: [file],
         });
+        trackShare('progress_image_referral');
       } else {
         // Fallback: download instead
         const url = URL.createObjectURL(blob);

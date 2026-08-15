@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Target, Check, Share2, Flame, RefreshCw } from 'lucide-react';
-import { trackChallengeComplete } from '../lib/analytics';
+import { trackChallengeComplete, trackShare } from '../lib/analytics';
+import { buildTrackedShareUrl } from '../lib/shareLinks';
 import confetti from 'canvas-confetti';
 
 function getChallenges(t) {
@@ -36,7 +37,7 @@ function getTodayKey() {
 }
 
 export default function DailyChallenge() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [completed, setCompleted] = useState(false);
   const [streak, setStreak] = useState(0);
   const [justCompleted, setJustCompleted] = useState(false);
@@ -111,11 +112,18 @@ export default function DailyChallenge() {
 
   const handleShare = async () => {
     const text = `${challenge.emoji} ${t('challenge.shareText')}: ${challenge.target} ${challenge.unit}! 🔥 ${streak} ${t('challenge.days')}! #FullBalance`;
+    const url = buildTrackedShareUrl({
+      language: lang,
+      source: 'challenge_share',
+      medium: 'organic',
+      campaign: `daily_challenge_${lang}`,
+    });
     if (navigator.share) {
-      await navigator.share({ title: 'Full Balance Challenge', text, url: 'https://fullbalance.app' }).catch(() => {});
+      await navigator.share({ title: 'Full Balance Challenge', text, url }).catch(() => {});
     } else {
-      await navigator.clipboard.writeText(text).catch(() => {});
+      await navigator.clipboard.writeText(`${text}\n${url}`).catch(() => {});
     }
+    trackShare('daily_challenge');
   };
 
   return (
