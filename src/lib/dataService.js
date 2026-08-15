@@ -696,135 +696,6 @@ export async function getProfile() {
 }
 
 // ══════════════════════════════════════════════
-// TRAINER / CLIENT CONNECTIONS
-// ══════════════════════════════════════════════
-
-function normalizeInviteCode(code) {
-  return String(code || '').trim().toUpperCase();
-}
-
-function getLocalTrainerConnections() {
-  return lsGet('shredmatrix_trainer_connections', []);
-}
-
-function setLocalTrainerConnections(connections) {
-  lsSet('shredmatrix_trainer_connections', connections);
-}
-
-export async function createTrainerInvite() {
-  if (!isSupabaseReady() || !getUserId()) {
-    const code = `PT-${Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, '0')}`;
-    const invite = {
-      code,
-      expires_at: new Date(Date.now() + 14 * 86400000).toISOString(),
-      created_at: new Date().toISOString(),
-    };
-    lsSet('shredmatrix_trainer_invite', invite);
-    return invite;
-  }
-
-  const { data, error } = await supabase.rpc('create_trainer_invite');
-  if (error) throw error;
-  return data;
-}
-
-export async function connectTrainerByCode(code) {
-  const normalizedCode = normalizeInviteCode(code);
-  if (!normalizedCode) throw new Error('Invite code is required');
-
-  if (!isSupabaseReady() || !getUserId()) {
-    const invite = lsGet('shredmatrix_trainer_invite');
-    if (normalizeInviteCode(invite?.code) !== normalizedCode) {
-      throw new Error('Trainer invite code is invalid or expired');
-    }
-    const connection = {
-      id: `local-${Date.now()}`,
-      trainer_id: 'local-trainer',
-      client_id: 'local-client',
-      status: 'active',
-      created_at: new Date().toISOString(),
-      trainer: { name: 'Local Trainer' },
-      client: { name: 'Local Client' },
-    };
-    const connections = getLocalTrainerConnections().filter((item) => item.trainer_id !== connection.trainer_id);
-    connections.unshift(connection);
-    setLocalTrainerConnections(connections);
-    return { trainer_id: connection.trainer_id, trainer_name: connection.trainer.name };
-  }
-
-  const { data, error } = await supabase.rpc('connect_trainer_by_code', { invite_code: normalizedCode });
-  if (error) {
-    if (/own invite code/i.test(error.message || '')) {
-      throw new Error('Bu kendi oluşturduğun kod. Bağlanmak için başka bir PT hesabından alınan kodu girmelisin.');
-    }
-    if (/invalid or expired/i.test(error.message || '')) {
-      throw new Error('PT kodu geçersiz veya süresi dolmuş.');
-    }
-    throw error;
-  }
-  return data;
-}
-
-export async function getTrainerClients() {
-  const userId = getUserId();
-  if (!isSupabaseReady() || !userId) {
-    return getLocalTrainerConnections();
-  }
-
-  const { data, error } = await supabase
-    .from('trainer_clients')
-    .select(`
-      id,
-      trainer_id,
-      client_id,
-      status,
-      created_at,
-      client:profiles!trainer_clients_client_id_fkey(id, name, email)
-    `)
-    .eq('trainer_id', userId)
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-export async function getMyTrainers() {
-  const userId = getUserId();
-  if (!isSupabaseReady() || !userId) {
-    return getLocalTrainerConnections();
-  }
-
-  const { data, error } = await supabase
-    .from('trainer_clients')
-    .select(`
-      id,
-      trainer_id,
-      client_id,
-      status,
-      created_at,
-      trainer:profiles!trainer_clients_trainer_id_fkey(id, name, email)
-    `)
-    .eq('client_id', userId)
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-export async function removeTrainerConnection(connectionId) {
-  if (!connectionId) return;
-
-  if (!isSupabaseReady() || !getUserId()) {
-    setLocalTrainerConnections(getLocalTrainerConnections().filter((item) => item.id !== connectionId));
-    return;
-  }
-
-  const { error } = await supabase
-    .from('trainer_clients')
-    .delete()
-    .eq('id', connectionId);
-  if (error) throw error;
-}
-
-// ══════════════════════════════════════════════
 // PHOTOS (Supabase Storage)
 // ══════════════════════════════════════════════
 
@@ -1014,22 +885,6 @@ export async function deleteProgressPhoto(photoName) {
   return getProgressPhotos();
 }
 
-async function listStorageFilesRecursive(prefix) {
-  const files = [];
-  const { data, error } = await supabase.storage.from('user-photos').list(prefix, { limit: 1000 });
-  if (error) throw error;
-
-  for (const item of data || []) {
-    const path = `${prefix}/${item.name}`;
-    if (item.id) {
-      files.push(path);
-    } else {
-      files.push(...await listStorageFilesRecursive(path));
-    }
-  }
-
-  return files;
-}
 // ══════════════════════════════════════════════
 // PHASE MANAGEMENT
 // ══════════════════════════════════════════════
@@ -1113,7 +968,13 @@ export async function setFirstLogin() {
 export async function deleteAllUserData(email) {
   const userId = getUserId();
 
-  // Always clear localStorage
+  if (isSupabaseReady() && userId) {
+    const { data, error } = await supabase.functions.invoke('delete-account');
+    if (error) throw new Error(error.message || 'Account could not be deleted.');
+    if (!data?.ok) throw new Error(data?.error || 'Account could not be deleted.');
+  }
+
+  // Clear local state only after the server confirms deletion.
   const allKeys = [
     'shredmatrix_session', `shredmatrix_plan_${email}`,
     'shredmatrix_progress', 'shredmatrix_water', 'shredmatrix_water_history',
@@ -1132,33 +993,7 @@ export async function deleteAllUserData(email) {
   const users = lsGet('shredmatrix_users', []);
   const filtered = users.filter(u => u.email !== email);
   lsSet('shredmatrix_users', filtered);
-
-  if (!isSupabaseReady() || !userId) return;
-
-  // Delete from all Supabase tables (ignore errors for missing tables)
-  const tables = ['plans', 'workout_logs', 'progress_entries',
-    'measurements', 'water_logs', 'sleep_logs', 'reminders'];
-  for (const table of tables) {
-    try { await supabase.from(table).delete().eq('user_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
-  }
-
-  try { await supabase.from('trainer_invites').delete().eq('trainer_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
-  try { await supabase.from('trainer_clients').delete().eq('trainer_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
-  try { await supabase.from('trainer_clients').delete().eq('client_id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
-
-  // Delete storage files
-  try {
-    const files = await listStorageFilesRecursive(userId);
-    if (files.length) await supabase.storage.from('user-photos').remove(files);
-  } catch (err) { console.warn('[DataService]', err?.message || err); }
-
-  // Delete profile (cascade will handle auth)
-  try { await supabase.from('profiles').delete().eq('id', userId); } catch (err) { console.warn('[DataService]', err?.message || err); }
-
-  // Delete auth user via RPC
-  try {
-    await supabase.rpc('delete_current_user');
-  } catch (err) { console.warn('[DataService]', err?.message || err); }
+  activeUserId = null;
 }
 
 // ══════════════════════════════════════════════

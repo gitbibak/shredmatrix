@@ -1,13 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
-  rpc: vi.fn(),
+  getUser: vi.fn(),
+  from: vi.fn(),
   invoke: vi.fn(),
 }));
 
+function profileQuery(result) {
+  const query = {
+    select: vi.fn(() => query),
+    eq: vi.fn(() => query),
+    single: vi.fn(() => Promise.resolve(result)),
+  };
+  return query;
+}
+
 vi.mock('./supabase', () => ({
   supabase: {
-    rpc: mocks.rpc,
+    auth: { getUser: mocks.getUser },
+    from: mocks.from,
     functions: { invoke: mocks.invoke },
   },
   isSupabaseReady: () => true,
@@ -17,7 +28,8 @@ import { deleteUser, isAdmin, verifyAdminAccess } from './adminService';
 
 describe('adminService security boundaries', () => {
   beforeEach(() => {
-    mocks.rpc.mockReset();
+    mocks.getUser.mockReset();
+    mocks.from.mockReset();
     mocks.invoke.mockReset();
   });
 
@@ -27,15 +39,16 @@ describe('adminService security boundaries', () => {
     expect(isAdmin({ email: 'admin@example.com' })).toBe(false);
   });
 
-  it('verifies admin access through the protected database function', async () => {
-    mocks.rpc.mockResolvedValue({ data: true, error: null });
+  it('verifies admin access from the signed-in user profile', async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'admin-id' } }, error: null });
+    mocks.from.mockReturnValue(profileQuery({ data: { role: 'admin' }, error: null }));
 
     await expect(verifyAdminAccess()).resolves.toBe(true);
-    expect(mocks.rpc).toHaveBeenCalledWith('is_admin');
+    expect(mocks.from).toHaveBeenCalledWith('profiles');
   });
 
-  it('denies access when database verification fails', async () => {
-    mocks.rpc.mockResolvedValue({ data: null, error: new Error('denied') });
+  it('denies access when session verification fails', async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: null }, error: new Error('denied') });
 
     await expect(verifyAdminAccess()).resolves.toBe(false);
   });

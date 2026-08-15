@@ -26,7 +26,17 @@ const fieldVariants = {
 };
 
 // ── Input Component ──────────────────────────────────────
-function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, error, index = 0 }) {
+function AuthInput({
+  icon: Icon,
+  type = 'text',
+  placeholder,
+  value,
+  onChange,
+  error,
+  index = 0,
+  showPasswordLabel = 'Show password',
+  hidePasswordLabel = 'Hide password',
+}) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
@@ -63,6 +73,8 @@ function AuthInput({ icon: Icon, type = 'text', placeholder, value, onChange, er
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? hidePasswordLabel : showPasswordLabel}
+            title={showPassword ? hidePasswordLabel : showPasswordLabel}
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-400 transition-colors cursor-pointer"
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -467,6 +479,8 @@ export default function AuthScreen({ onAuth, onBack }) {
                   onChange={setPassword}
                   error={errors.password}
                   index={isLogin ? 1 : 2}
+                  showPasswordLabel={t('auth.showPassword')}
+                  hidePasswordLabel={t('auth.hidePassword')}
                 />
 
                 {!isLogin && (
@@ -478,6 +492,8 @@ export default function AuthScreen({ onAuth, onBack }) {
                     onChange={setConfirmPassword}
                     error={errors.confirmPassword}
                     index={3}
+                    showPasswordLabel={t('auth.showPassword')}
+                    hidePasswordLabel={t('auth.hidePassword')}
                   />
                 )}
 

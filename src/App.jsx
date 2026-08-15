@@ -60,29 +60,32 @@ function isPublicContentPath(pathname) {
 
 // ── Error Boundary (P1-3) ────────────────────────────────────
 class ErrorBoundary extends Component {
-  state = { hasError: false, error: null };
+  state = { hasError: false };
 
-  static getDerivedStateFromError(error) {
-    // Auto-recover from DOM manipulation errors (browser extensions, translate, etc.)
-    const msg = error?.message || '';
-    if (msg.includes('removeChild') || msg.includes('insertBefore') || msg.includes('appendChild')) {
-      setTimeout(() => window.location.reload(), 100);
-      return { hasError: false, error: null };
-    }
-    return { hasError: true, error };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('[App] Unhandled render error', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       const lang = (() => { try { return localStorage.getItem('shredmatrix_lang') || 'tr'; } catch { return 'tr'; } })();
       const titles = { tr: 'Bir hata oluştu', en: 'Something went wrong', es: 'Algo salió mal' };
+      const descriptions = {
+        tr: 'Uygulama bu ekranı güvenli biçimde tamamlayamadı. Yenileyerek tekrar deneyin.',
+        en: 'The app could not safely complete this screen. Refresh and try again.',
+        es: 'La aplicación no pudo completar esta pantalla de forma segura. Actualiza e inténtalo de nuevo.',
+      };
       const buttons = { tr: 'Sayfayı Yenile', en: 'Refresh Page', es: 'Actualizar Página' };
       return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
           <div className="text-center max-w-md">
             <div className="text-6xl mb-4">⚠️</div>
             <h1 className="text-2xl font-bold text-white mb-3 font-outfit">{titles[lang] || titles.en}</h1>
-            <p className="text-slate-400 mb-6 text-sm">{this.state.error?.message}</p>
+            <p className="text-slate-400 mb-6 text-sm">{descriptions[lang] || descriptions.en}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold font-outfit hover:from-orange-600 hover:to-amber-600 transition-all cursor-pointer"
@@ -171,6 +174,7 @@ const GOAL_THEMES = {
 function LoadingScreen({ goal = 'muscle' }) {
   const { t } = useTranslation();
   const steps = t('loading.steps') || [];
+  const safeSteps = Array.isArray(steps) && steps.length > 0 ? steps : ['Preparing your plan...'];
   const [currentStep, setCurrentStep] = useState(0);
 
   const theme = GOAL_THEMES[goal] || GOAL_THEMES.muscle;
@@ -179,7 +183,7 @@ function LoadingScreen({ goal = 'muscle' }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentStep((prev) => {
-        if (prev >= steps.length - 1) {
+        if (prev >= safeSteps.length - 1) {
           clearInterval(interval);
           return prev;
         }
@@ -187,9 +191,9 @@ function LoadingScreen({ goal = 'muscle' }) {
       });
     }, 450);
     return () => clearInterval(interval);
-  }, []);
+  }, [safeSteps.length]);
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const progress = ((currentStep + 1) / safeSteps.length) * 100;
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4 relative overflow-hidden">
 
@@ -323,7 +327,7 @@ function LoadingScreen({ goal = 'muscle' }) {
             exit={{ opacity: 0, y: -8 }}
             className="text-xs text-slate-500 font-outfit h-5"
           >
-            {steps[currentStep]}
+            {safeSteps[currentStep]}
           </motion.p>
         </AnimatePresence>
 
@@ -627,9 +631,11 @@ function AppContent() {
             } />
 
             <Route path="/loading" element={
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={pageTransition}>
-                <LoadingScreen goal={pendingFormData?.primaryGoal || 'muscle'} />
-              </motion.div>
+              !user ? <Navigate to="/auth" replace /> :
+              !pendingFormData ? <Navigate to={plan ? '/dashboard' : '/onboarding'} replace /> :
+                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={pageTransition}>
+                  <LoadingScreen goal={pendingFormData.primaryGoal || 'muscle'} />
+                </motion.div>
             } />
 
             <Route path="/dashboard" element={

@@ -428,3 +428,14 @@ entrypoint = "./functions/strava-auth/index.ts"
 enabled = true
 verify_jwt = true
 entrypoint = "./functions/admin-delete-user/index.ts"
+
+[functions.delete-account]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/delete-account/index.ts"
+
+[functions.send-push]
+enabled = true
+# Requests are authenticated inside the function with a Vault-backed cron secret.
+verify_jwt = false
+entrypoint = "./functions/send-push/index.ts"

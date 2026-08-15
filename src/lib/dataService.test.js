@@ -64,26 +64,14 @@ describe('dataService local fallback', () => {
     ]);
   });
 
-  it('creates and resolves trainer invite links locally when Supabase is unavailable', async () => {
-    const {
-      connectTrainerByCode,
-      createTrainerInvite,
-      getMyTrainers,
-      getTrainerClients,
-      removeTrainerConnection,
-    } = await loadService();
+  it('clears local account data when Supabase is unavailable', async () => {
+    const { deleteAllUserData } = await loadService();
+    localStorage.setItem('shredmatrix_plan_user@example.com', JSON.stringify({ goal: 'muscle' }));
+    localStorage.setItem('shredmatrix_progress', JSON.stringify([{ weight: 75 }]));
 
-    const invite = await createTrainerInvite();
-    await connectTrainerByCode(invite.code.toLowerCase());
+    await deleteAllUserData('user@example.com');
 
-    const clients = await getTrainerClients();
-    const trainers = await getMyTrainers();
-    expect(invite.code).toMatch(/^PT-[A-F0-9]{8}$/);
-    expect(clients).toHaveLength(1);
-    expect(trainers).toHaveLength(1);
-    expect(clients[0].trainer.name).toBe('Local Trainer');
-
-    await removeTrainerConnection(clients[0].id);
-    expect(await getTrainerClients()).toEqual([]);
+    expect(localStorage.getItem('shredmatrix_plan_user@example.com')).toBeNull();
+    expect(localStorage.getItem('shredmatrix_progress')).toBeNull();
   });
 });

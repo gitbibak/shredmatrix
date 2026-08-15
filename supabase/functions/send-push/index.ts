@@ -4,6 +4,7 @@
 // ══════════════════════════════════════════════
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import webpush from 'npm:web-push@3.6.7';
 
 const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
 const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
@@ -50,134 +51,54 @@ const NOTIFICATION_SCHEDULES = {
   },
 };
 
-// ── Web Push with VAPID (RFC 8291 + RFC 8188) ──
-// Simplified push sender using fetch to push service endpoint
-
-async function importVapidKeys() {
-  // Decode URL-safe base64 private key
-  const padding = '='.repeat((4 - (VAPID_PRIVATE_KEY.length % 4)) % 4);
-  const base64 = (VAPID_PRIVATE_KEY + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawKey = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-
-  const privateKey = await crypto.subtle.importKey(
-    'pkcs8',
-    rawKey,
-    { name: 'ECDSA', namedCurve: 'P-256' },
-    false,
-    ['sign']
-  );
-
-  return privateKey;
-}
-
-function base64UrlEncode(data) {
-  const str = typeof data === 'string' ? data : String.fromCharCode(...new Uint8Array(data));
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-async function createVapidAuthHeader(endpoint) {
-  const url = new URL(endpoint);
-  const audience = `${url.protocol}//${url.host}`;
-
-  const header = { typ: 'JWT', alg: 'ES256' };
-  const now = Math.floor(Date.now() / 1000);
-  const payload = {
-    aud: audience,
-    exp: now + 12 * 3600,
-    sub: 'mailto:info@fullbalance.app',
-  };
-
-  const headerB64 = base64UrlEncode(JSON.stringify(header));
-  const payloadB64 = base64UrlEncode(JSON.stringify(payload));
-  const unsignedToken = `${headerB64}.${payloadB64}`;
-
-  const encoder = new TextEncoder();
-  const data = encoder.encode(unsignedToken);
-
-  try {
-    const privateKey = await importVapidKeys();
-    const signature = await crypto.subtle.sign(
-      { name: 'ECDSA', hash: 'SHA-256' },
-      privateKey,
-      data
-    );
-
-    // Convert DER signature to raw r||s format (64 bytes)
-    const sigArray = new Uint8Array(signature);
-    let r, s;
-    if (sigArray.length === 64) {
-      r = sigArray.slice(0, 32);
-      s = sigArray.slice(32, 64);
-    } else {
-      // DER format
-      const rLen = sigArray[3];
-      r = sigArray.slice(4, 4 + rLen);
-      const sLen = sigArray[5 + rLen];
-      s = sigArray.slice(6 + rLen, 6 + rLen + sLen);
-      // Pad/trim to 32 bytes
-      if (r.length > 32) r = r.slice(r.length - 32);
-      if (s.length > 32) s = s.slice(s.length - 32);
-      if (r.length < 32) r = new Uint8Array([...new Array(32 - r.length).fill(0), ...r]);
-      if (s.length < 32) s = new Uint8Array([...new Array(32 - s.length).fill(0), ...s]);
-    }
-    const rawSig = new Uint8Array([...r, ...s]);
-    const signatureB64 = base64UrlEncode(rawSig);
-
-    return {
-      authorization: `vapid t=${unsignedToken}.${signatureB64}, k=${VAPID_PUBLIC_KEY}`,
-    };
-  } catch (err) {
-    console.error('VAPID signing failed:', err);
-    throw err;
-  }
-}
+// ── Standards-compliant Web Push (RFC 8291) ──
+webpush.setVapidDetails(
+  'mailto:info@fullbalance.app',
+  VAPID_PUBLIC_KEY,
+  VAPID_PRIVATE_KEY,
+);
 
 async function sendPushNotification(subscription, payload) {
   try {
-    const vapidHeaders = await createVapidAuthHeader(subscription.endpoint);
-
-    const response = await fetch(subscription.endpoint, {
-      method: 'POST',
-      headers: {
-        ...vapidHeaders,
-        'Content-Type': 'application/json',
-        'TTL': '86400',
-        'Urgency': 'normal',
-      },
-      body: JSON.stringify(payload),
+    await webpush.sendNotification(subscription, JSON.stringify(payload), {
+      TTL: 86400,
+      urgency: 'normal',
     });
-
-    if (response.status === 201 || response.status === 200) {
-      return { success: true };
-    } else if (response.status === 404 || response.status === 410) {
-      // Subscription expired — should be removed
-      return { success: false, expired: true, status: response.status };
-    } else {
-      const text = await response.text();
-      console.warn(`Push failed (${response.status}):`, text);
-      return { success: false, status: response.status };
-    }
+    return { success: true };
   } catch (err) {
+    const status = Number(err?.statusCode || err?.status || 0);
+    if (status === 404 || status === 410) {
+      return { success: false, expired: true, status };
+    }
     console.error('Push send error:', err);
-    return { success: false, error: err.message };
+    return { success: false, status, error: err?.message || 'Push failed' };
   }
 }
 
 // ── Main Handler ────────────────────────────────
 
 Deno.serve(async (req) => {
-  // CORS
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json', 'Allow': 'POST' },
     });
   }
 
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    const cronSecret = req.headers.get('x-cron-secret') || '';
+    const { data: authorized, error: authError } = await supabase.rpc(
+      'verify_push_cron_secret',
+      { candidate: cronSecret },
+    );
+
+    if (authError || authorized !== true) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     // Determine current time slot (UTC+3 for Turkey)
     const now = new Date();

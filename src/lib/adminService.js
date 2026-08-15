@@ -13,9 +13,15 @@ export async function verifyAdminAccess() {
   if (!isSupabaseReady()) return false;
 
   try {
-    const { data, error } = await supabase.rpc('is_admin');
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData.user) return false;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', authData.user.id)
+      .single();
     if (error) throw error;
-    return data === true;
+    return data?.role === 'admin';
   } catch (err) {
     console.error('[Admin] Access verification error:', err);
     return false;
