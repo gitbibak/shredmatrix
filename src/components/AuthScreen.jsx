@@ -105,7 +105,7 @@ function AuthInput({
 // AuthScreen Component
 // ═════════════════════════════════════════════════════════
 export default function AuthScreen({ onAuth, onBack }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [mode, setMode] = useState(() => (
     new URLSearchParams(window.location.search).get('mode') === 'register' ? 'register' : 'login'
   )); // 'login' | 'register' | 'forgot'
@@ -186,7 +186,7 @@ export default function AuthScreen({ onAuth, onBack }) {
       try {
         if (mode === 'register') {
           trackSignUpStart('email');
-          const result = await signUp(email.toLowerCase().trim(), password, name.trim());
+          const result = await signUp(email.toLowerCase().trim(), password, name.trim(), lang);
           let referred = false;
           try { referred = Boolean(localStorage.getItem('fb_referred_by')); } catch { /* Optional attribution. */ }
           trackSignUp(referred ? 'email_referral' : 'email');
@@ -225,7 +225,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
       setIsSubmitting(false);
     },
-    [mode, name, email, password, confirmPassword, validate, onAuth]
+    [mode, name, email, password, confirmPassword, validate, onAuth, lang]
   );
 
   // ── Forgot Password Submit ──────────────────────────

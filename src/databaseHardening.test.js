@@ -52,4 +52,24 @@ describe('database hardening migrations', () => {
       'REVOKE ALL ON FUNCTION public.delete_current_user() FROM PUBLIC, anon, authenticated',
     );
   });
+
+  it('captures limited first-party attribution without opening role updates', () => {
+    const migration = read(
+      'supabase/migrations/20260815172000_add_acquisition_attribution.sql',
+    );
+
+    expect(migration).toContain('ADD COLUMN IF NOT EXISTS acquisition_source TEXT');
+    expect(migration).toContain("CHECK (app_language IS NULL OR app_language IN ('tr', 'en', 'es'))");
+    expect(migration).toContain('GRANT UPDATE (');
+    expect(migration).not.toMatch(/GRANT UPDATE\s+ON public\.profiles/i);
+  });
+
+  it('backfills only known plan languages and does not guess campaign sources', () => {
+    const migration = read(
+      'supabase/migrations/20260815173500_backfill_profile_language.sql',
+    );
+
+    expect(migration).toContain("plan.plan_data->>'lang' IN ('tr', 'en', 'es')");
+    expect(migration).not.toMatch(/SET\s+acquisition_source/i);
+  });
 });

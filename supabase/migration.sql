@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   avatar_url TEXT,
   role TEXT DEFAULT 'user',
   email TEXT,
+  acquisition_source TEXT,
+  acquisition_medium TEXT,
+  acquisition_campaign TEXT,
+  acquisition_content TEXT,
+  acquisition_term TEXT,
+  landing_path TEXT,
+  app_language TEXT,
+  browser_locale TEXT,
+  time_zone TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -30,6 +39,15 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS avatar_url TEXT,
   ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'user',
   ADD COLUMN IF NOT EXISTS email TEXT,
+  ADD COLUMN IF NOT EXISTS acquisition_source TEXT,
+  ADD COLUMN IF NOT EXISTS acquisition_medium TEXT,
+  ADD COLUMN IF NOT EXISTS acquisition_campaign TEXT,
+  ADD COLUMN IF NOT EXISTS acquisition_content TEXT,
+  ADD COLUMN IF NOT EXISTS acquisition_term TEXT,
+  ADD COLUMN IF NOT EXISTS landing_path TEXT,
+  ADD COLUMN IF NOT EXISTS app_language TEXT,
+  ADD COLUMN IF NOT EXISTS browser_locale TEXT,
+  ADD COLUMN IF NOT EXISTS time_zone TEXT,
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
 
 CREATE TABLE IF NOT EXISTS public.plans (
@@ -612,16 +630,39 @@ SECURITY DEFINER
 SET search_path = public, auth
 AS $$
 BEGIN
-  INSERT INTO public.profiles (id, name, email, role)
+  INSERT INTO public.profiles (
+    id, name, email, role, acquisition_source, acquisition_medium,
+    acquisition_campaign, acquisition_content, acquisition_term,
+    landing_path, app_language, browser_locale, time_zone
+  )
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'name', 'User'),
+    COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'full_name', 'User'),
     NEW.email,
-    'user'
+    'user',
+    LEFT(NEW.raw_user_meta_data->>'acquisition_source', 80),
+    LEFT(NEW.raw_user_meta_data->>'acquisition_medium', 80),
+    LEFT(NEW.raw_user_meta_data->>'acquisition_campaign', 120),
+    LEFT(NEW.raw_user_meta_data->>'acquisition_content', 120),
+    LEFT(NEW.raw_user_meta_data->>'acquisition_term', 120),
+    LEFT(NEW.raw_user_meta_data->>'landing_path', 160),
+    CASE WHEN NEW.raw_user_meta_data->>'app_language' IN ('tr', 'en', 'es')
+      THEN NEW.raw_user_meta_data->>'app_language' ELSE NULL END,
+    LEFT(NEW.raw_user_meta_data->>'browser_locale', 20),
+    LEFT(NEW.raw_user_meta_data->>'time_zone', 60)
   )
   ON CONFLICT (id) DO UPDATE
     SET email = COALESCE(public.profiles.email, EXCLUDED.email),
-        name = COALESCE(public.profiles.name, EXCLUDED.name);
+        name = COALESCE(public.profiles.name, EXCLUDED.name),
+        acquisition_source = COALESCE(public.profiles.acquisition_source, EXCLUDED.acquisition_source),
+        acquisition_medium = COALESCE(public.profiles.acquisition_medium, EXCLUDED.acquisition_medium),
+        acquisition_campaign = COALESCE(public.profiles.acquisition_campaign, EXCLUDED.acquisition_campaign),
+        acquisition_content = COALESCE(public.profiles.acquisition_content, EXCLUDED.acquisition_content),
+        acquisition_term = COALESCE(public.profiles.acquisition_term, EXCLUDED.acquisition_term),
+        landing_path = COALESCE(public.profiles.landing_path, EXCLUDED.landing_path),
+        app_language = COALESCE(public.profiles.app_language, EXCLUDED.app_language),
+        browser_locale = COALESCE(public.profiles.browser_locale, EXCLUDED.browser_locale),
+        time_zone = COALESCE(public.profiles.time_zone, EXCLUDED.time_zone);
   RETURN NEW;
 END;
 $$;

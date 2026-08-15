@@ -1,4 +1,5 @@
 import { supabase, isSupabaseReady } from './supabase';
+import { getAcquisitionContext } from './acquisition';
 
 // ══════════════════════════════════════════════
 // Full Balance — Data Service Layer
@@ -99,11 +100,46 @@ function getUserId() {
   return isSupabaseReady() ? activeUserId : null;
 }
 
+const ACQUISITION_FIELDS = [
+  'acquisition_source', 'acquisition_medium', 'acquisition_campaign',
+  'acquisition_content', 'acquisition_term', 'landing_path',
+  'app_language', 'browser_locale', 'time_zone',
+];
+const FIRST_TOUCH_FIELDS = [
+  'acquisition_source', 'acquisition_medium', 'acquisition_campaign',
+  'acquisition_content', 'acquisition_term', 'landing_path',
+];
+
+async function syncAcquisitionProfile(userId, language) {
+  if (!isSupabaseReady() || !userId) return;
+  try {
+    const context = getAcquisitionContext(language);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select(`${ACQUISITION_FIELDS.join(',')},created_at`)
+      .eq('id', userId)
+      .single();
+    if (error || !data) return;
+
+    const profileAge = Date.now() - new Date(data.created_at || 0).getTime();
+    const isNewProfile = Number.isFinite(profileAge) && profileAge < 86_400_000;
+    const missing = Object.fromEntries(ACQUISITION_FIELDS
+      .filter((field) => !data[field] && context[field])
+      .filter((field) => isNewProfile || !FIRST_TOUCH_FIELDS.includes(field))
+      .map((field) => [field, context[field]]));
+    if (Object.keys(missing).length > 0) {
+      await supabase.from('profiles').update(missing).eq('id', userId);
+    }
+  } catch (err) {
+    console.warn('[Acquisition]', err?.message || err);
+  }
+}
+
 // ══════════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════════
 
-export async function signUp(email, password, name) {
+export async function signUp(email, password, name, language) {
   if (!isSupabaseReady()) {
     throw new Error('Authentication service unavailable. Please try again later.');
   }
@@ -111,7 +147,7 @@ export async function signUp(email, password, name) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { name } },
+    options: { data: { name, ...getAcquisitionContext(language) } },
   });
   if (error) throw error;
   activeUserId = data.session?.user?.id || null;
@@ -126,6 +162,7 @@ export async function signIn(email, password) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   activeUserId = data.session?.user?.id || data.user?.id || null;
+  syncAcquisitionProfile(activeUserId);
   return { user: data.user, session: data.session };
 }
 
@@ -192,6 +229,7 @@ export async function getSession() {
     return null;
   }
   activeUserId = session.user.id;
+  syncAcquisitionProfile(activeUserId);
   return {
     user: {
       id: session.user.id,
@@ -209,6 +247,7 @@ export function onAuthStateChange(callback) {
     // Only react to actual sign-in/sign-out events, not token refreshes or initial session
     if (event === 'SIGNED_IN' && session) {
       activeUserId = session.user.id;
+      syncAcquisitionProfile(activeUserId);
       callback('SIGNED_IN', {
         id: session.user.id,
         name: session.user.user_metadata?.name || 'User',

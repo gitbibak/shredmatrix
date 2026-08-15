@@ -424,7 +424,7 @@ export const translations = {
     privacy: {
       title: 'Gizlilik Politikası',
       updated: 'Son güncelleme: Ağustos 2026',
-      s1: { title: 'Toplanan Veriler', content: 'Full Balance, yalnızca uygulamanın çalışması için gerekli olan verileri toplar: ad, e-posta adresi, fiziksel ölçüler (boy, kilo, yaş, cinsiyet), hedef ve tercih bilgileri. Bu veriler kişiselleştirilmiş beslenme ve antrenman planınızı oluşturmak için kullanılır.' },
+      s1: { title: 'Toplanan Veriler', content: 'Full Balance; ad, e-posta adresi, fiziksel ölçüler, hedef ve tercih bilgilerini kişisel planınızı oluşturmak için toplar. Kayıt kazanımını ölçmek için ayrıca ilk ziyaret dili, yönlendiren site, açılış sayfası ve varsa UTM kampanya etiketleri saklanır; tam gezinme geçmişiniz veya hassas sağlık verileriniz reklam ölçümüne eklenmez.' },
       s2: { title: 'Verilerin Saklanması', content: 'Verileriniz iki katmanlı güvenlik ile saklanır: (1) Cihazınızın yerel depolaması ve (2) Supabase şifreli bulut sunucuları (AES-256 şifreleme). Verilerinize yalnızca siz erişebilirsiniz.' },
       s3: { title: 'Üçüncü Taraf Paylaşımı', content: 'Kişisel ve sağlık verileriniz satılmaz veya reklam amacıyla paylaşılmaz. Yalnızca açık izin verirseniz sayfa görüntüleme, özellik kullanımı, cihaz/tarayıcı türü ve yaklaşık bölge gibi sınırlı analitik veriler Google Analytics tarafından işlenir; ad, e-posta, sağlık, alerji ve vücut verileri gönderilmez.' },
       s4: { title: 'Çerezler ve Analitik İzni', content: 'Analitik depolama varsayılan olarak kapalıdır. İzin verirseniz Google Analytics etkinleşir; reddederseniz üçüncü taraf analitik yüklenmez. Tercihiniz cihazınızda saklanır.' },
@@ -1514,7 +1514,7 @@ export const translations = {
     privacy: {
       title: 'Privacy Policy',
       updated: 'Last updated: August 2026',
-      s1: { title: 'Data Collected', content: 'Full Balance collects only the data necessary for the app to function: name, email address, physical measurements (height, weight, age, gender), goals and preferences.' },
+      s1: { title: 'Data Collected', content: 'Full Balance collects your name, email, physical measurements, goals and preferences to create your personal plan. To measure signup acquisition, we also store the first-visit language, referring site, landing page and any UTM campaign tags; full browsing history and sensitive health data are not added to advertising attribution.' },
       s2: { title: 'Data Storage', content: 'Your data is stored with two layers of security: (1) Your device\'s local storage and (2) Supabase encrypted cloud servers (AES-256 encryption). Only you can access your data.' },
       s3: { title: 'Third-Party Sharing', content: 'Your personal and health data is not sold or shared for advertising. Only with your explicit consent, limited analytics data such as page views, feature usage, device/browser type and approximate region is processed by Google Analytics; name, email, health, allergy and body data are never sent.' },
       s4: { title: 'Cookies and Analytics Consent', content: 'Analytics storage is disabled by default. Google Analytics is enabled only if you consent; if you decline, third-party analytics is not loaded. Your choice is stored on your device.' },
@@ -2528,7 +2528,7 @@ export const translations = {
     privacy: {
       title: 'Política de Privacidad',
       updated: 'Última actualización: Agosto 2026',
-      s1: { title: 'Datos Recopilados', content: 'Full Balance solo recopila los datos necesarios para el funcionamiento de la app: nombre, correo, medidas físicas, objetivos y preferencias.' },
+      s1: { title: 'Datos Recopilados', content: 'Full Balance recopila nombre, correo, medidas físicas, objetivos y preferencias para crear tu plan personal. Para medir la procedencia de los registros, también guardamos el idioma de la primera visita, el sitio de referencia, la página de entrada y las etiquetas UTM; no añadimos el historial completo ni datos de salud sensibles a la atribución publicitaria.' },
       s2: { title: 'Almacenamiento de Datos', content: 'Tus datos se almacenan con doble seguridad: almacenamiento local y servidores Supabase cifrados (AES-256).' },
       s3: { title: 'Compartir con Terceros', content: 'Tus datos personales y de salud no se venden ni se comparten con fines publicitarios. Solo con tu consentimiento explícito, Google Analytics procesa datos limitados como vistas de página, uso de funciones, tipo de dispositivo/navegador y región aproximada; nunca se envían nombre, correo, salud, alergias ni datos corporales.' },
       s4: { title: 'Cookies y Consentimiento Analítico', content: 'El almacenamiento analítico está desactivado por defecto. Google Analytics solo se activa si das permiso; si lo rechazas, no se carga analítica de terceros. Tu elección se guarda en tu dispositivo.' },

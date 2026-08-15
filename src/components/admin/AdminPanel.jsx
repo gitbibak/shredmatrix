@@ -26,6 +26,7 @@ const GOAL_COLORS = {
 };
 const EXP_COLORS = { 'Başlangıç': '#00e676', 'Orta': '#ffab00', 'İleri': '#ff4081' };
 const GENDER_COLORS = { 'Erkek': '#00b0ff', 'Kadın': '#ff4081', 'Bilinmiyor': '#64748b' };
+const LANGUAGE_COLORS = { 'Türkçe': '#ff6d00', 'English': '#00b0ff', 'Español': '#ffab00', 'Bilinmiyor': '#64748b' };
 const SUPPORT_CATEGORY_LABELS = {
   support: 'Destek',
   bug: 'Hata',
@@ -204,7 +205,7 @@ export default function AdminPanel({ user }) {
   const [usersPage, setUsersPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [distribution, setDistribution] = useState({ goals: [], genders: [], ages: [], experiences: [] });
+  const [distribution, setDistribution] = useState({ goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [] });
   const [trend, setTrend] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
   const [detailUserId, setDetailUserId] = useState(null);
@@ -630,6 +631,8 @@ export default function AdminPanel({ user }) {
                   <MiniDonut data={distribution.goals} colorMap={GOAL_COLORS} title="🎯 Hedef Dağılımı" />
                   <MiniDonut data={distribution.genders} colorMap={GENDER_COLORS} title="👤 Cinsiyet Dağılımı" />
                   <MiniDonut data={distribution.experiences} colorMap={EXP_COLORS} title="💪 Deneyim Seviyesi" />
+                  <MiniDonut data={distribution.languages} colorMap={LANGUAGE_COLORS} title="🌍 Kayıt Dili" />
+                  <MiniDonut data={distribution.sources} title="📣 Kazanım Kaynağı" />
 
                   {/* Age Bar Chart */}
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}

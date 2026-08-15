@@ -151,20 +151,25 @@ export async function getUserPlanDetails(userId) {
 
 // ── Plan Distribution (with normalization) ──────
 export async function getPlanDistribution() {
-  if (!isSupabaseReady()) return { goals: [], genders: [], ages: [], experiences: [] };
+  const empty = { goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [] };
+  if (!isSupabaseReady()) return empty;
 
   try {
-    const { data, error } = await supabase
-      .from('plans')
-      .select('plan_data');
-    if (error) throw error;
+    const [planResult, profileResult] = await Promise.all([
+      supabase.from('plans').select('plan_data'),
+      supabase.from('profiles').select('app_language, acquisition_source'),
+    ]);
+    if (planResult.error) throw planResult.error;
+    if (profileResult.error) throw profileResult.error;
 
     const goalCounts = {};
     const genderCounts = {};
     const experienceCounts = {};
+    const languageCounts = {};
+    const sourceCounts = {};
     const ageBuckets = { '16-20': 0, '21-25': 0, '26-30': 0, '31-35': 0, '36-40': 0, '41-50': 0, '50+': 0 };
 
-    (data || []).forEach(({ plan_data }) => {
+    (planResult.data || []).forEach(({ plan_data }) => {
       if (!plan_data) return;
 
       // Goal distribution (normalized)
@@ -190,15 +195,25 @@ export async function getPlanDistribution() {
       else ageBuckets['50+']++;
     });
 
+    const languageLabels = { tr: 'Türkçe', en: 'English', es: 'Español' };
+    (profileResult.data || []).forEach((profile) => {
+      const language = languageLabels[profile.app_language] || 'Bilinmiyor';
+      const source = String(profile.acquisition_source || 'Bilinmiyor').toLowerCase();
+      languageCounts[language] = (languageCounts[language] || 0) + 1;
+      sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+    });
+
     return {
       goals: Object.entries(goalCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       genders: Object.entries(genderCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       experiences: Object.entries(experienceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       ages: Object.entries(ageBuckets).filter(([, v]) => v > 0).map(([name, value]) => ({ name, value })),
+      languages: Object.entries(languageCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+      sources: Object.entries(sourceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
     };
   } catch (err) {
     console.error('[Admin] Distribution error:', err);
-    return { goals: [], genders: [], ages: [], experiences: [] };
+    return empty;
   }
 }
 

@@ -11,6 +11,7 @@ import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
 import { initAnalytics, trackGeneratePlan, trackPageView, trackReferral } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
+import { captureAcquisitionContext } from './lib/acquisition';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -409,6 +410,7 @@ function AppContent() {
 
   // Restore session on mount
   useEffect(() => {
+    captureAcquisitionContext(lang);
     initAnalytics();
     const referralCode = new URLSearchParams(window.location.search).get('ref');
     if (referralCode && /^[A-Z0-9]{4,16}$/i.test(referralCode)) {
