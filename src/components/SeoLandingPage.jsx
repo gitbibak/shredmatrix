@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { getAlternatesForTurkishPath } from '../data/internationalSeoPages';
+import { trackLandingCta } from '../lib/analytics';
 import {
   Award,
   BarChart3,
@@ -48,21 +49,81 @@ const pages = {
   'kalori-makro-takibi': {
     icon: UtensilsCrossed,
     accent: '#f97316',
-    title: 'Kalori ve',
+    title: 'Günlük Kalori İhtiyacı ve',
     titleAccent: 'Makro Takibi',
-    metaTitle: 'Kalori ve Makro Takip Uygulaması | Full Balance',
-    description: 'BMR, TDEE, BMI, günlük kalori, protein, karbonhidrat ve yağ hedeflerini hesaplayan ücretsiz beslenme ve makro takip uygulaması.',
-    keywords: 'kalori takip uygulaması, makro takip, BMR hesaplama, TDEE hesaplama, BMI hesaplama',
-    heroCopy: 'Hedefe göre kalori, makro ve 7 günlük menü önerilerini aynı kişisel planda topla.',
+    metaTitle: 'Günlük Kalori İhtiyacı Hesaplama ve Makro Takibi | Full Balance',
+    description: 'Alman gereken günlük kaloriyi BMR, TDEE, hedef ve aktiviteye göre hesapla; protein, karbonhidrat ve yağ hedeflerini ücretsiz takip et.',
+    keywords: 'günlük kalori ihtiyacı hesaplama, almam gereken kalori, besin kalori hesaplama, makro takip, BMR hesaplama, TDEE hesaplama',
+    heroCopy: 'Günlük enerji ihtiyacını hesapla; sonucu hedefe uygun makrolara, öğünlere ve 7 günlük kişisel plana dönüştür.',
     sections: [
-      { title: 'BMR, TDEE ve BMI hesaplama', body: 'Boy, kilo, yaş, cinsiyet ve aktivite bilgilerine göre temel metabolizma ve günlük enerji ihtiyacı hesaplanır.' },
+      { title: 'Alman gereken kaloriyi hesapla', body: 'Boy, kilo, yaş, cinsiyet ve aktivite bilgilerine göre BMR ve günlük toplam enerji ihtiyacı için başlangıç tahmini oluşturulur.' },
       { title: 'Hedefe göre makrolar', body: 'Kas gelişimi veya yağ yakımı gibi hedeflere göre protein, karbonhidrat ve yağ dağılımı önerilir.' },
       { title: '7 günlük menü fikri', body: 'Kullanıcının bütçe ve tercih bilgilerine göre daha uygulanabilir beslenme planı oluşturulur.' },
     ],
     faqs: [
-      ['BMR ve TDEE nedir?', 'BMR temel metabolizma hızını, TDEE ise günlük toplam enerji harcamasını ifade eder.'],
+      ['Günlük kaç kalori almam gerekir?', 'İhtiyaç yaş, boy, kilo, cinsiyet, aktivite ve hedefe göre değişir. Full Balance BMR ve TDEE üzerinden bir başlangıç tahmini oluşturur.'],
       ['Makro hedefleri kişisel mi?', 'Evet. Hedef, kilo, aktivite ve profil bilgilerine göre kişiselleştirilir.'],
       ['Beslenme planı ücretsiz mi?', 'Evet. Full Balance içindeki beslenme ve kalori özellikleri ücretsizdir.'],
+    ],
+  },
+  'evde-spor-programi': {
+    icon: Dumbbell,
+    accent: '#22c55e',
+    title: 'Ekipmansız Evde',
+    titleAccent: 'Spor Programı',
+    metaTitle: 'Ekipmansız Evde Spor Programı | Ücretsiz Plan | Full Balance',
+    description: 'Seviye, hedef ve haftalık gün sayısına göre ekipmansız evde spor programı oluştur; set, tekrar, dinlenme ve kolay alternatifleri ücretsiz gör.',
+    keywords: 'evde spor programı, ekipmansız antrenman, evde spor hareketleri, evde egzersiz programı',
+    heroCopy: 'Spor salonu hareketleri olmadan, gerçek ev ortamına uygun vücut ağırlığı egzersizleri ve kontrollü ilerleme planı.',
+    sections: [
+      { title: 'Gerçekten ekipmansız', body: 'Program kablo, makine veya spor salonu ekipmanı istemeyen vücut ağırlığı hareketlerinden oluşur.' },
+      { title: 'Seviyeye uygun alternatifler', body: 'Zor gelen hareketler için daha kolay varyasyon; gelişim oldukça tekrar, tempo ve hareket seviyesi artışı sunulur.' },
+      { title: 'Net haftalık akış', body: 'Antrenman ve dinlenme günleri, egzersiz sırası, set, tekrar ve dinlenme süreleri başlamadan önce görülür.' },
+    ],
+    faqs: [
+      ['Evde spor için ekipman gerekir mi?', 'Hayır. Bu plan vücut ağırlığıyla ve evde uygulanabilecek hareketlerle hazırlanır.'],
+      ['Yeni başlayanlar kullanabilir mi?', 'Evet. Hareket zorluğu ve haftalık hacim deneyim seviyesine göre ayarlanır.'],
+      ['Program nasıl zorlaşır?', 'Kontrol sağlandıkça tekrar, tempo, hareket açıklığı ve daha ileri varyasyonlarla ilerler.'],
+    ],
+  },
+  'evde-kas-gelistirme-hareketleri': {
+    icon: TrendingUp,
+    accent: '#f97316',
+    title: 'Evde Kas Geliştirme',
+    titleAccent: 'Hareketleri',
+    metaTitle: 'Evde Kas Geliştirme Hareketleri ve Programı | Full Balance',
+    description: 'Evde kas geliştirmek için ekipmansız hareketler, haftalık hacim, kontrollü progresyon, dinlenme, protein ve kalori hedeflerini tek ücretsiz planda gör.',
+    keywords: 'evde kas geliştirme hareketleri, kas geliştirme hareketleri, ekipmansız kas geliştirme, evde kas programı',
+    heroCopy: 'İtiş, squat, kalça, tek bacak ve core hareketlerini seviyene göre ilerlet; antrenmanı protein, kalori ve toparlanmayla birleştir.',
+    sections: [
+      { title: 'Dengeli hareket seçimi', body: 'İtiş, squat, kalça, tek taraflı bacak, core ve güvenli çekiş alternatifleri birlikte planlanır.' },
+      { title: 'Ölçülebilir progresyon', body: 'Mevcut hareket kontrollü yapılmadan rastgele zor varyasyona geçilmez; tekrar, tempo ve hareket açıklığı izlenir.' },
+      { title: 'Beslenme ve toparlanma', body: 'Protein, günlük enerji, uyku ve dinlenme günleri kas gelişimi planının yanında takip edilir.' },
+    ],
+    faqs: [
+      ['Ekipmansız kas gelişir mi?', 'Yeterli zorluk, düzenli progresyon ve toparlanmayla vücut ağırlığı antrenmanı kas gelişimini destekleyebilir.'],
+      ['Bu programda salon hareketi var mı?', 'Hayır. Bu sayfadaki plan ev ortamına ve ekipmansız harekete özeldir.'],
+      ['Hareket çok zorsa ne yapmalıyım?', 'Kontrollü yapabildiğin kolay varyasyonu kullanmalı ve hazır olduğunda ilerlemelisin.'],
+    ],
+  },
+  'baslangic-pilates-programi': {
+    icon: Waves,
+    accent: '#a78bfa',
+    title: 'Başlangıç Seviyesi',
+    titleAccent: 'Pilates Programı',
+    metaTitle: 'Başlangıç Pilates Programı | Evde Ücretsiz Plan | Full Balance',
+    description: 'Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.',
+    keywords: 'başlangıç pilates programı, evde pilates, yeni başlayanlar için pilates, ücretsiz pilates programı',
+    heroCopy: 'Hız yerine nefes, hizalanma ve kontrolü öğreten kısa mat seanslarıyla güvenli bir temel oluştur.',
+    sections: [
+      { title: 'Sade ve kontrollü başlangıç', body: 'İlk seanslar nefes, nötr hizalanma ve kontrollü hareket açıklığına odaklanır.' },
+      { title: 'Sadece mekik değil', body: 'Core stabilitesi, pelvis kontrolü, koordinasyon, postür ve mobilite birlikte geliştirilir.' },
+      { title: 'Kademeli ilerleme', body: 'Temel hareketler kontrollü yapılabildiğinde süre ve hareket karmaşıklığı adım adım artar.' },
+    ],
+    faqs: [
+      ['Reformer gerekir mi?', 'Hayır. Bu program evde mat üzerinde uygulanacak başlangıç pilates planıdır.'],
+      ['Daha önce pilates yapmadım, uygun mu?', 'Evet. Kısa seanslar ve erişilebilir hareketlerle başlar.'],
+      ['Haftada kaç gün yapılır?', 'Plan, ayırabildiğin günlere göre uygulanabilir seansları ve toparlanmayı dengeler.'],
     ],
   },
   'antrenman-programi': {
@@ -377,6 +438,9 @@ const supportCards = [
 ];
 
 const relatedLinks = [
+  ['evde-spor-programi', 'Ekipmansız evde spor'],
+  ['evde-kas-gelistirme-hareketleri', 'Evde kas geliştirme'],
+  ['baslangic-pilates-programi', 'Başlangıç pilatesi'],
   ['kas-gelisimi-programi', 'Kas gelişimi'],
   ['yag-yakimi-programi', 'Yağ yakımı'],
   ['ucretsiz-beslenme-programi', 'Beslenme programı'],
@@ -533,6 +597,7 @@ export default function SeoLandingPage({ slug }) {
             </Link>
             <Link
               to="/auth?mode=register"
+              onClick={() => trackLandingCta(`seo_${canonicalSlug}_nav`)}
               className="rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20"
             >
               Ücretsiz Başla
@@ -560,6 +625,7 @@ export default function SeoLandingPage({ slug }) {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/auth?mode=register"
+                  onClick={() => trackLandingCta(`seo_${canonicalSlug}_hero`)}
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-blue-500 px-6 py-4 font-outfit text-sm font-bold text-white shadow-xl shadow-orange-500/20"
                 >
                   Ücretsiz Hesap Oluştur

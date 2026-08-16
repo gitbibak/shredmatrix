@@ -49,6 +49,9 @@ const SEO_PAGE_SLUGS = [
   'protein-ihtiyaci-hesaplama',
   'ucretsiz-beslenme-programi',
   'alerjiye-gore-beslenme-programi',
+  'evde-spor-programi',
+  'evde-kas-gelistirme-hareketleri',
+  'baslangic-pilates-programi',
 ];
 
 function isPublicContentPath(pathname) {

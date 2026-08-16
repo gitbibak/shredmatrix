@@ -10,7 +10,7 @@ export const publicPages = [
   ['/contact', '2026-08-10'],
   ['/editorial-policy', '2026-08-10'],
   ['/ucretsiz-fitness-uygulamasi', '2026-08-14'],
-  ['/kalori-makro-takibi', '2026-08-14'],
+  ['/kalori-makro-takibi', '2026-08-16'],
   ['/antrenman-programi', '2026-08-14'],
   ['/ilerleme-takibi', '2026-08-14'],
   ['/su-uyku-kilo-takibi', '2026-08-14'],
@@ -26,7 +26,13 @@ export const publicPages = [
   ['/pilates-programi', '2026-08-14'],
   ['/reformer-pilates-programi', '2026-08-14'],
   ['/meditasyon-uygulamasi', '2026-08-14'],
+  ['/evde-spor-programi', '2026-08-16'],
+  ['/evde-kas-gelistirme-hareketleri', '2026-08-16'],
+  ['/baslangic-pilates-programi', '2026-08-16'],
   ['/blog', '2026-08-10'],
   ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
-  ...internationalSeoPages.map((page) => [page.path, '2026-08-14']),
+  ...internationalSeoPages.map((page) => [
+    page.path,
+    ['homeWorkout', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-16' : '2026-08-14',
+  ]),
 ];
