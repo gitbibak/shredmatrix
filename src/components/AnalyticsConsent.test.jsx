@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import AnalyticsConsent from './AnalyticsConsent';
 
-function renderConsent() {
+function renderConsent(props = {}) {
   return render(
     <LanguageProvider>
-      <AnalyticsConsent />
+      <AnalyticsConsent active delayMs={0} {...props} />
     </LanguageProvider>,
   );
 }
@@ -19,27 +19,34 @@ describe('AnalyticsConsent', () => {
     delete window.dataLayer;
   });
 
-  it('explains the choice without exposing technical wording', () => {
+  it('stays hidden outside the authenticated app', () => {
+    renderConsent({ active: false });
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('explains the optional choice after the user enters the app', async () => {
     renderConsent();
 
-    expect(screen.getByRole('dialog', { name: "Full Balance'ı birlikte geliştirelim" })).toBeInTheDocument();
-    expect(screen.getByText('Sağlık ve hesap bilgilerin paylaşılmaz.', { exact: false })).toBeInTheDocument();
+    expect(await screen.findByRole('dialog', { name: 'Anonim kullanım analizine izin verilsin mi?' })).toBeInTheDocument();
+    expect(screen.getByText('Reddetsen de uygulamanın tüm özellikleri çalışır.', { exact: false })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Ayrıntıları gör' })).toHaveAttribute('href', '/privacy');
   });
 
-  it('stores a rejection and closes without enabling analytics', () => {
+  it('stores a rejection and closes without enabling analytics', async () => {
     renderConsent();
-    fireEvent.click(screen.getByRole('button', { name: 'Hayır, teşekkürler' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'İzin verme' }));
 
     expect(localStorage.getItem('fullbalance_analytics_consent')).toBe('denied');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(document.querySelector('script[data-fullbalance-ga]')).not.toBeInTheDocument();
   });
 
-  it('does not show again after a choice has been saved', () => {
+  it('does not show again after a choice has been saved', async () => {
     localStorage.setItem('fullbalance_analytics_consent', 'denied');
     renderConsent();
 
+    await new Promise((resolve) => setTimeout(resolve, 5));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });

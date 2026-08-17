@@ -950,11 +950,11 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: "Full Balance'ı birlikte geliştirelim",
-      desc: 'Hangi özelliklerin faydalı olduğunu ölçmemize izin verir misin? Sağlık ve hesap bilgilerin paylaşılmaz.',
+      title: 'Anonim kullanım analizine izin verilsin mi?',
+      desc: 'Yalnızca hangi ekran ve özelliklerin kullanıldığını ölçeriz. Sağlık, ölçüm ve hesap bilgilerin gönderilmez. Reddetsen de uygulamanın tüm özellikleri çalışır.',
       details: 'Ayrıntıları gör',
-      decline: 'Hayır, teşekkürler',
-      allow: 'İzin Ver',
+      decline: 'İzin verme',
+      allow: 'Anonim analize izin ver',
     },
 
     // ── Install ──
@@ -1993,11 +1993,11 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: 'Help us improve Full Balance',
-      desc: 'May we measure which features are useful? Your health and account information is never shared.',
+      title: 'Allow anonymous usage analytics?',
+      desc: 'We only measure which screens and features are used. Health, measurement and account data is never sent. Every feature still works if you decline.',
       details: 'View details',
-      decline: 'No, thanks',
-      allow: 'Allow',
+      decline: 'Do not allow',
+      allow: 'Allow anonymous analytics',
     },
     install: {
       title: 'Add Full Balance to your phone',
@@ -3026,11 +3026,11 @@ export const translations = {
       },
     },
     analyticsConsent: {
-      title: 'Ayúdanos a mejorar Full Balance',
-      desc: '¿Nos permites medir qué funciones son útiles? Tu información de salud y de cuenta nunca se comparte.',
+      title: '¿Permitir análisis de uso anónimos?',
+      desc: 'Solo medimos qué pantallas y funciones se utilizan. Nunca enviamos datos de salud, medidas ni de la cuenta. Todas las funciones siguen disponibles si rechazas.',
       details: 'Ver detalles',
-      decline: 'No, gracias',
-      allow: 'Permitir',
+      decline: 'No permitir',
+      allow: 'Permitir análisis anónimos',
     },
     install: {
       title: 'Añade Full Balance a tu teléfono',

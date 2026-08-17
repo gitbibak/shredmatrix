@@ -1,11 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { getAnalyticsConsent, setAnalyticsConsent } from '../lib/analytics';
 import { useTranslation } from '../i18n/LanguageContext';
 
-export default function AnalyticsConsent() {
+export default function AnalyticsConsent({ active = false, delayMs = 12000 }) {
   const { t } = useTranslation();
-  const [visible, setVisible] = useState(() => getAnalyticsConsent() == null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!active || getAnalyticsConsent() != null) {
+      setVisible(false);
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => setVisible(true), delayMs);
+    return () => window.clearTimeout(timer);
+  }, [active, delayMs]);
 
   if (!visible) return null;
 

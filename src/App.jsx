@@ -734,6 +734,10 @@ function AppContent() {
         </Suspense>
       )}
 
+      <AnalyticsConsent
+        active={Boolean(user && plan && location.pathname === '/dashboard' && !showTour)}
+      />
+
       {/* Onboarding Tour Overlay */}
       <AnimatePresence>
         {showTour && (
@@ -754,7 +758,6 @@ export default function App() {
         <ToastProvider>
           <AppContent />
           <InstallPrompt />
-          <AnalyticsConsent />
         </ToastProvider>
       </BrowserRouter>
     </ErrorBoundary>
