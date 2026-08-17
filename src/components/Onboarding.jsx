@@ -11,7 +11,6 @@ import {
   User,
   Ruler,
   HeartPulse,
-  Utensils,
   ChevronRight,
   ChevronLeft,
   BadgeCheck,
@@ -27,15 +26,13 @@ import {
 import { trackEvent } from '../lib/analytics';
 
 // ── Step Configuration ───────────────────────────────────
-const STEP_IDS = ['goal', 'personal', 'body', 'activity', 'health', 'allergies'];
-const STEP_ICONS = [TrendingUp, User, Ruler, Footprints, HeartPulse, Utensils];
+const STEP_IDS = ['goal', 'basics', 'activity', 'safety'];
+const STEP_ICONS = [TrendingUp, User, Footprints, HeartPulse];
 const STEP_LABEL_KEYS = {
   goal: 'onboarding.step4.title',
-  personal: 'onboarding.step1.title',
-  body: 'onboarding.step2.title',
+  basics: 'onboarding.step2.title',
   activity: 'onboarding.step3.title',
-  health: 'onboarding.step5.title',
-  allergies: 'onboarding.step6.title',
+  safety: 'onboarding.step5.title',
 };
 
 // ── Animation Variants ───────────────────────────────────
@@ -214,7 +211,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
-  const DRAFT_VERSION = 3;
+  const DRAFT_VERSION = 4;
 
   // Restore on mount
   useEffect(() => {
@@ -281,11 +278,9 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const canNext = () => {
     switch (step) {
       case 0: return primaryGoal;
-      case 1: return name.trim().length > 0 && gender;
-      case 2: return weight > 0 && height > 0;
-      case 3: return activityLevel && experience && trainingEnvironment;
-      case 4: return healthConditions.length > 0;
-      case 5: return allergies.length > 0;
+      case 1: return name.trim().length > 0 && gender && weight > 0 && height > 0;
+      case 2: return activityLevel && experience && trainingEnvironment;
+      case 3: return healthConditions.length > 0 && allergies.length > 0;
       default: return true;
     }
   };
@@ -299,8 +294,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   };
 
   const submitOnboarding = () => {
-    if (STEP_IDS[step] !== 'allergies' || !canNext()) return;
-    trackEvent('onboarding_step_complete', { step_name: 'allergies', step_number: STEP_IDS.length });
+    if (STEP_IDS[step] !== 'safety' || !canNext()) return;
+    trackEvent('onboarding_step_complete', { step_name: 'safety', step_number: STEP_IDS.length });
     trackEvent('onboarding_complete');
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
@@ -319,7 +314,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const advanceOrSubmit = () => {
     if (!canNext()) return;
-    if (STEP_IDS[step] !== 'allergies') {
+    if (STEP_IDS[step] !== 'safety') {
       nextStep();
       return;
     }
@@ -525,26 +520,16 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                       })}
                     </div>
                   </div>
-                </div>
-              )}
 
-              {/* ─── STEP 2: Vücut ────────────────────── */}
-              {step === 2 && (
-                <div className="space-y-5 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step2.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.step2.subtitle')}</p>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
+                      <SliderInput label={t('onboarding.fields.height')} value={height} onChange={setHeight} min={140} max={220} unit="cm" />
+                    </div>
+                    <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
+                      <SliderInput label={t('onboarding.fields.weight')} value={weight} onChange={setWeight} min={40} max={200} unit="kg" />
+                    </div>
                   </div>
 
-                  <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
-                    <SliderInput label={t('onboarding.fields.height')} value={height} onChange={setHeight} min={140} max={220} unit="cm" />
-                  </div>
-
-                  <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50">
-                    <SliderInput label={t('onboarding.fields.weight')} value={weight} onChange={setWeight} min={40} max={200} unit="kg" />
-                  </div>
-
-                  {/* Live BMI indicator */}
                   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800/50">
                     <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-500/10">
                       <Ruler size={18} className="text-blue-400" />
@@ -562,8 +547,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                 </div>
               )}
 
-              {/* ─── STEP 3: Aktivite ─────────────────── */}
-              {step === 3 && (
+              {/* ─── STEP 2: Aktivite ─────────────────── */}
+              {step === 2 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step3.title')}</h2>
@@ -635,15 +620,15 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                 </div>
               )}
 
-              {/* ─── STEP 4: Sağlık ───────────────────── */}
-              {step === 4 && (
+              {/* ─── STEP 3: Güvenlik ─────────────────── */}
+              {step === 3 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.healthTitle')}</h2>
                     <p className="text-sm text-slate-500">{t('onboarding.fields.healthSubtitle')}</p>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {healthOptions.map((option) => {
                       const selected = healthConditions.includes(option.value);
                       return (
@@ -651,7 +636,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                           key={option.value}
                           selected={selected}
                           onClick={() => setHealthConditions((prev) => toggleMultiValue(prev, option.value))}
-                          className="min-h-[104px]"
+                          className="min-h-[88px] p-3"
                         >
                           <span className="text-2xl">{option.emoji}</span>
                           <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
@@ -661,18 +646,13 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                       );
                     })}
                   </div>
-                </div>
-              )}
 
-              {/* ─── STEP 5: Alerji ───────────────────── */}
-              {step === 5 && (
-                <div className="space-y-6 flex-1">
-                  <div>
+                  <div className="border-t border-slate-800 pt-5">
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.allergyTitle')}</h2>
                     <p className="text-sm text-slate-500">{t('onboarding.fields.allergySubtitle')}</p>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {allergyOptions.map((option) => {
                       const selected = allergies.includes(option.value);
                       return (
@@ -680,7 +660,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                           key={option.value}
                           selected={selected}
                           onClick={() => setAllergies((prev) => toggleMultiValue(prev, option.value))}
-                          className="min-h-[104px]"
+                          className="min-h-[88px] p-3"
                         >
                           <span className="text-2xl">{option.emoji}</span>
                           <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>

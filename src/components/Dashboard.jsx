@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
 import { preloadProfilePhoto } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
 
 // ── Lazy-loaded Dashboard sub-components ──
 const NutritionPanel = lazy(() => import('./NutritionPanel'));
@@ -34,6 +35,7 @@ const StravaActivitiesPanel = lazy(() => import('./StravaPanel').then(m => ({ de
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
   LogOut, Target, CalendarCheck, Share2, ChevronDown,
+  Calculator, SlidersHorizontal, HeartPulse, Trophy,
 } from 'lucide-react';
 
 
@@ -59,6 +61,29 @@ function warmProfileAssets() {
   preloadProfilePhoto().catch(() => {});
 }
 
+function DisclosureSection({ title, description, icon: Icon, open, onToggle, children }) {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-slate-800/30 sm:px-5"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-950/60 text-slate-300">
+          <Icon size={18} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-outfit text-sm font-bold text-white">{title}</span>
+          <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">{description}</span>
+        </span>
+        <ChevronDown size={17} className={`shrink-0 text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && <div className="border-t border-slate-800 p-4 sm:p-5">{children}</div>}
+    </section>
+  );
+}
+
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
@@ -66,6 +91,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
   const [showProgressDetails, setShowProgressDetails] = useState(false);
+  const [showNutritionTools, setShowNutritionTools] = useState(false);
+  const [showWorkoutTools, setShowWorkoutTools] = useState(false);
+  const [showLongevity, setShowLongevity] = useState(false);
+  const [showChallenge, setShowChallenge] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [daysSinceJoin] = useState(() => {
     try { const d = localStorage.getItem('shredmatrix_first_login'); return d ? Math.floor((Date.now() - new Date(d).getTime()) / 86400000) : 0; } catch (err) { console.warn('[Dashboard]', err?.message || err); return 0; }
@@ -87,6 +116,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       localStorage.setItem('shredmatrix_first_login', new Date().toISOString());
     }
   }, [plan]);
+
+  useEffect(() => {
+    trackEvent('dashboard_tab_view', { tab: activeTab, module: plan?.primaryGoal || plan?.goalKey || 'unknown' });
+  }, [activeTab, plan?.primaryGoal, plan?.goalKey]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return undefined;
@@ -279,7 +312,15 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <WaterTracker compact />
                     <SleepTracker compact />
                   </div>
-                  <DailyChallenge />
+                  <DisclosureSection
+                    title={t('dashboard.simple.challengeTitle')}
+                    description={t('dashboard.simple.challengeDesc')}
+                    icon={Trophy}
+                    open={showChallenge}
+                    onToggle={() => setShowChallenge((value) => !value)}
+                  >
+                    <DailyChallenge />
+                  </DisclosureSection>
                 </motion.div>
               </motion.div>
               </Suspense>
@@ -298,12 +339,20 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             >
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <motion.div variants={columnVariants} className="lg:col-span-2">
+                <div className="mx-auto max-w-5xl space-y-5">
+                  <motion.div variants={columnVariants}>
                     <NutritionPanel plan={plan} />
                   </motion.div>
-                  <motion.div variants={columnVariants} className="space-y-6">
-                    <CalorieCalc />
+                  <motion.div variants={columnVariants}>
+                    <DisclosureSection
+                      title={t('dashboard.simple.calculatorTitle')}
+                      description={t('dashboard.simple.calculatorDesc')}
+                      icon={Calculator}
+                      open={showNutritionTools}
+                      onToggle={() => setShowNutritionTools((value) => !value)}
+                    >
+                      <CalorieCalc />
+                    </DisclosureSection>
                   </motion.div>
                 </div>
               </motion.div>
@@ -323,15 +372,25 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             >
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <motion.div variants={columnVariants} className="lg:col-span-2">
+                <div className="mx-auto max-w-5xl space-y-5">
+                  <motion.div variants={columnVariants}>
                     <WorkoutPanel plan={plan} />
                   </motion.div>
-                  <motion.div variants={columnVariants} className="space-y-6">
-                    <WorkoutTimer />
-                    <MuscleRecovery plan={plan} />
-                    <ProgramAdvisor plan={plan} onPlanUpdate={onPlanUpdate} />
-                    <SupplementGuide goal={plan.goal} />
+                  <motion.div variants={columnVariants}>
+                    <DisclosureSection
+                      title={t('dashboard.simple.workoutToolsTitle')}
+                      description={t('dashboard.simple.workoutToolsDesc')}
+                      icon={SlidersHorizontal}
+                      open={showWorkoutTools}
+                      onToggle={() => setShowWorkoutTools((value) => !value)}
+                    >
+                      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                        <WorkoutTimer />
+                        <MuscleRecovery plan={plan} />
+                        <ProgramAdvisor plan={plan} onPlanUpdate={onPlanUpdate} />
+                        <SupplementGuide goal={plan.goal} />
+                      </div>
+                    </DisclosureSection>
                   </motion.div>
                 </div>
               </motion.div>
@@ -351,9 +410,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             >
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <div className="mb-6">
-                  <LongevityPanel plan={plan} />
-                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <motion.div variants={columnVariants} className="lg:col-span-2">
                     <ProgressTracker userName={plan.userName} />
@@ -361,6 +417,17 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   <motion.div variants={columnVariants} className="space-y-6">
                     <StreakCalendar />
                   </motion.div>
+                </div>
+                <div className="mt-6">
+                  <DisclosureSection
+                    title={t('dashboard.simple.longevityTitle')}
+                    description={t('dashboard.simple.longevityDesc')}
+                    icon={HeartPulse}
+                    open={showLongevity}
+                    onToggle={() => setShowLongevity((value) => !value)}
+                  >
+                    <LongevityPanel plan={plan} />
+                  </DisclosureSection>
                 </div>
                 <div className="mt-6">
                   <button

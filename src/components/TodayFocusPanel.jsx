@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
 
 const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = {
@@ -98,13 +99,17 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
   const todayRow = weekRows.find((row) => row.isToday) || weekRows[0];
   const trainingDays = weekRows.filter((row) => !row.rest).length || plan?.trainingDays || 0;
   const completedThisWeek = weekRows.filter((row) => row.completed).length;
-  const remainingWorkouts = Math.max(trainingDays - completedThisWeek, 0);
   const todayExerciseCount = todayRow?.dayPlan?.exercises?.length || 0;
   const todayCompleted = todayRow?.completed;
   const restToday = todayRow?.rest;
+  const goalKey = plan?.primaryGoal || 'muscle';
+  const supportedGoals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
+  const moduleKey = supportedGoals.includes(goalKey) ? goalKey : 'muscle';
+  const nextTraining = weekRows.find((row) => row.index > todayRow.index && !row.rest)
+    || weekRows.find((row) => !row.rest);
 
   const dayLabels = DAY_NAMES[lang] || DAY_NAMES.tr;
-  const title = restToday ? t('todayFocus.restTitle') : t('todayFocus.workoutTitle');
+  const title = restToday ? t('todayFocus.restTitle') : t(`todayFocus.modules.${moduleKey}.title`);
   const subtitle = restToday
     ? t('todayFocus.restSubtitle')
     : t('todayFocus.workoutSubtitle', {
@@ -157,35 +162,33 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-          <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.weekTarget')}</p>
-          <p className="text-base sm:text-lg font-outfit font-bold text-white">
-            {completedThisWeek}/{trainingDays || 0}
-          </p>
-        </div>
-        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-          <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.remaining')}</p>
-          <p className="text-base sm:text-lg font-outfit font-bold text-white">
-            {remainingWorkouts}
-          </p>
-        </div>
-        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-          <p className="text-[10px] text-slate-500 mb-1">{t('todayFocus.todayLoad')}</p>
-          <p className="text-base sm:text-lg font-outfit font-bold text-white truncate">
-            {restToday ? t('todayFocus.rest') : `${todayExerciseCount} ${t('todayFocus.exercise')}`}
-          </p>
-        </div>
-      </div>
-
       <button
         type="button"
-        onClick={() => onNavigate?.(ctaTarget)}
+        onClick={() => {
+          trackEvent('primary_action_click', { destination: ctaTarget, module: moduleKey, completed: todayCompleted });
+          onNavigate?.(ctaTarget);
+        }}
         className="w-full flex items-center justify-center gap-2 rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm font-outfit font-bold text-orange-300 hover:bg-orange-500/15 transition-colors"
       >
         {todayCompleted ? t('todayFocus.completedCta') : ctaLabel}
         <ArrowRight size={16} />
       </button>
+
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950/50 px-3 py-2.5 text-xs">
+        <span className="text-slate-500">
+          {t('todayFocus.weekTarget')} <strong className="ml-1 text-slate-200">{completedThisWeek}/{trainingDays || 0}</strong>
+        </span>
+        <span className="text-right text-slate-500">
+          {t('todayFocus.todayLoad')} <strong className="ml-1 text-slate-200">{restToday ? t('todayFocus.rest') : `${todayExerciseCount} ${t('todayFocus.exercise')}`}</strong>
+        </span>
+      </div>
+
+      {todayCompleted && nextTraining?.dayPlan?.focus && (
+        <p className="mt-3 text-xs leading-relaxed text-emerald-300/80">
+          <CheckCircle2 size={13} className="mr-1.5 inline" />
+          {t('todayFocus.nextPreview', { focus: nextTraining.dayPlan.focus })}
+        </p>
+      )}
 
       <button
         type="button"

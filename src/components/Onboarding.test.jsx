@@ -18,27 +18,27 @@ describe('Onboarding step flow', () => {
     localStorage.clear();
   });
 
-  it('moves from health to allergy step before submitting the plan', async () => {
+  it('shows health and allergy choices together before submitting the plan', async () => {
     const onSubmit = renderOnboarding();
 
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.change(await screen.findByPlaceholderText(/Adınızı girin/i), { target: { value: 'Tolga' } });
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
-
-    expect(onSubmit).not.toHaveBeenCalled();
     expect(await screen.findByText(/Gıda alerjiniz veya hassasiyetiniz var mı/i)).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /Programı Oluştur/i })).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: /Programı Oluştur/i }));
+
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({
+      healthConditions: ['none'],
+      allergies: ['none'],
+    }));
   });
 
-  it('does not skip allergy step when editing existing profile data', async () => {
+  it('keeps saved health data and still shows allergy choices while editing', async () => {
     localStorage.setItem('fb_onboarding_draft', JSON.stringify({
-      step: 5,
+      step: 3,
       name: 'Old Draft',
       healthConditions: ['none'],
       allergies: ['none'],
@@ -63,13 +63,10 @@ describe('Onboarding step flow', () => {
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
-
     expect(onSubmit).not.toHaveBeenCalled();
     expect(await screen.findByText(/Gıda alerjiniz veya hassasiyetiniz var mı/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Bel Ağrısı/i })).toHaveClass('border-orange-500');
   });
 });
