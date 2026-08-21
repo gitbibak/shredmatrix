@@ -31,6 +31,7 @@ describe('Onboarding step flow', () => {
     fireEvent.click(await screen.findByRole('button', { name: /Programı Oluştur/i }));
 
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({
+      bodyFatPercentage: null,
       healthConditions: ['none'],
       allergies: ['none'],
     }));

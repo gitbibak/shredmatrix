@@ -300,7 +300,9 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
       name, age, gender, height, weight,
-      bodyFatPercentage: 20,
+      // Do not invent a body-fat value. The plan generator uses Mifflin-St Jeor
+      // until the user records an actual measurement.
+      bodyFatPercentage: null,
       experience,
       activityLevel,
       primaryGoal,

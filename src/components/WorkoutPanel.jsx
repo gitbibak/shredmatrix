@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getWorkoutLogs, saveWorkoutLog } from '../lib/dataService';
+import { getWorkoutLogs, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
 import { getExerciseInfo, getDifficultyLabel } from '../data/exerciseDatabase';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
-import { buildSupplements, resolveGoalKey } from './SupplementGuide';
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import confetti from 'canvas-confetti';
 import {
@@ -20,7 +20,8 @@ import {
   Activity,
   Info,
   BookOpen,
-  Pill,
+  Gauge,
+  HeartPulse,
   TriangleAlert,
 } from 'lucide-react';
 
@@ -60,31 +61,14 @@ function isRestDay(day) {
   );
 }
 
-function scheduleMatches(schedule, keywords) {
-  const text = String(schedule || '').toLowerCase();
-  return keywords.some((keyword) => text.includes(keyword));
-}
-
-function buildWorkoutSupplementAdvice(supplements) {
-  const before = supplements
-    .filter((item) => scheduleMatches(item.schedule, ['öncesi', 'pre-workout', 'pre workout', 'before']))
-    .slice(0, 2);
-  const during = supplements
-    .filter((item) => scheduleMatches(item.schedule, ['sırası', 'during']))
-    .slice(0, 1);
-  const after = supplements
-    .filter((item) => scheduleMatches(item.schedule, ['sonrası', 'post-workout', 'post workout', 'after']))
-    .slice(0, 2);
-
-  const fallback = supplements
-    .filter((item) => item.importance === 'high')
-    .slice(0, 2);
-
-  return {
-    before,
-    during,
-    after: after.length ? after : fallback,
-  };
+function resolveGoalKey(goal) {
+  const value = String(goal || '').toLowerCase();
+  if (value.includes('yağ') || value.includes('fat')) return 'fat_loss';
+  if (value.includes('medit')) return 'meditation';
+  if (value.includes('yoga')) return 'yoga';
+  if (value.includes('pilates')) return 'pilates';
+  if (value.includes('reformer')) return 'reformer';
+  return 'muscle';
 }
 
 function ExerciseRow({ exercise, index, t, onShowDemo }) {
@@ -442,13 +426,11 @@ export default function WorkoutPanel({ plan }) {
   });
   const [completedDays, setCompletedDays] = useState({});
   const [celebration, setCelebration] = useState(null);
+  const [feedbackEffort, setFeedbackEffort] = useState(null);
+  const [feedbackPain, setFeedbackPain] = useState(null);
+  const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [demoExercise, setDemoExercise] = useState(null);
   const toast = useToast();
-  const planGoal = plan?.goal || '';
-  const supplementAdvice = useMemo(() => {
-    const goalKey = resolveGoalKey(planGoal);
-    return buildWorkoutSupplementAdvice(buildSupplements(t, goalKey));
-  }, [planGoal, t]);
 
   // Load completed workouts from dataService
   useEffect(() => {
@@ -511,8 +493,11 @@ export default function WorkoutPanel({ plan }) {
     };
 
     try {
-      await saveWorkoutLog(entry);
+      const savedLog = await saveWorkoutLog(entry);
       setCompletedDays((prev) => ({ ...prev, [focus]: true }));
+      setFeedbackEffort(null);
+      setFeedbackPain(null);
+      trackEvent('workout_completed');
 
       // 🎉 CELEBRATION!
       // Haptic feedback
@@ -527,12 +512,36 @@ export default function WorkoutPanel({ plan }) {
       // Show celebration overlay
       setCelebration({
         focus,
+        logId: savedLog?.id,
+        date: today,
         exercises: (day.exercises || []).length,
         sets: (day.exercises || []).reduce((s, ex) => s + (parseInt(ex.sets) || 4), 0),
-        supplementAdvice,
       });
     } catch {
       toast.error(t('errors.saveFailed'));
+    }
+  };
+
+  const handleSaveFeedback = async () => {
+    if (!celebration || !feedbackEffort || feedbackPain === null || feedbackSaving) return;
+    setFeedbackSaving(true);
+    try {
+      await saveWorkoutFeedback({
+        id: celebration.logId,
+        date: celebration.date,
+        dayFocus: celebration.focus,
+        perceivedExertion: feedbackEffort,
+        painReported: feedbackPain,
+      });
+      // Health-related answers remain first-party data and are never sent to analytics.
+      trackEvent('workout_feedback_saved');
+      if (feedbackPain) toast.info(t('workout.feedbackPainAdvice'));
+      else toast.success(t('workout.feedbackSaved'));
+      setCelebration(null);
+    } catch {
+      toast.error(t('errors.saveFailed'));
+    } finally {
+      setFeedbackSaving(false);
     }
   };
 
@@ -736,54 +745,48 @@ export default function WorkoutPanel({ plan }) {
                 </div>
               </motion.div>
 
-              {celebration.supplementAdvice && (
-                <motion.div
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.72 }}
-                  className="mb-5 text-left rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <Pill size={14} className="text-emerald-300" />
-                    <p className="text-[11px] font-bold font-outfit text-emerald-200">
-                      {t('workout.supplementTitle')}
-                    </p>
-                  </div>
-
-                  {[
-                    { key: 'before', label: t('workout.beforeWorkout'), items: celebration.supplementAdvice.before },
-                    { key: 'during', label: t('workout.duringWorkout'), items: celebration.supplementAdvice.during },
-                    { key: 'after', label: t('workout.afterWorkout'), items: celebration.supplementAdvice.after },
-                  ].filter((group) => group.items?.length > 0).map((group) => (
-                    <div key={group.key} className="mb-2 last:mb-0">
-                      <p className="text-[9px] uppercase tracking-wider font-semibold text-slate-400 mb-1">
-                        {group.label}
-                      </p>
-                      <div className="space-y-1">
-                        {group.items.map((item) => (
-                          <div key={`${group.key}-${item.name}`} className="rounded-xl bg-slate-950/70 border border-slate-800/70 px-2.5 py-2">
-                            <div className="flex items-center justify-between gap-2">
-                              <p className="text-[11px] font-bold text-white truncate">
-                                {item.emoji} {item.name}
-                              </p>
-                              <span className="text-[9px] text-emerald-300 shrink-0">
-                                {item.dose}
-                              </span>
-                            </div>
-                            <p className="text-[9px] text-slate-500 mt-0.5 leading-relaxed">
-                              {item.schedule} · {item.why}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+              <motion.div
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.72 }}
+                className="mb-5 space-y-3 rounded-2xl border border-slate-700 bg-slate-950/60 p-3 text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <Gauge size={14} className="text-orange-300" />
+                  <p className="text-xs font-bold text-slate-100">{t('workout.feedbackTitle')}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[1, 2, 3].map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setFeedbackEffort(value)}
+                      className={`min-h-10 rounded-xl border px-2 text-[10px] font-bold transition-colors ${feedbackEffort === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                    >
+                      {t(`workout.feedbackEffort${value}`)}
+                    </button>
                   ))}
-
-                  <p className="text-[9px] text-amber-200/80 leading-relaxed mt-2">
-                    {t('workout.supplementMedical')}
-                  </p>
-                </motion.div>
-              )}
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+                    <HeartPulse size={13} className="text-rose-300" />
+                    {t('workout.feedbackPain')}
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[false, true].map((value) => (
+                      <button
+                        key={String(value)}
+                        type="button"
+                        onClick={() => setFeedbackPain(value)}
+                        className={`min-w-14 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors ${feedbackPain === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                      >
+                        {value ? t('workout.feedbackYes') : t('workout.feedbackNo')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {feedbackPain && <p className="text-[10px] leading-relaxed text-amber-200/80">{t('workout.feedbackPainAdvice')}</p>}
+              </motion.div>
 
               {/* Motivational quote */}
               <motion.p
@@ -800,11 +803,15 @@ export default function WorkoutPanel({ plan }) {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.9 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setCelebration(null)}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold shadow-lg shadow-orange-500/20 cursor-pointer"
+                onClick={handleSaveFeedback}
+                disabled={!feedbackEffort || feedbackPain === null || feedbackSaving}
+                className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {t('celebration.continue')}
+                {feedbackSaving ? t('workout.feedbackSaving') : t('workout.feedbackSave')}
               </motion.button>
+              <button type="button" onClick={() => setCelebration(null)} className="mt-3 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
+                {t('workout.feedbackSkip')}
+              </button>
             </motion.div>
           </motion.div>
         )}

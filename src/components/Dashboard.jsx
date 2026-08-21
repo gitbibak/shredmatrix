@@ -15,7 +15,7 @@ const WorkoutTimer = lazy(() => import('./WorkoutTimer'));
 const WeeklyReport = lazy(() => import('./WeeklyReport'));
 const MonthlyReport = lazy(() => import('./MonthlyReport'));
 const Achievements = lazy(() => import('./Achievements'));
-const SupplementGuide = lazy(() => import('./SupplementGuide'));
+const RecoveryGuide = lazy(() => import('./RecoveryGuide'));
 const ShareCard = lazy(() => import('./ShareCard'));
 const BodyMeasurements = lazy(() => import('./BodyMeasurements'));
 const SleepTracker = lazy(() => import('./SleepTracker'));
@@ -388,7 +388,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                         <WorkoutTimer />
                         <MuscleRecovery plan={plan} />
                         <ProgramAdvisor plan={plan} onPlanUpdate={onPlanUpdate} />
-                        <SupplementGuide goal={plan.goal} />
+                        <RecoveryGuide />
                       </div>
                     </DisclosureSection>
                   </motion.div>

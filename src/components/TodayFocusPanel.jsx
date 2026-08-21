@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
+  AlertTriangle,
   CalendarCheck,
   CheckCircle2,
   Dumbbell,
@@ -107,6 +108,20 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
   const moduleKey = supportedGoals.includes(goalKey) ? goalKey : 'muscle';
   const nextTraining = weekRows.find((row) => row.index > todayRow.index && !row.rest)
     || weekRows.find((row) => !row.rest);
+  const latestFeedback = useMemo(() => {
+    return logs
+      .filter((entry) => entry.feedback_at || entry.feedbackAt)
+      .sort((a, b) => {
+        const aTime = new Date(a.feedback_at || a.feedbackAt || a.created_at || a.date || 0).getTime();
+        const bTime = new Date(b.feedback_at || b.feedbackAt || b.created_at || b.date || 0).getTime();
+        return bTime - aTime;
+      })[0] || null;
+  }, [logs]);
+  const recoveryNotice = latestFeedback?.pain_reported
+    ? t('todayFocus.painFollowUp')
+    : Number(latestFeedback?.perceived_exertion) === 3
+      ? t('todayFocus.hardFollowUp')
+      : null;
 
   const dayLabels = DAY_NAMES[lang] || DAY_NAMES.tr;
   const title = restToday ? t('todayFocus.restTitle') : t(`todayFocus.modules.${moduleKey}.title`);
@@ -188,6 +203,13 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
           <CheckCircle2 size={13} className="mr-1.5 inline" />
           {t('todayFocus.nextPreview', { focus: nextTraining.dayPlan.focus })}
         </p>
+      )}
+
+      {recoveryNotice && (
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2.5 text-xs leading-relaxed text-amber-100/90">
+          <AlertTriangle size={15} className="mt-0.5 shrink-0 text-amber-300" />
+          <span>{recoveryNotice}</span>
+        </div>
       )}
 
       <button

@@ -48,9 +48,33 @@ describe('dataService local fallback', () => {
     const { saveWorkoutLog, getWorkoutLogs } = await loadService();
     const log = { date: '2026-07-07', focus: 'Push', exercises: [] };
 
-    await saveWorkoutLog(log);
+    const saved = await saveWorkoutLog(log);
 
-    expect(await getWorkoutLogs()).toEqual([log]);
+    expect(saved).toMatchObject(log);
+    expect(saved.id).toBeTruthy();
+    expect(await getWorkoutLogs()).toEqual([saved]);
+  });
+
+  it('adds optional effort and pain feedback to the matching workout', async () => {
+    const { saveWorkoutLog, saveWorkoutFeedback, getWorkoutLogs } = await loadService();
+    const saved = await saveWorkoutLog({ date: '2026-08-21', dayFocus: 'Full Body', exercises: [] });
+
+    await saveWorkoutFeedback({
+      id: saved.id,
+      date: saved.date,
+      dayFocus: saved.dayFocus,
+      perceivedExertion: 2,
+      painReported: false,
+    });
+
+    expect(await getWorkoutLogs()).toEqual([
+      expect.objectContaining({
+        id: saved.id,
+        perceived_exertion: 2,
+        pain_reported: false,
+        feedback_at: expect.any(String),
+      }),
+    ]);
   });
 
   it('upserts one wellbeing check-in per day in the local fallback', async () => {

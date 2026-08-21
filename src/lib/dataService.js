@@ -324,24 +324,64 @@ export async function saveWorkoutLog(log) {
 
   if (!isSupabaseReady() || !userId) {
     const logs = lsGet('shredmatrix_workout_log', []);
-    logs.push(log);
+    const savedLog = { ...log, id: log.id || crypto.randomUUID() };
+    logs.push(savedLog);
     lsSet('shredmatrix_workout_log', logs);
-    return;
+    return savedLog;
   }
 
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('workout_logs')
-      .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes });
+      .insert({ user_id: userId, date: log.date, day_focus: log.focus || log.day_focus, exercises: log.exercises, notes: log.notes })
+      .select('*')
+      .single();
     if (error) throw error;
     // Fire-and-forget: update leaderboard in background
     updateLeaderboardScore().catch(() => {});
+    return data;
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
     const logs = lsGet('shredmatrix_workout_log', []);
-    logs.push(log);
+    const savedLog = { ...log, id: log.id || crypto.randomUUID() };
+    logs.push(savedLog);
     lsSet('shredmatrix_workout_log', logs);
+    return savedLog;
   }
+}
+
+export async function saveWorkoutFeedback({ id, date, dayFocus, perceivedExertion, painReported }) {
+  const feedback = {
+    perceived_exertion: Number(perceivedExertion),
+    pain_reported: Boolean(painReported),
+    feedback_at: new Date().toISOString(),
+  };
+  if (![1, 2, 3].includes(feedback.perceived_exertion)) {
+    throw new Error('Invalid workout effort feedback');
+  }
+
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) {
+    const logs = lsGet('shredmatrix_workout_log', []);
+    const index = [...logs].reverse().findIndex((entry) => (
+      (id && entry.id === id)
+      || (!id && entry.date === date && (entry.dayFocus || entry.day_focus || entry.focus) === dayFocus)
+    ));
+    if (index < 0) throw new Error('Workout log not found');
+    const actualIndex = logs.length - 1 - index;
+    logs[actualIndex] = { ...logs[actualIndex], ...feedback };
+    lsSet('shredmatrix_workout_log', logs);
+    return logs[actualIndex];
+  }
+
+  let query = supabase.from('workout_logs').update(feedback).eq('user_id', userId);
+  query = id
+    ? query.eq('id', id)
+    : query.eq('date', date).eq('day_focus', dayFocus);
+  const { data, error } = await query.select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error('Workout log not found');
+  return data;
 }
 
 export async function getWorkoutLogs() {
