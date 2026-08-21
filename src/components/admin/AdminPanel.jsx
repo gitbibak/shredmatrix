@@ -4,7 +4,8 @@ import {
   BarChart3, Users, PieChart, Activity, Search,
   TrendingUp, UserPlus, Calendar, Target, ChevronLeft, ChevronRight,
   Trash2, Eye, X, Shield, RefreshCw, Menu, ArrowLeft, Clock, Zap,
-  Dumbbell, Droplets, Scale, Ruler, MessageSquare, Mail, CheckCircle2, AlertCircle
+  Dumbbell, Droplets, Scale, Ruler, MessageSquare, Mail, CheckCircle2, AlertCircle,
+  ClipboardCheck, Star
 } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import {
@@ -15,7 +16,8 @@ import {
   verifyAdminAccess, getAdminStats, getAdminUsers, getPlanDistribution,
   getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers,
   getActivityStats, getWorkoutTrend, getSupportTickets, getSupportStats,
-  updateSupportTicket
+  updateSupportTicket, getRetentionStats, getContentReviews, updateContentReview,
+  getAdminTestimonials, updateTestimonialStatus
 } from '../../lib/adminService';
 
 // ── Colors ───────────────────────────────────────
@@ -45,6 +47,7 @@ const SUPPORT_STATUS_COLORS = {
   reviewing: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
   resolved: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
 };
+const CONTENT_LABELS = { strength: 'Kuvvet', fat_loss: 'Yağ Yakımı', nutrition: 'Beslenme', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer', meditation: 'Meditasyon' };
 
 // ── Stat Card ────────────────────────────────────
 function StatCard({ icon: Icon, label, value, sub, color = '#ff6d00', delay = 0 }) {
@@ -214,6 +217,7 @@ export default function AdminPanel({ user }) {
   const [detailUserId, setDetailUserId] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [activityStats, setActivityStats] = useState(null);
+  const [retentionStats, setRetentionStats] = useState(null);
   const [workoutTrend, setWorkoutTrend] = useState([]);
   const [supportTickets, setSupportTickets] = useState([]);
   const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
@@ -223,6 +227,10 @@ export default function AdminPanel({ user }) {
   const [supportNotes, setSupportNotes] = useState({});
   const [loadError, setLoadError] = useState('');
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [contentReviews, setContentReviews] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [qualityDrafts, setQualityDrafts] = useState({});
+  const [qualityUpdatingId, setQualityUpdatingId] = useState(null);
 
   const PAGE_SIZE = 15;
   const isAllowed = accessState === 'allowed';
@@ -248,7 +256,7 @@ export default function AdminPanel({ user }) {
   const loadData = useCallback(async () => {
     if (!isAllowed) return;
     try {
-      const [s, d, t, r, a, w, support] = await Promise.all([
+      const [s, d, t, r, a, w, support, retention] = await Promise.all([
         getAdminStats(),
         getPlanDistribution(),
         getRegistrationTrend(),
@@ -256,6 +264,7 @@ export default function AdminPanel({ user }) {
         getActivityStats(),
         getWorkoutTrend(),
         getSupportStats(),
+        getRetentionStats(),
       ]);
       if (!s || !a) throw new Error('Bazı yönetim verileri alınamadı.');
       setStats(s);
@@ -265,6 +274,7 @@ export default function AdminPanel({ user }) {
       setActivityStats(a);
       setWorkoutTrend(w);
       setSupportStats(support);
+      setRetentionStats(retention);
       setLoadError('');
       setLastUpdated(new Date());
     } catch (err) {
@@ -288,6 +298,16 @@ export default function AdminPanel({ user }) {
       .then(setSupportTickets)
       .catch(() => setLoadError('Destek kayıtları yüklenemedi. Lütfen yeniden deneyin.'));
   }, [isAllowed, supportFilter]);
+  useEffect(() => {
+    if (!isAllowed) return;
+    Promise.all([getContentReviews(), getAdminTestimonials('pending')])
+      .then(([reviews, stories]) => {
+        setContentReviews(reviews);
+        setTestimonials(stories);
+        setQualityDrafts(Object.fromEntries(reviews.map((review) => [review.id, review])));
+      })
+      .catch(() => setLoadError('Kalite inceleme kayıtları yüklenemedi.'));
+  }, [isAllowed]);
 
   const visibleSupportTickets = useMemo(() => {
     const query = supportSearch.trim().toLocaleLowerCase('tr-TR');
@@ -304,6 +324,10 @@ export default function AdminPanel({ user }) {
     try {
       await Promise.all([loadData(), loadUsers()]);
       setSupportTickets(await getSupportTickets(supportFilter));
+      const [reviews, stories] = await Promise.all([getContentReviews(), getAdminTestimonials('pending')]);
+      setContentReviews(reviews);
+      setTestimonials(stories);
+      setQualityDrafts(Object.fromEntries(reviews.map((review) => [review.id, review])));
       setLastUpdated(new Date());
     } catch (error) {
       console.error('[Admin] Refresh error:', error);
@@ -342,6 +366,7 @@ export default function AdminPanel({ user }) {
     { id: 'analytics', icon: PieChart, label: 'Analizler' },
     { id: 'activity', icon: Activity, label: 'Aktivite' },
     { id: 'support', icon: MessageSquare, label: 'Destek' },
+    { id: 'quality', icon: ClipboardCheck, label: 'Kalite' },
   ];
 
   const totalPages = Math.ceil(usersTotal / PAGE_SIZE);
@@ -371,6 +396,31 @@ export default function AdminPanel({ user }) {
       return;
     }
     await handleTicketUpdate(ticket.id, { status: 'resolved', admin_note: adminNote });
+  };
+
+  const handleReviewSave = async (reviewId, reviewStatus) => {
+    setQualityUpdatingId(reviewId);
+    try {
+      const updated = await updateContentReview(reviewId, { ...qualityDrafts[reviewId], review_status: reviewStatus });
+      setContentReviews((items) => items.map((item) => item.id === reviewId ? updated : item));
+      setQualityDrafts((drafts) => ({ ...drafts, [reviewId]: updated }));
+    } catch (err) {
+      alert(err.message || 'İnceleme kaydedilemedi.');
+    } finally {
+      setQualityUpdatingId(null);
+    }
+  };
+
+  const handleTestimonialStatus = async (id, status) => {
+    setQualityUpdatingId(id);
+    try {
+      await updateTestimonialStatus(id, status);
+      setTestimonials((items) => items.filter((item) => item.id !== id));
+    } catch (err) {
+      alert(err.message || 'Yorum güncellenemedi.');
+    } finally {
+      setQualityUpdatingId(null);
+    }
   };
 
   return (
@@ -478,6 +528,13 @@ export default function AdminPanel({ user }) {
                   <StatCard icon={UserPlus} label="Bugün Kayıt" value={stats?.todayRegistrations ?? '—'} color="#00b0ff" delay={0.05} />
                   <StatCard icon={Calendar} label="Bu Hafta" value={stats?.weekRegistrations ?? '—'} color="#00e676" delay={0.1} />
                   <StatCard icon={TrendingUp} label="Aylık Büyüme" value={stats?.monthlyGrowth != null ? `%${stats.monthlyGrowth}` : '—'} sub={`${stats?.monthRegistrations ?? 0} yeni kayıt`} color="#ff4081" delay={0.15} />
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <StatCard icon={Target} label="Plan Aktivasyonu" value={retentionStats ? `%${retentionStats.activationRate}` : '—'} sub={`${retentionStats?.activated ?? 0}/${retentionStats?.registrations ?? 0} son 60 gün`} color="#ffab00" delay={0.16} />
+                  <StatCard icon={Calendar} label="D1 Geri Dönüş" value={retentionStats?.d1Rate == null ? '—' : `%${retentionStats.d1Rate}`} sub={`${retentionStats?.d1Returned ?? 0}/${retentionStats?.d1Eligible ?? 0} uygun kullanıcı`} color="#38bdf8" delay={0.18} />
+                  <StatCard icon={TrendingUp} label="D7 Geri Dönüş" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} uygun kullanıcı`} color="#a78bfa" delay={0.2} />
+                  <StatCard icon={Users} label="Ölçüm Penceresi" value="60 gün" sub="Yeni kohort takibi" color="#34d399" delay={0.22} />
                 </div>
 
                 {/* Trend */}
@@ -832,6 +889,55 @@ export default function AdminPanel({ user }) {
                       <p className="text-sm text-slate-500">{supportSearch ? 'Aramayla eşleşen destek kaydı yok.' : 'Bu filtrede destek kaydı yok.'}</p>
                     </div>
                   )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* ═══ QUALITY ═══ */}
+            {activeTab === 'quality' && (
+              <motion.div key="quality" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <div className="mb-5 flex items-start gap-3">
+                    <ClipboardCheck className="mt-0.5 text-emerald-400" size={20} />
+                    <div><h2 className="font-outfit text-lg font-bold">Uzman içerik incelemesi</h2><p className="mt-1 text-xs leading-5 text-slate-500">Onay için uzman adı, mesleki unvanı ve HTTPS kanıt bağlantısı zorunludur.</p></div>
+                  </div>
+                  <div className="grid gap-3 lg:grid-cols-2">
+                    {contentReviews.map((review) => {
+                      const draft = qualityDrafts[review.id] || review;
+                      const setField = (field, value) => setQualityDrafts((items) => ({ ...items, [review.id]: { ...draft, [field]: value } }));
+                      return (
+                        <article key={review.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                          <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-sm font-bold">{CONTENT_LABELS[review.content_area] || review.content_area}</h3><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${review.review_status === 'approved' ? 'bg-emerald-500/10 text-emerald-300' : review.review_status === 'changes_requested' ? 'bg-red-500/10 text-red-300' : 'bg-amber-500/10 text-amber-300'}`}>{review.review_status}</span></div>
+                          <div className="space-y-2">
+                            <input value={draft.reviewer_name || ''} onChange={(event) => setField('reviewer_name', event.target.value)} placeholder="Uzman adı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <input value={draft.reviewer_credential || ''} onChange={(event) => setField('reviewer_credential', event.target.value)} placeholder="Uzmanlık / sertifika" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <input value={draft.evidence_url || ''} onChange={(event) => setField('evidence_url', event.target.value)} placeholder="https:// doğrulama veya belge bağlantısı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <textarea value={draft.notes || ''} onChange={(event) => setField('notes', event.target.value)} placeholder="İnceleme notu" rows={2} className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                          </div>
+                          <div className="mt-3 grid grid-cols-3 gap-2">
+                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'in_review')} className="min-h-9 rounded-lg border border-blue-500/30 text-[10px] font-bold text-blue-300">İncelemede</button>
+                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'changes_requested')} className="min-h-9 rounded-lg border border-red-500/30 text-[10px] font-bold text-red-300">Düzeltme</button>
+                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-[10px] font-bold text-white">Onayla</button>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <div className="mb-5 flex items-start gap-3"><Star className="mt-0.5 text-amber-400" size={20} /><div><h2 className="font-outfit text-lg font-bold">Bekleyen kullanıcı deneyimleri</h2><p className="mt-1 text-xs text-slate-500">Yalnızca açık paylaşım izni bulunan anonim yorumlar gösterilir.</p></div></div>
+                  <div className="space-y-3">
+                    {testimonials.map((story) => (
+                      <article key={story.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                        <div className="flex items-center justify-between"><span className="text-sm text-amber-400">{'★'.repeat(story.rating)}</span><span className="text-[9px] uppercase text-slate-600">{story.language}</span></div>
+                        {story.result_summary && <p className="mt-3 text-xs font-bold text-cyan-300">{story.result_summary}</p>}
+                        <p className="mt-2 text-xs leading-5 text-slate-300">{story.body}</p>
+                        <div className="mt-3 grid grid-cols-2 gap-2"><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'rejected')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">Reddet</button><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Anonim yayınla</button></div>
+                      </article>
+                    ))}
+                    {testimonials.length === 0 && <p className="py-8 text-center text-sm text-slate-600">Bekleyen yorum yok.</p>}
+                  </div>
                 </div>
               </motion.div>
             )}

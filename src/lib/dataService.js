@@ -342,22 +342,41 @@ export async function saveWorkoutLog(log) {
     return data;
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
-    const logs = lsGet('shredmatrix_workout_log', []);
-    const savedLog = { ...log, id: log.id || crypto.randomUUID() };
-    logs.push(savedLog);
-    lsSet('shredmatrix_workout_log', logs);
-    return savedLog;
+    throw err;
   }
 }
 
-export async function saveWorkoutFeedback({ id, date, dayFocus, perceivedExertion, painReported }) {
+export async function saveWorkoutFeedback({
+  id,
+  date,
+  dayFocus,
+  perceivedExertion,
+  painReported,
+  energyAfter,
+  sessionDurationMinutes,
+  adaptationAction = 'maintain',
+}) {
   const feedback = {
     perceived_exertion: Number(perceivedExertion),
     pain_reported: Boolean(painReported),
+    energy_after: Number(energyAfter),
+    session_duration_minutes: Number(sessionDurationMinutes),
+    adaptation_action: adaptationAction,
     feedback_at: new Date().toISOString(),
   };
   if (![1, 2, 3].includes(feedback.perceived_exertion)) {
     throw new Error('Invalid workout effort feedback');
+  }
+  if (![1, 2, 3].includes(feedback.energy_after)) {
+    throw new Error('Invalid post-workout energy feedback');
+  }
+  if (!Number.isInteger(feedback.session_duration_minutes)
+    || feedback.session_duration_minutes < 1
+    || feedback.session_duration_minutes > 600) {
+    throw new Error('Invalid workout duration');
+  }
+  if (!['maintain', 'reduce', 'progress', 'hold'].includes(feedback.adaptation_action)) {
+    throw new Error('Invalid workout adaptation');
   }
 
   const userId = getUserId();
@@ -403,6 +422,66 @@ export async function getWorkoutLogs() {
     console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_workout_log', []);
   }
+}
+
+// ══════════════════════════════════════════════
+// RETENTION ACTIVITY
+// ══════════════════════════════════════════════
+
+export async function recordActivityDay() {
+  const userId = getUserId();
+  const activityDate = new Date().toISOString().slice(0, 10);
+  if (!isSupabaseReady() || !userId) return false;
+
+  const cacheKey = `fb_activity_recorded_${activityDate}`;
+  try {
+    if (localStorage.getItem(cacheKey) === userId) return true;
+  } catch { /* Continue without cache. */ }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase.from('user_activity_days').upsert({
+    user_id: userId,
+    activity_date: activityDate,
+    last_seen_at: now,
+  }, { onConflict: 'user_id,activity_date' });
+  if (error) throw error;
+  try { localStorage.setItem(cacheKey, userId); } catch { /* Optional cache. */ }
+  return true;
+}
+
+// ══════════════════════════════════════════════
+// USER STORIES
+// ══════════════════════════════════════════════
+
+export async function submitTestimonial({ rating, body, resultSummary, language = 'en', consentPublic }) {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) throw new Error('Sign in required');
+  const payload = {
+    user_id: userId,
+    rating: Math.max(1, Math.min(5, Math.round(Number(rating)))),
+    body: String(body || '').trim().slice(0, 600),
+    result_summary: String(resultSummary || '').trim().slice(0, 180) || null,
+    language: ['tr', 'en', 'es'].includes(language) ? language : 'en',
+    consent_public: Boolean(consentPublic),
+    status: 'pending',
+  };
+  if (payload.body.length < 30 || !payload.consent_public) throw new Error('Invalid testimonial');
+  const { data, error } = await supabase.from('testimonials').insert(payload).select('*').single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getApprovedTestimonials(limit = 6) {
+  if (!isSupabaseReady()) return [];
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('id, rating, body, result_summary, language, created_at')
+    .eq('status', 'approved')
+    .eq('consent_public', true)
+    .order('created_at', { ascending: false })
+    .limit(Math.max(1, Math.min(12, limit)));
+  if (error) return [];
+  return data || [];
 }
 
 // ══════════════════════════════════════════════

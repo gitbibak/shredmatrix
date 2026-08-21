@@ -374,7 +374,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="mx-auto max-w-5xl space-y-5">
                   <motion.div variants={columnVariants}>
-                    <WorkoutPanel plan={plan} />
+                    <WorkoutPanel plan={plan} onPlanUpdate={onPlanUpdate} />
                   </motion.div>
                   <motion.div variants={columnVariants}>
                     <DisclosureSection

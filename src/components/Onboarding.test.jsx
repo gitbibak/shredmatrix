@@ -24,7 +24,6 @@ describe('Onboarding step flow', () => {
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.change(await screen.findByPlaceholderText(/Adınızı girin/i), { target: { value: 'Tolga' } });
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
     expect(await screen.findByText(/Gıda alerjiniz veya hassasiyetiniz var mı/i)).toBeInTheDocument();
@@ -61,7 +60,6 @@ describe('Onboarding step flow', () => {
       resetDraftKey: 1,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 

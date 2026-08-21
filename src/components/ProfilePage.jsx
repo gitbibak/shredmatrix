@@ -11,6 +11,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { generatePlan } from '../data/planGenerator';
 import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, deleteProgressPhoto } from '../lib/dataService';
 import { useToast } from './ToastProvider';
+import UserStoryForm from './UserStoryForm';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const PHOTO_EXPIRY_KEY = 'shredmatrix_profile_photo_expires';
@@ -802,6 +803,11 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             </button>
           ))}
         </div>
+      </motion.div>
+
+      {/* ── Actions ── */}
+      <motion.div variants={itemV}>
+        <UserStoryForm lang={lang} />
       </motion.div>
 
       {/* ── Actions ── */}

@@ -74,6 +74,79 @@ export function summarizeInternationalAcquisition(profiles = [], planUserIds = [
   };
 }
 
+function utcDateKey(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
+}
+
+function addUtcDays(dateKey, days) {
+  const date = new Date(`${dateKey}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return utcDateKey(date);
+}
+
+export function summarizeRetention(profiles = [], activityDays = [], planUserIds = [], now = new Date()) {
+  const today = utcDateKey(now);
+  const activeDates = new Map();
+  activityDays.forEach(({ user_id: userId, activity_date: activityDate }) => {
+    if (!userId || !activityDate) return;
+    if (!activeDates.has(userId)) activeDates.set(userId, new Set());
+    activeDates.get(userId).add(String(activityDate).slice(0, 10));
+  });
+
+  const activatedIds = new Set(planUserIds);
+  const result = {
+    registrations: profiles.length,
+    activated: profiles.filter(({ id }) => activatedIds.has(id)).length,
+    d1Eligible: 0,
+    d1Returned: 0,
+    d7Eligible: 0,
+    d7Returned: 0,
+  };
+
+  profiles.forEach((profile) => {
+    const signupDate = utcDateKey(profile.created_at);
+    if (!signupDate) return;
+    const dates = activeDates.get(profile.id) || new Set();
+    const d1Date = addUtcDays(signupDate, 1);
+    const d7Date = addUtcDays(signupDate, 7);
+    if (d1Date <= today) {
+      result.d1Eligible += 1;
+      if (dates.has(d1Date)) result.d1Returned += 1;
+    }
+    if (d7Date <= today) {
+      result.d7Eligible += 1;
+      if (dates.has(d7Date)) result.d7Returned += 1;
+    }
+  });
+
+  return {
+    ...result,
+    activationRate: result.registrations > 0 ? Math.round((result.activated / result.registrations) * 100) : 0,
+    d1Rate: result.d1Eligible > 0 ? Math.round((result.d1Returned / result.d1Eligible) * 100) : null,
+    d7Rate: result.d7Eligible > 0 ? Math.round((result.d7Returned / result.d7Eligible) * 100) : null,
+  };
+}
+
+export async function getRetentionStats() {
+  if (!isSupabaseReady()) return summarizeRetention();
+  const since = new Date();
+  since.setUTCDate(since.getUTCDate() - 60);
+  const sinceKey = utcDateKey(since);
+  const [profilesResult, activityResult, plansResult] = await Promise.all([
+    supabase.from('profiles').select('id, created_at').gte('created_at', since.toISOString()),
+    supabase.from('user_activity_days').select('user_id, activity_date').gte('activity_date', sinceKey),
+    supabase.from('plans').select('user_id').gte('created_at', since.toISOString()),
+  ]);
+  const failed = [profilesResult, activityResult, plansResult].find(({ error }) => error);
+  if (failed?.error) throw failed.error;
+  return summarizeRetention(
+    profilesResult.data || [],
+    activityResult.data || [],
+    (plansResult.data || []).map(({ user_id: userId }) => userId),
+  );
+}
+
 // ── User Statistics ─────────────────────────────
 export async function getAdminStats() {
   if (!isSupabaseReady()) return null;
@@ -391,6 +464,61 @@ export async function updateSupportTicket(ticketId, updates) {
     .select('id, user_id, name, email, category, subject, message, status, priority, source, page_url, admin_note, resolved_at, created_at, updated_at')
     .single();
 
+  if (error) throw error;
+  return data;
+}
+
+// ── Quality & editorial review ──────────────────
+export async function getContentReviews() {
+  if (!isSupabaseReady()) return [];
+  const { data, error } = await supabase
+    .from('content_reviews')
+    .select('*')
+    .order('content_area');
+  if (error) throw error;
+  return data || [];
+}
+
+export async function updateContentReview(reviewId, updates) {
+  if (!isSupabaseReady()) throw new Error('Supabase not ready');
+  const payload = { ...updates, updated_at: new Date().toISOString() };
+  if (payload.review_status === 'approved') {
+    if (!String(payload.reviewer_name || '').trim()
+      || !String(payload.reviewer_credential || '').trim()
+      || !/^https:\/\//i.test(String(payload.evidence_url || '').trim())) {
+      throw new Error('Onay için uzman adı, uzmanlığı ve HTTPS kanıt bağlantısı zorunlu.');
+    }
+    payload.reviewed_at = new Date().toISOString();
+  } else if (payload.review_status) {
+    payload.reviewed_at = null;
+  }
+  const { data, error } = await supabase
+    .from('content_reviews')
+    .update(payload)
+    .eq('id', reviewId)
+    .select('*')
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getAdminTestimonials(status = 'pending') {
+  if (!isSupabaseReady()) return [];
+  let query = supabase.from('testimonials').select('*').order('created_at', { ascending: false }).limit(60);
+  if (status !== 'all') query = query.eq('status', status);
+  const { data, error } = await query;
+  if (error) throw error;
+  return data || [];
+}
+
+export async function updateTestimonialStatus(testimonialId, status) {
+  if (!['approved', 'rejected'].includes(status)) throw new Error('Geçersiz durum.');
+  const { data, error } = await supabase
+    .from('testimonials')
+    .update({ status, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+    .eq('id', testimonialId)
+    .select('*')
+    .single();
   if (error) throw error;
   return data;
 }

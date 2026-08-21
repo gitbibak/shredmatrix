@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Armchair,
-  Footprints,
-  Bike,
   Dumbbell,
   Flame,
   TrendingUp,
@@ -26,13 +23,12 @@ import {
 import { trackEvent } from '../lib/analytics';
 
 // ── Step Configuration ───────────────────────────────────
-const STEP_IDS = ['goal', 'basics', 'activity', 'safety'];
-const STEP_ICONS = [TrendingUp, User, Footprints, HeartPulse];
+const STEP_IDS = ['goal', 'basics', 'safety'];
+const STEP_ICONS = [TrendingUp, User, HeartPulse];
 const STEP_LABEL_KEYS = {
   goal: 'onboarding.step4.title',
   basics: 'onboarding.step2.title',
-  activity: 'onboarding.step3.title',
-  safety: 'onboarding.step5.title',
+    safety: 'onboarding.step5.title',
 };
 
 // ── Animation Variants ───────────────────────────────────
@@ -148,14 +144,6 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     { value: 'expert', label: t('onboarding.fields.expert'), desc: t('onboarding.fields.expExpert'), emoji: '🏆' },
   ];
 
-  const activityLevels = [
-    { value: 'sedentary', icon: Armchair, label: t('onboarding.fields.sedentary'), desc: '' },
-    { value: 'light', icon: Footprints, label: t('onboarding.fields.light'), desc: '' },
-    { value: 'moderate', icon: Bike, label: t('onboarding.fields.moderate'), desc: '' },
-    { value: 'active', icon: Dumbbell, label: t('onboarding.fields.active'), desc: '' },
-    { value: 'athlete', icon: Flame, label: t('onboarding.fields.veryActive'), desc: '' },
-  ];
-
   const goals = [
     { value: 'muscle', icon: TrendingUp, label: t('onboarding.fields.muscle'), desc: '', color: '#ff6d00' },
     { value: 'fat_loss', icon: Flame, label: t('onboarding.fields.fatLoss'), desc: '', color: '#00b0ff' },
@@ -191,7 +179,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState(175);
   const [weight, setWeight] = useState(75);
-  const [experience, setExperience] = useState('intermediate');
+  const [experience, setExperience] = useState('beginner');
   const [activityLevel, setActivityLevel] = useState('moderate');
   const [primaryGoal, setPrimaryGoal] = useState('muscle');
   const [trainingEnvironment, setTrainingEnvironment] = useState('gym');
@@ -222,7 +210,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       setGender(initialData.gender || 'male');
       setHeight(initialData.height || 175);
       setWeight(initialData.weight || 75);
-      setExperience(initialData.experience || 'intermediate');
+      setExperience(initialData.experience || 'beginner');
       setActivityLevel(initialData.activityLevel || 'moderate');
       setPrimaryGoal(initialData.primaryGoal || 'muscle');
       setTrainingEnvironment(initialData.trainingEnvironment || (initialData.primaryGoal === 'reformer' ? 'studio' : 'gym'));
@@ -279,8 +267,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     switch (step) {
       case 0: return primaryGoal;
       case 1: return name.trim().length > 0 && gender && weight > 0 && height > 0;
-      case 2: return activityLevel && experience && trainingEnvironment;
-      case 3: return healthConditions.length > 0 && allergies.length > 0;
+      case 2: return healthConditions.length > 0 && allergies.length > 0;
       default: return true;
     }
   };
@@ -469,6 +456,37 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                     })}
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.experience')}</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {experienceLevels.map((lvl) => {
+                        const selected = experience === lvl.value;
+                        return (
+                          <SelectCard key={lvl.value} selected={selected} onClick={() => setExperience(lvl.value)} className="min-h-[84px] p-3">
+                            <span className="text-xl">{lvl.emoji}</span>
+                            <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>{lvl.label}</span>
+                          </SelectCard>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.trainingEnvironment')}</label>
+                    <div className={`grid gap-2 ${trainingEnvironmentOptions.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                      {trainingEnvironmentOptions.map((option) => {
+                        const Icon = option.icon;
+                        const selected = trainingEnvironment === option.value;
+                        return (
+                          <SelectCard key={option.value} selected={selected} onClick={() => setTrainingEnvironment(option.value)} className="min-h-[88px] p-3">
+                            <Icon size={20} className={selected ? 'text-orange-400' : 'text-slate-500'} />
+                            <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>{option.label}</span>
+                          </SelectCard>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                     <Sparkles size={18} className="text-emerald-400 shrink-0" />
                     <p className="text-xs text-slate-400">
@@ -549,81 +567,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                 </div>
               )}
 
-              {/* ─── STEP 2: Aktivite ─────────────────── */}
+              {/* ─── STEP 2: Güvenlik ─────────────────── */}
               {step === 2 && (
-                <div className="space-y-6 flex-1">
-                  <div>
-                    <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.step3.title')}</h2>
-                    <p className="text-sm text-slate-500">{t('onboarding.step3.subtitle')}</p>
-                  </div>
-
-                  {/* Experience */}
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.experience')}</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {experienceLevels.map((lvl) => {
-                        const sel = experience === lvl.value;
-                        return (
-                          <SelectCard key={lvl.value} selected={sel} onClick={() => setExperience(lvl.value)}>
-                            <span className="text-2xl">{lvl.emoji}</span>
-                            <span className={`text-sm font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {lvl.label}
-                            </span>
-                            <span className="text-[10px] text-slate-600">{lvl.desc}</span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Activity Level */}
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.activityLevel')}</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                      {activityLevels.map((level) => {
-                        const Icon = level.icon;
-                        const sel = activityLevel === level.value;
-                        return (
-                          <SelectCard key={level.value} selected={sel} onClick={() => setActivityLevel(level.value)} className="p-3">
-                            <Icon size={22} className={sel ? 'text-orange-400' : 'text-slate-500'} />
-                            <span className={`text-xs font-semibold font-outfit ${sel ? 'text-white' : 'text-slate-400'}`}>
-                              {level.label}
-                            </span>
-                            <span className="text-[9px] text-slate-600 leading-tight">{level.desc}</span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.trainingEnvironment')}</label>
-                    <div className={`grid gap-2 ${trainingEnvironmentOptions.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                      {trainingEnvironmentOptions.map((option) => {
-                        const Icon = option.icon;
-                        const selected = trainingEnvironment === option.value;
-                        return (
-                          <SelectCard
-                            key={option.value}
-                            selected={selected}
-                            onClick={() => setTrainingEnvironment(option.value)}
-                            className="p-3 min-h-[92px]"
-                          >
-                            <Icon size={21} className={selected ? 'text-orange-400' : 'text-slate-500'} />
-                            <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
-                              {option.label}
-                            </span>
-                            <span className="text-[9px] leading-tight text-slate-600">{option.desc}</span>
-                          </SelectCard>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ─── STEP 3: Güvenlik ─────────────────── */}
-              {step === 3 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.healthTitle')}</h2>

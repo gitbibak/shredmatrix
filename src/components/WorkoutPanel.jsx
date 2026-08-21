@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
 import { getWorkoutDayImage } from '../data/moduleAssets';
+import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -23,6 +24,7 @@ import {
   Gauge,
   HeartPulse,
   TriangleAlert,
+  Zap,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -326,6 +328,13 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
                   </div>
                 )}
 
+                {day.adaptationAction && day.adaptationAction !== 'maintain' && (
+                  <div className={`flex items-start gap-2 rounded-xl border px-3 py-2.5 text-[11px] leading-relaxed ${day.adaptationAction === 'hold' ? 'border-amber-500/30 bg-amber-500/10 text-amber-100' : 'border-blue-500/25 bg-blue-500/10 text-blue-100'}`}>
+                    <TriangleAlert size={14} className="mt-0.5 shrink-0" />
+                    <span>{t(`workout.adaptation.${day.adaptationAction}`)}</span>
+                  </div>
+                )}
+
                 {/* Column labels */}
                 <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-slate-500 px-3 pb-1">
                   <span>{t('workout.totalExercises')}</span>
@@ -416,7 +425,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
   );
 }
 
-export default function WorkoutPanel({ plan }) {
+export default function WorkoutPanel({ plan, onPlanUpdate }) {
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState(() => {
     // Map JS getDay() (0=Sun) to plan array index (0=Mon)
@@ -428,6 +437,9 @@ export default function WorkoutPanel({ plan }) {
   const [celebration, setCelebration] = useState(null);
   const [feedbackEffort, setFeedbackEffort] = useState(null);
   const [feedbackPain, setFeedbackPain] = useState(null);
+  const [feedbackEnergy, setFeedbackEnergy] = useState(null);
+  const [feedbackDuration, setFeedbackDuration] = useState(45);
+  const [feedbackError, setFeedbackError] = useState('');
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [demoExercise, setDemoExercise] = useState(null);
   const toast = useToast();
@@ -445,6 +457,13 @@ export default function WorkoutPanel({ plan }) {
       setCompletedDays(todayMap);
     }).catch((err) => { console.warn('[WorkoutPanel]', err?.message || err); });
   }, []);
+
+  useEffect(() => {
+    if (!celebration) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [celebration]);
 
   if (!plan) return (
     <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1rem',textAlign:'center',color:'#94a3b8'}}>
@@ -497,6 +516,9 @@ export default function WorkoutPanel({ plan }) {
       setCompletedDays((prev) => ({ ...prev, [focus]: true }));
       setFeedbackEffort(null);
       setFeedbackPain(null);
+      setFeedbackEnergy(null);
+      setFeedbackDuration(45);
+      setFeedbackError('');
       trackEvent('workout_completed');
 
       // 🎉 CELEBRATION!
@@ -523,22 +545,40 @@ export default function WorkoutPanel({ plan }) {
   };
 
   const handleSaveFeedback = async () => {
-    if (!celebration || !feedbackEffort || feedbackPain === null || feedbackSaving) return;
+    if (!celebration || !feedbackEffort || feedbackPain === null || !feedbackEnergy || feedbackSaving) return;
     setFeedbackSaving(true);
+    setFeedbackError('');
     try {
-      await saveWorkoutFeedback({
+      const previousLogs = await getWorkoutLogs();
+      const recentFeedback = previousLogs
+        .filter((entry) => entry.feedback_at)
+        .filter((entry) => entry.id !== celebration.logId)
+        .slice(0, 3);
+      const adaptationAction = chooseAdaptation({
+        perceivedExertion: feedbackEffort,
+        painReported: feedbackPain,
+        energyAfter: feedbackEnergy,
+      }, recentFeedback, goalKey);
+      const savedFeedback = await saveWorkoutFeedback({
         id: celebration.logId,
         date: celebration.date,
         dayFocus: celebration.focus,
         perceivedExertion: feedbackEffort,
         painReported: feedbackPain,
+        energyAfter: feedbackEnergy,
+        sessionDurationMinutes: feedbackDuration,
+        adaptationAction,
       });
+      const adaptation = adaptNextWorkout(plan, celebration.focus, adaptationAction, savedFeedback?.id || celebration.logId);
+      if (adaptation.changed) await onPlanUpdate?.(adaptation.plan);
       // Health-related answers remain first-party data and are never sent to analytics.
-      trackEvent('workout_feedback_saved');
+      trackEvent('workout_feedback_saved', { adaptation: adaptationAction });
       if (feedbackPain) toast.info(t('workout.feedbackPainAdvice'));
       else toast.success(t('workout.feedbackSaved'));
       setCelebration(null);
-    } catch {
+    } catch (error) {
+      setFeedbackError(t('workout.feedbackError'));
+      console.warn('[WorkoutFeedback]', error?.message || error);
       toast.error(t('errors.saveFailed'));
     } finally {
       setFeedbackSaving(false);
@@ -682,54 +722,34 @@ export default function WorkoutPanel({ plan }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
-            onClick={() => setCelebration(null)}
+            className="fixed inset-0 z-[100] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="workout-feedback-title"
           >
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ y: 48, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 48, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-orange-500/30 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-3xl border border-slate-700 bg-slate-900 p-4 text-center shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-5"
+              style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
             >
-              {/* Glow */}
-              <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full bg-orange-500/10 blur-3xl" />
-
-              {/* Big emoji */}
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
-                className="text-6xl mb-3"
-              >
-                🎉
-              </motion.div>
-
-              <motion.h2
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-2xl font-black font-outfit bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent mb-2"
-              >
+              <div className="mx-auto mb-3 h-1 w-12 rounded-full bg-slate-700 sm:hidden" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/10 text-2xl">✓</div>
+              <h2 id="workout-feedback-title" className="text-xl font-black font-outfit text-white mb-1">
                 {t('celebration.title')}
-              </motion.h2>
-
-              <motion.p
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-sm text-slate-400 mb-5"
-              >
+              </h2>
+              <p className="text-xs text-slate-400 mb-4">
                 {celebration.focus}
-              </motion.p>
+              </p>
 
               {/* Stats */}
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="flex justify-center gap-6 mb-5"
+                className="flex justify-center gap-8 mb-4 rounded-xl border border-slate-800 bg-slate-950/50 py-2.5"
               >
                 <div className="text-center">
                   <p className="text-xl font-bold text-white font-outfit">{celebration.exercises}</p>
@@ -749,7 +769,7 @@ export default function WorkoutPanel({ plan }) {
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.72 }}
-                className="mb-5 space-y-3 rounded-2xl border border-slate-700 bg-slate-950/60 p-3 text-left"
+                className="mb-4 space-y-4 rounded-2xl border border-slate-700 bg-slate-950/60 p-4 text-left"
               >
                 <div className="flex items-center gap-2">
                   <Gauge size={14} className="text-orange-300" />
@@ -767,6 +787,40 @@ export default function WorkoutPanel({ plan }) {
                     </button>
                   ))}
                 </div>
+                <div>
+                  <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+                    <Zap size={13} className="text-cyan-300" /> {t('workout.feedbackEnergy')}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[1, 2, 3].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setFeedbackEnergy(value)}
+                        className={`min-h-10 rounded-xl border px-2 text-[10px] font-bold transition-colors ${feedbackEnergy === value ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                      >
+                        {t(`workout.feedbackEnergy${value}`)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <label className="block">
+                  <span className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+                    <Timer size={13} className="text-emerald-300" /> {t('workout.feedbackDuration')}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min="1"
+                      max="600"
+                      value={feedbackDuration}
+                      onChange={(event) => setFeedbackDuration(Math.max(1, Math.min(600, Number(event.target.value) || 1)))}
+                      className="min-h-11 w-full rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm font-bold text-white outline-none focus:border-emerald-400"
+                    />
+                    <span className="shrink-0 text-xs text-slate-500">{t('workout.feedbackMinutes')}</span>
+                  </div>
+                </label>
                 <div className="flex items-center justify-between gap-3">
                   <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
                     <HeartPulse size={13} className="text-rose-300" />
@@ -786,17 +840,8 @@ export default function WorkoutPanel({ plan }) {
                   </div>
                 </div>
                 {feedbackPain && <p className="text-[10px] leading-relaxed text-amber-200/80">{t('workout.feedbackPainAdvice')}</p>}
+                {feedbackError && <p role="alert" className="text-[11px] font-semibold text-rose-300">{feedbackError}</p>}
               </motion.div>
-
-              {/* Motivational quote */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="text-[11px] text-slate-500 italic mb-4"
-              >
-                {t('celebration.motivational')}
-              </motion.p>
 
               <motion.button
                 initial={{ y: 10, opacity: 0 }}
@@ -804,7 +849,7 @@ export default function WorkoutPanel({ plan }) {
                 transition={{ delay: 0.9 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSaveFeedback}
-                disabled={!feedbackEffort || feedbackPain === null || feedbackSaving}
+                disabled={!feedbackEffort || feedbackPain === null || !feedbackEnergy || !feedbackDuration || feedbackSaving}
                 className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {feedbackSaving ? t('workout.feedbackSaving') : t('workout.feedbackSave')}

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { generatePlan, regeneratePlanWithPhase, localizePlan, PLAN_VERSION } from './data/planGenerator';
-import { getSession, onAuthStateChange, loadPlan, savePlan, signOut as authSignOut } from './lib/dataService';
+import { getSession, onAuthStateChange, loadPlan, recordActivityDay, savePlan, signOut as authSignOut } from './lib/dataService';
 import { isSupabaseReady } from './lib/supabase';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
@@ -493,6 +493,11 @@ function AppContent() {
     trackPageView(document.title, location.pathname);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+    recordActivityDay().catch((error) => console.warn('[Retention]', error?.message || error));
+  }, [user?.id, location.pathname]);
+
   // Regenerate plan when language changes
   useEffect(() => {
     if (!plan || plan.lang === lang) return;
@@ -594,9 +599,9 @@ function AppContent() {
     navigate('/', { replace: true });
   };
 
-  const handlePlanUpdate = (newPlan) => {
+  const handlePlanUpdate = async (newPlan) => {
     setPlan(newPlan);
-    savePlan(newPlan, user?.email).catch(() => {});
+    await savePlan(newPlan, user?.email);
   };
 
   const pageTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] };

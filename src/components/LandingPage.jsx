@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Activity, ArrowRight, BarChart3, BookOpen, Brain, Check,
@@ -11,6 +11,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
+import { getApprovedTestimonials } from '../lib/dataService';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -125,7 +126,12 @@ function SectionTitle({ eyebrow, title, desc }) {
 export default function LandingPage({ onStart }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
   const [shareCopied, setShareCopied] = useState(false);
+  const [testimonials, setTestimonials] = useState([]);
   const c = copy[lang] || copy.tr;
+
+  useEffect(() => {
+    getApprovedTestimonials(6).then(setTestimonials).catch(() => setTestimonials([]));
+  }, []);
 
   const goals = [
     { key: 'muscle', icon: Dumbbell, color: '#f97316', fallback: 'Kas Gelişimi' },
@@ -272,6 +278,24 @@ export default function LandingPage({ onStart }) {
           </div>
         </div>
       </section>
+
+      {testimonials.some((item) => item.language === lang) && (
+        <section className="border-b border-slate-800 py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-5 sm:px-6">
+            <SectionTitle eyebrow={lang === 'tr' ? 'Gerçek deneyimler' : lang === 'es' ? 'Experiencias reales' : 'Real experiences'} title={lang === 'tr' ? 'Full Balance kullananlardan' : lang === 'es' ? 'De quienes usan Full Balance' : 'From people using Full Balance'} />
+            <div className="grid gap-3 md:grid-cols-3">
+              {testimonials.filter((item) => item.language === lang).slice(0, 3).map((item) => (
+                <article key={item.id} className="border border-slate-800 bg-slate-900/55 p-5">
+                  <div className="text-sm text-amber-400" aria-label={`${item.rating}/5`}>{'★'.repeat(item.rating)}</div>
+                  {item.result_summary && <p className="mt-3 text-xs font-bold text-cyan-300">{item.result_summary}</p>}
+                  <p className="mt-3 text-sm leading-6 text-slate-300">“{item.body}”</p>
+                  <p className="mt-4 text-[10px] uppercase text-slate-600">{lang === 'tr' ? 'Doğrulanmış kullanıcı · anonim' : 'Verified user · anonymous'}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">

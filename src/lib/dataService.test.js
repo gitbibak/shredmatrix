@@ -65,6 +65,9 @@ describe('dataService local fallback', () => {
       dayFocus: saved.dayFocus,
       perceivedExertion: 2,
       painReported: false,
+      energyAfter: 3,
+      sessionDurationMinutes: 42,
+      adaptationAction: 'maintain',
     });
 
     expect(await getWorkoutLogs()).toEqual([
@@ -72,6 +75,9 @@ describe('dataService local fallback', () => {
         id: saved.id,
         perceived_exertion: 2,
         pain_reported: false,
+        energy_after: 3,
+        session_duration_minutes: 42,
+        adaptation_action: 'maintain',
         feedback_at: expect.any(String),
       }),
     ]);

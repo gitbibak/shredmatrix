@@ -8,6 +8,11 @@ import { trackAuthView, trackEvent, trackLogin, trackSignUp, trackSignUpStart } 
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isStrongPassword = (value) => value.length >= 10
+  && /[a-z]/.test(value)
+  && /[A-Z]/.test(value)
+  && /\d/.test(value)
+  && /[^A-Za-z0-9]/.test(value);
 
 // ── Animation Variants ───────────────────────────────────
 const formVariants = {
@@ -36,6 +41,7 @@ function AuthInput({
   index = 0,
   showPasswordLabel = 'Show password',
   hidePasswordLabel = 'Hide password',
+  autoComplete,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
@@ -59,7 +65,7 @@ function AuthInput({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           aria-label={placeholder}
-          autoComplete={isPassword ? 'current-password' : type === 'email' ? 'email' : 'name'}
+          autoComplete={autoComplete || (isPassword ? 'current-password' : type === 'email' ? 'email' : 'name')}
           className={[
             'w-full pl-11 pr-11 py-3.5 rounded-xl bg-slate-950 border text-white text-sm',
             'placeholder-slate-600 focus:outline-none focus:ring-1 transition-all duration-200 font-inter',
@@ -156,8 +162,14 @@ export default function AuthScreen({ onAuth, onBack }) {
 
     if (!password) {
       newErrors.password = t('auth.errors.passwordRequired');
-    } else if (password.length < 6) {
+    } else if (mode !== 'register' && password.length < 6) {
       newErrors.password = t('auth.errors.passwordMin');
+    } else if (mode === 'register' && !isStrongPassword(password)) {
+      newErrors.password = lang === 'tr'
+        ? 'En az 10 karakter; büyük-küçük harf, rakam ve sembol kullan.'
+        : lang === 'es'
+          ? 'Usa al menos 10 caracteres, mayúscula, minúscula, número y símbolo.'
+          : 'Use at least 10 characters with uppercase, lowercase, a number and a symbol.';
     }
 
     if (mode === 'register') {
@@ -170,7 +182,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [mode, name, email, password, confirmPassword]);
+  }, [mode, name, email, password, confirmPassword, lang, t]);
 
   // ── Submit ───────────────────────────────────────────
   const handleSubmit = useCallback(
@@ -481,7 +493,14 @@ export default function AuthScreen({ onAuth, onBack }) {
                   index={isLogin ? 1 : 2}
                   showPasswordLabel={t('auth.showPassword')}
                   hidePasswordLabel={t('auth.hidePassword')}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
                 />
+
+                {!isLogin && !errors.password && (
+                  <p className="-mt-2 px-1 text-[10px] leading-4 text-slate-500">
+                    {lang === 'tr' ? '10+ karakter · büyük/küçük harf · rakam · sembol' : lang === 'es' ? '10+ caracteres · mayúscula/minúscula · número · símbolo' : '10+ characters · upper/lowercase · number · symbol'}
+                  </p>
+                )}
 
                 {!isLogin && (
                   <AuthInput
@@ -494,6 +513,7 @@ export default function AuthScreen({ onAuth, onBack }) {
                     index={3}
                     showPasswordLabel={t('auth.showPassword')}
                     hidePasswordLabel={t('auth.hidePassword')}
+                    autoComplete="new-password"
                   />
                 )}
 
