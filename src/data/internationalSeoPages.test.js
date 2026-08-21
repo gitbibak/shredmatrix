@@ -40,5 +40,7 @@ describe('international SEO pages', () => {
   it('keeps search-focused titles aligned with calculator intent', () => {
     expect(findInternationalSeoPage('/es/calculadora-imc').metaTitle).toContain('Calculadora IMC Gratis');
     expect(findInternationalSeoPage('/en/bmi-calculator').metaTitle).toContain('Imperial & Metric');
+    expect(findInternationalSeoPage('/en/personal-workout-plan').metaTitle).toContain('Home or Gym');
+    expect(findInternationalSeoPage('/en/protein-calculator').hero).toContain('without an account');
   });
 });
