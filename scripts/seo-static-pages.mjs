@@ -34,7 +34,7 @@ export const seoLandingPages = [
   ['bmi-hesaplama', 'BMI Hesaplama ve Kilo Takibi', 'BMI değerini hesapla; kilo, vücut ölçüsü ve ilerleme eğilimleriyle birlikte ücretsiz takip et.'],
   ['alerjiye-gore-beslenme-programi', 'Alerjiye Göre Beslenme Programı', 'Laktoz, gluten, yumurta, kuruyemiş ve deniz ürünü tercihlerini dikkate alan kişisel beslenme planı.'],
   ['yoga-uygulamasi', 'Ücretsiz Yoga Uygulaması', 'Başlangıçtan ileri seviyeye esneklik, mobilite, nefes ve düzenli pratik takibi sunan kişisel yoga planı.'],
-  ['pilates-programi', 'Ücretsiz Pilates Programı', 'Core, postür, denge ve kontrollü hareket odağıyla seviyeye göre kişisel pilates programı.'],
+  ['pilates-programi', 'Ücretsiz Pilates Uygulaması ve Programı', 'Evde mat pilates için seviyene göre ücretsiz program oluştur; core, postür, kontrollü hareket, devamlılık ve gelişimini tek uygulamada takip et.'],
   ['reformer-pilates-programi', 'Ücretsiz Reformer Pilates Programı', 'Direnç, core, postür ve kontrollü progresyon odağıyla kişisel reformer pilates planı.'],
   ['meditasyon-uygulamasi', 'Ücretsiz Meditasyon Uygulaması', 'Nefes, farkındalık, uyku ve günlük devamlılık takibiyle kişisel meditasyon planı.'],
   ['evde-spor-programi', 'Ekipmansız Evde Spor Programı', 'Seviye, hedef ve haftalık gün sayısına göre ekipmansız evde spor programı oluştur; set, tekrar, dinlenme ve kolay alternatifleri ücretsiz gör.'],

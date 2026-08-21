@@ -63,11 +63,11 @@ const pageDefinitions = {
       faqs: [['Is it suitable for beginners?', 'Yes. Beginner plans use manageable exercise selection, volume and progression.'], ['Can I train at home?', 'The plan considers your available environment and equipment.'], ['Does it include yoga and Pilates?', 'Yes. Full Balance also creates plans for yoga, Pilates, reformer and meditation.']],
     },
     es: {
-      title: 'Plan de Entrenamiento Gratis', accent: 'Hecho para Ti', metaTitle: 'Plan de Entrenamiento Personalizado Gratis | Full Balance',
-      description: 'Crea un plan gratis según tu objetivo, experiencia y días disponibles con ejercicios, series, repeticiones, descanso y progresión.',
-      hero: 'Deja de adivinar qué entrenar. Obtén una semana clara para tu objetivo y nivel y registra cada sesión desde el móvil.',
-      sections: [['Primero tu objetivo y nivel', 'El plan considera tu objetivo, experiencia, días disponibles y limitaciones de salud relevantes.'], ['Cada sesión es clara', 'Consulta el orden, las series, repeticiones, descanso y consejos prácticos de técnica.'], ['Progreso por fases', 'Los planes avanzan por fases estructuradas en lugar de cambiar sin sentido cada semana.']],
-      faqs: [['¿Sirve para principiantes?', 'Sí. Los planes iniciales utilizan ejercicios, volumen y progresión manejables.'], ['¿Puedo entrenar en casa?', 'El plan considera el entorno y el material que tienes disponible.'], ['¿Incluye yoga y pilates?', 'Sí. Full Balance también crea planes de yoga, pilates, reformer y meditación.']],
+      title: 'Plan de Entrenamiento Personalizado', accent: 'Gratis', metaTitle: 'Plan de Entrenamiento Personalizado Gratis | Full Balance',
+      description: 'Crea gratis un plan de entrenamiento para casa o gimnasio según tu objetivo, nivel y días disponibles, con series, repeticiones, descanso y progresión.',
+      hero: 'Elige casa o gimnasio y obtén una semana clara para tu objetivo, nivel y días disponibles. Consulta cada sesión y registra tu progreso desde el móvil.',
+      sections: [['Primero tu objetivo y nivel', 'El plan considera tu objetivo, experiencia, días disponibles, entorno de entrenamiento y limitaciones de salud relevantes.'], ['Cada sesión es clara', 'Consulta el orden, las series, repeticiones, descanso y consejos prácticos de técnica.'], ['Progreso por fases', 'Los planes avanzan por fases estructuradas en lugar de cambiar sin sentido cada semana.']],
+      faqs: [['¿Sirve para principiantes?', 'Sí. Los planes iniciales utilizan ejercicios, volumen y progresión manejables.'], ['¿Puedo elegir casa o gimnasio?', 'Sí. Elige el entorno antes de crear el plan. La opción de casa utiliza movimientos de peso corporal sin máquinas de gimnasio.'], ['¿Incluye yoga y pilates?', 'Sí. Full Balance también crea planes de yoga, pilates, reformer y meditación.']],
     },
   },
   homeWorkout: {
@@ -164,18 +164,18 @@ const pageDefinitions = {
     paths: { tr: '/bmi-hesaplama', en: '/en/bmi-calculator', es: '/es/calculadora-imc' },
     category: 'progress', calculator: 'bmi',
     en: {
-      title: 'Free BMI Calculator', accent: 'Metric or Imperial', metaTitle: 'Free BMI Calculator in Metric or Imperial Units | Full Balance',
-      description: 'Calculate adult BMI instantly with metric or imperial units and read a clear, non-diagnostic explanation. Free and no signup required.',
-      hero: 'Calculate BMI in seconds and view it as one screening measure, not a complete judgment of health or progress.',
-      sections: [['Instant calculation', 'Use kilograms and centimeters or pounds and feet to calculate adult BMI.'], ['Clear context', 'BMI is a population-level screening measure and does not directly measure body fat or fitness.'], ['Track more than weight', 'Full Balance can combine weight with measurements, workouts, sleep, water and weekly trends.']],
-      faqs: [['Does BMI measure body fat?', 'No. BMI uses height and weight and does not directly measure body composition.'], ['Is BMI a diagnosis?', 'No. It is a screening measure and should not be used as a diagnosis.'], ['Who is this calculator for?', 'The standard categories shown here are intended for adults and may not suit pregnancy, children or some athletic populations.']],
+      title: 'Free BMI Calculator', accent: 'Imperial or Metric', metaTitle: 'Free BMI Calculator (Imperial & Metric) | Full Balance',
+      description: 'Calculate BMI with pounds, feet and inches or kilograms and centimeters. Get an instant free result with adult category context and no signup.',
+      hero: 'Enter height and weight in imperial or metric units and see your BMI instantly. No account is needed to use the calculator.',
+      sections: [['Imperial and metric units', 'Use pounds, feet and inches or switch to kilograms and centimeters.'], ['Clear adult context', 'BMI is a population-level screening measure and does not directly measure body fat or fitness.'], ['Track more than weight', 'Full Balance can combine weight with measurements, workouts, sleep, water and weekly trends.']],
+      faqs: [['How do I calculate BMI with pounds and inches?', 'Choose imperial units, enter weight in pounds and height in feet and inches; the calculator applies the imperial conversion automatically.'], ['Does BMI measure body fat?', 'No. BMI uses height and weight and does not directly measure body composition.'], ['Is BMI a diagnosis?', 'No. It is a screening measure and should not be used as a diagnosis.']],
     },
     es: {
-      title: 'Calculadora Gratis de IMC', accent: 'Métrico o Imperial', metaTitle: 'Calculadora de IMC Gratis | Métrico o Imperial | Full Balance',
-      description: 'Calcula el IMC adulto al instante en sistema métrico o imperial y lee una explicación clara y no diagnóstica. Gratis y sin registro.',
-      hero: 'Calcula el IMC en segundos y entiéndelo como una medida orientativa, no como una evaluación completa de salud o progreso.',
-      sections: [['Cálculo inmediato', 'Usa kilogramos y centímetros o libras y pies para calcular el IMC adulto.'], ['Contexto claro', 'El IMC es una medida poblacional y no mide directamente la grasa corporal ni la condición física.'], ['Más que el peso', 'Full Balance combina peso con medidas, entrenamiento, sueño, agua y tendencias semanales.']],
-      faqs: [['¿El IMC mide la grasa corporal?', 'No. Utiliza altura y peso y no mide directamente la composición corporal.'], ['¿Es un diagnóstico?', 'No. Es una medida orientativa y no debe utilizarse como diagnóstico.'], ['¿Para quién sirve?', 'Las categorías estándar se destinan a adultos y pueden no ser adecuadas durante el embarazo, para menores o algunos deportistas.']],
+      title: 'Calculadora IMC Gratis', accent: 'Resultado Inmediato', metaTitle: 'Calculadora IMC Gratis (Métrica e Imperial) | Full Balance',
+      description: 'Calcula tu IMC gratis con peso y altura: kilos y centímetros o libras, pies y pulgadas. Resultado inmediato, categoría orientativa y sin registro.',
+      hero: 'Introduce tu peso y altura en sistema métrico o imperial y consulta tu IMC al instante. No necesitas una cuenta para calcularlo.',
+      sections: [['Peso y altura en dos sistemas', 'Utiliza kilos y centímetros o cambia a libras, pies y pulgadas.'], ['Resultado y categoría al instante', 'Consulta el valor calculado junto con el rango orientativo estándar para adultos.'], ['Más que el peso', 'Full Balance combina peso con medidas, entrenamiento, sueño, agua y tendencias semanales.']],
+      faqs: [['¿Cómo calcular mi IMC?', 'Introduce tu peso y altura, elige el sistema métrico o imperial y la calculadora hará la operación automáticamente.'], ['¿El IMC mide la grasa corporal?', 'No. Utiliza altura y peso y no mide directamente la composición corporal.'], ['¿Es un diagnóstico?', 'No. Es una medida orientativa y no debe utilizarse como diagnóstico.']],
     },
   },
   muscle: {
@@ -229,7 +229,20 @@ export function findInternationalSeoPage(pathname) {
 }
 
 export function getInternationalRelatedPages(page) {
-  return internationalSeoPages.filter((candidate) => candidate.lang === page.lang && candidate.path !== page.path);
+  const priorityByTopic = {
+    bmi: ['calories', 'protein', 'nutrition', 'fatLoss', 'workout', 'home'],
+    workout: ['homeWorkout', 'homeMuscle', 'muscle', 'fatLoss', 'beginnerPilates', 'nutrition', 'bmi'],
+    homeWorkout: ['workout', 'homeMuscle', 'beginnerPilates', 'fatLoss', 'nutrition', 'bmi'],
+    homeMuscle: ['homeWorkout', 'muscle', 'workout', 'protein', 'calories', 'nutrition', 'bmi'],
+    beginnerPilates: ['pilates', 'homeWorkout', 'yoga', 'workout', 'bmi', 'home'],
+    pilates: ['beginnerPilates', 'homeWorkout', 'yoga', 'workout', 'bmi', 'home'],
+  };
+  const priorities = priorityByTopic[page.topic] || ['bmi', 'workout', 'homeWorkout', 'beginnerPilates', 'nutrition', 'home'];
+  const priorityIndex = new Map(priorities.map((topic, index) => [topic, index]));
+
+  return internationalSeoPages
+    .filter((candidate) => candidate.lang === page.lang && candidate.path !== page.path)
+    .sort((a, b) => (priorityIndex.get(a.topic) ?? priorities.length) - (priorityIndex.get(b.topic) ?? priorities.length));
 }
 
 export function getAlternatesForTurkishPath(pathname) {

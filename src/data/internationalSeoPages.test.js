@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAlternatesForTurkishPath, internationalSeoPages } from './internationalSeoPages';
+import { findInternationalSeoPage, getAlternatesForTurkishPath, getInternationalRelatedPages, internationalSeoPages } from './internationalSeoPages';
 
 describe('international SEO pages', () => {
   it('provides one English and Spanish page for every international topic', () => {
@@ -25,5 +25,20 @@ describe('international SEO pages', () => {
       en: '/en/calorie-macro-calculator',
       es: '/es/calculadora-calorias-macros',
     });
+  });
+
+  it('prioritizes intent-related links for high-impression calculator pages', () => {
+    const page = findInternationalSeoPage('/es/calculadora-imc');
+    expect(getInternationalRelatedPages(page).slice(0, 4).map((item) => item.topic)).toEqual([
+      'calories',
+      'protein',
+      'nutrition',
+      'fatLoss',
+    ]);
+  });
+
+  it('keeps search-focused titles aligned with calculator intent', () => {
+    expect(findInternationalSeoPage('/es/calculadora-imc').metaTitle).toContain('Calculadora IMC Gratis');
+    expect(findInternationalSeoPage('/en/bmi-calculator').metaTitle).toContain('Imperial & Metric');
   });
 });
