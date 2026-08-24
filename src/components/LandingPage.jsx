@@ -12,6 +12,7 @@ import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import { getApprovedTestimonials } from '../lib/dataService';
+import { recordAcquisitionContent } from '../lib/acquisition';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -175,6 +176,7 @@ export default function LandingPage({ onStart }) {
   };
 
   const startRegistration = (placement) => {
+    recordAcquisitionContent(`landing_${lang}_${placement}`);
     trackLandingCta(placement);
     onStart();
   };

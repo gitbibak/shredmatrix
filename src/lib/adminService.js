@@ -210,7 +210,7 @@ export async function getAdminUsers(page = 0, pageSize = 20, search = '') {
   try {
     let query = supabase
       .from('profiles')
-      .select('id, email, name, created_at, plan_created_at, role', { count: 'exact' })
+      .select('id, email, name, created_at, plan_created_at, role, app_language, acquisition_source, acquisition_campaign, acquisition_content, landing_path', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(page * pageSize, (page + 1) * pageSize - 1);
 
@@ -249,7 +249,7 @@ export async function getUserPlanDetails(userId) {
 // ── Plan Distribution (with normalization) ──────
 export async function getPlanDistribution() {
   const empty = {
-    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [],
+    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [], campaigns: [], contents: [],
     international: summarizeInternationalAcquisition(),
   };
   if (!isSupabaseReady()) return empty;
@@ -257,7 +257,7 @@ export async function getPlanDistribution() {
   try {
     const [planResult, profileResult] = await Promise.all([
       supabase.from('plans').select('user_id, plan_data'),
-      supabase.from('profiles').select('id, created_at, app_language, acquisition_source'),
+      supabase.from('profiles').select('id, created_at, app_language, acquisition_source, acquisition_campaign, acquisition_content'),
     ]);
     if (planResult.error) throw planResult.error;
     if (profileResult.error) throw profileResult.error;
@@ -267,6 +267,8 @@ export async function getPlanDistribution() {
     const experienceCounts = {};
     const languageCounts = {};
     const sourceCounts = {};
+    const campaignCounts = {};
+    const contentCounts = {};
     const ageBuckets = { '16-20': 0, '21-25': 0, '26-30': 0, '31-35': 0, '36-40': 0, '41-50': 0, '50+': 0 };
 
     (planResult.data || []).forEach(({ plan_data }) => {
@@ -301,6 +303,10 @@ export async function getPlanDistribution() {
       const source = String(profile.acquisition_source || 'Bilinmiyor').toLowerCase();
       languageCounts[language] = (languageCounts[language] || 0) + 1;
       sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+      const campaign = String(profile.acquisition_campaign || '').trim();
+      const content = String(profile.acquisition_content || '').trim();
+      if (campaign) campaignCounts[campaign] = (campaignCounts[campaign] || 0) + 1;
+      if (content) contentCounts[content] = (contentCounts[content] || 0) + 1;
     });
 
     return {
@@ -310,6 +316,8 @@ export async function getPlanDistribution() {
       ages: Object.entries(ageBuckets).filter(([, v]) => v > 0).map(([name, value]) => ({ name, value })),
       languages: Object.entries(languageCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       sources: Object.entries(sourceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+      campaigns: Object.entries(campaignCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+      contents: Object.entries(contentCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       international: summarizeInternationalAcquisition(
         profileResult.data || [],
         (planResult.data || []).map((plan) => plan.user_id),

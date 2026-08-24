@@ -209,7 +209,7 @@ export default function AdminPanel({ user }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [distribution, setDistribution] = useState({
-    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [],
+    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [], campaigns: [], contents: [],
     international: { registrations: 0, activated: 0, activationRate: 0, english: 0, spanish: 0, attributed: 0, direct: 0 },
   });
   const [trend, setTrend] = useState([]);
@@ -650,6 +650,10 @@ export default function AdminPanel({ user }) {
                             <span className="px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-400">Admin</span>
                           </>
                         )}
+                        {u.app_language && <span className="uppercase">{u.app_language}</span>}
+                        {u.acquisition_source && <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-blue-300">{u.acquisition_source}</span>}
+                        {u.acquisition_campaign && <span className="rounded bg-violet-500/10 px-1.5 py-0.5 text-violet-300">{u.acquisition_campaign}</span>}
+                        {u.acquisition_content && <span className="max-w-full truncate rounded bg-cyan-500/10 px-1.5 py-0.5 text-cyan-300" title={u.acquisition_content}>{u.acquisition_content}</span>}
                       </div>
                     </motion.div>
                   ))}
@@ -723,6 +727,8 @@ export default function AdminPanel({ user }) {
                   <MiniDonut data={distribution.experiences} colorMap={EXP_COLORS} title="💪 Deneyim Seviyesi" />
                   <MiniDonut data={distribution.languages} colorMap={LANGUAGE_COLORS} title="🌍 Kayıt Dili" />
                   <MiniDonut data={distribution.sources} title="📣 Kazanım Kaynağı" />
+                  {distribution.campaigns?.length > 0 && <MiniDonut data={distribution.campaigns} title="Kampanyalar" />}
+                  {distribution.contents?.length > 0 && <MiniDonut data={distribution.contents} title="Kayıt Geçişleri" />}
 
                   {/* Age Bar Chart */}
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}

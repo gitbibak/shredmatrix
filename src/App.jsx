@@ -9,7 +9,7 @@ import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
-import { initAnalytics, trackGeneratePlan, trackPageView, trackReferral } from './lib/analytics';
+import { initAnalytics, trackGeneratePlan, trackPageView, trackPlanCreated, trackReferral } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
 import { captureAcquisitionContext } from './lib/acquisition';
 
@@ -527,7 +527,13 @@ function AppContent() {
         setPlan(generatedPlan);
 
         // Save plan to Supabase/localStorage
-        savePlan(generatedPlan, user?.email).catch(() => {});
+        savePlan(generatedPlan, user?.email)
+          .then(() => trackPlanCreated({
+            language: generatedPlan.lang || lang,
+            goal: generatedPlan.goal || 'unknown',
+            environment: generatedPlan.trainingEnvironment || 'unknown',
+          }))
+          .catch(() => {});
 
         setPendingFormData(null);
         navigate('/dashboard', { replace: true });

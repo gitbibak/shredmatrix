@@ -32,6 +32,7 @@ describe('privacy-safe analytics', () => {
     analytics.trackSignUpStart('email');
     analytics.trackSignUp('email');
     analytics.trackGeneratePlan();
+    analytics.trackPlanCreated({ language: 'en', goal: 'muscle', environment: 'home' });
 
     const summary = analytics.getAnalyticsSummary(1);
     const today = new Date().toISOString().split('T')[0];
@@ -41,6 +42,7 @@ describe('privacy-safe analytics', () => {
       sign_up_start: 1,
       sign_up: 1,
       generate_plan: 1,
+      plan_created: 1,
     });
   });
 

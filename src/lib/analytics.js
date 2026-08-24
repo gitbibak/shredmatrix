@@ -113,6 +113,7 @@ export const trackAuthView = () => trackEvent('auth_view');
 export const trackLandingCta = (placement = 'unknown') => trackEvent('landing_cta_click', { placement });
 export const trackLogin = (method = 'email') => trackEvent('login', { method });
 export const trackGeneratePlan = () => trackEvent('generate_plan');
+export const trackPlanCreated = (params = {}) => trackEvent('plan_created', params);
 export const trackCompleteWorkout = () => trackEvent('complete_workout');
 export const trackLogWater = () => trackEvent('log_water');
 export const trackLogSleep = () => trackEvent('log_sleep');

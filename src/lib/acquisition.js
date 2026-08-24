@@ -25,10 +25,26 @@ function externalReferrer() {
   try {
     if (!document.referrer) return null;
     const referrer = new URL(document.referrer);
-    return referrer.origin === window.location.origin ? null : clean(referrer.hostname, 100);
+    return referrer.origin === window.location.origin ? null : normalizeSource(referrer.hostname);
   } catch {
     return null;
   }
+}
+
+function normalizeSource(hostname) {
+  const host = clean(hostname, 100)?.toLowerCase().replace(/^www\./, '');
+  if (!host) return null;
+  if (host === 'chatgpt.com' || host.endsWith('.chatgpt.com') || host === 'chat.openai.com') return 'chatgpt.com';
+  if (host.startsWith('google.') || host.includes('.google.')) return 'google';
+  if (host.startsWith('bing.') || host.includes('.bing.')) return 'bing';
+  if (host === 'perplexity.ai' || host.endsWith('.perplexity.ai')) return 'perplexity.ai';
+  if (host === 'instagram.com' || host.endsWith('.instagram.com')) return 'instagram';
+  if (host.startsWith('pinterest.') || host.includes('.pinterest.')) return 'pinterest';
+  if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be') return 'youtube';
+  if (host === 'reddit.com' || host.endsWith('.reddit.com')) return 'reddit';
+  if (host === 'tiktok.com' || host.endsWith('.tiktok.com')) return 'tiktok';
+  if (host === 'x.com' || host.endsWith('.x.com') || host === 't.co') return 'x';
+  return host;
 }
 
 export function captureAcquisitionContext(language) {
@@ -64,10 +80,24 @@ export function captureAcquisitionContext(language) {
     ? { ...stored, ...fresh }
     : { ...fresh, ...stored, app_language: appLanguage };
 
+  // A tagged URL can remain in the address bar while the visitor moves through
+  // the page. Keep the first measured CTA when a later read has no utm_content.
+  if (hasCampaign && stored?.acquisition_content && !fresh.acquisition_content) {
+    result.acquisition_content = stored.acquisition_content;
+  }
+
   writeStored(result);
   return result;
 }
 
 export function getAcquisitionContext(language) {
   return captureAcquisitionContext(language);
+}
+
+export function recordAcquisitionContent(content) {
+  const value = clean(content, 120);
+  if (!value || typeof window === 'undefined') return;
+  const stored = readStored() || captureAcquisitionContext();
+  if (stored.acquisition_content) return;
+  writeStored({ ...stored, acquisition_content: value });
 }

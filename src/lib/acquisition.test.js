@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { captureAcquisitionContext } from './acquisition';
+import { captureAcquisitionContext, recordAcquisitionContent } from './acquisition';
 
 describe('first-party acquisition attribution', () => {
   beforeEach(() => {
@@ -25,5 +25,17 @@ describe('first-party acquisition attribution', () => {
     window.history.replaceState({}, '', '/auth?mode=register');
 
     expect(captureAcquisitionContext('en').acquisition_source).toBe('google');
+  });
+
+  it('records the first internal conversion content without replacing campaign attribution', () => {
+    captureAcquisitionContext('en');
+    recordAcquisitionContent('seo_en_home_workout_hero');
+    recordAcquisitionContent('seo_en_home_workout_nav');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'google',
+      acquisition_campaign: 'free_fitness',
+      acquisition_content: 'seo_en_home_workout_hero',
+    });
   });
 });

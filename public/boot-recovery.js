@@ -27,7 +27,7 @@
     } catch (error) {
       console.warn('[Boot recovery]', error);
     }
-    const url = new URL('/', window.location.origin);
+    const url = new URL(window.location.href);
     url.searchParams.set('refresh', Date.now());
     window.location.replace(url.toString());
     return true;
@@ -40,7 +40,9 @@
     }
 
     const stylesheet = document.querySelector('link[rel="stylesheet"][href*="/assets/"]');
-    if (!stylesheet) return false;
+    // Vite injects CSS through JavaScript in development, so the absence of a
+    // production stylesheet link is not by itself a broken-page signal.
+    if (!stylesheet) return null;
     try {
       const url = new URL(stylesheet.href, location.href);
       url.searchParams.set('repair', String(Date.now()));
@@ -79,7 +81,7 @@
   }, true);
 
   window.setTimeout(() => {
-    ensureAppStyles().then((ready) => { if (!ready) recover(); });
+    ensureAppStyles().then((ready) => { if (ready === false) recover(); });
   }, 250);
 
   window.setTimeout(async () => {
