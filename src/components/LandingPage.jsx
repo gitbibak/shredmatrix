@@ -25,6 +25,8 @@ const fadeUp = {
 
 const copy = {
   tr: {
+    metaTitle: 'Full Balance - Ücretsiz Fitness, Beslenme ve Longevity Uygulaması',
+    metaDescription: 'Evde ekipmansız, temel ekipmanla veya salonda; 6 hedef modu, kişisel beslenme, su, uyku ve ilerleme takibi tamamen ücretsiz.',
     navCta: 'Ücretsiz başla',
     freeBadge: 'Tamamen ücretsiz · Kredi kartı gerekmez',
     heroTitle: 'Ücretsiz kişisel fitness ve wellness uygulaması',
@@ -81,6 +83,8 @@ const copy = {
     founderLink: 'Kurucu ve geliştirici', founderCredit: 'Full Balance, Tolga Deveci tarafından kurulan ve geliştirilen bağımsız bir projedir.',
   },
   en: {
+    metaTitle: 'Full Balance - Free Fitness, Nutrition and Longevity App',
+    metaDescription: 'Free personal plans for home workouts with or without equipment and gym training, plus nutrition, water, sleep and progress tracking.',
     navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your free personal fitness and wellness app',
     heroDesc: 'At home with no equipment, with basic equipment or at the gym: muscle growth, fat loss, yoga, meditation, reformer and pilates plans adapt to both your goal and training environment.',
     primaryCta: 'Create your free account', share: 'Share with a friend', copied: 'Link copied', freeNote: 'No subscription · no paywall · no hidden fees',
@@ -104,6 +108,8 @@ const copy = {
     founderLink: 'Founder & developer', founderCredit: 'Full Balance is an independent product founded and developed by Tolga Deveci.',
   },
   es: {
+    metaTitle: 'Full Balance - App Gratuita de Fitness, Nutrición y Longevidad',
+    metaDescription: 'Planes personales gratis para entrenar en casa con o sin equipo o en el gimnasio, con nutrición, agua, sueño y seguimiento del progreso.',
     navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu aplicación personal gratuita de fitness y bienestar',
     heroDesc: 'En casa sin equipo, con equipo básico o en el gimnasio: los planes de músculo, pérdida de grasa, yoga, meditación, reformer y pilates se adaptan a tu objetivo y entorno.',
     primaryCta: 'Crea tu cuenta gratis', share: 'Compartir', copied: 'Enlace copiado', freeNote: 'Sin suscripción · sin muro de pago · sin costes ocultos',
@@ -156,6 +162,13 @@ export default function LandingPage({ onStart }) {
   const [shareCopied, setShareCopied] = useState(false);
   const [testimonials, setTestimonials] = useState([]);
   const c = copy[lang] || copy.tr;
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = c.metaTitle;
+    const description = document.querySelector('meta[name="description"]');
+    if (description) description.setAttribute('content', c.metaDescription);
+  }, [c.metaDescription, c.metaTitle, lang]);
 
   useEffect(() => {
     getApprovedTestimonials(6).then(setTestimonials).catch(() => setTestimonials([]));

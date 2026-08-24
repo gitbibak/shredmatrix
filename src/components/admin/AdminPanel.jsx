@@ -48,6 +48,12 @@ const SUPPORT_STATUS_COLORS = {
   resolved: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
 };
 const CONTENT_LABELS = { strength: 'Kuvvet', fat_loss: 'Yağ Yakımı', nutrition: 'Beslenme', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer', meditation: 'Meditasyon' };
+const CONTENT_REVIEW_STATUS_LABELS = {
+  pending: 'Henüz incelenmedi',
+  in_review: 'İncelemede',
+  changes_requested: 'Düzeltme istendi',
+  approved: 'Doğrulanmış inceleme',
+};
 
 // ── Stat Card ────────────────────────────────────
 function StatCard({ icon: Icon, label, value, sub, color = '#ff6d00', delay = 0 }) {
@@ -928,7 +934,10 @@ export default function AdminPanel({ user }) {
                 <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
                   <div className="mb-5 flex items-start gap-3">
                     <ClipboardCheck className="mt-0.5 text-emerald-400" size={20} />
-                    <div><h2 className="font-outfit text-lg font-bold">Uzman içerik incelemesi</h2><p className="mt-1 text-xs leading-5 text-slate-500">Onay için uzman adı, mesleki unvanı ve HTTPS kanıt bağlantısı zorunludur.</p></div>
+                    <div>
+                      <h2 className="font-outfit text-lg font-bold">İçerik güvence kayıtları</h2>
+                      <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">Bu alan bir uzman varmış gibi görünmek için değildir. Yalnızca gerçek ve nitelikli bir dış uzman içeriği fiilen incelediğinde adı, mesleki yeterliliği ve doğrulanabilir kanıtı kaydedilir. Bekleyen kayıtlar kullanıcıya onaylanmış olarak gösterilmez.</p>
+                    </div>
                   </div>
                   <div className="grid gap-3 lg:grid-cols-2">
                     {contentReviews.map((review) => {
@@ -936,7 +945,7 @@ export default function AdminPanel({ user }) {
                       const setField = (field, value) => setQualityDrafts((items) => ({ ...items, [review.id]: { ...draft, [field]: value } }));
                       return (
                         <article key={review.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-                          <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-sm font-bold">{CONTENT_LABELS[review.content_area] || review.content_area}</h3><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${review.review_status === 'approved' ? 'bg-emerald-500/10 text-emerald-300' : review.review_status === 'changes_requested' ? 'bg-red-500/10 text-red-300' : 'bg-amber-500/10 text-amber-300'}`}>{review.review_status}</span></div>
+                          <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-sm font-bold">{CONTENT_LABELS[review.content_area] || review.content_area}</h3><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${review.review_status === 'approved' ? 'bg-emerald-500/10 text-emerald-300' : review.review_status === 'changes_requested' ? 'bg-red-500/10 text-red-300' : 'bg-amber-500/10 text-amber-300'}`}>{CONTENT_REVIEW_STATUS_LABELS[review.review_status] || review.review_status}</span></div>
                           <div className="space-y-2">
                             <input value={draft.reviewer_name || ''} onChange={(event) => setField('reviewer_name', event.target.value)} placeholder="Uzman adı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
                             <input value={draft.reviewer_credential || ''} onChange={(event) => setField('reviewer_credential', event.target.value)} placeholder="Uzmanlık / sertifika" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
@@ -946,7 +955,7 @@ export default function AdminPanel({ user }) {
                           <div className="mt-3 grid grid-cols-3 gap-2">
                             <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'in_review')} className="min-h-9 rounded-lg border border-blue-500/30 text-[10px] font-bold text-blue-300">İncelemede</button>
                             <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'changes_requested')} className="min-h-9 rounded-lg border border-red-500/30 text-[10px] font-bold text-red-300">Düzeltme</button>
-                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-[10px] font-bold text-white">Onayla</button>
+                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-[10px] font-bold text-white">Doğrula</button>
                           </div>
                         </article>
                       );

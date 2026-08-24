@@ -793,7 +793,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                       key={value}
                       type="button"
                       onClick={() => setFeedbackEffort(value)}
-                      className={`min-h-10 rounded-xl border px-2 text-[10px] font-bold transition-colors ${feedbackEffort === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                      className={`min-h-11 rounded-xl border px-2 text-[11px] font-bold transition-colors ${feedbackEffort === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
                     >
                       {t(`workout.feedbackEffort${value}`)}
                     </button>
@@ -809,7 +809,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                         key={value}
                         type="button"
                         onClick={() => setFeedbackEnergy(value)}
-                        className={`min-h-10 rounded-xl border px-2 text-[10px] font-bold transition-colors ${feedbackEnergy === value ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                        className={`min-h-11 rounded-xl border px-2 text-[11px] font-bold transition-colors ${feedbackEnergy === value ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
                       >
                         {t(`workout.feedbackEnergy${value}`)}
                       </button>
@@ -844,7 +844,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                         key={String(value)}
                         type="button"
                         onClick={() => setFeedbackPain(value)}
-                        className={`min-w-14 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold transition-colors ${feedbackPain === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
+                        className={`min-h-11 min-w-16 rounded-lg border px-3 py-2 text-[11px] font-bold transition-colors ${feedbackPain === value ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-slate-700 bg-slate-900 text-slate-400'}`}
                       >
                         {value ? t('workout.feedbackYes') : t('workout.feedbackNo')}
                       </button>
@@ -862,11 +862,11 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSaveFeedback}
                 disabled={!feedbackEffort || feedbackPain === null || !feedbackEnergy || !feedbackDuration || feedbackSaving}
-                className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {feedbackSaving ? t('workout.feedbackSaving') : t('workout.feedbackSave')}
               </motion.button>
-              <button type="button" onClick={() => setCelebration(null)} className="mt-3 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
+              <button type="button" onClick={() => setCelebration(null)} className="mt-2 min-h-11 px-4 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
                 {t('workout.feedbackSkip')}
               </button>
             </motion.div>

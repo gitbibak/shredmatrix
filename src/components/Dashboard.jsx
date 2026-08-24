@@ -274,22 +274,22 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowShare(true)}
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 transition-colors cursor-pointer"
+              className="flex min-h-10 min-w-10 items-center justify-center gap-1 rounded-lg border border-blue-500/20 bg-blue-500/10 px-2.5 py-2 text-blue-400 transition-colors hover:bg-blue-500/20 cursor-pointer"
               title={t('dashboard.share')}
               aria-label={t('dashboard.share')}
             >
-              <Share2 size={13} />
+              <Share2 size={16} />
               <span className="text-[10px] font-medium hidden sm:inline">{t('dashboard.share')}</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onLogout}
-              className="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+              className="flex min-h-10 min-w-10 items-center justify-center gap-1 rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-2 text-red-400 transition-colors hover:bg-red-500/20 cursor-pointer"
               title={t('dashboard.logout')}
               aria-label={t('dashboard.logout')}
             >
-              <LogOut size={13} />
+              <LogOut size={16} />
               <span className="text-[10px] font-medium hidden sm:inline">{t('dashboard.logout')}</span>
             </motion.button>
           </div>
@@ -313,8 +313,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-                  <PushPermission daysSinceJoin={daysSinceJoin} />
-                  <MilestoneStoryPrompt lang={lang} onOpenProfile={() => setActiveTab('profile')} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />
                     <SleepTracker compact />
@@ -328,6 +326,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                   >
                     <DailyChallenge />
                   </DisclosureSection>
+                  <PushPermission daysSinceJoin={daysSinceJoin} />
                 </motion.div>
               </motion.div>
               </Suspense>
@@ -487,6 +486,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 onPlanUpdate={onPlanUpdate}
               />
               <div className="mt-6 space-y-6">
+                <MilestoneStoryPrompt lang={lang} onOpenProfile={() => setActiveTab('profile')} />
                 <StravaConnectCard />
                 <DataExport />
               </div>
@@ -497,7 +497,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
         {/* Medical Disclaimer */}
         <div className="mt-8 mb-4 text-center">
-          <p className="text-[8px] text-slate-700">
+          <p className="text-[11px] leading-relaxed text-slate-500">
             ⚕️ {t('disclaimer.short')} · {t('disclaimer.dataPrivacy')}
           </p>
         </div>
@@ -524,7 +524,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 onFocus={tab.id === 'profile' ? warmProfileAssets : undefined}
                 onClick={() => setActiveTab(tab.id)}
                 className={[
-                  'flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all cursor-pointer min-w-0',
+                  'flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 transition-all cursor-pointer min-w-0',
                   active ? 'text-orange-400' : 'text-slate-600',
                 ].join(' ')}
               >
