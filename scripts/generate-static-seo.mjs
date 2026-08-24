@@ -170,6 +170,9 @@ const founderPages = [
     role: 'Ürün fikrinin uygulamaya dönüşmesi, mobil ve web deneyimi, kişiselleştirme altyapısı, veri güvenliği, performans ve kullanıcı geri bildirimlerine göre yapılan iyileştirmeler ürün geliştirme sorumluluğunun parçalarıdır.',
     productTitle: 'Full Balance ne sunuyor?',
     product: 'Full Balance; kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için hedef odaklı planları beslenme, su, uyku, ilerleme ve longevity alışkanlık takibiyle birleştirir. Evde ekipmansız, temel ekipmanlı veya salonda kullanılabilir.',
+    identityTitle: 'Hangi Full Balance?',
+    identity: 'Bu profil, fullbalance.app adresindeki Full Balance Fitness & Wellness uygulamasına aittir. Aynı veya benzer adı kullanan tabanlık, finans, e-ticaret ya da diğer kuruluşlarla bağlantısı yoktur.',
+    socialProfile: 'Tolga Deveci’nin X profili',
     boundaryTitle: 'Ürün ve sağlık uzmanlığı ayrımı',
     boundary: 'Tolga Deveci ürünün kurucusu ve yazılım geliştiricisidir; sağlık uzmanı olarak tanıtılmaz. Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık içerikleri kaynaklı genel bilgilendirme olarak sunulur.',
     contact: 'Full Balance, ürün geliştirme veya basın konularında info@fullbalance.app adresinden iletişime geçebilirsiniz.',
@@ -187,6 +190,9 @@ const founderPages = [
     role: 'His product responsibilities include turning the idea into a working application, developing the mobile and web experience, personalization infrastructure, data security, performance and improvements based on user feedback.',
     productTitle: 'What does Full Balance provide?',
     product: 'Full Balance combines goal-based plans for muscle growth, fat loss, yoga, meditation, reformer and Pilates with nutrition, water, sleep, progress and longevity habit tracking. It supports no-equipment home, basic-equipment home and gym environments.',
+    identityTitle: 'Which Full Balance?',
+    identity: 'This profile is about the Full Balance Fitness & Wellness application at fullbalance.app. It is not affiliated with the e-commerce, financial coaching, orthopedic insole or other organizations that use the same or a similar name.',
+    socialProfile: 'Tolga Deveci on X',
     boundaryTitle: 'Product and health expertise',
     boundary: 'Tolga Deveci is presented as the product founder and software developer, not as a healthcare professional. Full Balance is not a medical diagnosis or treatment tool. Health content is general, sourced information.',
     contact: 'For questions about Full Balance, product development or press, contact info@fullbalance.app.',
@@ -204,6 +210,9 @@ const founderPages = [
     role: 'Sus responsabilidades incluyen convertir la idea en una aplicación funcional, desarrollar la experiencia móvil y web, la personalización, la seguridad de datos, el rendimiento y las mejoras basadas en comentarios de usuarios.',
     productTitle: '¿Qué ofrece Full Balance?',
     product: 'Full Balance combina planes para desarrollo muscular, pérdida de grasa, yoga, meditación, reformer y pilates con nutrición, agua, sueño, progreso y hábitos de longevidad. Admite entrenamiento en casa sin equipo, con equipo básico y en gimnasio.',
+    identityTitle: '¿Qué Full Balance?',
+    identity: 'Este perfil corresponde a la aplicación Full Balance Fitness & Wellness de fullbalance.app. No está afiliada con empresas de plantillas ortopédicas, asesoría financiera, comercio electrónico u otras organizaciones con un nombre igual o similar.',
+    socialProfile: 'Tolga Deveci en X',
     boundaryTitle: 'Producto y experiencia sanitaria',
     boundary: 'Tolga Deveci se presenta como fundador y desarrollador del producto, no como profesional sanitario. Full Balance no diagnostica ni trata enfermedades. El contenido de salud es información general con fuentes.',
     contact: 'Para consultas sobre Full Balance, desarrollo de producto o prensa, escribe a info@fullbalance.app.',
@@ -213,14 +222,14 @@ const founderPages = [
 
 for (const page of founderPages) {
   const canonical = `${BASE_URL}${page.path}`;
-  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p></header><article><section><h2>${escapeHtml(page.summaryTitle)}</h2><p>${escapeHtml(page.summary)}</p></section><section><h2>${escapeHtml(page.roleTitle)}</h2><p>${escapeHtml(page.role)}</p></section><section><h2>${escapeHtml(page.productTitle)}</h2><p>${escapeHtml(page.product)}</p></section><section><h2>${escapeHtml(page.boundaryTitle)}</h2><p>${escapeHtml(page.boundary)}</p><a href="/editorial-policy">${escapeHtml(page.policy)}</a></section><section><h2>Contact</h2><p>${escapeHtml(page.contact)}</p></section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p></header><article><section><h2>${escapeHtml(page.summaryTitle)}</h2><p>${escapeHtml(page.summary)}</p></section><section><h2>${escapeHtml(page.roleTitle)}</h2><p>${escapeHtml(page.role)}</p></section><section><h2>${escapeHtml(page.productTitle)}</h2><p>${escapeHtml(page.product)}</p></section><section><h2>${escapeHtml(page.identityTitle)}</h2><p>${escapeHtml(page.identity)}</p><a href="https://x.com/TolgaDeveci" rel="me">${escapeHtml(page.socialProfile)}</a></section><section><h2>${escapeHtml(page.boundaryTitle)}</h2><p>${escapeHtml(page.boundary)}</p><a href="/editorial-policy">${escapeHtml(page.policy)}</a></section><section><h2>Contact</h2><p>${escapeHtml(page.contact)}</p></section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'ProfilePage', '@id': `${canonical}#profile`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, mainEntity: { '@id': `${BASE_URL}/#tolga-deveci` } },
-      { '@type': 'Person', '@id': `${BASE_URL}/#tolga-deveci`, name: 'Tolga Deveci', jobTitle: page.lang === 'tr' ? 'Full Balance Kurucusu ve Yazılım Geliştiricisi' : page.lang === 'es' ? 'Fundador y Desarrollador de Software de Full Balance' : 'Founder and Software Developer of Full Balance', url: `${BASE_URL}${founderAlternates.tr}`, worksFor: { '@id': `${BASE_URL}/#organization` }, knowsAbout: ['Software development', 'Product development', 'User experience', 'Fitness application development'] },
-      { '@type': 'Organization', '@id': `${BASE_URL}/#organization`, name: 'Full Balance', url: `${BASE_URL}/`, logo: `${BASE_URL}/icon-512.png`, founder: { '@id': `${BASE_URL}/#tolga-deveci` } },
-      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: `${BASE_URL}/`, creator: { '@id': `${BASE_URL}/#tolga-deveci` }, publisher: { '@id': `${BASE_URL}/#organization` }, applicationCategory: 'HealthApplication', isAccessibleForFree: true },
+      { '@type': 'Person', '@id': `${BASE_URL}/#tolga-deveci`, name: 'Tolga Deveci', jobTitle: page.lang === 'tr' ? 'Full Balance Kurucusu ve Yazılım Geliştiricisi' : page.lang === 'es' ? 'Fundador y Desarrollador de Software de Full Balance' : 'Founder and Software Developer of Full Balance', url: `${BASE_URL}${founderAlternates.tr}`, identifier: 'tolga-deveci-full-balance-app', sameAs: ['https://x.com/TolgaDeveci'], worksFor: { '@id': `${BASE_URL}/#organization` }, knowsAbout: ['Software development', 'Product development', 'User experience', 'Fitness application development'] },
+      { '@type': 'Organization', '@id': `${BASE_URL}/#organization`, name: 'Full Balance', alternateName: ['Full Balance App', 'Full Balance Fitness & Wellness App'], identifier: 'fullbalance.app', description: 'The independent Full Balance Fitness & Wellness application published at fullbalance.app.', url: `${BASE_URL}/`, logo: `${BASE_URL}/icon-512.png`, founder: { '@id': `${BASE_URL}/#tolga-deveci` } },
+      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', alternateName: ['Full Balance App', 'Full Balance Fitness & Wellness App'], identifier: 'fullbalance.app', url: `${BASE_URL}/`, creator: { '@id': `${BASE_URL}/#tolga-deveci` }, publisher: { '@id': `${BASE_URL}/#organization` }, applicationCategory: 'HealthApplication', isAccessibleForFree: true },
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: 'Tolga Deveci', item: canonical }] },
     ],
   };

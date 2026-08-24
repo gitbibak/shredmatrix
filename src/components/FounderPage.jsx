@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowLeft, CheckCircle2, Code2, Compass, Layers3, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Code2, Compass, ExternalLink, Layers3, Mail, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const BASE_URL = 'https://fullbalance.app';
@@ -27,6 +27,9 @@ const pageCopy = {
     ],
     purposeTitle: 'Ürün yaklaşımı',
     purposeBody: 'Full Balance’ın amacı, farklı uygulamalara dağılmış günlük sağlık ve fitness araçlarını daha sade bir akışta birleştirmektir. Kullanıcı önce bugünkü ana görevini görür; ayrıntılara yalnızca ihtiyaç duyduğunda ulaşır.',
+    identityTitle: 'Hangi Full Balance?',
+    identityBody: 'Bu profil, fullbalance.app adresindeki Full Balance Fitness & Wellness uygulamasına aittir. Aynı veya benzer adı kullanan tabanlık, finans, e-ticaret ya da diğer kuruluşlarla bağlantısı yoktur.',
+    socialProfile: 'Tolga Deveci’nin X profilini görüntüle',
     boundaryTitle: 'Açık sınırlar',
     boundaryBody: 'Tolga Deveci ürünün kurucusu ve yazılım geliştiricisidir; sağlık uzmanı olarak tanıtılmaz. Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık içerikleri kaynaklı genel bilgilendirme olarak sunulur ve yayın ilkelerinde belirtilen sınırlar uygulanır.',
     factsTitle: 'Kısa bilgiler',
@@ -66,6 +69,9 @@ const pageCopy = {
     ],
     purposeTitle: 'Product approach',
     purposeBody: 'Full Balance is designed to bring daily fitness and wellness tools that are usually spread across different apps into one simpler flow. Users see their main task for today first and open additional detail only when needed.',
+    identityTitle: 'Which Full Balance?',
+    identityBody: 'This profile is about the Full Balance Fitness & Wellness application at fullbalance.app. It is not affiliated with the e-commerce, financial coaching, orthopedic insole or other organizations that use the same or a similar name.',
+    socialProfile: 'View Tolga Deveci on X',
     boundaryTitle: 'Clear boundaries',
     boundaryBody: 'Tolga Deveci is presented as the product founder and software developer, not as a healthcare professional. Full Balance is not a medical diagnosis or treatment tool. Health content is general, sourced information governed by the published editorial policy.',
     factsTitle: 'Quick facts',
@@ -105,6 +111,9 @@ const pageCopy = {
     ],
     purposeTitle: 'Enfoque del producto',
     purposeBody: 'Full Balance reúne en un flujo sencillo herramientas de fitness y bienestar que suelen estar repartidas entre distintas aplicaciones. El usuario ve primero su tarea principal del día y abre más detalles solo cuando los necesita.',
+    identityTitle: '¿Qué Full Balance?',
+    identityBody: 'Este perfil corresponde a la aplicación Full Balance Fitness & Wellness de fullbalance.app. No está afiliada con empresas de plantillas ortopédicas, asesoría financiera, comercio electrónico u otras organizaciones con un nombre igual o similar.',
+    socialProfile: 'Ver el perfil de Tolga Deveci en X',
     boundaryTitle: 'Límites claros',
     boundaryBody: 'Tolga Deveci se presenta como fundador y desarrollador del producto, no como profesional sanitario. Full Balance no diagnostica ni trata enfermedades. El contenido de salud es información general con fuentes y sigue la política editorial publicada.',
     factsTitle: 'Datos principales',
@@ -177,6 +186,8 @@ export default function FounderPage() {
           name: 'Tolga Deveci',
           jobTitle: lang === 'tr' ? 'Full Balance Kurucusu ve Yazılım Geliştiricisi' : lang === 'es' ? 'Fundador y Desarrollador de Software de Full Balance' : 'Founder and Software Developer of Full Balance',
           url: `${BASE_URL}/kurucu-tolga-deveci`,
+          identifier: 'tolga-deveci-full-balance-app',
+          sameAs: ['https://x.com/TolgaDeveci'],
           worksFor: { '@id': `${BASE_URL}/#organization` },
           knowsAbout: ['Software development', 'Product development', 'User experience', 'Fitness application development'],
         },
@@ -184,9 +195,24 @@ export default function FounderPage() {
           '@type': 'Organization',
           '@id': `${BASE_URL}/#organization`,
           name: 'Full Balance',
+          alternateName: ['Full Balance App', 'Full Balance Fitness & Wellness App'],
           url: `${BASE_URL}/`,
           logo: `${BASE_URL}/icon-512.png`,
+          identifier: 'fullbalance.app',
+          description: 'The independent Full Balance Fitness & Wellness application published at fullbalance.app.',
           founder: { '@id': `${BASE_URL}/#tolga-deveci` },
+        },
+        {
+          '@type': ['WebApplication', 'SoftwareApplication'],
+          '@id': `${BASE_URL}/#app`,
+          name: 'Full Balance',
+          alternateName: ['Full Balance App', 'Full Balance Fitness & Wellness App'],
+          identifier: 'fullbalance.app',
+          url: `${BASE_URL}/`,
+          creator: { '@id': `${BASE_URL}/#tolga-deveci` },
+          publisher: { '@id': `${BASE_URL}/#organization` },
+          applicationCategory: 'HealthApplication',
+          isAccessibleForFree: true,
         },
       ],
     });
@@ -247,6 +273,13 @@ export default function FounderPage() {
             <section className="mt-12 border-t border-slate-800 pt-10">
               <h2 className="font-outfit text-2xl font-bold">{c.purposeTitle}</h2>
               <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base sm:leading-8">{c.purposeBody}</p>
+            </section>
+            <section className="mt-12 border-t border-slate-800 pt-10">
+              <h2 className="font-outfit text-2xl font-bold">{c.identityTitle}</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base sm:leading-8">{c.identityBody}</p>
+              <a href="https://x.com/TolgaDeveci" rel="me noreferrer" target="_blank" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-cyan-400 hover:text-cyan-300">
+                {c.socialProfile} <ExternalLink size={15} />
+              </a>
             </section>
             <section className="mt-12 border-t border-slate-800 pt-10">
               <ShieldCheck size={24} className="text-blue-400" />
