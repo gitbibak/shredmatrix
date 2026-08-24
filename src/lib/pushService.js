@@ -77,13 +77,13 @@ export function getPermissionStatus() {
 }
 
 /**
- * Check if user has dismissed the push prompt recently (24h cooldown)
+ * Check if user has dismissed the push prompt recently (14-day cooldown)
  */
 export function wasRecentlyDismissed() {
   try {
     const dismissed = localStorage.getItem(PUSH_PREF_KEY);
     if (!dismissed) return false;
-    return (Date.now() - parseInt(dismissed)) < 24 * 60 * 60 * 1000;
+    return (Date.now() - parseInt(dismissed)) < 14 * 24 * 60 * 60 * 1000;
   } catch { return false; }
 }
 
@@ -112,7 +112,7 @@ function urlBase64ToUint8Array(base64String) {
  * Subscribe to push notifications
  * Returns { success: true, subscription } or { success: false, reason: string }
  */
-export async function subscribeToPush() {
+export async function subscribeToPush({ language = 'en' } = {}) {
   // Pre-flight checks
   if (!VAPID_PUBLIC_KEY) {
     return { success: false, reason: 'vapid-missing' };
@@ -164,7 +164,7 @@ export async function subscribeToPush() {
     }
 
     // Step 4: Save to Supabase
-    await saveSubscription(subscription);
+    await saveSubscription(subscription, language);
 
     // Step 5: Cache locally
     try {
@@ -173,8 +173,13 @@ export async function subscribeToPush() {
 
     // Step 6: Send welcome notification
     try {
-      await registration.showNotification('🔔 Bildirimler Açık!', {
-        body: 'Antrenman hatırlatmaları ve motivasyon mesajları alacaksın!',
+      const welcome = {
+        tr: { title: 'Hatırlatmalar açıldı', body: 'Planın için günde en fazla bir hatırlatma alacaksın.' },
+        en: { title: 'Reminders are on', body: 'You will receive at most one daily reminder for your plan.' },
+        es: { title: 'Recordatorios activados', body: 'Recibirás como máximo un recordatorio diario para tu plan.' },
+      }[language] || { title: 'Reminders are on', body: 'You will receive at most one daily reminder for your plan.' };
+      await registration.showNotification(welcome.title, {
+        body: welcome.body,
         icon: '/icon-192.png',
         badge: '/favicon-32.png',
         tag: 'fb-welcome',
@@ -191,7 +196,7 @@ export async function subscribeToPush() {
 /**
  * Save push subscription to Supabase
  */
-async function saveSubscription(subscription) {
+async function saveSubscription(subscription, language = 'en') {
   if (!isSupabaseReady()) return;
 
   try {
@@ -199,11 +204,14 @@ async function saveSubscription(subscription) {
     if (!user) return;
 
     const sub = subscription.toJSON();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
     await supabase.from('push_subscriptions').upsert({
       user_id: user.id,
       endpoint: sub.endpoint,
       p256dh: sub.keys?.p256dh || '',
       auth: sub.keys?.auth || '',
+      language: ['tr', 'en', 'es'].includes(language) ? language : 'en',
+      timezone,
       updated_at: new Date().toISOString(),
     }, {
       onConflict: 'user_id',

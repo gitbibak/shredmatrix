@@ -1,8 +1,3 @@
-// ══════════════════════════════════════════════
-// Full Balance — Push Notification Edge Function
-// Sends scheduled push notifications to all subscribers
-// ══════════════════════════════════════════════
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
 
@@ -11,88 +6,62 @@ const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
-// ── Notification Templates ──────────────────────
-const NOTIFICATION_SCHEDULES = {
-  morning: {
-    hours: [8, 9, 10], // 08:00-10:00 arası
-    messages: [
-      { title: '🏋️ Günaydın!', body: 'Bugünkü antrenman planın hazır. Harekete geç! 💪', category: 'workout' },
-      { title: '☀️ Günaydın!', body: 'Güne bir bardak su ile başla! Metabolizmanı ateşle 🔥', category: 'water' },
-      { title: '💪 Antrenman Zamanı!', body: 'Bugün kendini daha güçlü hissetmek için 1 saat yeter!', category: 'workout' },
-    ],
-  },
-  midday: {
-    hours: [12, 13, 14], // 12:00-14:00 arası
-    messages: [
-      { title: '💧 Su İçme Zamanı', body: 'Günün yarısı geçti! Su hedefine ne kadar yakınsın?', category: 'water' },
-      { title: '🍽️ Öğle Molası', body: 'Protein ağırlıklı bir öğün, kas gelişimini destekler!', category: 'motivation' },
-    ],
-  },
-  afternoon: {
-    hours: [15, 16, 17], // 15:00-17:00 arası
-    messages: [
-      { title: '⚡ Öğleden Sonra Motivasyonu', body: 'Bugün antrenmanını yaptın mı? Her gün bir adım daha!', category: 'workout' },
-      { title: '💧 Su Hatırlatması', body: 'Bir bardak daha! Günlük hedefe ulaş 💪', category: 'water' },
-    ],
-  },
-  evening: {
-    hours: [20, 21, 22], // 20:00-22:00 arası
-    messages: [
-      { title: '🌙 İyi Geceler!', body: 'Yarın daha güçlü olmak için bugün erken yat! 😴', category: 'sleep' },
-      { title: '📊 Günlük Özet', body: 'Bugünkü hedeflerini kontrol et. Yarın daha iyisini yapabilirsin!', category: 'streak' },
-    ],
-  },
-  streak_reminder: {
-    hours: [18, 19], // 18:00-19:00 arası (giriş yapmayanlara)
-    messages: [
-      { title: '🔥 Serini Koru!', body: 'Bugün henüz giriş yapmadın! Serin kırılmasın 💥', category: 'streak' },
-      { title: '🎯 Hedefini Unutma!', body: 'Bugünkü antrenmanını tamamla, harika gidiyorsun!', category: 'motivation' },
-    ],
-  },
+const MESSAGES = {
+  tr: [
+    { title: 'Bugünün planı hazır', body: 'Tek bir adım seç ve bugünün planını sürdür.', category: 'plan' },
+    { title: 'Düzenini koru', body: 'Bugün ekranında sıradaki kişisel adımın seni bekliyor.', category: 'streak' },
+  ],
+  en: [
+    { title: "Today's plan is ready", body: 'Choose one step and keep your personal plan moving today.', category: 'plan' },
+    { title: 'Keep your rhythm', body: 'Your next personal step is waiting on the Today screen.', category: 'streak' },
+  ],
+  es: [
+    { title: 'Tu plan de hoy está listo', body: 'Elige un paso y continúa hoy con tu plan personal.', category: 'plan' },
+    { title: 'Mantén tu ritmo', body: 'Tu siguiente paso personal te espera en la pantalla Hoy.', category: 'streak' },
+  ],
 };
 
-// ── Standards-compliant Web Push (RFC 8291) ──
-webpush.setVapidDetails(
-  'mailto:info@fullbalance.app',
-  VAPID_PUBLIC_KEY,
-  VAPID_PRIVATE_KEY,
-);
+webpush.setVapidDetails('mailto:info@fullbalance.app', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
-async function sendPushNotification(subscription, payload) {
+function getLocalSchedule(timezone: string, now = new Date()) {
   try {
-    await webpush.sendNotification(subscription, JSON.stringify(payload), {
-      TTL: 86400,
-      urgency: 'normal',
-    });
-    return { success: true };
-  } catch (err) {
-    const status = Number(err?.statusCode || err?.status || 0);
-    if (status === 404 || status === 410) {
-      return { success: false, expired: true, status };
-    }
-    console.error('Push send error:', err);
-    return { success: false, status, error: err?.message || 'Push failed' };
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(now);
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return { hour: Number(values.hour), date: `${values.year}-${values.month}-${values.day}` };
+  } catch {
+    return getLocalSchedule('UTC', now);
   }
 }
 
-// ── Main Handler ────────────────────────────────
+async function sendPushNotification(subscription, payload) {
+  try {
+    await webpush.sendNotification(subscription, JSON.stringify(payload), { TTL: 43200, urgency: 'normal' });
+    return { success: true };
+  } catch (error) {
+    const status = Number(error?.statusCode || error?.status || 0);
+    return { success: false, expired: status === 404 || status === 410, status };
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
-      headers: { 'Content-Type': 'application/json', 'Allow': 'POST' },
+      headers: { 'Content-Type': 'application/json', Allow: 'POST' },
     });
   }
 
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     const cronSecret = req.headers.get('x-cron-secret') || '';
-    const { data: authorized, error: authError } = await supabase.rpc(
-      'verify_push_cron_secret',
-      { candidate: cronSecret },
-    );
-
+    const { data: authorized, error: authError } = await supabase.rpc('verify_push_cron_secret', { candidate: cronSecret });
     if (authError || authorized !== true) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
@@ -100,87 +69,50 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Determine current time slot (UTC+3 for Turkey)
-    const now = new Date();
-    const turkeyHour = (now.getUTCHours() + 3) % 24;
-
-    // Find matching schedule
-    let selectedMessages = [];
-    for (const [, schedule] of Object.entries(NOTIFICATION_SCHEDULES)) {
-      if (schedule.hours.includes(turkeyHour)) {
-        selectedMessages = [...selectedMessages, ...schedule.messages];
-      }
-    }
-
-    // If no schedule matches, use a random motivation message
-    if (selectedMessages.length === 0) {
-      return new Response(JSON.stringify({
-        message: `No notifications scheduled for hour ${turkeyHour} (Turkey time)`,
-        sent: 0,
-      }), {
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Pick a random message from matched ones
-    const message = selectedMessages[Math.floor(Math.random() * selectedMessages.length)];
-
-    // Get all push subscriptions
     const { data: subscriptions, error } = await supabase
       .from('push_subscriptions')
-      .select('*');
-
+      .select('id, endpoint, p256dh, auth, language, timezone, notification_hour, last_notified_on');
     if (error) throw error;
-    if (!subscriptions || subscriptions.length === 0) {
-      return new Response(JSON.stringify({ message: 'No subscriptions found', sent: 0 }), {
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
 
-    // Send to all subscribers
     let sent = 0;
     let failed = 0;
+    let skipped = 0;
     const expiredIds = [];
 
-    for (const sub of subscriptions) {
+    for (const subscription of subscriptions || []) {
+      const local = getLocalSchedule(subscription.timezone || 'UTC');
+      const preferredHour = Number(subscription.notification_hour || 9);
+      if (local.hour !== preferredHour || subscription.last_notified_on === local.date) {
+        skipped += 1;
+        continue;
+      }
+
+      const language = ['tr', 'en', 'es'].includes(subscription.language) ? subscription.language : 'en';
+      const options = MESSAGES[language];
+      const message = options[Math.floor(Math.random() * options.length)];
       const result = await sendPushNotification(
-        { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-        {
-          title: message.title,
-          body: message.body,
-          category: message.category,
-          url: '/dashboard',
-        }
+        { endpoint: subscription.endpoint, keys: { p256dh: subscription.p256dh, auth: subscription.auth } },
+        { ...message, url: '/dashboard' },
       );
 
       if (result.success) {
-        sent++;
+        sent += 1;
+        await supabase.from('push_subscriptions').update({ last_notified_on: local.date }).eq('id', subscription.id);
       } else {
-        failed++;
-        if (result.expired) {
-          expiredIds.push(sub.id);
-        }
+        failed += 1;
+        if (result.expired) expiredIds.push(subscription.id);
       }
     }
 
-    // Clean up expired subscriptions
     if (expiredIds.length > 0) {
       await supabase.from('push_subscriptions').delete().in('id', expiredIds);
     }
 
-    return new Response(JSON.stringify({
-      message: `Push notifications sent (Turkey hour: ${turkeyHour})`,
-      notification: message,
-      sent,
-      failed,
-      expired_cleaned: expiredIds.length,
-      total_subscribers: subscriptions.length,
-    }), {
+    return new Response(JSON.stringify({ sent, failed, skipped, expired_cleaned: expiredIds.length }), {
       headers: { 'Content-Type': 'application/json' },
     });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error?.message || 'Push delivery failed' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

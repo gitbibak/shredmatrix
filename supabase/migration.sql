@@ -134,6 +134,10 @@ CREATE TABLE IF NOT EXISTS public.push_subscriptions (
   endpoint TEXT NOT NULL,
   p256dh TEXT NOT NULL,
   auth TEXT NOT NULL,
+  language TEXT NOT NULL DEFAULT 'en' CHECK (language IN ('tr', 'en', 'es')),
+  timezone TEXT NOT NULL DEFAULT 'UTC',
+  notification_hour SMALLINT NOT NULL DEFAULT 9 CHECK (notification_hour BETWEEN 7 AND 21),
+  last_notified_on DATE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id)

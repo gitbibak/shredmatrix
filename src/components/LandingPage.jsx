@@ -63,6 +63,9 @@ const copy = {
     guidesTitle: 'Neyi neden yaptığını da öğren',
     guidesDesc: 'Longevity, kuvvet, uyku ve mobilite konularını sade, uygulanabilir ve kaynaklı içeriklerle açıklıyoruz.',
     readGuide: 'Rehberi oku',
+    allGuides: 'Tüm rehberler',
+    stats: ['hedef', 'program', 'ücretsiz'],
+    guideTitles: ['Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık', 'Kuvvet Antrenmanı ve Sağlıklı Yaş Alma', 'Uyku, Toparlanma ve Longevity'],
     finalTitle: 'Sağlıklı rutinini bugün ücretsiz kur',
     finalDesc: 'Tek hedef seç, kısa bilgilerini gir ve kişisel planını kullanmaya başla.',
     footerMedical: 'Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık durumuna uygun kararlar için sağlık uzmanına danış.',
@@ -81,6 +84,8 @@ const copy = {
     freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
     stepsEyebrow: 'Simple start', stepsTitle: 'Your personal plan in three steps', steps: [['Choose your goal', 'Select one of six goals and your experience level.'], ['Add the essentials', 'Complete the short profile, health and allergy preferences.'], ['Start today', 'See your workout and nutrition plan; recommendations adapt as you progress.']],
     guidesEyebrow: 'Sourced guides', guidesTitle: 'Understand why each habit matters', guidesDesc: 'Clear, practical and sourced guides on longevity, strength, sleep and mobility.', readGuide: 'Read guide',
+    allGuides: 'All guides', stats: ['goals', 'programs', 'free'],
+    guideTitles: ['What Is Longevity? 5 Habits That Support Healthy Living', 'Strength Training for Healthy Aging', 'Sleep, Recovery and Longevity'],
     finalTitle: 'Build your healthy routine for free today', finalDesc: 'Choose one goal, add the essentials and start using your personal plan.', footerMedical: 'Full Balance is not a medical diagnosis or treatment tool. Consult a health professional for decisions related to your condition.',
   },
   es: {
@@ -97,6 +102,8 @@ const copy = {
     freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
     stepsEyebrow: 'Inicio sencillo', stepsTitle: 'Tu plan personal en tres pasos', steps: [['Elige tu objetivo', 'Selecciona uno de seis objetivos y tu nivel.'], ['Añade lo esencial', 'Completa el perfil breve y tus preferencias de salud y alergias.'], ['Empieza hoy', 'Consulta entrenamiento y nutrición; las recomendaciones se adaptan a tu progreso.']],
     guidesEyebrow: 'Guías con fuentes', guidesTitle: 'Comprende por qué importa cada hábito', guidesDesc: 'Guías claras y prácticas sobre longevidad, fuerza, sueño y movilidad.', readGuide: 'Leer guía',
+    allGuides: 'Todas las guías', stats: ['objetivos', 'programas', 'gratis'],
+    guideTitles: ['¿Qué es la longevidad? 5 hábitos para una vida saludable', 'Entrenamiento de fuerza para un envejecimiento saludable', 'Sueño, recuperación y longevidad'],
     finalTitle: 'Crea hoy tu rutina saludable gratis', finalDesc: 'Elige un objetivo, añade lo esencial y empieza tu plan personal.', footerMedical: 'Full Balance no es una herramienta de diagnóstico ni tratamiento. Consulta a un profesional de salud.',
   },
 };
@@ -144,9 +151,9 @@ export default function LandingPage({ onStart }) {
   ];
 
   const guides = [
-    { slug: 'longevity-nedir-saglikli-yasam-aliskanliklari', image: '/images/blog/longevity-habits.jpg', title: 'Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık' },
-    { slug: 'kuvvet-antrenmani-ve-saglikli-yaslanma', image: '/images/blog/strength-healthy-aging.jpg', title: 'Kuvvet Antrenmanı ve Sağlıklı Yaş Alma' },
-    { slug: 'uyku-toparlanma-ve-longevity', image: '/images/blog/sleep-recovery.jpg', title: 'Uyku, Toparlanma ve Longevity' },
+    { slug: 'longevity-nedir-saglikli-yasam-aliskanliklari', image: '/images/blog/longevity-habits.jpg', title: c.guideTitles[0] },
+    { slug: 'kuvvet-antrenmani-ve-saglikli-yaslanma', image: '/images/blog/strength-healthy-aging.jpg', title: c.guideTitles[1] },
+    { slug: 'uyku-toparlanma-ve-longevity', image: '/images/blog/sleep-recovery.jpg', title: c.guideTitles[2] },
   ];
 
   const handleShare = async () => {
@@ -227,9 +234,9 @@ export default function LandingPage({ onStart }) {
             <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.previewTitle}</h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.previewDesc}</p>
             <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-800 pt-5 text-center">
-              <div><strong className="block text-xl text-white">6</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'hedef' : 'goals'}</span></div>
-              <div><strong className="block text-xl text-white">24</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'program' : 'programs'}</span></div>
-              <div><strong className="block text-xl text-emerald-400">%100</strong><span className="text-xs text-slate-500">{lang === 'tr' ? 'ücretsiz' : 'free'}</span></div>
+              <div><strong className="block text-xl text-white">6</strong><span className="text-xs text-slate-500">{c.stats[0]}</span></div>
+              <div><strong className="block text-xl text-white">24</strong><span className="text-xs text-slate-500">{c.stats[1]}</span></div>
+              <div><strong className="block text-xl text-emerald-400">%100</strong><span className="text-xs text-slate-500">{c.stats[2]}</span></div>
             </div>
           </div>
           <img src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" width="1200" height="630" className="w-full border border-slate-800 object-cover" />
@@ -332,7 +339,7 @@ export default function LandingPage({ onStart }) {
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <SectionTitle eyebrow={c.guidesEyebrow} title={c.guidesTitle} desc={c.guidesDesc} />
-            <Link to="/blog" className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">{lang === 'tr' ? 'Tüm rehberler' : 'All guides'}<ArrowRight size={16} /></Link>
+            <Link to="/blog" className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">{c.allGuides}<ArrowRight size={16} /></Link>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {guides.map((guide) => (

@@ -1,182 +1,91 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, X, Check, Dumbbell, Droplets, Moon, Trophy, AlertCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Bell, Check, X } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { getWorkoutLogs } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
 import {
-  isPushSupported,
-  getPermissionStatus,
-  wasRecentlyDismissed,
   dismissPushPrompt,
+  getPermissionStatus,
+  isPushSupported,
   subscribeToPush,
-  getPushUnsupportedReason,
+  wasRecentlyDismissed,
 } from '../lib/pushService';
 
-/**
- * Push notification permission request — bottom card style
- * Only shows if device actually supports push notifications
- */
-export default function PushPermission() {
-  const { t } = useTranslation();
+export default function PushPermission({ daysSinceJoin = 0 }) {
+  const { t, lang } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [done, setDone] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Don't show if not supported
-    if (!isPushSupported()) return;
-    // Don't show if already granted or denied
-    const perm = getPermissionStatus();
-    if (perm === 'granted' || perm === 'denied') return;
-    // Don't show if recently dismissed
-    if (wasRecentlyDismissed()) return;
+    let active = true;
+    const decide = async () => {
+      if (!isPushSupported() || getPermissionStatus() !== 'default' || wasRecentlyDismissed()) return;
+      const logs = await getWorkoutLogs().catch(() => []);
+      if (!active || (daysSinceJoin < 2 && logs.length === 0)) return;
+      setVisible(true);
+      trackEvent('reminder_prompt_view', { language: lang, trigger: logs.length > 0 ? 'first_workout' : 'return_visit' });
+    };
+    decide();
+    return () => { active = false; };
+  }, [daysSinceJoin, lang]);
 
-    const timer = setTimeout(() => setVisible(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const getErrorMessage = (reason, detail) => {
-    switch (reason) {
-      case 'denied':
-        return t('push.deniedError');
-      case 'dismissed':
-        return 'İzin dialogunu kapattın. Tekrar "İzin Ver" butonuna bas.';
-      case 'ios-old':
-        return 'Bildirimler iOS 16.4+ gerektirir. Telefonunu güncelle.';
-      case 'ios-not-standalone':
-        return 'Bildirimleri almak için uygulamayı ana ekrana eklemelisin.';
-      case 'sw-not-ready':
-        return 'Servis çalışanı hazır değil. Uygulamayı kapatıp tekrar aç.';
-      case 'vapid-missing':
-        return 'Sistem yapılandırma hatası. Lütfen daha sonra tekrar dene.';
-      case 'subscribe-failed':
-        return `Abonelik oluşturulamadı${detail ? ': ' + detail : ''}. Tekrar dene.`;
-      default:
-        return t('push.error');
-    }
-  };
-
-  const handleAllow = async () => {
+  const allow = async () => {
     setSubscribing(true);
-    setError(null);
-
-    const result = await subscribeToPush();
+    setError(false);
+    const result = await subscribeToPush({ language: lang });
     setSubscribing(false);
-
+    trackEvent('reminder_permission_result', { language: lang, result: result.success ? 'granted' : result.reason });
     if (result.success) {
       setDone(true);
-      setTimeout(() => setVisible(false), 3000);
-    } else {
-      setError(getErrorMessage(result.reason, result.detail));
+      return;
     }
+    setError(true);
   };
 
-  const handleDismiss = () => {
+  const dismiss = () => {
     dismissPushPrompt();
+    trackEvent('reminder_prompt_dismiss', { language: lang });
     setVisible(false);
   };
 
   if (!visible) return null;
 
-  const features = [
-    { icon: Dumbbell, text: t('push.feature.workout'), color: 'text-orange-400' },
-    { icon: Droplets, text: t('push.feature.water'), color: 'text-blue-400' },
-    { icon: Moon, text: t('push.feature.sleep'), color: 'text-purple-400' },
-    { icon: Trophy, text: t('push.feature.streak'), color: 'text-amber-400' },
-  ];
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: -60, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -60, scale: 0.97 }}
-        transition={{ type: 'spring', damping: 22, stiffness: 260 }}
-        className="relative z-[60] mb-4"
-      >
-        <div className="bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-4 shadow-2xl shadow-black/30 overflow-hidden">
-          {/* Subtle glow effect */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
-
-          {/* Close button */}
-          <button
-            onClick={handleDismiss}
-            aria-label="Kapat"
-            className="absolute top-3 right-3 p-1.5 rounded-full text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all cursor-pointer"
-          >
-            <X size={14} />
-          </button>
-
-          {done ? (
-            /* ── Success State ── */
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center gap-3 py-1"
+    <section className="relative flex items-start gap-3 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-300">
+        {done ? <Check size={18} /> : <Bell size={18} />}
+      </span>
+      <div className="min-w-0 flex-1 pr-7">
+        <h2 className="font-outfit text-sm font-bold text-white">
+          {done ? t('push.enabled') : t('push.contextTitle')}
+        </h2>
+        <p className="mt-1 text-xs leading-5 text-slate-400">
+          {done ? t('push.enabledDesc') : t('push.contextDesc')}
+        </p>
+        {!done && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={allow}
+              disabled={subscribing}
+              className="min-h-10 rounded-lg bg-cyan-600 px-4 text-xs font-bold text-white disabled:opacity-50"
             >
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center">
-                <Check size={18} className="text-green-400" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-white font-outfit">{t('push.enabled')}</p>
-                <p className="text-[11px] text-slate-400 mt-0.5">{t('push.enabledDesc')}</p>
-              </div>
-            </motion.div>
-          ) : (
-            /* ── Request State ── */
-            <div>
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 border border-orange-500/20 flex items-center justify-center">
-                  <Bell size={18} className="text-orange-400" />
-                </div>
-                <div className="flex-1 min-w-0 pr-6">
-                  <p className="text-sm font-bold text-white font-outfit">{t('push.title')}</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">{t('push.desc')}</p>
-                </div>
-              </div>
-
-              {/* Features grid */}
-              <div className="grid grid-cols-2 gap-1.5 mb-3">
-                {features.map((f, i) => (
-                  <div key={i} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
-                    <f.icon size={11} className={f.color} />
-                    <span className="text-[10px] text-slate-300">{f.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Error message */}
-              {error && (
-                <div className="flex items-start gap-2 mb-3 px-2.5 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <AlertCircle size={13} className="text-red-400 mt-0.5 shrink-0" />
-                  <p className="text-[11px] text-red-300 leading-relaxed">{error}</p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex items-center gap-2">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleAllow}
-                  disabled={subscribing}
-                  className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold cursor-pointer hover:from-orange-600 hover:to-orange-700 transition-colors disabled:opacity-50 shadow-lg shadow-orange-500/20"
-                >
-                  <Bell size={12} />
-                  {subscribing ? '...' : (error ? 'Tekrar Dene' : t('push.allow'))}
-                </motion.button>
-
-                <button
-                  onClick={handleDismiss}
-                  className="px-4 py-2 rounded-xl text-slate-400 text-xs font-medium hover:text-slate-300 hover:bg-slate-800/50 transition-all cursor-pointer"
-                >
-                  {t('push.later')}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </AnimatePresence>
+              {subscribing ? t('push.enabling') : error ? t('push.retry') : t('push.allow')}
+            </button>
+            <button type="button" onClick={dismiss} className="min-h-10 px-3 text-xs font-semibold text-slate-400">
+              {t('push.later')}
+            </button>
+          </div>
+        )}
+        {error && <p className="mt-2 text-[11px] text-red-300">{t('push.error')}</p>}
+      </div>
+      {!done && (
+        <button type="button" onClick={dismiss} aria-label={t('push.later')} className="absolute right-3 top-3 p-2 text-slate-500">
+          <X size={16} />
+        </button>
+      )}
+    </section>
   );
 }

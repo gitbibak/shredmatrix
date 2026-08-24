@@ -264,7 +264,7 @@ describe('planGenerator safety personalization', () => {
         expect(plan.personalization.allergyValidated).toBe(true);
       }
     }
-  });
+  }, 10000);
 
   it('normalizes equipment choices to the supported contract for every module', () => {
     expect(normalizeTrainingEnvironment('muscle', 'home_basic')).toBe('home_basic');

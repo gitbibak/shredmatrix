@@ -484,6 +484,19 @@ export async function getApprovedTestimonials(limit = 6) {
   return data || [];
 }
 
+export async function hasSubmittedTestimonial() {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) return false;
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('id')
+    .eq('user_id', userId)
+    .limit(1)
+    .maybeSingle();
+  if (error) return false;
+  return Boolean(data);
+}
+
 // ══════════════════════════════════════════════
 // PROGRESS (Weight + Body Fat)
 // ══════════════════════════════════════════════

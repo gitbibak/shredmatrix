@@ -26,6 +26,8 @@ const TodayFocusPanel = lazy(() => import('./TodayFocusPanel'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
 const LongevityPanel = lazy(() => import('./LongevityPanel'));
+const PushPermission = lazy(() => import('./PushPermission'));
+const MilestoneStoryPrompt = lazy(() => import('./MilestoneStoryPrompt'));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -308,6 +310,8 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+                  <PushPermission daysSinceJoin={daysSinceJoin} />
+                  <MilestoneStoryPrompt lang={lang} onOpenProfile={() => setActiveTab('profile')} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />
                     <SleepTracker compact />

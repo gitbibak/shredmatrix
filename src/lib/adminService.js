@@ -521,6 +521,17 @@ export async function getAdminTestimonials(status = 'pending') {
 
 export async function updateTestimonialStatus(testimonialId, status) {
   if (!['approved', 'rejected'].includes(status)) throw new Error('Geçersiz durum.');
+  if (status === 'approved') {
+    const { data: existing, error: readError } = await supabase
+      .from('testimonials')
+      .select('consent_public, body')
+      .eq('id', testimonialId)
+      .single();
+    if (readError) throw readError;
+    if (!existing.consent_public || String(existing.body || '').trim().length < 30) {
+      throw new Error('Açık yayın izni ve geçerli yorum olmadan onay verilemez.');
+    }
+  }
   const { data, error } = await supabase
     .from('testimonials')
     .update({ status, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString() })
