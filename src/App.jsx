@@ -30,6 +30,7 @@ const SupportResolutionNotice = lazy(() => import('./components/SupportResolutio
 const BlogIndex = lazy(() => import('./components/BlogIndex'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const EditorialPolicy = lazy(() => import('./components/EditorialPolicy'));
+const FounderPage = lazy(() => import('./components/FounderPage'));
 
 const SEO_PAGE_SLUGS = [
   'ucretsiz-fitness-uygulamasi',
@@ -698,6 +699,14 @@ function AppContent() {
                 <EditorialPolicy />
               </motion.div>
             } />
+
+            {['/kurucu-tolga-deveci', '/en/founder-tolga-deveci', '/es/fundador-tolga-deveci'].map((path) => (
+              <Route key={path} path={path} element={
+                <motion.div key={path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                  <FounderPage />
+                </motion.div>
+              } />
+            ))}
 
             {SEO_PAGE_SLUGS.map((slug) => (
               <Route

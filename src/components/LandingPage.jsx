@@ -78,6 +78,7 @@ const copy = {
     finalTitle: 'Sağlıklı rutinini bugün ücretsiz kur',
     finalDesc: 'Tek hedef seç, kısa bilgilerini gir ve kişisel planını kullanmaya başla.',
     footerMedical: 'Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık durumuna uygun kararlar için sağlık uzmanına danış.',
+    founderLink: 'Kurucu ve geliştirici', founderCredit: 'Full Balance, Tolga Deveci tarafından kurulan ve geliştirilen bağımsız bir projedir.',
   },
   en: {
     navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your free personal fitness and wellness app',
@@ -100,6 +101,7 @@ const copy = {
     allGuides: 'All guides', stats: ['goals', 'programs', 'free'],
     guideTitles: ['What Is Longevity? 5 Habits That Support Healthy Living', 'Strength Training for Healthy Aging', 'Sleep, Recovery and Longevity'],
     finalTitle: 'Build your healthy routine for free today', finalDesc: 'Choose one goal, add the essentials and start using your personal plan.', footerMedical: 'Full Balance is not a medical diagnosis or treatment tool. Consult a health professional for decisions related to your condition.',
+    founderLink: 'Founder & developer', founderCredit: 'Full Balance is an independent product founded and developed by Tolga Deveci.',
   },
   es: {
     navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu aplicación personal gratuita de fitness y bienestar',
@@ -122,6 +124,7 @@ const copy = {
     allGuides: 'Todas las guías', stats: ['objetivos', 'programas', 'gratis'],
     guideTitles: ['¿Qué es la longevidad? 5 hábitos para una vida saludable', 'Entrenamiento de fuerza para un envejecimiento saludable', 'Sueño, recuperación y longevidad'],
     finalTitle: 'Crea hoy tu rutina saludable gratis', finalDesc: 'Elige un objetivo, añade lo esencial y empieza tu plan personal.', footerMedical: 'Full Balance no es una herramienta de diagnóstico ni tratamiento. Consulta a un profesional de salud.',
+    founderLink: 'Fundador y desarrollador', founderCredit: 'Full Balance es un producto independiente fundado y desarrollado por Tolga Deveci.',
   },
 };
 
@@ -416,8 +419,10 @@ export default function LandingPage({ onStart }) {
               <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>
               <Link to="/contact" className="hover:text-white">{t('contact.link') || 'İletişim'}</Link>
               <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : 'Editorial policy'}</Link>
+              <Link to={lang === 'tr' ? '/kurucu-tolga-deveci' : lang === 'es' ? '/es/fundador-tolga-deveci' : '/en/founder-tolga-deveci'} className="hover:text-white">{c.founderLink}</Link>
             </div>
           </div>
+          <p className="mt-5 max-w-3xl text-xs leading-5 text-slate-600">{c.founderCredit}</p>
           <div className="mt-6 flex items-start gap-2 border-t border-slate-800 pt-5 text-xs leading-5 text-slate-600"><Lock size={13} className="mt-0.5 shrink-0" /><p>{c.footerMedical}</p></div>
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-700"><Languages size={13} /> TR · EN · ES</div>
         </div>

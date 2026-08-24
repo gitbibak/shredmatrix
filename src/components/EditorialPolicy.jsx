@@ -78,6 +78,9 @@ export default function EditorialPolicy() {
             <p className="mt-2 text-sm leading-6 text-slate-400">
               Kaynak, doğruluk veya anlatımla ilgili geri bildiriminizi <a className="font-semibold text-white underline underline-offset-4" href="mailto:info@fullbalance.app">info@fullbalance.app</a> adresine iletebilirsiniz.
             </p>
+            <p className="mt-3 text-sm leading-6 text-slate-400">
+              Ürünün kurucusu ve yazılım geliştiricisi hakkında <Link className="font-semibold text-white underline underline-offset-4" to="/kurucu-tolga-deveci">Tolga Deveci profilini</Link> inceleyebilirsiniz.
+            </p>
           </div>
         </div>
       </section>

@@ -55,6 +55,28 @@ assert(blogHtml.includes('"@type":"Blog"'), 'blog index schema is missing');
 const editorialHtml = await readFile(join(distDir, 'editorial-policy', 'index.html'), 'utf8');
 assert(editorialHtml.includes('<h1>Yayın ilkelerimiz</h1>'), 'editorial policy H1 is missing');
 assert(editorialHtml.includes(`${BASE_URL}/editorial-policy`), 'editorial policy canonical is missing');
+assert(editorialHtml.includes('/kurucu-tolga-deveci'), 'editorial policy founder link is missing');
+
+const founderRoutes = [
+  ['kurucu-tolga-deveci', 'tr', 'Tolga Deveci — Full Balance Kurucusu ve Geliştiricisi'],
+  ['en/founder-tolga-deveci', 'en', 'Tolga Deveci — Founder and Developer of Full Balance'],
+  ['es/fundador-tolga-deveci', 'es', 'Tolga Deveci — Fundador y Desarrollador de Full Balance'],
+];
+
+for (const [route, lang, title] of founderRoutes) {
+  const html = await readFile(join(distDir, route, 'index.html'), 'utf8');
+  assert(html.includes(`<html lang="${lang}">`), `${route} document language is missing`);
+  assert(html.includes(`<title>${title}</title>`), `${route} title is missing`);
+  assert(html.includes('<h1>Tolga Deveci</h1>'), `${route} visible founder H1 is missing`);
+  assert(html.includes('"@type":"ProfilePage"'), `${route} ProfilePage schema is missing`);
+  assert(html.includes('"@type":"Person"'), `${route} Person schema is missing`);
+  assert(html.includes('"founder":{"@id":"https://fullbalance.app/#tolga-deveci"}'), `${route} organization founder relationship is missing`);
+  assert(html.includes('"creator":{"@id":"https://fullbalance.app/#tolga-deveci"}'), `${route} application creator relationship is missing`);
+  assert(html.includes(`hreflang="tr" href="${BASE_URL}/kurucu-tolga-deveci"`), `${route} Turkish alternate is missing`);
+  assert(html.includes(`hreflang="en" href="${BASE_URL}/en/founder-tolga-deveci"`), `${route} English alternate is missing`);
+  assert(html.includes(`hreflang="es" href="${BASE_URL}/es/fundador-tolga-deveci"`), `${route} Spanish alternate is missing`);
+  assert(occurrences(html, 'type="application/ld+json"') === 1, `${route} has conflicting structured data blocks`);
+}
 
 for (const page of internationalSeoPages) {
   const html = await readFile(join(distDir, page.path.replace(/^\//, ''), 'index.html'), 'utf8');
@@ -74,4 +96,4 @@ for (const [path] of publicPages) {
   assert(sitemap.includes(`<loc>${BASE_URL}${path}</loc>`), `${path} is missing from sitemap.xml`);
 }
 
-console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + 2} static SEO pages and ${publicPages.length} sitemap URLs.`);
+console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderRoutes.length + 2} static SEO pages and ${publicPages.length} sitemap URLs.`);

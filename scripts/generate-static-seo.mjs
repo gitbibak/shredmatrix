@@ -147,9 +147,85 @@ for (const article of blogArticles) {
 }
 
 const editorialDescription = 'Full Balance sağlık ve wellness rehberlerinin kaynak seçimi, hazırlama, güncelleme ve düzeltme ilkeleri.';
-const editorialBody = `<main class="static-seo"><a href="/blog">Rehbere dön</a><h1>Yayın ilkelerimiz</h1><p>Full Balance rehberleri sağlıklı yaşam konularını sade ve uygulanabilir biçimde açıklamak için hazırlanır.</p><section><h2>Kaynak seçimi</h2><p>Önceliğimiz Dünya Sağlık Örgütü, ulusal sağlık kurumları, hakemli araştırmalar ve yetkili meslek kuruluşları gibi birincil ve kurumsal kaynaklardır.</p><h2>Tıbbi sınırlar</h2><p>İçerikler genel bilgilendirme içindir. Tanı, tedavi, kişiye özel tıbbi öneri veya sonuç garantisi verilmez.</p><h2>Hazırlama ve güncelleme</h2><p>Kaynaklar yazı sonunda gösterilir; önemli değişikliklerde içerik yeniden değerlendirilir ve güncelleme tarihi değiştirilir.</p></section><footer><a href="mailto:info@fullbalance.app">Düzeltme bildir</a></footer></main>`;
+const editorialBody = `<main class="static-seo"><a href="/blog">Rehbere dön</a><h1>Yayın ilkelerimiz</h1><p>Full Balance rehberleri sağlıklı yaşam konularını sade ve uygulanabilir biçimde açıklamak için hazırlanır.</p><section><h2>Kaynak seçimi</h2><p>Önceliğimiz Dünya Sağlık Örgütü, ulusal sağlık kurumları, hakemli araştırmalar ve yetkili meslek kuruluşları gibi birincil ve kurumsal kaynaklardır.</p><h2>Tıbbi sınırlar</h2><p>İçerikler genel bilgilendirme içindir. Tanı, tedavi, kişiye özel tıbbi öneri veya sonuç garantisi verilmez.</p><h2>Hazırlama ve güncelleme</h2><p>Kaynaklar yazı sonunda gösterilir; önemli değişikliklerde içerik yeniden değerlendirilir ve güncelleme tarihi değiştirilir.</p></section><footer><a href="mailto:info@fullbalance.app">Düzeltme bildir</a> · <a href="/kurucu-tolga-deveci">Kurucu ve geliştirici: Tolga Deveci</a></footer></main>`;
 const editorialSchema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Yayın İlkeleri ve İçerik Süreci', url: `${BASE_URL}/editorial-policy`, description: editorialDescription, inLanguage: 'tr-TR', publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL } };
 await writeRoute('/editorial-policy', buildDocument({ title: 'Yayın İlkeleri ve İçerik Süreci | Full Balance', description: editorialDescription, canonical: `${BASE_URL}/editorial-policy`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: editorialSchema, body: editorialBody }));
+
+const founderAlternates = {
+  tr: '/kurucu-tolga-deveci',
+  en: '/en/founder-tolga-deveci',
+  es: '/es/fundador-tolga-deveci',
+};
+
+const founderPages = [
+  {
+    lang: 'tr', locale: 'tr-TR', path: founderAlternates.tr,
+    title: 'Tolga Deveci — Full Balance Kurucusu ve Geliştiricisi',
+    description: 'Tolga Deveci, tamamen ücretsiz kişisel fitness, beslenme ve wellness uygulaması Full Balance’ın kurucusu ve yazılım geliştiricisidir.',
+    heading: 'Tolga Deveci', eyebrow: 'Full Balance kurucusu ve geliştiricisi',
+    intro: 'Full Balance, Tolga Deveci tarafından kurulan ve geliştirilen bağımsız, tamamen ücretsiz bir kişisel fitness ve wellness uygulamasıdır.',
+    summaryTitle: 'Full Balance’ı kim geliştirdi?',
+    summary: 'Full Balance’ın kurucusu ve yazılım geliştiricisi Tolga Deveci’dir. Ürünün planlama, kullanıcı deneyimi, yazılım geliştirme ve sürekli iyileştirme süreçlerini yürütür.',
+    roleTitle: 'Tolga Deveci’nin projedeki rolü',
+    role: 'Ürün fikrinin uygulamaya dönüşmesi, mobil ve web deneyimi, kişiselleştirme altyapısı, veri güvenliği, performans ve kullanıcı geri bildirimlerine göre yapılan iyileştirmeler ürün geliştirme sorumluluğunun parçalarıdır.',
+    productTitle: 'Full Balance ne sunuyor?',
+    product: 'Full Balance; kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için hedef odaklı planları beslenme, su, uyku, ilerleme ve longevity alışkanlık takibiyle birleştirir. Evde ekipmansız, temel ekipmanlı veya salonda kullanılabilir.',
+    boundaryTitle: 'Ürün ve sağlık uzmanlığı ayrımı',
+    boundary: 'Tolga Deveci ürünün kurucusu ve yazılım geliştiricisidir; sağlık uzmanı olarak tanıtılmaz. Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık içerikleri kaynaklı genel bilgilendirme olarak sunulur.',
+    contact: 'Full Balance, ürün geliştirme veya basın konularında info@fullbalance.app adresinden iletişime geçebilirsiniz.',
+    cta: 'Full Balance’ı ücretsiz kullan', policy: 'Yayın ilkeleri', home: 'Ana sayfa',
+  },
+  {
+    lang: 'en', locale: 'en-US', path: founderAlternates.en,
+    title: 'Tolga Deveci — Founder and Developer of Full Balance',
+    description: 'Tolga Deveci is the founder and software developer of Full Balance, a completely free personal fitness, nutrition and wellness application.',
+    heading: 'Tolga Deveci', eyebrow: 'Founder and developer of Full Balance',
+    intro: 'Full Balance is an independent, completely free personal fitness and wellness application founded and developed by Tolga Deveci.',
+    summaryTitle: 'Who developed Full Balance?',
+    summary: 'Tolga Deveci is the founder and software developer of Full Balance. He leads product planning, user experience, software development and continuous improvement.',
+    roleTitle: 'Tolga Deveci’s role in the project',
+    role: 'His product responsibilities include turning the idea into a working application, developing the mobile and web experience, personalization infrastructure, data security, performance and improvements based on user feedback.',
+    productTitle: 'What does Full Balance provide?',
+    product: 'Full Balance combines goal-based plans for muscle growth, fat loss, yoga, meditation, reformer and Pilates with nutrition, water, sleep, progress and longevity habit tracking. It supports no-equipment home, basic-equipment home and gym environments.',
+    boundaryTitle: 'Product and health expertise',
+    boundary: 'Tolga Deveci is presented as the product founder and software developer, not as a healthcare professional. Full Balance is not a medical diagnosis or treatment tool. Health content is general, sourced information.',
+    contact: 'For questions about Full Balance, product development or press, contact info@fullbalance.app.',
+    cta: 'Use Full Balance for free', policy: 'Editorial policy', home: 'Home',
+  },
+  {
+    lang: 'es', locale: 'es-ES', path: founderAlternates.es,
+    title: 'Tolga Deveci — Fundador y Desarrollador de Full Balance',
+    description: 'Tolga Deveci es el fundador y desarrollador de Full Balance, una aplicación gratuita de fitness, nutrición y bienestar personal.',
+    heading: 'Tolga Deveci', eyebrow: 'Fundador y desarrollador de Full Balance',
+    intro: 'Full Balance es una aplicación personal e independiente de fitness y bienestar, completamente gratuita, fundada y desarrollada por Tolga Deveci.',
+    summaryTitle: '¿Quién desarrolló Full Balance?',
+    summary: 'Tolga Deveci es el fundador y desarrollador de software de Full Balance. Dirige la planificación del producto, la experiencia de usuario, el desarrollo y la mejora continua.',
+    roleTitle: 'Función de Tolga Deveci en el proyecto',
+    role: 'Sus responsabilidades incluyen convertir la idea en una aplicación funcional, desarrollar la experiencia móvil y web, la personalización, la seguridad de datos, el rendimiento y las mejoras basadas en comentarios de usuarios.',
+    productTitle: '¿Qué ofrece Full Balance?',
+    product: 'Full Balance combina planes para desarrollo muscular, pérdida de grasa, yoga, meditación, reformer y pilates con nutrición, agua, sueño, progreso y hábitos de longevidad. Admite entrenamiento en casa sin equipo, con equipo básico y en gimnasio.',
+    boundaryTitle: 'Producto y experiencia sanitaria',
+    boundary: 'Tolga Deveci se presenta como fundador y desarrollador del producto, no como profesional sanitario. Full Balance no diagnostica ni trata enfermedades. El contenido de salud es información general con fuentes.',
+    contact: 'Para consultas sobre Full Balance, desarrollo de producto o prensa, escribe a info@fullbalance.app.',
+    cta: 'Usar Full Balance gratis', policy: 'Política editorial', home: 'Inicio',
+  },
+];
+
+for (const page of founderPages) {
+  const canonical = `${BASE_URL}${page.path}`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p></header><article><section><h2>${escapeHtml(page.summaryTitle)}</h2><p>${escapeHtml(page.summary)}</p></section><section><h2>${escapeHtml(page.roleTitle)}</h2><p>${escapeHtml(page.role)}</p></section><section><h2>${escapeHtml(page.productTitle)}</h2><p>${escapeHtml(page.product)}</p></section><section><h2>${escapeHtml(page.boundaryTitle)}</h2><p>${escapeHtml(page.boundary)}</p><a href="/editorial-policy">${escapeHtml(page.policy)}</a></section><section><h2>Contact</h2><p>${escapeHtml(page.contact)}</p></section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a></footer></main>`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'ProfilePage', '@id': `${canonical}#profile`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, mainEntity: { '@id': `${BASE_URL}/#tolga-deveci` } },
+      { '@type': 'Person', '@id': `${BASE_URL}/#tolga-deveci`, name: 'Tolga Deveci', jobTitle: page.lang === 'tr' ? 'Full Balance Kurucusu ve Yazılım Geliştiricisi' : page.lang === 'es' ? 'Fundador y Desarrollador de Software de Full Balance' : 'Founder and Software Developer of Full Balance', url: `${BASE_URL}${founderAlternates.tr}`, worksFor: { '@id': `${BASE_URL}/#organization` }, knowsAbout: ['Software development', 'Product development', 'User experience', 'Fitness application development'] },
+      { '@type': 'Organization', '@id': `${BASE_URL}/#organization`, name: 'Full Balance', url: `${BASE_URL}/`, logo: `${BASE_URL}/icon-512.png`, founder: { '@id': `${BASE_URL}/#tolga-deveci` } },
+      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: `${BASE_URL}/`, creator: { '@id': `${BASE_URL}/#tolga-deveci` }, publisher: { '@id': `${BASE_URL}/#organization` }, applicationCategory: 'HealthApplication', isAccessibleForFree: true },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: 'Tolga Deveci', item: canonical }] },
+    ],
+  };
+  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang === 'es' ? 'en' : page.lang}.png`, schema, body, lang: page.lang, alternates: founderAlternates }));
+}
 
 for (const page of internationalSeoPages) {
   const canonical = `${BASE_URL}${page.path}`;
@@ -168,4 +244,4 @@ for (const page of internationalSeoPages) {
   await writeRoute(page.path, buildDocument({ title: page.metaTitle, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-en.png`, schema, body, lang: page.lang, alternates: page.alternates }));
 }
 
-console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + 2} static SEO pages.`);
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + 2} static SEO pages.`);
