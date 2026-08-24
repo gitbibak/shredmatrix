@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
-import { preloadProfilePhoto } from '../lib/dataService';
+import { preloadProfilePhoto, recordProductStep } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
 
 // ── Lazy-loaded Dashboard sub-components ──
@@ -121,6 +121,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
   useEffect(() => {
     trackEvent('dashboard_tab_view', { tab: activeTab, module: plan?.primaryGoal || plan?.goalKey || 'unknown' });
+    if (activeTab === 'today') {
+      recordProductStep('today_viewed').catch((error) => console.warn('[Activation]', error?.message || error));
+    }
   }, [activeTab, plan?.primaryGoal, plan?.goalKey]);
 
   useEffect(() => {

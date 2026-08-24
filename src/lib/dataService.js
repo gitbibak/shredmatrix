@@ -449,6 +449,35 @@ export async function recordActivityDay() {
   return true;
 }
 
+const PRODUCT_STEP_COLUMNS = {
+  today_viewed: 'today_viewed',
+  workout_plan_viewed: 'workout_plan_viewed',
+  workout_day_opened: 'workout_day_opened',
+  workout_completed: 'workout_completed',
+};
+
+export async function recordProductStep(step) {
+  const column = PRODUCT_STEP_COLUMNS[step];
+  const userId = getUserId();
+  const activityDate = new Date().toISOString().slice(0, 10);
+  if (!column || !isSupabaseReady() || !userId) return false;
+
+  const cacheKey = `fb_product_step_${activityDate}_${column}`;
+  try {
+    if (localStorage.getItem(cacheKey) === userId) return true;
+  } catch { /* Continue without cache. */ }
+
+  const { error } = await supabase.from('user_activity_days').upsert({
+    user_id: userId,
+    activity_date: activityDate,
+    last_seen_at: new Date().toISOString(),
+    [column]: true,
+  }, { onConflict: 'user_id,activity_date' });
+  if (error) throw error;
+  try { localStorage.setItem(cacheKey, userId); } catch { /* Optional cache. */ }
+  return true;
+}
+
 // ══════════════════════════════════════════════
 // USER STORIES
 // ══════════════════════════════════════════════

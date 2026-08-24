@@ -17,7 +17,7 @@ import {
   getRegistrationTrend, getUserPlanDetails, deleteUser, getRecentUsers,
   getActivityStats, getWorkoutTrend, getSupportTickets, getSupportStats,
   updateSupportTicket, getRetentionStats, getContentReviews, updateContentReview,
-  getAdminTestimonials, updateTestimonialStatus
+  getAdminTestimonials, getActivationFunnelStats, updateTestimonialStatus
 } from '../../lib/adminService';
 
 // ── Colors ───────────────────────────────────────
@@ -218,6 +218,7 @@ export default function AdminPanel({ user }) {
   const [refreshing, setRefreshing] = useState(false);
   const [activityStats, setActivityStats] = useState(null);
   const [retentionStats, setRetentionStats] = useState(null);
+  const [activationFunnel, setActivationFunnel] = useState(null);
   const [workoutTrend, setWorkoutTrend] = useState([]);
   const [supportTickets, setSupportTickets] = useState([]);
   const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
@@ -256,7 +257,7 @@ export default function AdminPanel({ user }) {
   const loadData = useCallback(async () => {
     if (!isAllowed) return;
     try {
-      const [s, d, t, r, a, w, support, retention] = await Promise.all([
+      const [s, d, t, r, a, w, support, retention, funnel] = await Promise.all([
         getAdminStats(),
         getPlanDistribution(),
         getRegistrationTrend(),
@@ -265,6 +266,7 @@ export default function AdminPanel({ user }) {
         getWorkoutTrend(),
         getSupportStats(),
         getRetentionStats(),
+        getActivationFunnelStats(),
       ]);
       if (!s || !a) throw new Error('Bazı yönetim verileri alınamadı.');
       setStats(s);
@@ -275,6 +277,7 @@ export default function AdminPanel({ user }) {
       setWorkoutTrend(w);
       setSupportStats(support);
       setRetentionStats(retention);
+      setActivationFunnel(funnel);
       setLoadError('');
       setLastUpdated(new Date());
     } catch (err) {
@@ -536,6 +539,26 @@ export default function AdminPanel({ user }) {
                   <StatCard icon={TrendingUp} label="D7 Geri Dönüş" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} uygun kullanıcı`} color="#a78bfa" delay={0.2} />
                   <StatCard icon={Users} label="Ölçüm Penceresi" value="60 gün" sub="Yeni kohort takibi" color="#34d399" delay={0.22} />
                 </div>
+
+                <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4 sm:p-5">
+                  <div className="mb-4">
+                    <h3 className="font-outfit text-sm font-bold text-white">Son 7 gün aktivasyon hunisi</h3>
+                    <p className="mt-1 text-[10px] leading-5 text-slate-500">Kullanıcı hiçbir kayıt yapmasa bile uygulamayı açtığında aktif sayılır. Aşağıdaki adımlar bu sürümden itibaren birikir.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+                    {[
+                      { icon: Users, label: 'Uygulamayı açtı', value: activationFunnel?.activeUsers, color: '#94a3b8' },
+                      { icon: Calendar, label: 'Bugün ekranını gördü', value: activationFunnel?.todayViewed, color: '#38bdf8' },
+                      { icon: Dumbbell, label: 'Antrenmana geçti', value: activationFunnel?.workoutPlanViewed, color: '#f97316' },
+                      { icon: Eye, label: 'Antrenman gününü açtı', value: activationFunnel?.workoutDayOpened, color: '#a78bfa' },
+                      { icon: CheckCircle2, label: 'Antrenmanı tamamladı', value: activationFunnel?.workoutCompleted, color: '#34d399' },
+                    ].map((item, index) => {
+                      const active = activationFunnel?.activeUsers || 0;
+                      const value = item.value ?? 0;
+                      return <StatCard key={item.label} icon={item.icon} label={item.label} value={value} sub={index === 0 ? 'Tekil kullanıcı' : active > 0 ? `Aktiflerin %${Math.round((value / active) * 100)}` : 'Henüz veri yok'} color={item.color} delay={0.24 + index * 0.03} />;
+                    })}
+                  </div>
+                </section>
 
                 {/* Trend */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}

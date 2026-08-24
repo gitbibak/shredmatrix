@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getWorkoutLogs, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+import { getWorkoutLogs, recordProductStep, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
 import { getExerciseInfo, getDifficultyLabel } from '../data/exerciseDatabase';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -459,6 +459,17 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
   }, []);
 
   useEffect(() => {
+    if (!plan) return;
+    recordProductStep('workout_plan_viewed').catch((error) => console.warn('[Activation]', error?.message || error));
+  }, [plan]);
+
+  useEffect(() => {
+    if (openIndex < 0 || !plan?.workoutSplit?.[openIndex]) return;
+    trackEvent('workout_day_opened');
+    recordProductStep('workout_day_opened').catch((error) => console.warn('[Activation]', error?.message || error));
+  }, [openIndex, plan]);
+
+  useEffect(() => {
     if (!celebration) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -520,6 +531,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
       setFeedbackDuration(45);
       setFeedbackError('');
       trackEvent('workout_completed');
+      recordProductStep('workout_completed').catch((error) => console.warn('[Activation]', error?.message || error));
 
       // 🎉 CELEBRATION!
       // Haptic feedback

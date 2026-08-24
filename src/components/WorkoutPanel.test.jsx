@@ -5,6 +5,7 @@ import { getWorkoutLogs, saveWorkoutFeedback, saveWorkoutLog } from '../lib/data
 
 vi.mock('../lib/dataService', () => ({
   getWorkoutLogs: vi.fn(),
+  recordProductStep: vi.fn().mockResolvedValue(true),
   saveWorkoutFeedback: vi.fn(),
   saveWorkoutLog: vi.fn(),
 }));

@@ -147,6 +147,29 @@ export async function getRetentionStats() {
   );
 }
 
+export function summarizeActivationFunnel(activityRows = []) {
+  const usersFor = (predicate) => new Set(activityRows.filter(predicate).map(({ user_id: userId }) => userId).filter(Boolean)).size;
+  return {
+    activeUsers: usersFor(() => true),
+    todayViewed: usersFor((row) => row.today_viewed),
+    workoutPlanViewed: usersFor((row) => row.workout_plan_viewed),
+    workoutDayOpened: usersFor((row) => row.workout_day_opened),
+    workoutCompleted: usersFor((row) => row.workout_completed),
+  };
+}
+
+export async function getActivationFunnelStats() {
+  if (!isSupabaseReady()) return summarizeActivationFunnel();
+  const since = new Date();
+  since.setUTCDate(since.getUTCDate() - 6);
+  const { data, error } = await supabase
+    .from('user_activity_days')
+    .select('user_id, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed')
+    .gte('activity_date', utcDateKey(since));
+  if (error) throw error;
+  return summarizeActivationFunnel(data || []);
+}
+
 // ── User Statistics ─────────────────────────────
 export async function getAdminStats() {
   if (!isSupabaseReady()) return null;

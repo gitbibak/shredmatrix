@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { summarizeRetention } from './adminService';
+import { summarizeActivationFunnel, summarizeRetention } from './adminService';
 
 describe('summarizeRetention', () => {
   it('excludes users who are not yet eligible and measures exact return days', () => {
@@ -24,6 +24,25 @@ describe('summarizeRetention', () => {
       d7Eligible: 1,
       d7Returned: 1,
       d7Rate: 100,
+    });
+  });
+});
+
+describe('summarizeActivationFunnel', () => {
+  it('counts unique users at each step without requiring a saved workout', () => {
+    const activity = [
+      { user_id: 'passive', today_viewed: true, workout_plan_viewed: false, workout_day_opened: false, workout_completed: false },
+      { user_id: 'starter', today_viewed: true, workout_plan_viewed: true, workout_day_opened: true, workout_completed: false },
+      { user_id: 'finisher', today_viewed: true, workout_plan_viewed: true, workout_day_opened: true, workout_completed: true },
+      { user_id: 'finisher', today_viewed: true, workout_plan_viewed: true, workout_day_opened: true, workout_completed: true },
+    ];
+
+    expect(summarizeActivationFunnel(activity)).toEqual({
+      activeUsers: 3,
+      todayViewed: 3,
+      workoutPlanViewed: 2,
+      workoutDayOpened: 2,
+      workoutCompleted: 1,
     });
   });
 });

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   Activity, ArrowRight, BarChart3, BookOpen, Brain, Check,
   ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
-  HeartPulse, Languages, Leaf, Lock, Salad, ShieldCheck,
+  HeartPulse, House, Languages, Leaf, Lock, MapPin, PackageOpen, Salad, ShieldCheck,
   Sparkles, Sun, Target, TrendingUp,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -28,11 +28,20 @@ const copy = {
     navCta: 'Ücretsiz başla',
     freeBadge: 'Tamamen ücretsiz · Kredi kartı gerekmez',
     heroTitle: 'Ücretsiz kişisel fitness ve wellness uygulaması',
-    heroDesc: 'Kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için kişisel planlar; beslenme, ilerleme ve longevity dengesiyle tek yerde.',
+    heroDesc: 'Evde ekipmansız, evde temel ekipmanla veya salonda: kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates planın hedefinle birlikte ortamına da uyarlanır.',
     primaryCta: 'Ücretsiz hesabını oluştur',
     share: 'Arkadaşına gönder',
     copied: 'Bağlantı kopyalandı',
     freeNote: 'Abonelik yok · premium duvarı yok · gizli ücret yok',
+    homeEyebrow: 'Ortamına gerçekten uygun',
+    homeTitle: 'Evde ne varsa, programında yalnızca o var.',
+    homeDesc: 'Kayıt sırasında nerede çalışacağını seç. Full Balance egzersizlerini hedefin, seviyen, sağlık tercihlerin ve seçtiğin ortamla uyumlu hazırlar.',
+    noEquipmentTitle: 'Evde · Ekipmansız',
+    noEquipmentDesc: 'Vücut ağırlığı ve güvenli ev desteğiyle uygulanabilen hareketler. Salon makinesi veya sahip olmadığın ekipman verilmez.',
+    equipmentTitle: 'Evde · Temel ekipman',
+    equipmentDesc: 'Dambıl, direnç bandı ve mat gibi temel ekipmana göre hazırlanmış egzersizler ve uygun alternatifler.',
+    homeVenueNote: 'Salonu seçersen program makine ve serbest ağırlıklara göre hazırlanır. Reformer gibi cihaz gerektiren hedeflerde yalnızca uygun ortam seçenekleri gösterilir.',
+    homeCta: 'Ortamına uygun ücretsiz planı oluştur',
     previewEyebrow: 'Tek sakin akış',
     previewTitle: 'Planını uygula, alışkanlıklarını gör, ilerlemeni takip et.',
     previewDesc: 'Full Balance farklı araçlara dağılmadan antrenman, öğün, su, uyku ve vücut gelişimini aynı kişisel panelde birleştirir.',
@@ -72,8 +81,12 @@ const copy = {
   },
   en: {
     navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your free personal fitness and wellness app',
-    heroDesc: 'Personal plans for muscle growth, fat loss, yoga, meditation, reformer and pilates, combined with nutrition, progress and longevity balance.',
+    heroDesc: 'At home with no equipment, with basic equipment or at the gym: muscle growth, fat loss, yoga, meditation, reformer and pilates plans adapt to both your goal and training environment.',
     primaryCta: 'Create your free account', share: 'Share with a friend', copied: 'Link copied', freeNote: 'No subscription · no paywall · no hidden fees',
+    homeEyebrow: 'Built for your actual setup', homeTitle: 'Your plan only uses what you have at home.', homeDesc: 'Choose where you train during signup. Full Balance adapts exercises to your goal, level, health preferences and selected environment.',
+    noEquipmentTitle: 'Home · No equipment', noEquipmentDesc: 'Bodyweight movements and safe household support. No gym machine or equipment you do not own.',
+    equipmentTitle: 'Home · Basic equipment', equipmentDesc: 'Exercises and practical alternatives for dumbbells, resistance bands and a mat.',
+    homeVenueNote: 'Choose the gym for machine and free-weight programming. Equipment-specific goals such as reformer only show compatible environments.', homeCta: 'Create my free setup-based plan',
     previewEyebrow: 'One calm flow', previewTitle: 'Follow your plan, understand your habits and track progress.', previewDesc: 'Full Balance brings workouts, meals, water, sleep and body progress into one personal dashboard.',
     goalsEyebrow: '6 personal goals', goalsTitle: 'Choose the right place to begin', goalsDesc: 'Each goal has foundation, intermediate, advanced and master plans. You can change your goal later.',
     includedEyebrow: 'More than a program', includedTitle: 'Nutrition, progress and longevity work together', includedDesc: 'Your existing daily records become one meaningful view without extra forms.',
@@ -90,8 +103,12 @@ const copy = {
   },
   es: {
     navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu aplicación personal gratuita de fitness y bienestar',
-    heroDesc: 'Planes para ganar músculo, perder grasa, yoga, meditación, reformer y pilates, junto con nutrición, progreso y equilibrio de longevidad.',
+    heroDesc: 'En casa sin equipo, con equipo básico o en el gimnasio: los planes de músculo, pérdida de grasa, yoga, meditación, reformer y pilates se adaptan a tu objetivo y entorno.',
     primaryCta: 'Crea tu cuenta gratis', share: 'Compartir', copied: 'Enlace copiado', freeNote: 'Sin suscripción · sin muro de pago · sin costes ocultos',
+    homeEyebrow: 'Creado para tu espacio real', homeTitle: 'Tu plan solo utiliza lo que tienes en casa.', homeDesc: 'Elige dónde entrenas durante el registro. Full Balance adapta los ejercicios a tu objetivo, nivel, preferencias de salud y entorno.',
+    noEquipmentTitle: 'Casa · Sin equipo', noEquipmentDesc: 'Movimientos con peso corporal y apoyo doméstico seguro. Sin máquinas ni material que no tengas.',
+    equipmentTitle: 'Casa · Equipo básico', equipmentDesc: 'Ejercicios y alternativas para mancuernas, bandas de resistencia y esterilla.',
+    homeVenueNote: 'Elige gimnasio para usar máquinas y peso libre. Objetivos específicos como reformer solo muestran entornos compatibles.', homeCta: 'Crear mi plan gratuito según mi espacio',
     previewEyebrow: 'Un flujo sencillo', previewTitle: 'Sigue tu plan, comprende tus hábitos y controla tu progreso.', previewDesc: 'Full Balance reúne entrenamiento, comidas, agua, sueño y progreso corporal en un panel personal.',
     goalsEyebrow: '6 objetivos personales', goalsTitle: 'Elige el punto de partida adecuado', goalsDesc: 'Cada objetivo incluye niveles inicial, intermedio, avanzado y maestro. Puedes cambiarlo después.',
     includedEyebrow: 'Más que un programa', includedTitle: 'Nutrición, progreso y longevidad unidos', includedDesc: 'Tus registros diarios forman una vista útil sin formularios adicionales.',
@@ -208,7 +225,7 @@ export default function LandingPage({ onStart }) {
       </nav>
 
       <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
-        <img src="/images/blog/longevity-habits.jpg" alt="Full Balance ile hareket, beslenme ve sağlıklı yaşam alışkanlıkları" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
+        <img src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
         <div className="absolute inset-0 bg-slate-950/70" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/20" />
         <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-6 sm:pb-24">
@@ -228,6 +245,36 @@ export default function LandingPage({ onStart }) {
       </header>
 
       <section className="border-b border-white/10 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionTitle eyebrow={c.homeEyebrow} title={c.homeTitle} desc={c.homeDesc} />
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              { image: '/images/home-bodyweight.jpg', icon: House, title: c.noEquipmentTitle, desc: c.noEquipmentDesc, color: 'text-emerald-400' },
+              { image: '/images/home-equipment.jpg', icon: PackageOpen, title: c.equipmentTitle, desc: c.equipmentDesc, color: 'text-cyan-400' },
+            ].map((item) => (
+              <article key={item.title} className="overflow-hidden border border-slate-800 bg-slate-900/55">
+                <img src={item.image} alt={item.title} width="1536" height="1024" loading="lazy" className="aspect-[3/2] w-full object-cover" />
+                <div className="p-5 sm:p-6">
+                  <item.icon size={22} className={item.color} />
+                  <h3 className="mt-4 font-outfit text-xl font-bold text-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-400">{item.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-col gap-4 border-l-2 border-orange-500 bg-orange-500/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3 text-sm leading-6 text-slate-300">
+              <MapPin size={19} className="mt-0.5 shrink-0 text-orange-400" />
+              <p>{c.homeVenueNote}</p>
+            </div>
+            <button onClick={() => startRegistration('training_environment')} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 bg-orange-500 px-5 font-outfit text-xs font-bold text-white hover:bg-orange-400">
+              {c.homeCta}<ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-white/10 py-16 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
             <Eyebrow>{c.previewEyebrow}</Eyebrow>
@@ -236,7 +283,7 @@ export default function LandingPage({ onStart }) {
             <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-800 pt-5 text-center">
               <div><strong className="block text-xl text-white">6</strong><span className="text-xs text-slate-500">{c.stats[0]}</span></div>
               <div><strong className="block text-xl text-white">24</strong><span className="text-xs text-slate-500">{c.stats[1]}</span></div>
-              <div><strong className="block text-xl text-emerald-400">%100</strong><span className="text-xs text-slate-500">{c.stats[2]}</span></div>
+              <div><strong className="block text-xl text-emerald-400">{lang === 'tr' ? '%100' : '100%'}</strong><span className="text-xs text-slate-500">{c.stats[2]}</span></div>
             </div>
           </div>
           <img src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" width="1200" height="630" className="w-full border border-slate-800 object-cover" />
