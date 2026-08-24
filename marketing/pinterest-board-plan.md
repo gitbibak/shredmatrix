@@ -36,6 +36,14 @@ Pinterest hedefi: Google gibi calisan gorsel arama kanalinda uzun omurlu trafik 
    - Aciklama: BMI, protein ihtiyaci, kalori hedefi ve fitness metrikleri.
    - Link: `/bmi-hesaplama`
 
+9. Home Workouts for Beginners
+   - Description: Free beginner home workout plans with no-equipment and dumbbell options, clear sets, reps, rest, progression and nutrition support.
+   - Links: `/en/home-workout-no-equipment`, `/en/home-dumbbell-workout-plan`
+
+10. Entrenamiento en Casa con Mancuernas
+   - Descripcion: Planes gratis para principiantes con mancuernas o bandas, progresion clara y nutricion personalizada.
+   - Link: `/es/entrenamiento-en-casa-con-mancuernas`
+
 ## Pin Tasarim Kurallari
 
 - Boyut: 1000 x 1500 px.
@@ -83,7 +91,8 @@ Pinterest hedefi: Google gibi calisan gorsel arama kanalinda uzun omurlu trafik 
 
 ## Haftalik Pinterest Uygulama
 
-- Pazartesi: 7 yeni pin yukle, 21:30'a zamanla.
-- Sali-Cuma: Her gun 3 pin.
-- Cumartesi: En iyi performansli 3 pinin yeni baslikli varyasyonu.
-- Pazar: Kayit getiren panoya 5 ek pin.
+- Haftada 4-5 yeni ve ozgun pin yayinla; her pin dogrudan ilgili dildeki sayfaya gitsin.
+- Ilk iki hafta EN ekipmansiz, EN dambilli ve ES dambilli konularini esit dagit.
+- Her varyanti hedef ulkenin yerel saatinde 12:00-14:00 ve 18:00-22:00 pencerelerinde test et.
+- Yedi gun sonunda goruntulenme degil, UTM landing ziyareti ve kayit sayisina gore karar ver.
+- Kayit getirmeyen varyanti tekrar tekrar yayinlama; hook, gorsel veya hedef sayfayi degistir.

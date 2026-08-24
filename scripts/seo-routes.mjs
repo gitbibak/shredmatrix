@@ -27,12 +27,13 @@ export const publicPages = [
   ['/reformer-pilates-programi', '2026-08-14'],
   ['/meditasyon-uygulamasi', '2026-08-14'],
   ['/evde-spor-programi', '2026-08-16'],
+  ['/evde-dambil-antrenman-programi', '2026-08-24'],
   ['/evde-kas-gelistirme-hareketleri', '2026-08-16'],
   ['/baslangic-pilates-programi', '2026-08-16'],
   ['/blog', '2026-08-10'],
   ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
   ...internationalSeoPages.map((page) => [
     page.path,
-    ['homeWorkout', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-16' : '2026-08-14',
+    ['homeWorkout', 'homeDumbbell', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-24' : '2026-08-14',
   ]),
 ];

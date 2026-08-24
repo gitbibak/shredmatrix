@@ -86,6 +86,26 @@ const pages = {
       ['Program nasıl zorlaşır?', 'Kontrol sağlandıkça tekrar, tempo, hareket açıklığı ve daha ileri varyasyonlarla ilerler.'],
     ],
   },
+  'evde-dambil-antrenman-programi': {
+    icon: Dumbbell,
+    accent: '#38bdf8',
+    title: 'Evde Dambıl',
+    titleAccent: 'Antrenman Programı',
+    metaTitle: 'Evde Dambıl Antrenman Programı | Ücretsiz Kişisel Plan',
+    description: 'Hedef ve seviyene göre evde dambıl veya direnç bandıyla uygulanabilen, salon makinesi içermeyen ücretsiz kişisel antrenman ve beslenme planı oluştur.',
+    keywords: 'evde dambıl antrenman programı, evde ekipmanlı spor, dambıl programı, direnç bandı antrenmanı',
+    heroCopy: 'Dambıl veya direnç bandıyla evde çalış; salon makineleri olmadan set, tekrar, dinlenme, progresyon ve beslenme hedeflerini tek planda gör.',
+    sections: [
+      { title: 'Seçtiğin ekipmana uygun', body: 'Program dambıl ve direnç bandı hareketlerini kullanır; kablo, barbell ve yalnızca salonda bulunan makineleri dışarıda bırakır.' },
+      { title: 'Kontrollü ilerleme', body: 'Egzersiz sırası, set, tekrar ve dinlenme açıkça gösterilir; sonraki fazlarda antrenman yükü seviyene göre artırılır.' },
+      { title: 'Beslenmeyle aynı hedefte', body: 'Kalori, makro, öğün ve alışveriş listesi aynı hedefi destekler; seçilen alerji ve beslenme tercihleri dikkate alınır.' },
+    ],
+    faqs: [
+      ['Hangi ekipman gerekir?', 'Bir çift dambıl veya direnç bandı yeterlidir; spor salonu makinesi gerekmez.'],
+      ['Yeni başlayanlara uygun mu?', 'Evet. Egzersiz seçimi ve haftalık hacim deneyime göre ayarlanır.'],
+      ['Beslenme planı dahil mi?', 'Evet. Hedefe ve seçilen alerjilere göre uyarlanan beslenme planı ücretsizdir.'],
+    ],
+  },
   'evde-kas-gelistirme-hareketleri': {
     icon: TrendingUp,
     accent: '#f97316',
@@ -439,6 +459,7 @@ const supportCards = [
 
 const relatedLinks = [
   ['evde-spor-programi', 'Ekipmansız evde spor'],
+  ['evde-dambil-antrenman-programi', 'Evde dambıl programı'],
   ['evde-kas-gelistirme-hareketleri', 'Evde kas geliştirme'],
   ['baslangic-pilates-programi', 'Başlangıç pilatesi'],
   ['kas-gelisimi-programi', 'Kas gelişimi'],

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { generatePlan, personalizeMealItems, PLAN_VERSION } from './planGenerator';
+import {
+  findMealAllergyViolations,
+  generatePlan,
+  normalizeTrainingEnvironment,
+  personalizeMealItems,
+  PLAN_VERSION,
+} from './planGenerator';
 import { findHomeEquipmentViolations } from './homeWorkoutPrograms';
 
 describe('planGenerator safety personalization', () => {
@@ -240,6 +246,49 @@ describe('planGenerator safety personalization', () => {
     ['whey', 'milk', 'yogurt', 'salmon', 'egg', 'wheat', 'toast', 'chicken'].forEach((term) => {
       expect(text).not.toContain(term);
     });
+  });
+
+  it('keeps every module and language clear of every selected allergen', () => {
+    const goals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
+    const allergies = ['lactose', 'gluten', 'egg', 'nuts', 'seafood', 'soy', 'sesame', 'vegan', 'vegetarian'];
+
+    for (const lang of ['tr', 'en', 'es']) {
+      for (const primaryGoal of goals) {
+        const plan = generatePlan({
+          ...baseMetrics,
+          primaryGoal,
+          allergies,
+        }, 0, lang);
+
+        expect(findMealAllergyViolations(plan.dailyNutrition, allergies)).toEqual([]);
+        expect(plan.personalization.allergyValidated).toBe(true);
+      }
+    }
+  });
+
+  it('normalizes equipment choices to the supported contract for every module', () => {
+    expect(normalizeTrainingEnvironment('muscle', 'home_basic')).toBe('home_basic');
+    expect(normalizeTrainingEnvironment('fat_loss', 'home_bodyweight')).toBe('home_bodyweight');
+    expect(normalizeTrainingEnvironment('yoga', 'gym')).toBe('home_bodyweight');
+    expect(normalizeTrainingEnvironment('pilates', 'home_basic')).toBe('home_bodyweight');
+    expect(normalizeTrainingEnvironment('meditation', 'gym')).toBe('home_bodyweight');
+    expect(normalizeTrainingEnvironment('reformer', 'home_bodyweight')).toBe('studio');
+    expect(normalizeTrainingEnvironment('reformer', 'home_reformer')).toBe('home_reformer');
+
+    for (const primaryGoal of ['yoga', 'pilates', 'meditation']) {
+      const plan = generatePlan({ ...baseMetrics, primaryGoal, trainingEnvironment: 'gym' }, 0, 'en');
+      expect(plan.trainingEnvironment).toBe('home_bodyweight');
+      expect(plan.personalization.equipmentValidated).toBe(true);
+    }
+
+    const reformer = generatePlan({
+      ...baseMetrics,
+      primaryGoal: 'reformer',
+      trainingEnvironment: 'home_bodyweight',
+    }, 0, 'en');
+    expect(reformer.trainingEnvironment).toBe('studio');
+    expect(reformer.planQuality.equipmentLabel).toBe('Studio reformer machine');
+    expect(reformer.personalization.equipmentValidated).toBe(true);
   });
 
   it('keeps beginner fat-loss plans low impact and strength-retention focused', () => {

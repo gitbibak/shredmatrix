@@ -30,6 +30,9 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - BMI Calculator: https://fullbalance.app/bmi-hesaplama
 - Calorie and Macro Tracking: https://fullbalance.app/kalori-makro-takibi
 - Workout Planner: https://fullbalance.app/antrenman-programi
+- No-Equipment Home Workout: https://fullbalance.app/en/home-workout-no-equipment
+- Home Dumbbell Workout: https://fullbalance.app/en/home-dumbbell-workout-plan
+- Entrenamiento con Mancuernas: https://fullbalance.app/es/entrenamiento-en-casa-con-mancuernas
 - Progress Tracking: https://fullbalance.app/ilerleme-takibi
 - Water, Sleep and Weight Tracking: https://fullbalance.app/su-uyku-kilo-takibi
 - Yoga, Pilates and Reformer: https://fullbalance.app/yoga-pilates-reformer

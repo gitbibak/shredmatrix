@@ -9,6 +9,10 @@ const intentDetails = {
     benefits: ['Makine veya spor salonu ekipmanı istemeyen vücut ağırlığı hareketleri', 'Zorluk seviyesine göre kolay alternatifler ve kontrollü progresyon', 'Egzersiz sırası, set, tekrar, dinlenme ve haftalık toparlanma planı'],
     faqs: [['Evde spor için ekipman gerekir mi?', 'Hayır. Bu plan vücut ağırlığıyla ve gerçek ev ortamında uygulanabilecek hareketlerle hazırlanır.'], ['Yeni başlayanlar kullanabilir mi?', 'Evet. Hareket zorluğu ve haftalık hacim deneyim seviyesine göre ayarlanır.']],
   },
+  'evde-dambil-antrenman-programi': {
+    benefits: ['Dambıl veya direnç bandına uygun, salon makinesi içermeyen hareketler', 'Seviyeye göre egzersiz sırası, set, tekrar, dinlenme ve kontrollü progresyon', 'Hedefe uygun kalori, makro, alerji ve beslenme tercihi uyarlaması'],
+    faqs: [['Hangi ekipman gerekir?', 'Bir çift dambıl veya direnç bandı yeterlidir; salon makinesi gerekmez.'], ['Yeni başlayanlar kullanabilir mi?', 'Evet. Hareket seçimi ve haftalık hacim deneyim seviyesine göre ayarlanır.']],
+  },
   'evde-kas-gelistirme-hareketleri': {
     benefits: ['İtiş, squat, kalça, tek bacak ve core örüntülerini dengeli planlama', 'Tekrar, tempo, hareket açıklığı ve varyasyonla ölçülebilir ilerleme', 'Protein, kalori, uyku ve dinlenmeyi antrenmanla birlikte takip etme'],
     faqs: [['Ekipmansız kas gelişir mi?', 'Yeterli zorluk, düzenli progresyon ve toparlanmayla vücut ağırlığı antrenmanı kas gelişimini destekleyebilir.'], ['Programda salon hareketi var mı?', 'Hayır. Bu plan ev ortamına uygun ekipmansız hareketlere özeldir.']],
@@ -38,6 +42,7 @@ export const seoLandingPages = [
   ['reformer-pilates-programi', 'Ücretsiz Reformer Pilates Programı', 'Direnç, core, postür ve kontrollü progresyon odağıyla kişisel reformer pilates planı.'],
   ['meditasyon-uygulamasi', 'Ücretsiz Meditasyon Uygulaması', 'Nefes, farkındalık, uyku ve günlük devamlılık takibiyle kişisel meditasyon planı.'],
   ['evde-spor-programi', 'Ekipmansız Evde Spor Programı', 'Seviye, hedef ve haftalık gün sayısına göre ekipmansız evde spor programı oluştur; set, tekrar, dinlenme ve kolay alternatifleri ücretsiz gör.'],
+  ['evde-dambil-antrenman-programi', 'Evde Dambıl Antrenman Programı', 'Hedef ve seviyene göre evde dambıl veya direnç bandıyla uygulanabilen, salon makinesi içermeyen ücretsiz kişisel antrenman ve beslenme planı oluştur.'],
   ['evde-kas-gelistirme-hareketleri', 'Evde Kas Geliştirme Hareketleri ve Programı', 'Evde kas geliştirmek için ekipmansız hareketler, kontrollü progresyon, dinlenme, protein ve kalori hedeflerini tek ücretsiz planda gör.'],
   ['baslangic-pilates-programi', 'Başlangıç Pilates Programı', 'Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.'],
 ].map(([slug, title, description]) => ({

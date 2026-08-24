@@ -43,4 +43,15 @@ describe('international SEO pages', () => {
     expect(findInternationalSeoPage('/en/personal-workout-plan').metaTitle).toContain('Home or Gym');
     expect(findInternationalSeoPage('/en/protein-calculator').hero).toContain('without an account');
   });
+
+  it('answers the observed home dumbbell search intent in English and Spanish', () => {
+    const english = findInternationalSeoPage('/en/home-dumbbell-workout-plan');
+    const spanish = findInternationalSeoPage('/es/entrenamiento-en-casa-con-mancuernas');
+
+    expect(english.metaTitle).toContain('Home Dumbbell Workout Plan');
+    expect(english.hero).toContain('dumbbells or resistance bands');
+    expect(spanish.metaTitle).toContain('Casa con Mancuernas');
+    expect(spanish.hero).toContain('mancuernas o bandas');
+    expect(spanish.alternates.tr).toBe('/evde-dambil-antrenman-programi');
+  });
 });

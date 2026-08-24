@@ -10,7 +10,7 @@ import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWork
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 18;
+export const PLAN_VERSION = 19;
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {
@@ -1142,10 +1142,12 @@ const ALLERGEN_KEYWORDS = {
     'cacahuete', 'almendra', 'nuez', 'avellana', 'nueces',
   ],
   seafood: [
-    'balık', 'somon', 'ton', 'levrek', 'palamut',
-    'salmon', 'tuna', 'fish', 'sea bass', 'mackerel',
-    'salmón', 'atún', 'lubina', 'caballa',
+    'balık', 'somon', 'ton', 'levrek', 'palamut', 'karides', 'midye', 'yengeç', 'ıstakoz',
+    'salmon', 'tuna', 'fish', 'sea bass', 'mackerel', 'shrimp', 'prawn', 'crab', 'lobster', 'shellfish',
+    'salmón', 'atún', 'lubina', 'caballa', 'camarón', 'gamba', 'cangrejo', 'langosta', 'marisco',
   ],
+  soy: ['soya', 'soy', 'tofu', 'tempeh', 'edamame'],
+  sesame: ['susam', 'tahin', 'sesame', 'tahini', 'sésamo', 'ajonjolí'],
   vegan: [
     'tavuk', 'et', 'dana', 'hindi', 'köfte', 'yumurta', 'süt', 'peynir', 'yoğurt', 'lor', 'balık', 'somon', 'ton', 'levrek', 'palamut', 'bal',
     'chicken', 'beef', 'turkey', 'meat', 'egg', 'milk', 'cheese', 'yogurt', 'cottage', 'fish', 'salmon', 'tuna', 'honey', 'whey',
@@ -1167,6 +1169,8 @@ const ALLERGY_REPLACEMENTS = {
     seafood: ['Izgara tavuk göğsü (200g)', 'Hindi köfte (180g)', 'Mercimek köftesi + salata'],
     vegan: ['Mercimek + kinoa bowl', 'Nohutlu sebze yemeği', 'Bezelye protein smoothie'],
     vegetarian: ['Yumurta dışı sebzeli protein bowl', 'Mercimek + kinoa salatası', 'Nohutlu sebze yemeği'],
+    soy: ['Mercimek + kinoa bowl', 'Nohutlu sebze yemeği', 'Bezelye protein smoothie'],
+    sesame: ['Avokado + pirinç patlağı', 'Kabak çekirdeği (30g)', 'Chia puding'],
     safe: 'Pirinç + sebze + zeytinyağı',
   },
   en: {
@@ -1177,6 +1181,8 @@ const ALLERGY_REPLACEMENTS = {
     seafood: ['Grilled chicken breast (200g)', 'Turkey meatballs (180g)', 'Lentil patties + salad'],
     vegan: ['Lentil + quinoa bowl', 'Chickpea vegetable stew', 'Pea protein smoothie'],
     vegetarian: ['Vegetable protein bowl', 'Lentil + quinoa salad', 'Chickpea vegetable stew'],
+    soy: ['Lentil + quinoa bowl', 'Chickpea vegetable stew', 'Pea protein smoothie'],
+    sesame: ['Avocado + rice cakes', 'Pumpkin seeds (30g)', 'Chia pudding'],
     safe: 'Rice + vegetables + olive oil',
   },
   es: {
@@ -1187,14 +1193,19 @@ const ALLERGY_REPLACEMENTS = {
     seafood: ['Pechuga de pollo a la plancha (200g)', 'Albóndigas de pavo (180g)', 'Hamburguesas de lentejas + ensalada'],
     vegan: ['Bowl de lentejas + quinoa', 'Guiso de garbanzos y verduras', 'Smoothie de proteína vegetal'],
     vegetarian: ['Bowl vegetal alto en proteína', 'Ensalada de lentejas + quinoa', 'Guiso de garbanzos y verduras'],
+    soy: ['Bowl de lentejas + quinoa', 'Guiso de garbanzos y verduras', 'Smoothie de proteína de guisante'],
+    sesame: ['Aguacate + tortitas de arroz', 'Semillas de calabaza (30g)', 'Pudin de chía'],
     safe: 'Arroz + verduras + aceite de oliva',
   },
 };
 
 function itemMatchesAllergy(item, allergy) {
-  const lower = String(item || '').toLowerCase();
+  const lower = String(item || '').toLocaleLowerCase('tr-TR');
   const keywords = ALLERGEN_KEYWORDS[allergy];
-  return Boolean(keywords?.some((kw) => lower.includes(kw)));
+  return Boolean(keywords?.some((keyword) => {
+    const escaped = keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}(?=$|[^\\p{L}\\p{N}])`, 'iu').test(lower);
+  }));
 }
 
 function itemConflictsWithAllergies(item, allergies) {
@@ -1212,15 +1223,31 @@ function getSafeFoodReplacement(item, triggeredAllergy, allergies, lang) {
 }
 
 export function personalizeMealItems(items, { allergies = [], budget = 'moderate', lang = 'tr' } = {}) {
+  const activeAllergies = allergies.filter((allergy) => allergy !== 'none');
+  const replacements = ALLERGY_REPLACEMENTS[lang] || ALLERGY_REPLACEMENTS.tr;
   return (items || []).map((originalItem) => {
     let item = budget === 'economy' ? applyEconomyFoodSwap(originalItem, lang) : originalItem;
-    for (const allergy of allergies) {
-      if (allergy !== 'none' && itemMatchesAllergy(item, allergy)) {
-        item = getSafeFoodReplacement(item, allergy, allergies, lang);
+    for (const allergy of activeAllergies) {
+      if (itemMatchesAllergy(item, allergy)) {
+        item = getSafeFoodReplacement(item, allergy, activeAllergies, lang);
       }
     }
-    return item;
+    return itemConflictsWithAllergies(item, activeAllergies) ? replacements.safe : item;
   });
+}
+
+export function findMealAllergyViolations(dailyNutrition, allergies = []) {
+  const activeAllergies = allergies.filter((allergy) => allergy !== 'none');
+  if (activeAllergies.length === 0) return [];
+
+  return (dailyNutrition || []).flatMap((day) =>
+    (day.meals || []).flatMap((meal) =>
+      (meal.items || []).flatMap((item) => {
+        const matches = activeAllergies.filter((allergy) => itemMatchesAllergy(item, allergy));
+        return matches.map((allergy) => ({ day: day.day, meal: meal.name, item, allergy }));
+      }),
+    ),
+  );
 }
 
 function getHealthExerciseReplacement(exerciseName, filter) {
@@ -2541,6 +2568,14 @@ function applyMealTiming(meals, workSchedule) {
 }
 
 // ── Ana Fonksiyon ────────────────────────────────────────
+export function normalizeTrainingEnvironment(primaryGoal, environment) {
+  if (primaryGoal === 'reformer') {
+    return ['studio', 'home_reformer'].includes(environment) ? environment : 'studio';
+  }
+  if (['yoga', 'pilates', 'meditation'].includes(primaryGoal)) return 'home_bodyweight';
+  return ['gym', 'home_bodyweight', 'home_basic'].includes(environment) ? environment : 'gym';
+}
+
 export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   const {
     name, age: rawAge, gender, height: rawHeight, weight: rawWeight,
@@ -2548,8 +2583,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     primaryGoal, workSchedule, budget,
     healthConditions = [], allergies = [], trainingEnvironment: rawTrainingEnvironment,
   } = userMetrics;
-  const trainingEnvironment = rawTrainingEnvironment
-    || (primaryGoal === 'reformer' ? 'studio' : ['yoga', 'pilates', 'meditation'].includes(primaryGoal) ? 'home_bodyweight' : 'gym');
+  const trainingEnvironment = normalizeTrainingEnvironment(primaryGoal, rawTrainingEnvironment);
 
   // ── Input Validation — NaN/Infinity koruması ──
   const age = Math.max(14, Math.min(80, Number(rawAge) || 25));
@@ -2681,25 +2715,25 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     };
   });
 
-  // Apply food allergy filters to nutrition plan
+  // Apply food allergy and dietary-preference filters to every meal.
   if (allergies.length > 0 && !allergies.includes('none')) {
     dailyNutrition.forEach((dayNut) => {
       if (!dayNut.meals) return;
       dayNut.meals.forEach((meal) => {
         if (!meal.items) return;
-        meal.items = meal.items.map((item) => {
-          for (const allergy of allergies) {
-            if (itemMatchesAllergy(item, allergy)) {
-              meal.allergyAdjusted = true;
-              meal.removedAllergens = Array.from(new Set([...(meal.removedAllergens || []), allergy]));
-              return getSafeFoodReplacement(item, allergy, allergies, lang);
-            }
-          }
-          return item;
-        });
+        const removedAllergens = allergies.filter((allergy) =>
+          allergy !== 'none' && meal.items.some((item) => itemMatchesAllergy(item, allergy)),
+        );
+        meal.items = personalizeMealItems(meal.items, { allergies, lang });
+        if (removedAllergens.length > 0) {
+          meal.allergyAdjusted = true;
+          meal.removedAllergens = Array.from(new Set([...(meal.removedAllergens || []), ...removedAllergens]));
+        }
       });
     });
   }
+
+  const allergyViolations = findMealAllergyViolations(dailyNutrition, allergies);
 
   return {
     // Kullanıcı profili
@@ -2720,9 +2754,9 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     planQuality: {
       ...buildPlanQualitySummary(primaryGoal, safePhase),
       equipmentLabel: {
-        tr: { gym: 'Salon ekipmanı', home_basic: 'Dumbbell + direnç bandı', home_bodyweight: 'Ekipmansız ev', studio: 'Reformer cihazı' },
-        en: { gym: 'Gym equipment', home_basic: 'Dumbbells + resistance band', home_bodyweight: 'No-equipment home', studio: 'Reformer machine' },
-        es: { gym: 'Equipo de gimnasio', home_basic: 'Mancuernas + banda', home_bodyweight: 'Casa sin equipo', studio: 'Máquina Reformer' },
+        tr: { gym: 'Salon ekipmanı', home_basic: 'Dambıl + direnç bandı', home_bodyweight: 'Ekipmansız ev', studio: 'Stüdyo reformer cihazı', home_reformer: 'Ev reformer cihazı' },
+        en: { gym: 'Gym equipment', home_basic: 'Dumbbells + resistance band', home_bodyweight: 'No-equipment home', studio: 'Studio reformer machine', home_reformer: 'Home reformer machine' },
+        es: { gym: 'Equipo de gimnasio', home_basic: 'Mancuernas + banda', home_bodyweight: 'Casa sin equipo', studio: 'Máquina reformer de estudio', home_reformer: 'Máquina reformer en casa' },
       }[lang]?.[trainingEnvironment] || trainingEnvironment,
       requiresMedicalClearance,
       medicalNotice: requiresMedicalClearance
@@ -2762,7 +2796,9 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       appliedPhase: safePhase,
       trainingEnvironment,
       environmentAdjusted: ['home_bodyweight', 'home_basic'].includes(trainingEnvironment),
-      equipmentValidated: equipmentViolations.length === 0,
+      equipmentValidated: equipmentViolations.length === 0
+        && (primaryGoal !== 'reformer' || ['studio', 'home_reformer'].includes(trainingEnvironment)),
+      allergyValidated: allergyViolations.length === 0,
     },
     goal: {
       tr: { muscle: 'Kas Gelişimi', fat_loss: 'Yağ Yakımı', meditation: 'Meditasyon', yoga: 'Yoga', pilates: 'Pilates', reformer: 'Reformer' },

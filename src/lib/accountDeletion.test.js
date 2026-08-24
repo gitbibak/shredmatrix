@@ -3,6 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   invoke: vi.fn(),
   getSession: vi.fn(),
+  update: vi.fn(() => ({ eq: vi.fn().mockResolvedValue({ error: null }) })),
+  select: vi.fn(() => ({
+    eq: vi.fn(() => ({ single: vi.fn().mockResolvedValue({ data: null, error: null }) })),
+  })),
 }));
 
 vi.mock('./supabase', () => ({
@@ -10,6 +14,7 @@ vi.mock('./supabase', () => ({
   supabase: {
     auth: { getSession: mocks.getSession },
     functions: { invoke: mocks.invoke },
+    from: vi.fn(() => ({ select: mocks.select, update: mocks.update })),
   },
 }));
 

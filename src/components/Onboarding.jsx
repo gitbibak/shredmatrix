@@ -21,6 +21,7 @@ import {
   PackageOpen,
 } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
+import { normalizeTrainingEnvironment } from '../data/planGenerator';
 
 // ── Step Configuration ───────────────────────────────────
 const STEP_IDS = ['goal', 'basics', 'safety'];
@@ -169,6 +170,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     { value: 'egg', label: t('onboarding.fields.egg'), emoji: '🥚' },
     { value: 'nuts', label: t('onboarding.fields.nuts'), emoji: '🥜' },
     { value: 'seafood', label: t('onboarding.fields.seafood'), emoji: '🐟' },
+    { value: 'soy', label: t('onboarding.fields.soy'), emoji: '🫘' },
+    { value: 'sesame', label: t('onboarding.fields.sesame'), emoji: '🌾' },
     { value: 'vegan', label: t('onboarding.fields.vegan'), emoji: '🌱' },
     { value: 'vegetarian', label: t('onboarding.fields.vegetarian'), emoji: '🥬' },
   ];
@@ -186,6 +189,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const [healthConditions, setHealthConditions] = useState(['none']);
   const [allergies, setAllergies] = useState(['none']);
 
+  const asksForTrainingEnvironment = ['muscle', 'fat_loss', 'reformer'].includes(primaryGoal);
   const trainingEnvironmentOptions = primaryGoal === 'reformer'
     ? [
       { value: 'studio', icon: Building2, label: t('onboarding.fields.reformerStudio'), desc: t('onboarding.fields.reformerStudioDesc') },
@@ -199,7 +203,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   // ── Persist & restore onboarding data ───────────────────
   const STORAGE_KEY = 'fb_onboarding_draft';
-  const DRAFT_VERSION = 4;
+  const DRAFT_VERSION = 5;
 
   // Restore on mount
   useEffect(() => {
@@ -213,7 +217,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       setExperience(initialData.experience || 'beginner');
       setActivityLevel(initialData.activityLevel || 'moderate');
       setPrimaryGoal(initialData.primaryGoal || 'muscle');
-      setTrainingEnvironment(initialData.trainingEnvironment || (initialData.primaryGoal === 'reformer' ? 'studio' : 'gym'));
+      setTrainingEnvironment(normalizeTrainingEnvironment(initialData.primaryGoal, initialData.trainingEnvironment));
       setHealthConditions(Array.isArray(initialData.healthConditions) && initialData.healthConditions.length ? initialData.healthConditions : ['none']);
       setAllergies(Array.isArray(initialData.allergies) && initialData.allergies.length ? initialData.allergies : ['none']);
       setStep(0);
@@ -235,7 +239,9 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
         if (saved.experience) setExperience(saved.experience);
         if (saved.activityLevel) setActivityLevel(saved.activityLevel);
         if (saved.primaryGoal) setPrimaryGoal(saved.primaryGoal);
-        if (saved.trainingEnvironment) setTrainingEnvironment(saved.trainingEnvironment);
+        if (saved.trainingEnvironment) {
+          setTrainingEnvironment(normalizeTrainingEnvironment(saved.primaryGoal || 'muscle', saved.trainingEnvironment));
+        }
         if (Array.isArray(saved.healthConditions)) setHealthConditions(saved.healthConditions.length ? saved.healthConditions : ['none']);
         if (Array.isArray(saved.allergies)) setAllergies(saved.allergies.length ? saved.allergies : ['none']);
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
@@ -293,7 +299,7 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       experience,
       activityLevel,
       primaryGoal,
-      trainingEnvironment,
+      trainingEnvironment: normalizeTrainingEnvironment(primaryGoal, trainingEnvironment),
       workSchedule: ['flexible'],
       budget: 'moderate',
       healthConditions,
@@ -471,21 +477,23 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.trainingEnvironment')}</label>
-                    <div className={`grid gap-2 ${trainingEnvironmentOptions.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                      {trainingEnvironmentOptions.map((option) => {
-                        const Icon = option.icon;
-                        const selected = trainingEnvironment === option.value;
-                        return (
-                          <SelectCard key={option.value} selected={selected} onClick={() => setTrainingEnvironment(option.value)} className="min-h-[88px] p-3">
-                            <Icon size={20} className={selected ? 'text-orange-400' : 'text-slate-500'} />
-                            <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>{option.label}</span>
-                          </SelectCard>
-                        );
-                      })}
+                  {asksForTrainingEnvironment && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-3 font-outfit">{t('onboarding.fields.trainingEnvironment')}</label>
+                      <div className={`grid gap-2 ${trainingEnvironmentOptions.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                        {trainingEnvironmentOptions.map((option) => {
+                          const Icon = option.icon;
+                          const selected = trainingEnvironment === option.value;
+                          return (
+                            <SelectCard key={option.value} selected={selected} onClick={() => setTrainingEnvironment(option.value)} className="min-h-[88px] p-3">
+                              <Icon size={20} className={selected ? 'text-orange-400' : 'text-slate-500'} />
+                              <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>{option.label}</span>
+                            </SelectCard>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                     <Sparkles size={18} className="text-emerald-400 shrink-0" />

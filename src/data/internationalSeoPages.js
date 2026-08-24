@@ -88,6 +88,24 @@ const pageDefinitions = {
       faqs: [['¿Necesito mancuernas?', 'No. El plan está diseñado con peso corporal y sin material de gimnasio.'], ['¿Sirve para principiantes?', 'Sí. La dificultad y el volumen semanal se adaptan a la experiencia.'], ['¿Cómo aumento la dificultad?', 'El plan progresa con repeticiones, tempo más lento, rango y variantes más exigentes.']],
     },
   },
+  homeDumbbell: {
+    paths: { tr: '/evde-dambil-antrenman-programi', en: '/en/home-dumbbell-workout-plan', es: '/es/entrenamiento-en-casa-con-mancuernas' },
+    category: 'workout',
+    en: {
+      title: 'Free Personalized Home Dumbbell', accent: 'Workout Plan', metaTitle: 'Free Personalized Home Dumbbell Workout Plan | Full Balance',
+      description: 'Create a free personalized home dumbbell workout plan for your goal and level, with sets, reps, rest, progression and an allergy-aware nutrition plan.',
+      hero: 'Train at home with dumbbells or resistance bands and no gym machines. Get a structured weekly plan matched to your level, goal and recovery.',
+      sections: [['Uses the equipment you selected', 'Home-equipment plans use dumbbells and resistance bands while excluding cable stations, barbells and gym-only machines.'], ['Clear progression', 'Each session provides exercise order, sets, rep ranges and rest, while later phases increase training demand in a controlled way.'], ['Nutrition alongside training', 'Calorie and macro targets, meal ideas and a shopping list support the same goal and account for selected allergies and dietary preferences.']],
+      faqs: [['What equipment do I need?', 'A pair of dumbbells or a resistance band is enough for this option. The plan does not require gym machines.'], ['Can beginners use the plan?', 'Yes. Exercise selection and weekly volume are adapted to experience.'], ['Is the nutrition plan included?', 'Yes. Training and an allergy-aware nutrition plan are included for free.']],
+    },
+    es: {
+      title: 'Plan Gratis en Casa', accent: 'con Mancuernas', metaTitle: 'Plan Gratis en Casa con Mancuernas | Full Balance',
+      description: 'Crea gratis un plan personalizado para entrenar en casa con mancuernas según tu objetivo y nivel, con series, repeticiones, descanso, progresión y nutrición.',
+      hero: 'Entrena en casa con mancuernas o bandas y sin máquinas de gimnasio. Recibe una semana estructurada según tu nivel, objetivo y recuperación.',
+      sections: [['Respeta el material elegido', 'Los planes de casa con material utilizan mancuernas y bandas, y excluyen poleas, barras y máquinas exclusivas del gimnasio.'], ['Progresión clara', 'Cada sesión muestra orden, series, repeticiones y descanso; las fases siguientes aumentan la carga de forma controlada.'], ['Nutrición junto al entrenamiento', 'Calorías, macros, ideas de comidas y lista de compra siguen el mismo objetivo y consideran alergias y preferencias alimentarias.']],
+      faqs: [['¿Qué material necesito?', 'Un par de mancuernas o una banda de resistencia es suficiente. No necesitas máquinas de gimnasio.'], ['¿Sirve para principiantes?', 'Sí. Los ejercicios y el volumen semanal se adaptan a la experiencia.'], ['¿Incluye nutrición?', 'Sí. El entrenamiento y el plan nutricional adaptado a alergias están incluidos gratis.']],
+    },
+  },
   homeMuscle: {
     paths: { tr: '/evde-kas-gelistirme-hareketleri', en: '/en/home-muscle-building-workout', es: '/es/ejercicios-en-casa-ganar-musculo' },
     category: 'workout',
@@ -231,9 +249,10 @@ export function findInternationalSeoPage(pathname) {
 export function getInternationalRelatedPages(page) {
   const priorityByTopic = {
     bmi: ['calories', 'protein', 'nutrition', 'fatLoss', 'workout', 'home'],
-    workout: ['homeWorkout', 'homeMuscle', 'muscle', 'fatLoss', 'beginnerPilates', 'nutrition', 'bmi'],
-    homeWorkout: ['workout', 'homeMuscle', 'beginnerPilates', 'fatLoss', 'nutrition', 'bmi'],
-    homeMuscle: ['homeWorkout', 'muscle', 'workout', 'protein', 'calories', 'nutrition', 'bmi'],
+    workout: ['homeWorkout', 'homeDumbbell', 'homeMuscle', 'muscle', 'fatLoss', 'beginnerPilates', 'nutrition', 'bmi'],
+    homeWorkout: ['homeDumbbell', 'workout', 'homeMuscle', 'beginnerPilates', 'fatLoss', 'nutrition', 'bmi'],
+    homeDumbbell: ['homeWorkout', 'homeMuscle', 'workout', 'muscle', 'fatLoss', 'nutrition', 'protein'],
+    homeMuscle: ['homeDumbbell', 'homeWorkout', 'muscle', 'workout', 'protein', 'calories', 'nutrition', 'bmi'],
     beginnerPilates: ['pilates', 'homeWorkout', 'yoga', 'workout', 'bmi', 'home'],
     pilates: ['beginnerPilates', 'homeWorkout', 'yoga', 'workout', 'bmi', 'home'],
   };

@@ -50,6 +50,7 @@ const SEO_PAGE_SLUGS = [
   'ucretsiz-beslenme-programi',
   'alerjiye-gore-beslenme-programi',
   'evde-spor-programi',
+  'evde-dambil-antrenman-programi',
   'evde-kas-gelistirme-hareketleri',
   'baslangic-pilates-programi',
 ];

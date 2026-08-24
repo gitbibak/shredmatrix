@@ -20,19 +20,34 @@ Olcum yapisi:
   - Reformer: `https://fullbalance.app/reformer-pilates-programi`
   - Meditasyon: `https://fullbalance.app/meditasyon-uygulamasi`
   - Beslenme: `https://fullbalance.app/ucretsiz-beslenme-programi`
+  - Ekipmansiz ev programi: `https://fullbalance.app/en/home-workout-no-equipment?utm_source=instagram&utm_medium=organic_video&utm_campaign=home_no_equipment_en`
+  - Evde dambilli program: `https://fullbalance.app/en/home-dumbbell-workout-plan?utm_source=instagram&utm_medium=organic_video&utm_campaign=home_dumbbell_en`
+  - Ispanyolca evde dambilli program: `https://fullbalance.app/es/entrenamiento-en-casa-con-mancuernas?utm_source=pinterest&utm_medium=organic_pin&utm_campaign=home_dumbbell_es`
 
-Paylasim saatleri:
-- TikTok/Reels: 12:15 ve 20:30.
-- Pinterest: 09:00, 13:00, 18:00, 21:30.
-- X: 09:30, 14:00, 20:00.
-- SEO rehberi yayinlama: 10:00.
-- Ilk 7 gun sonunda saatleri veriye gore degistir: kayit, tiklama ve izlenme tamamlama oranina bak.
+Baslangic test pencereleri (hesabin kendi verisi olusana kadar):
+- TikTok/Reels: hedef ulkenin yerel saatinde 12:00-14:00 veya 19:00-21:00.
+- Pinterest: hedef ulkenin yerel saatinde 18:00-22:00.
+- Saat tek basina basari olcutu degildir. Ilk 14 gunde her konu iki farkli pencerede test edilir; kayit getiren pencere korunur.
+- UTM kaydi olmayan veya yalnizca goruntulenme alan paylasim basarili sayilmaz.
 
-Gunluk yayin ritmi:
-- Her gun 1 Reels/TikTok video.
-- Her gun 3 Pinterest pin: 1 ana pin, 1 problem pin, 1 modul pin.
-- Haftada 5 SEO rehberi, haftada 2 kisa blog/guncelleme.
-- X'te gunluk 1 faydali thread veya tek net ipucu.
+Surdurulebilir yayin ritmi:
+- Haftada 3 Reels/TikTok: ekipmansiz ev, dambilli ev ve alerji uyumlu beslenme.
+- Haftada 4-5 ozgun Pinterest pini; ayni gorseli tekrar yukleme.
+- Haftada en fazla 1, gercek arama niyetine dayanan SEO rehberi veya mevcut sayfa iyilestirmesi.
+- X'te haftada 2 gercek urun bilgisi, sonuc veya uygulama gelistirme notu.
+- Her 7 gunde kayit getirmeyen konu durdurulur; en az bir kayit getiren konuya yeni kreatif uretilir.
+
+## 24 Agustos Evde Antrenman Kampanya Testi
+
+Search Console sinyali: Ispanyolca evde dambilla kisisel plan sorgusu gosterim aliyor. Bu nedenle ilk yabanci kitle testi "beginner home workout + nutrition" olarak daraltilir.
+
+| Varyant | Hook | Gosterilecek kanit | Hedef sayfa | Basari olcutu |
+| --- | --- | --- | --- | --- |
+| EN ekipmansiz | No gym? Your free plan still works. | Uygulamadaki ekipmansiz secim ve makinesiz hafta | `/en/home-workout-no-equipment` | Kayit / landing ziyareti |
+| EN dambilli | Dumbbells at home, a plan that fits them. | Dambil/bant secimi, set-tekrar-dinlenme, beslenme | `/en/home-dumbbell-workout-plan` | Kayit / landing ziyareti |
+| ES dambilli | Tu plan en casa con mancuernas, gratis. | Mancuerna/banda, progresion ve nutricion | `/es/entrenamiento-en-casa-con-mancuernas` | Kayit / landing ziyareti |
+
+Kural: 100 landing ziyareti veya 14 gun dolmadan kazanan ilan edilmez. Tiklama var kayit yoksa acilis sayfasi/CTA; izlenme var tiklama yoksa hook ve kreatif; gosterim yoksa konu ve dagitim kanali degistirilir.
 
 ## 30 Gunluk Takvim
 

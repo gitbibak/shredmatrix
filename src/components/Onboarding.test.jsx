@@ -26,7 +26,7 @@ describe('Onboarding step flow', () => {
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Gıda alerjiniz veya hassasiyetiniz var mı/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Gıda alerjiniz veya beslenme tercihiniz var mı/i)).toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: /Programı Oluştur/i }));
 
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({
@@ -65,7 +65,18 @@ describe('Onboarding step flow', () => {
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(await screen.findByText(/Gıda alerjiniz veya hassasiyetiniz var mı/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Gıda alerjiniz veya beslenme tercihiniz var mı/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Bel Ağrısı/i })).toHaveClass('border-orange-500');
+  });
+
+  it('shows equipment choices only when they change the generated program', () => {
+    renderOnboarding();
+
+    expect(screen.getByText(/Nerede çalışacaksın/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /^Yoga/i }));
+    expect(screen.queryByText(/Nerede çalışacaksın/i)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /^Reformer/i }));
+    expect(screen.getByText(/Nerede çalışacaksın/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Ev reformeri/i })).toBeInTheDocument();
   });
 });
