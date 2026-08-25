@@ -1,25 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
+import { getDailyNotification } from './notificationContent.js';
 
 const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
 const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-
-const MESSAGES = {
-  tr: [
-    { title: 'Bugünün planı hazır', body: 'Tek bir adım seç ve bugünün planını sürdür.', category: 'plan' },
-    { title: 'Düzenini koru', body: 'Bugün ekranında sıradaki kişisel adımın seni bekliyor.', category: 'streak' },
-  ],
-  en: [
-    { title: "Today's plan is ready", body: 'Choose one step and keep your personal plan moving today.', category: 'plan' },
-    { title: 'Keep your rhythm', body: 'Your next personal step is waiting on the Today screen.', category: 'streak' },
-  ],
-  es: [
-    { title: 'Tu plan de hoy está listo', body: 'Elige un paso y continúa hoy con tu plan personal.', category: 'plan' },
-    { title: 'Mantén tu ritmo', body: 'Tu siguiente paso personal te espera en la pantalla Hoy.', category: 'streak' },
-  ],
-};
 
 webpush.setVapidDetails('mailto:info@fullbalance.app', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
@@ -87,12 +73,10 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const language = ['tr', 'en', 'es'].includes(subscription.language) ? subscription.language : 'en';
-      const options = MESSAGES[language];
-      const message = options[Math.floor(Math.random() * options.length)];
+      const message = getDailyNotification(subscription.language, local.date, subscription.id);
       const result = await sendPushNotification(
         { endpoint: subscription.endpoint, keys: { p256dh: subscription.p256dh, auth: subscription.auth } },
-        { ...message, url: '/dashboard' },
+        message,
       );
 
       if (result.success) {

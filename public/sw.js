@@ -1,4 +1,4 @@
-const CACHE = 'fb-v9';
+const CACHE = 'fb-v10';
 const PRE_CACHE = [
   '/',
   '/index.html',
@@ -126,74 +126,35 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   // Default notification data
   let data = {
-    title: 'Full Balance',
-    body: 'Antrenmanını unutma! 💪',
-    tag: 'fb-push',
+    title: 'Bugün için tek adım',
+    body: 'Planını aç ve sıradaki adımı tamamla.',
+    tag: 'fb-daily-plan',
     category: 'general',
+    language: 'tr',
   };
 
   try {
     if (event.data) data = { ...data, ...event.data.json() };
   } catch (e) { /* use defaults */ }
 
-  // Category-specific defaults
-  const categoryDefaults = {
-    workout: {
-      title: data.title || '🏋️ Antrenman Zamanı!',
-      body: data.body || 'Bugünkü antrenmanını tamamla, hedefine bir adım daha yaklaş!',
-      tag: 'fb-workout',
-    },
-    water: {
-      title: data.title || '💧 Su İçme Zamanı',
-      body: data.body || 'Günlük su hedefine ulaşmak için bir bardak daha iç!',
-      tag: 'fb-water',
-    },
-    sleep: {
-      title: data.title || '🌙 Uyku Zamanı',
-      body: data.body || 'İyi bir uyku, kas gelişimi için kritik. Hazırlan!',
-      tag: 'fb-sleep',
-    },
-    streak: {
-      title: data.title || '🔥 Serini Koru!',
-      body: data.body || 'Harika gidiyorsun! Bugün de devam et!',
-      tag: 'fb-streak',
-    },
-    motivation: {
-      title: data.title || '⚡ Motivasyon',
-      body: data.body || 'Her antrenman seni daha güçlü yapıyor. Pes etme!',
-      tag: 'fb-motivation',
-    },
-  };
-
-  const categoryData = categoryDefaults[data.category] || {};
-  const finalTitle = categoryData.title || data.title;
-  const finalBody = categoryData.body || data.body;
-  const finalTag = categoryData.tag || data.tag;
-
   const options = {
-    body: finalBody,
+    body: data.body,
     icon: '/icon-192.png',
     badge: '/favicon-32.png',
     vibrate: [100, 50, 100],
-    tag: finalTag,
-    renotify: true,
-    data: { url: data.url || '/dashboard' },
-    actions: data.actions || [
-      { action: 'open', title: 'Aç' },
-      { action: 'dismiss', title: 'Kapat' },
-    ],
+    tag: 'fb-daily-plan',
+    renotify: false,
+    data: { url: data.url || '/dashboard', category: data.category || 'general' },
   };
 
   event.waitUntil(
-    self.registration.showNotification(finalTitle, options)
+    self.registration.showNotification(data.title, options)
   );
 });
 
 // ── Notification Click ─────────────────────────
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-
-  if (event.action === 'dismiss') return;
 
   const targetUrl = event.notification.data?.url || '/dashboard';
 

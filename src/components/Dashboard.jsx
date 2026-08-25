@@ -127,6 +127,18 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   }, [activeTab, plan?.primaryGoal, plan?.goalKey]);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('entry') !== 'push') return;
+
+    const message = params.get('message') || 'unknown';
+    trackEvent('push_notification_open', { message });
+    params.delete('entry');
+    params.delete('message');
+    const query = params.toString();
+    window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
+  }, []);
+
+  useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return undefined;
     const initialHeight = window.visualViewport.height;
     const updateKeyboardState = () => {
