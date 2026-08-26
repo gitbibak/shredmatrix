@@ -193,9 +193,9 @@ const pageDefinitions = {
       faqs: [['How do I calculate BMI with pounds and inches?', 'Choose imperial units, enter weight in pounds and height in feet and inches; the calculator applies the imperial conversion automatically.'], ['Does BMI measure body fat?', 'No. BMI uses height and weight and does not directly measure body composition.'], ['Is BMI a diagnosis?', 'No. It is a screening measure and should not be used as a diagnosis.']],
     },
     es: {
-      title: 'Calculadora IMC Gratis', accent: 'Peso y Altura', metaTitle: 'Calculadora IMC Gratis: Peso y Altura | Full Balance',
-      description: 'Calcula tu IMC gratis con peso y altura: kilos y centímetros o libras, pies y pulgadas. Resultado inmediato, categoría orientativa y sin registro.',
-      hero: 'Introduce tu peso y altura en sistema métrico o imperial y consulta tu IMC al instante. No necesitas una cuenta para calcularlo.',
+      title: 'Calculadora de IMC Gratis', accent: 'Métrica e Imperial', metaTitle: 'Calculadora de IMC Gratis (Métrica e Imperial) | Full Balance',
+      description: 'Calcula tu IMC gratis con kilos y centímetros o con libras, pies y pulgadas. Resultado inmediato para adultos, categoría orientativa y sin registro.',
+      hero: 'Introduce tu peso y altura en sistema métrico o imperial para calcular el IMC al instante. La calculadora es gratis y no requiere una cuenta.',
       sections: [['Peso y altura en dos sistemas', 'Utiliza kilos y centímetros o cambia a libras, pies y pulgadas.'], ['Resultado y categoría al instante', 'Consulta el valor calculado junto con el rango orientativo estándar para adultos.'], ['Más que el peso', 'Full Balance combina peso con medidas, entrenamiento, sueño, agua y tendencias semanales.']],
       faqs: [['¿Cómo calcular mi IMC?', 'Introduce tu peso y altura, elige el sistema métrico o imperial y la calculadora hará la operación automáticamente.'], ['¿El IMC mide la grasa corporal?', 'No. Utiliza altura y peso y no mide directamente la composición corporal.'], ['¿Es un diagnóstico?', 'No. Es una medida orientativa y no debe utilizarse como diagnóstico.']],
     },
