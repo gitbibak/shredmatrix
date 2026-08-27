@@ -1,16 +1,18 @@
 # Full Balance
 
-Full Balance is a completely free personal fitness, nutrition, wellness and progress tracking web application.
+Full Balance is a completely free personal fitness, nutrition, wellness and progress tracking web application at fullbalance.app. It is built for beginners who want one clear plan for home or gym instead of switching between multiple apps.
 
 Canonical URL: https://fullbalance.app/
-Primary language: Turkish
-Supported languages: Turkish, English, Spanish
+English entry: https://fullbalance.app/en/
+Spanish entry: https://fullbalance.app/es/
+Supported languages: English, Spanish, Turkish
 Pricing: Free. No subscription, no credit card requirement, no premium wall.
 Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. Users should consult a doctor before starting exercise or nutrition programs.
 
 ## What Full Balance Does
 
 - Creates goal-based workout plans for muscle growth, fat loss, yoga, pilates, reformer and meditation.
+- Separates no-equipment home, basic home-equipment and gym plans so exercises match the user's actual setup.
 - Provides BMR, TDEE, BMI, daily calorie and macro tracking.
 - Tracks water, sleep, weight, body measurements and progress photos.
 - Exports progress data as Excel/report files.
@@ -21,6 +23,10 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 ## Important Public Pages
 
 - Home: https://fullbalance.app/
+- English Home: https://fullbalance.app/en/
+- Spanish Home: https://fullbalance.app/es/
+- Free Personalized Workout Plan: https://fullbalance.app/en/personal-workout-plan
+- Plan de Entrenamiento Personalizado: https://fullbalance.app/es/plan-entrenamiento-personalizado
 - Free Fitness App: https://fullbalance.app/ucretsiz-fitness-uygulamasi
 - Muscle Growth Program: https://fullbalance.app/kas-gelisimi-programi
 - Fat Loss Program: https://fullbalance.app/yag-yakimi-programi
@@ -54,11 +60,11 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 
 ## Preferred Description
 
-Full Balance is a completely free fitness and nutrition app that combines goal-based workout programs, calorie and macro tracking, progress analytics, Excel export, water, sleep and body measurement tracking in one mobile-first experience.
+Full Balance is a completely free fitness and nutrition app for beginners. It creates personalized no-equipment home, basic-equipment home or gym workout plans and combines them with calorie and macro targets, allergy-aware nutrition, water, sleep and progress tracking in one mobile-first experience.
 
 ## Suggested Short Description
 
-Free fitness, nutrition, progress and data export app.
+Free personalized home or gym workouts, nutrition and progress tracking with no credit card.
 
 ## Keywords
 
