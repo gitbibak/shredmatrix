@@ -43,7 +43,10 @@ describe('international SEO pages', () => {
     expect(spanishBmi.description).toContain('libras, pies y pulgadas');
     expect(findInternationalSeoPage('/en/bmi-calculator').metaTitle).toContain('Imperial BMI Calculator');
     expect(findInternationalSeoPage('/en/personal-workout-plan').metaTitle).toContain('Home or Gym');
-    expect(findInternationalSeoPage('/es/plan-entrenamiento-personalizado').description).toContain('mancuernas');
+    const spanishWorkout = findInternationalSeoPage('/es/plan-entrenamiento-personalizado');
+    expect(spanishWorkout.metaTitle).toContain('Casa con Mancuernas');
+    expect(spanishWorkout.description).toContain('tonificación');
+    expect(spanishWorkout.faqs.some(([question]) => question.includes('tonificación'))).toBe(true);
     expect(findInternationalSeoPage('/en/protein-calculator').hero).toContain('without an account');
   });
 

@@ -67,11 +67,11 @@ const pageDefinitions = {
       faqs: [['Is it suitable for beginners?', 'Yes. Beginner plans use manageable exercise selection, volume and progression.'], ['Can I choose home or gym?', 'Yes. Select your training environment before the plan is created. Home plans avoid gym-only machines.'], ['Which goals are available?', 'Muscle gain, fat loss, yoga, Pilates, reformer and meditation are supported.']],
     },
     es: {
-      title: 'Plan de Entrenamiento Personalizado', accent: 'Casa o Gimnasio', metaTitle: 'Plan de Entrenamiento Personalizado en Casa Gratis | Full Balance',
-      description: 'Crea gratis un plan de entrenamiento personalizado en casa con peso corporal o mancuernas, o en gimnasio, según tu objetivo, nivel y días disponibles.',
-      hero: 'Elige casa sin material, casa con mancuernas o gimnasio. Obtén una semana clara para tu objetivo, nivel y días disponibles y registra el progreso desde el móvil.',
-      sections: [['Primero tu objetivo y nivel', 'El plan considera tu objetivo, experiencia, días disponibles, entorno de entrenamiento y limitaciones de salud relevantes.'], ['Cada sesión es clara', 'Consulta el orden, las series, repeticiones, descanso y consejos prácticos de técnica.'], ['Progreso por fases', 'Los planes avanzan por fases estructuradas en lugar de cambiar sin sentido cada semana.']],
-      faqs: [['¿Sirve para principiantes?', 'Sí. Los planes iniciales utilizan ejercicios, volumen y progresión manejables.'], ['¿Puedo elegir casa o gimnasio?', 'Sí. Elige el entorno antes de crear el plan. La opción de casa utiliza movimientos de peso corporal sin máquinas de gimnasio.'], ['¿Incluye yoga y pilates?', 'Sí. Full Balance también crea planes de yoga, pilates, reformer y meditación.']],
+      title: 'Plan de Entrenamiento Personalizado', accent: 'en Casa con Mancuernas', metaTitle: 'Plan Personalizado en Casa con Mancuernas Gratis | Full Balance',
+      description: 'Crea gratis un plan personalizado de tonificación en casa con mancuernas o peso corporal, adaptado a tu objetivo, nivel y días disponibles.',
+      hero: 'Elige casa con mancuernas, casa sin material o gimnasio. Recibe una semana de entrenamiento personalizada con ejercicios, series, repeticiones, descanso y progresión.',
+      sections: [['Casa con mancuernas o sin material', 'El plan respeta el entorno elegido: utiliza mancuernas y bandas si las tienes, o movimientos de peso corporal sin máquinas si entrenas sin equipo.'], ['Cada sesión es clara', 'Consulta el orden, las series, repeticiones, descanso y consejos prácticos de técnica.'], ['Progreso por fases', 'Los planes avanzan por fases estructuradas según tu nivel y objetivo, en lugar de cambiar sin sentido cada semana.']],
+      faqs: [['¿Sirve para tonificación en casa?', 'Sí. Elige tu objetivo, nivel y material disponible para recibir una rutina personal con una progresión clara.'], ['¿Necesito mancuernas?', 'No. Puedes elegir casa con mancuernas o casa sin material; el plan excluye el equipo que no tengas.'], ['¿Puedo elegir casa o gimnasio?', 'Sí. Elige el entorno antes de crear el plan y los ejercicios se adaptarán a esa selección.'], ['¿Incluye yoga y pilates?', 'Sí. Full Balance también crea planes de yoga, pilates, reformer y meditación.']],
     },
   },
   homeWorkout: {
