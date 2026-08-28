@@ -533,17 +533,17 @@ export default function AdminPanel({ user }) {
             {activeTab === 'dashboard' && (
               <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                  <StatCard icon={Users} label="Toplam Kullanıcı" value={stats?.totalUsers ?? '—'} color="#ff6d00" delay={0} />
-                  <StatCard icon={UserPlus} label="Bugün Kayıt" value={stats?.todayRegistrations ?? '—'} color="#00b0ff" delay={0.05} />
-                  <StatCard icon={Calendar} label="Bu Hafta" value={stats?.weekRegistrations ?? '—'} color="#00e676" delay={0.1} />
-                  <StatCard icon={TrendingUp} label="Aylık Büyüme" value={stats?.monthlyGrowth != null ? `%${stats.monthlyGrowth}` : '—'} sub={`${stats?.monthRegistrations ?? 0} yeni kayıt`} color="#ff4081" delay={0.15} />
+                  <StatCard icon={Users} label="Toplam Üye" value={stats?.totalUsers ?? '—'} sub="Yönetici hesabı hariç" color="#ff6d00" delay={0} />
+                  <StatCard icon={UserPlus} label="Bugün (İstanbul)" value={stats?.todayRegistrations ?? '—'} sub="Devam eden gün" color="#00b0ff" delay={0.05} />
+                  <StatCard icon={Calendar} label="Son 7 Tam Gün" value={stats?.weekRegistrations ?? '—'} sub="Bugün hariç" color="#00e676" delay={0.1} />
+                  <StatCard icon={TrendingUp} label="Son 30 Tam Gün" value={stats?.monthRegistrations ?? '—'} sub={stats ? `Önceki 30 gün: ${stats.previousMonthRegistrations} · fark ${stats.registrationDelta >= 0 ? '+' : ''}${stats.registrationDelta}` : ''} color="#ff4081" delay={0.15} />
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                  <StatCard icon={Target} label="Plan Aktivasyonu" value={retentionStats ? `%${retentionStats.activationRate}` : '—'} sub={`${retentionStats?.activated ?? 0}/${retentionStats?.registrations ?? 0} son 60 gün`} color="#ffab00" delay={0.16} />
-                  <StatCard icon={Calendar} label="D1 Geri Dönüş" value={retentionStats?.d1Rate == null ? '—' : `%${retentionStats.d1Rate}`} sub={`${retentionStats?.d1Returned ?? 0}/${retentionStats?.d1Eligible ?? 0} uygun kullanıcı`} color="#38bdf8" delay={0.18} />
-                  <StatCard icon={TrendingUp} label="D7 Geri Dönüş" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} uygun kullanıcı`} color="#a78bfa" delay={0.2} />
-                  <StatCard icon={Users} label="Ölçüm Penceresi" value="60 gün" sub="Yeni kohort takibi" color="#34d399" delay={0.22} />
+                  <StatCard icon={Target} label="Plan Aktivasyonu (60 gün)" value={retentionStats ? `%${retentionStats.activationRate}` : '—'} sub={`${retentionStats?.activated ?? 0}/${retentionStats?.registrations ?? 0} üye plan oluşturdu`} color="#ffab00" delay={0.16} />
+                  <StatCard icon={Calendar} label="D1 Geri Dönüş" value={retentionStats?.d1Rate == null ? '—' : `%${retentionStats.d1Rate}`} sub={`${retentionStats?.d1Returned ?? 0}/${retentionStats?.d1Eligible ?? 0} ölçülebilen üye`} color="#38bdf8" delay={0.18} />
+                  <StatCard icon={TrendingUp} label="D7 Geri Dönüş" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} ölçülebilen üye`} color="#a78bfa" delay={0.2} />
+                  <StatCard icon={Users} label="Geri Dönüş Ölçümü" value={retentionStats ? `${retentionStats.measurementDays} tam gün` : '—'} sub={retentionStats?.trackingStartedAt ? `${retentionStats.trackingStartedAt} tarihinden beri` : 'Henüz ölçüm yok'} color="#34d399" delay={0.22} />
                 </div>
 
                 <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4 sm:p-5">

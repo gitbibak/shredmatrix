@@ -85,8 +85,55 @@ function addUtcDays(dateKey, days) {
   return utcDateKey(date);
 }
 
+function dateKeyInTimeZone(value, timeZone = 'Europe/Istanbul') {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map(({ type, value: partValue }) => [type, partValue]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+export function summarizeAdminStats(profiles = [], planUserIds = [], openSupportTickets = 0, now = new Date()) {
+  const today = dateKeyInTimeZone(now);
+  const last7Start = addUtcDays(today, -7);
+  const last30Start = addUtcDays(today, -30);
+  const previous30Start = addUtcDays(today, -60);
+  const members = profiles.filter(({ role }) => role !== 'admin');
+  const memberIds = new Set(members.map(({ id }) => id));
+  const registrationDate = ({ created_at: createdAt }) => dateKeyInTimeZone(createdAt);
+  const countBetween = (start, end) => members.filter((profile) => {
+    const date = registrationDate(profile);
+    return date && date >= start && date < end;
+  }).length;
+  const monthRegistrations = countBetween(last30Start, today);
+  const previousMonthRegistrations = countBetween(previous30Start, last30Start);
+
+  return {
+    totalUsers: members.length,
+    completedProfiles: members.length,
+    todayRegistrations: members.filter((profile) => registrationDate(profile) === today).length,
+    weekRegistrations: countBetween(last7Start, today),
+    monthRegistrations,
+    previousMonthRegistrations,
+    registrationDelta: monthRegistrations - previousMonthRegistrations,
+    usersWithPlans: new Set(planUserIds.filter((userId) => memberIds.has(userId))).size,
+    openSupportTickets: Number(openSupportTickets) || 0,
+  };
+}
+
 export function summarizeRetention(profiles = [], activityDays = [], planUserIds = [], now = new Date()) {
   const today = utcDateKey(now);
+  const coverageDates = activityDays
+    .map(({ activity_date: activityDate }) => String(activityDate || '').slice(0, 10))
+    .filter(Boolean)
+    .sort();
+  const trackingStartedAt = coverageDates[0] || null;
+  const lastCompleteDate = today ? addUtcDays(today, -1) : null;
   const activeDates = new Map();
   activityDays.forEach(({ user_id: userId, activity_date: activityDate }) => {
     if (!userId || !activityDate) return;
@@ -110,11 +157,11 @@ export function summarizeRetention(profiles = [], activityDays = [], planUserIds
     const dates = activeDates.get(profile.id) || new Set();
     const d1Date = addUtcDays(signupDate, 1);
     const d7Date = addUtcDays(signupDate, 7);
-    if (d1Date <= today) {
+    if (trackingStartedAt && d1Date >= trackingStartedAt && d1Date < today) {
       result.d1Eligible += 1;
       if (dates.has(d1Date)) result.d1Returned += 1;
     }
-    if (d7Date <= today) {
+    if (trackingStartedAt && d7Date >= trackingStartedAt && d7Date < today) {
       result.d7Eligible += 1;
       if (dates.has(d7Date)) result.d7Returned += 1;
     }
@@ -125,6 +172,11 @@ export function summarizeRetention(profiles = [], activityDays = [], planUserIds
     activationRate: result.registrations > 0 ? Math.round((result.activated / result.registrations) * 100) : 0,
     d1Rate: result.d1Eligible > 0 ? Math.round((result.d1Returned / result.d1Eligible) * 100) : null,
     d7Rate: result.d7Eligible > 0 ? Math.round((result.d7Returned / result.d7Eligible) * 100) : null,
+    trackingStartedAt,
+    lastCompleteDate,
+    measurementDays: trackingStartedAt && lastCompleteDate
+      ? Math.max(0, Math.round((new Date(`${lastCompleteDate}T00:00:00.000Z`) - new Date(`${trackingStartedAt}T00:00:00.000Z`)) / 86400000) + 1)
+      : 0,
   };
 }
 
@@ -134,9 +186,9 @@ export async function getRetentionStats() {
   since.setUTCDate(since.getUTCDate() - 60);
   const sinceKey = utcDateKey(since);
   const [profilesResult, activityResult, plansResult] = await Promise.all([
-    supabase.from('profiles').select('id, created_at').gte('created_at', since.toISOString()),
+    supabase.from('profiles').select('id, created_at, role').gte('created_at', since.toISOString()).neq('role', 'admin'),
     supabase.from('user_activity_days').select('user_id, activity_date').gte('activity_date', sinceKey),
-    supabase.from('plans').select('user_id').gte('created_at', since.toISOString()),
+    supabase.from('plans').select('user_id'),
   ]);
   const failed = [profilesResult, activityResult, plansResult].find(({ error }) => error);
   if (failed?.error) throw failed.error;
@@ -175,51 +227,19 @@ export async function getAdminStats() {
   if (!isSupabaseReady()) return null;
 
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const monthAgo = new Date();
-    monthAgo.setDate(monthAgo.getDate() - 30);
-    const twoMonthsAgo = new Date();
-    twoMonthsAgo.setDate(twoMonthsAgo.getDate() - 60);
-
-    const results = await Promise.all([
-      supabase.from('profiles').select('*', { count: 'exact', head: true }),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString()),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', monthAgo.toISOString()),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', twoMonthsAgo.toISOString()).lt('created_at', monthAgo.toISOString()),
-      supabase.from('plans').select('*', { count: 'exact', head: true }),
+    const [profilesResult, plansResult, supportResult] = await Promise.all([
+      supabase.from('profiles').select('id, created_at, role'),
+      supabase.from('plans').select('user_id'),
       supabase.from('support_tickets').select('*', { count: 'exact', head: true }).neq('status', 'resolved'),
     ]);
-
-    const failed = results.find((result) => result.error);
+    const failed = [profilesResult, plansResult, supportResult].find(({ error }) => error);
     if (failed?.error) throw failed.error;
 
-    const [
-      { count: totalUsers },
-      { count: todayRegistrations },
-      { count: weekRegistrations },
-      { count: monthRegistrations },
-      { count: prevMonthRegistrations },
-      { count: usersWithPlans },
-      { count: openSupportTickets },
-    ] = results;
-
-    const growth = prevMonthRegistrations > 0
-      ? Math.round(((monthRegistrations - prevMonthRegistrations) / prevMonthRegistrations) * 100)
-      : monthRegistrations > 0 ? 100 : 0;
-
-    return {
-      totalUsers: totalUsers || 0,
-      todayRegistrations: todayRegistrations || 0,
-      weekRegistrations: weekRegistrations || 0,
-      monthRegistrations: monthRegistrations || 0,
-      monthlyGrowth: growth,
-      usersWithPlans: usersWithPlans || 0,
-      openSupportTickets: openSupportTickets || 0,
-    };
+    return summarizeAdminStats(
+      profilesResult.data || [],
+      (plansResult.data || []).map(({ user_id: userId }) => userId),
+      supportResult.count,
+    );
   } catch (err) {
     console.error('[Admin] Stats error:', err);
     return null;
