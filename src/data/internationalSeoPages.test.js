@@ -10,6 +10,17 @@ describe('international SEO pages', () => {
     }
   });
 
+  it('keeps reformer pages machine-specific and localized', () => {
+    const english = findInternationalSeoPage('/en/free-reformer-pilates-plan');
+    const spanish = findInternationalSeoPage('/es/plan-reformer-pilates-gratis');
+
+    expect(english?.alternates.tr).toBe('/reformer-pilates-programi');
+    expect(english?.description).toMatch(/studio or home reformer/i);
+    expect(english?.faqs.flat().join(' ')).toMatch(/reformer machine/i);
+    expect(spanish?.description).toMatch(/reformer en casa/i);
+    expect(spanish?.faqs.flat().join(' ')).toMatch(/m[aá]quina reformer/i);
+  });
+
   it('uses unique localized paths and complete reciprocal alternates', () => {
     const paths = internationalSeoPages.map((page) => page.path);
     expect(new Set(paths).size).toBe(paths.length);

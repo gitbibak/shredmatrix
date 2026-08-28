@@ -37,6 +37,8 @@ export const publicPages = [
   ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
   ...internationalSeoPages.map((page) => [
     page.path,
-    ['homeWorkout', 'homeDumbbell', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-24' : '2026-08-14',
+    page.topic === 'reformer'
+      ? '2026-08-28'
+      : (['homeWorkout', 'homeDumbbell', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-24' : '2026-08-14'),
   ]),
 ];
