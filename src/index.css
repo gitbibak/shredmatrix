@@ -230,6 +230,22 @@ button, a, [role="button"] {
   }
 }
 
+/* Keep the primary mobile navigation clear of iOS and installed-PWA home areas. */
+.mobile-app-shell {
+  padding-bottom: calc(4.5rem + max(env(safe-area-inset-bottom, 0px), 10px));
+}
+
+.mobile-bottom-nav {
+  min-height: calc(4rem + max(env(safe-area-inset-bottom, 0px), 10px));
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 10px);
+}
+
+@media (min-width: 1024px) {
+  .mobile-app-shell {
+    padding-bottom: 0;
+  }
+}
+
 /* Better mobile scrollbar */
 @media (max-width: 768px) {
   ::-webkit-scrollbar {

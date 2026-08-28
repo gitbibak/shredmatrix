@@ -144,14 +144,21 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     const updateKeyboardState = () => {
       const viewport = window.visualViewport;
       const heightLoss = window.innerHeight - viewport.height;
-      setKeyboardOpen(heightLoss > 140 || viewport.height < initialHeight - 140);
+      const activeElement = document.activeElement;
+      const editing = activeElement?.matches?.('input, textarea, select, [contenteditable="true"]');
+      setKeyboardOpen(Boolean(editing && (heightLoss > 140 || viewport.height < initialHeight - 140)));
     };
+    const updateAfterFocusChange = () => window.requestAnimationFrame(updateKeyboardState);
 
     window.visualViewport.addEventListener('resize', updateKeyboardState);
     window.visualViewport.addEventListener('scroll', updateKeyboardState);
+    document.addEventListener('focusin', updateAfterFocusChange);
+    document.addEventListener('focusout', updateAfterFocusChange);
     return () => {
       window.visualViewport.removeEventListener('resize', updateKeyboardState);
       window.visualViewport.removeEventListener('scroll', updateKeyboardState);
+      document.removeEventListener('focusin', updateAfterFocusChange);
+      document.removeEventListener('focusout', updateAfterFocusChange);
     };
   }, []);
 
@@ -159,7 +166,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
   return (
     <>
-    <div className="min-h-screen bg-grid pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0 overflow-x-hidden w-full">
+    <div className="mobile-app-shell min-h-screen bg-grid lg:pb-0 overflow-x-hidden w-full">
       {/* ── Top Nav ──────────────────────────────────── */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
@@ -518,12 +525,11 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
       <nav
         className={[
-          'lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50 transition-transform duration-200',
+          'mobile-bottom-nav lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50 transition-transform duration-200',
           keyboardOpen ? 'translate-y-full pointer-events-none' : 'translate-y-0',
         ].join(' ')}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div role="tablist" className="flex items-center justify-around h-16 max-w-lg mx-auto">
+        <div role="tablist" className="flex h-16 w-full max-w-lg items-stretch mx-auto px-1">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -536,12 +542,12 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 onFocus={tab.id === 'profile' ? warmProfileAssets : undefined}
                 onClick={() => setActiveTab(tab.id)}
                 className={[
-                  'flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 transition-all cursor-pointer min-w-0',
+                  'flex min-h-14 min-w-0 flex-1 touch-manipulation select-none flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5 transition-all cursor-pointer',
                   active ? 'text-orange-400' : 'text-slate-600',
                 ].join(' ')}
               >
                 <Icon size={18} />
-                <span className="text-[9px] font-medium truncate">{tab.label}</span>
+                <span className="max-w-full truncate text-[10px] leading-3 font-medium">{tab.label}</span>
                 {active && (
                   <motion.div
                     layoutId="bottomTabIndicator"
