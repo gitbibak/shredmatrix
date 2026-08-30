@@ -52,7 +52,10 @@ describe('international SEO pages', () => {
     const spanishBmi = findInternationalSeoPage('/es/calculadora-imc');
     expect(spanishBmi.metaTitle).toContain('Calculadora de IMC Gratis');
     expect(spanishBmi.description).toContain('libras, pies y pulgadas');
-    expect(findInternationalSeoPage('/en/bmi-calculator').metaTitle).toContain('Imperial BMI Calculator');
+    const englishBmi = findInternationalSeoPage('/en/bmi-calculator');
+    expect(englishBmi.metaTitle).toContain('Free Imperial BMI Calculator');
+    expect(englishBmi.metaTitle).toContain('lb, ft & in');
+    expect(englishBmi.description).toContain('no signup');
     expect(findInternationalSeoPage('/en/personal-workout-plan').metaTitle).toContain('Home or Gym');
     const spanishWorkout = findInternationalSeoPage('/es/plan-entrenamiento-personalizado');
     expect(spanishWorkout.metaTitle).toContain('Casa con Mancuernas');

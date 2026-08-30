@@ -186,8 +186,8 @@ const pageDefinitions = {
     paths: { tr: '/bmi-hesaplama', en: '/en/bmi-calculator', es: '/es/calculadora-imc' },
     category: 'progress', calculator: 'bmi',
     en: {
-      title: 'Imperial BMI Calculator', accent: 'Pounds, Feet or Metric', metaTitle: 'Imperial BMI Calculator: Pounds, Feet & Inches | Full Balance',
-      description: 'Calculate BMI in pounds, feet and inches or kilograms and centimeters. Get a free instant adult result with no signup required.',
+      title: 'Free Imperial BMI Calculator', accent: 'Pounds, Feet or Metric', metaTitle: 'Free Imperial BMI Calculator (lb, ft & in) | Full Balance',
+      description: 'Calculate adult BMI with pounds, feet and inches or metric units. Get a free instant result with no signup, subscription or credit card.',
       hero: 'Enter height and weight in imperial or metric units and see your BMI instantly. No account is needed to use the calculator.',
       sections: [['Imperial and metric units', 'Use pounds, feet and inches or switch to kilograms and centimeters.'], ['Clear adult context', 'BMI is a population-level screening measure and does not directly measure body fat or fitness.'], ['Track more than weight', 'Full Balance can combine weight with measurements, workouts, sleep, water and weekly trends.']],
       faqs: [['How do I calculate BMI with pounds and inches?', 'Choose imperial units, enter weight in pounds and height in feet and inches; the calculator applies the imperial conversion automatically.'], ['Does BMI measure body fat?', 'No. BMI uses height and weight and does not directly measure body composition.'], ['Is BMI a diagnosis?', 'No. It is a screening measure and should not be used as a diagnosis.']],
