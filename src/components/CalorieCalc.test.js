@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getMealEstimateRange } from './CalorieCalc';
+import { getMealEstimateRange, validateMealPhoto } from './CalorieCalc';
 
 describe('meal calorie estimate range', () => {
   it('returns zero for empty or invalid totals', () => {
@@ -14,5 +14,17 @@ describe('meal calorie estimate range', () => {
 
   it('rounds displayed calorie bounds to whole numbers', () => {
     expect(getMealEstimateRange(333, true)).toEqual({ low: 266, high: 433 });
+  });
+});
+
+describe('meal photo validation', () => {
+  it('accepts normal image files and iOS files with a supported extension', () => {
+    expect(validateMealPhoto({ name: 'meal.jpg', type: 'image/jpeg', size: 2_000_000 })).toBeNull();
+    expect(validateMealPhoto({ name: 'IMG_1001.HEIC', type: '', size: 8_000_000 })).toBeNull();
+  });
+
+  it('rejects non-images and photos above the mobile-safe limit', () => {
+    expect(validateMealPhoto({ name: 'meal.pdf', type: 'application/pdf', size: 1000 })).toBe('invalid');
+    expect(validateMealPhoto({ name: 'meal.jpg', type: 'image/jpeg', size: 31 * 1024 * 1024 })).toBe('tooLarge');
   });
 });

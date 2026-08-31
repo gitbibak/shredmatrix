@@ -166,7 +166,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
   return (
     <>
-    <div className="mobile-app-shell min-h-screen bg-grid lg:pb-0 overflow-x-hidden w-full">
+    <div className="mobile-app-shell min-h-screen w-full overflow-x-clip bg-grid lg:pb-0">
       {/* ── Top Nav ──────────────────────────────────── */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
@@ -316,7 +316,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       </motion.nav>
 
       {/* ── Main Content ─────────────────────────────── */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
+      <main className="mx-auto max-w-7xl overflow-x-clip px-4 py-6 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           {/* ─── Bugün Tab ─── */}
           {activeTab === 'today' && (
@@ -374,7 +374,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                       onToggle={() => setShowNutritionTools((value) => !value)}
                       highlight
                     >
-                      <CalorieCalc />
+                      <CalorieCalc embedded />
                     </DisclosureSection>
                   </motion.div>
                   <motion.div variants={columnVariants}>
@@ -523,7 +523,20 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
         </div>
       </main>
 
-      {/* ── Mobile Bottom Tab Bar ─────────────────────── */}
+      {/* ── Footer (desktop only) ─────────────────────── */}
+      <footer className="hidden lg:block border-t border-slate-800/50 mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <p className="text-[10px] text-slate-600">
+            {t('dashboard.footer')}
+          </p>
+          {user?.email && (
+            <p className="text-[10px] text-slate-700">{user.email}</p>
+          )}
+        </div>
+      </footer>
+    </div>
+
+      {/* Keep fixed navigation outside scroll and animation containers for iOS. */}
       <nav
         className={[
           'mobile-bottom-nav lg:hidden fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50 transition-transform duration-200',
@@ -561,19 +574,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
           })}
         </div>
       </nav>
-
-      {/* ── Footer (desktop only) ─────────────────────── */}
-      <footer className="hidden lg:block border-t border-slate-800/50 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <p className="text-[10px] text-slate-600">
-            {t('dashboard.footer')}
-          </p>
-          {user?.email && (
-            <p className="text-[10px] text-slate-700">{user.email}</p>
-          )}
-        </div>
-      </footer>
-    </div>
 
       {/* ── Share Card Modal ── */}
       <AnimatePresence>

@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { translations } from '../i18n/translations';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -225,7 +225,19 @@ export function getMealEstimateRange(calories, photoAssisted = false) {
   };
 }
 
-export default function CalorieCalc({ language }) {
+const MAX_MEAL_PHOTO_BYTES = 30 * 1024 * 1024;
+
+export function validateMealPhoto(file) {
+  if (!file) return 'missing';
+  const extension = file.name?.split('.').pop()?.toLowerCase();
+  const supportedExtension = ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'].includes(extension);
+  if (file.type && !file.type.startsWith('image/')) return 'invalid';
+  if (!file.type && !supportedExtension) return 'invalid';
+  if (file.size > MAX_MEAL_PHOTO_BYTES) return 'tooLarge';
+  return null;
+}
+
+export default function CalorieCalc({ language, embedded = false }) {
   const { t, lang } = useTranslation();
   const activeLang = language || lang;
   const tt = useCallback((key) => {
@@ -241,11 +253,10 @@ export default function CalorieCalc({ language }) {
   const [selectedFood, setSelectedFood] = useState(null);
   const [mealItems, setMealItems] = useState([]);
   const [photo, setPhoto] = useState(null);
-  const photoInputRef = useRef(null);
-
-  useEffect(() => () => {
-    if (photo?.url) URL.revokeObjectURL(photo.url);
-  }, [photo]);
+  const [photoError, setPhotoError] = useState('');
+  const [photoLoading, setPhotoLoading] = useState(false);
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   const filtered = useMemo(() => {
     let items = FOODS;
@@ -281,18 +292,36 @@ export default function CalorieCalc({ language }) {
   const selectPhoto = (event) => {
     const file = event.target.files?.[0];
     event.target.value = '';
-    if (!file || !file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) return;
-    setPhoto((current) => {
-      if (current?.url) URL.revokeObjectURL(current.url);
-      return { url: URL.createObjectURL(file), name: file.name };
-    });
-    trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
+    const validationError = validateMealPhoto(file);
+    if (validationError) {
+      setPhotoError(tt(`calorieCalc.photoError${validationError === 'tooLarge' ? 'TooLarge' : 'Invalid'}`));
+      return;
+    }
+
+    setPhotoError('');
+    setPhotoLoading(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') {
+        setPhotoError(tt('calorieCalc.photoErrorRead'));
+        setPhotoLoading(false);
+        return;
+      }
+      setPhoto({ url: reader.result, name: file.name });
+      setPhotoLoading(false);
+      trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
+    };
+    reader.onerror = () => {
+      setPhotoError(tt('calorieCalc.photoErrorRead'));
+      setPhotoLoading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const removePhoto = () => setPhoto((current) => {
-    if (current?.url) URL.revokeObjectURL(current.url);
-    return null;
-  });
+  const removePhoto = () => {
+    setPhoto(null);
+    setPhotoError('');
+  };
 
   const addToMeal = () => {
     if (!selectedFood || grams < 1) return;
@@ -315,7 +344,7 @@ export default function CalorieCalc({ language }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-5"
+      className={embedded ? '' : 'rounded-2xl border border-slate-800 bg-slate-900 p-5'}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-1">
@@ -332,27 +361,53 @@ export default function CalorieCalc({ language }) {
       <div className="mb-4 overflow-hidden rounded-xl border border-cyan-500/25 bg-cyan-500/5">
         {photo ? (
           <div className="relative aspect-[16/9] w-full bg-slate-950">
-            <img src={photo.url} alt={tt('calorieCalc.photoAlt')} className="h-full w-full object-cover" />
+            <img
+              src={photo.url}
+              alt={tt('calorieCalc.photoAlt')}
+              className="h-full w-full object-contain"
+              onError={() => {
+                setPhoto(null);
+                setPhotoError(tt('calorieCalc.photoErrorRead'));
+              }}
+            />
             <button type="button" onClick={removePhoto} aria-label={tt('calorieCalc.removePhoto')} className="absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-slate-950/85 text-white backdrop-blur">
               <X size={16} />
             </button>
           </div>
         ) : (
-          <button type="button" onClick={() => photoInputRef.current?.click()} className="flex min-h-24 w-full items-center gap-3 p-4 text-left transition-colors hover:bg-cyan-500/10">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-500/15 text-cyan-300"><Camera size={21} /></span>
-            <span className="min-w-0">
-              <span className="block text-xs font-bold text-white">{tt('calorieCalc.photoStart')}</span>
-              <span className="mt-1 block text-[10px] leading-relaxed text-slate-400">{tt('calorieCalc.photoHelper')}</span>
-            </span>
-            <ImagePlus size={18} className="ml-auto shrink-0 text-cyan-300" />
-          </button>
+          <div className="p-4">
+            <div className="flex items-start gap-3">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-500/15 text-cyan-300"><Camera size={21} /></span>
+              <span className="min-w-0">
+                <span className="block text-xs font-bold text-white">{tt('calorieCalc.photoStart')}</span>
+                <span className="mt-1 block text-[10px] leading-relaxed text-slate-400">{tt('calorieCalc.photoHelper')}</span>
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button type="button" disabled={photoLoading} onClick={() => cameraInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cyan-500/25 bg-cyan-500/10 px-3 text-[11px] font-bold text-cyan-200 disabled:opacity-60">
+                <Camera size={16} /> {tt('calorieCalc.photoTake')}
+              </button>
+              <button type="button" disabled={photoLoading} onClick={() => galleryInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 text-[11px] font-bold text-slate-200 disabled:opacity-60">
+                <ImagePlus size={16} /> {tt('calorieCalc.photoChoose')}
+              </button>
+            </div>
+            {photoLoading && <p className="mt-2 text-[10px] text-cyan-200">{tt('calorieCalc.photoLoading')}</p>}
+          </div>
         )}
-        <input ref={photoInputRef} type="file" accept="image/*" capture="environment" onChange={selectPhoto} className="hidden" />
+        <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={selectPhoto} className="hidden" aria-label={tt('calorieCalc.photoTake')} />
+        <input ref={galleryInputRef} type="file" accept="image/*" onChange={selectPhoto} className="hidden" aria-label={tt('calorieCalc.photoChoose')} />
         <div className="flex items-start gap-2 border-t border-cyan-500/15 px-4 py-3 text-[10px] leading-relaxed text-cyan-100/75">
           <ShieldCheck size={14} className="mt-0.5 shrink-0 text-emerald-400" />
           <span>{tt('calorieCalc.photoPrivacy')}</span>
         </div>
       </div>
+
+      {photoError && (
+        <div role="alert" className="mb-4 flex items-start gap-2 rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-[10px] leading-relaxed text-red-200">
+          <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+          <span>{photoError}</span>
+        </div>
+      )}
 
       {photo && (
         <ol className="mb-4 grid gap-2 sm:grid-cols-3">
