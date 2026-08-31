@@ -1,6 +1,9 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "shredmatrix"
 compatibility_date = "2025-06-13"
+routes = [
+  { pattern = "fullbalance.app/*", zone_name = "fullbalance.app" }
+]
 
 [assets]
 directory = "./dist"
