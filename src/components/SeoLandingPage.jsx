@@ -111,8 +111,8 @@ const pages = {
     accent: '#f97316',
     title: 'Evde Kas Geliştirme',
     titleAccent: 'Hareketleri',
-    metaTitle: 'Evde Kas Geliştirme Hareketleri ve Programı | Full Balance',
-    description: 'Evde kas geliştirmek için ekipmansız hareketler, haftalık hacim, kontrollü progresyon, dinlenme, protein ve kalori hedeflerini tek ücretsiz planda gör.',
+    metaTitle: 'Evde Kas Geliştirme Hareketleri | Ücretsiz | Full Balance',
+    description: 'Evde kas geliştirme hareketlerini seviyene göre uygula. Ekipmansız ücretsiz programda set, tekrar, progresyon, dinlenme, protein ve kalori hedeflerini gör.',
     keywords: 'evde kas geliştirme hareketleri, kas geliştirme hareketleri, ekipmansız kas geliştirme, evde kas programı',
     heroCopy: 'İtiş, squat, kalça, tek bacak ve core hareketlerini seviyene göre ilerlet; antrenmanı protein, kalori ve toparlanmayla birleştir.',
     sections: [

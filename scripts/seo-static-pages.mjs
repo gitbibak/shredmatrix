@@ -43,7 +43,7 @@ export const seoLandingPages = [
   ['meditasyon-uygulamasi', 'Ücretsiz Meditasyon Uygulaması', 'Nefes, farkındalık, uyku ve günlük devamlılık takibiyle kişisel meditasyon planı.'],
   ['evde-spor-programi', 'Ekipmansız Evde Spor Programı', 'Seviye, hedef ve haftalık gün sayısına göre ekipmansız evde spor programı oluştur; set, tekrar, dinlenme ve kolay alternatifleri ücretsiz gör.'],
   ['evde-dambil-antrenman-programi', 'Evde Dambıl Antrenman Programı', 'Hedef ve seviyene göre evde dambıl veya direnç bandıyla uygulanabilen, salon makinesi içermeyen ücretsiz kişisel antrenman ve beslenme planı oluştur.'],
-  ['evde-kas-gelistirme-hareketleri', 'Evde Kas Geliştirme Hareketleri ve Programı', 'Evde kas geliştirmek için ekipmansız hareketler, kontrollü progresyon, dinlenme, protein ve kalori hedeflerini tek ücretsiz planda gör.'],
+  ['evde-kas-gelistirme-hareketleri', 'Evde Kas Geliştirme Hareketleri | Ücretsiz', 'Evde kas geliştirme hareketlerini seviyene göre uygula. Ekipmansız ücretsiz programda set, tekrar, progresyon, dinlenme, protein ve kalori hedeflerini gör.'],
   ['baslangic-pilates-programi', 'Başlangıç Pilates Programı', 'Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.'],
 ].map(([slug, title, description]) => ({
   slug,
