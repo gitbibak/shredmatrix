@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { translations } from '../i18n/translations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calculator, Search, Plus, Trash2, RotateCcw } from 'lucide-react';
+import { AlertTriangle, Calculator, Camera, ImagePlus, Plus, RotateCcw, Search, ShieldCheck, Trash2, X } from 'lucide-react';
+import { trackEvent } from '../lib/analytics';
 
 // ═══════════════════════════════════════════════════════════
 // 200+ foods database — per 100g values
@@ -212,13 +214,38 @@ const FOODS = [
 
 const CATEGORIES = ['meat', 'dairy', 'grain', 'veggie', 'fruit', 'snack', 'drink', 'fastfood', 'dessert', 'sauce'];
 
-export default function CalorieCalc() {
+export function getMealEstimateRange(calories, photoAssisted = false) {
+  const value = Number(calories) || 0;
+  if (value <= 0) return { low: 0, high: 0 };
+  const lowerMultiplier = photoAssisted ? 0.8 : 0.9;
+  const upperMultiplier = photoAssisted ? 1.3 : 1.15;
+  return {
+    low: Math.max(0, Math.round(value * lowerMultiplier)),
+    high: Math.round(value * upperMultiplier),
+  };
+}
+
+export default function CalorieCalc({ language }) {
   const { t, lang } = useTranslation();
+  const activeLang = language || lang;
+  const tt = useCallback((key) => {
+    if (!language) return t(key);
+    const keys = key.split('.');
+    let value = translations[activeLang];
+    for (const part of keys) value = value?.[part];
+    return value ?? t(key);
+  }, [activeLang, language, t]);
   const [search, setSearch] = useState('');
   const [selectedCat, setSelectedCat] = useState(null);
   const [grams, setGrams] = useState(100);
   const [selectedFood, setSelectedFood] = useState(null);
   const [mealItems, setMealItems] = useState([]);
+  const [photo, setPhoto] = useState(null);
+  const photoInputRef = useRef(null);
+
+  useEffect(() => () => {
+    if (photo?.url) URL.revokeObjectURL(photo.url);
+  }, [photo]);
 
   const filtered = useMemo(() => {
     let items = FOODS;
@@ -246,6 +273,26 @@ export default function CalorieCalc() {
     c: sum.c + item.c,
     f: sum.f + item.f,
   }), { cal: 0, p: 0, c: 0, f: 0 }), [mealItems]);
+  const estimateRange = useMemo(
+    () => getMealEstimateRange(totals.cal, Boolean(photo)),
+    [photo, totals.cal],
+  );
+
+  const selectPhoto = (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file || !file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) return;
+    setPhoto((current) => {
+      if (current?.url) URL.revokeObjectURL(current.url);
+      return { url: URL.createObjectURL(file), name: file.name };
+    });
+    trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
+  };
+
+  const removePhoto = () => setPhoto((current) => {
+    if (current?.url) URL.revokeObjectURL(current.url);
+    return null;
+  });
 
   const addToMeal = () => {
     if (!selectedFood || grams < 1) return;
@@ -262,6 +309,7 @@ export default function CalorieCalc() {
     setSelectedFood(null);
     setGrams(100);
     setSearch('');
+    trackEvent('meal_item_added', { surface: language ? 'public_tool' : 'dashboard', category: selectedFood.cat, language: activeLang });
   };
 
   return (
@@ -273,19 +321,55 @@ export default function CalorieCalc() {
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <Calculator size={16} className="text-emerald-400" />
-          <h3 className="text-sm font-bold font-outfit text-white">{t('calorieCalc.title')}</h3>
+          <h3 className="text-sm font-bold font-outfit text-white">{tt('calorieCalc.title')}</h3>
           <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
             {FOODS.length}+
           </span>
         </div>
       </div>
-      <p className="mb-4 text-[10px] leading-relaxed text-slate-500">{t('calorieCalc.helper')}</p>
+      <p className="mb-4 text-[10px] leading-relaxed text-slate-500">{tt('calorieCalc.helper')}</p>
+
+      <div className="mb-4 overflow-hidden rounded-xl border border-cyan-500/25 bg-cyan-500/5">
+        {photo ? (
+          <div className="relative aspect-[16/9] w-full bg-slate-950">
+            <img src={photo.url} alt={tt('calorieCalc.photoAlt')} className="h-full w-full object-cover" />
+            <button type="button" onClick={removePhoto} aria-label={tt('calorieCalc.removePhoto')} className="absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-slate-950/85 text-white backdrop-blur">
+              <X size={16} />
+            </button>
+          </div>
+        ) : (
+          <button type="button" onClick={() => photoInputRef.current?.click()} className="flex min-h-24 w-full items-center gap-3 p-4 text-left transition-colors hover:bg-cyan-500/10">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-500/15 text-cyan-300"><Camera size={21} /></span>
+            <span className="min-w-0">
+              <span className="block text-xs font-bold text-white">{tt('calorieCalc.photoStart')}</span>
+              <span className="mt-1 block text-[10px] leading-relaxed text-slate-400">{tt('calorieCalc.photoHelper')}</span>
+            </span>
+            <ImagePlus size={18} className="ml-auto shrink-0 text-cyan-300" />
+          </button>
+        )}
+        <input ref={photoInputRef} type="file" accept="image/*" capture="environment" onChange={selectPhoto} className="hidden" />
+        <div className="flex items-start gap-2 border-t border-cyan-500/15 px-4 py-3 text-[10px] leading-relaxed text-cyan-100/75">
+          <ShieldCheck size={14} className="mt-0.5 shrink-0 text-emerald-400" />
+          <span>{tt('calorieCalc.photoPrivacy')}</span>
+        </div>
+      </div>
+
+      {photo && (
+        <ol className="mb-4 grid gap-2 sm:grid-cols-3">
+          {[tt('calorieCalc.photoStepFoods'), tt('calorieCalc.photoStepPortion'), tt('calorieCalc.photoStepHidden')].map((step, index) => (
+            <li key={step} className="flex items-start gap-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[10px] leading-relaxed text-slate-300">
+              <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-cyan-500/15 font-bold text-cyan-300">{index + 1}</span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      )}
 
       {/* Search */}
       <div className="relative mb-3">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
         <input
-          type="text" placeholder={t('calorieCalc.search')}
+          type="text" placeholder={tt('calorieCalc.search')}
           value={search} onChange={e => setSearch(e.target.value)}
           className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600 focus:border-emerald-500/50 transition-colors"
         />
@@ -304,7 +388,7 @@ export default function CalorieCalc() {
             onClick={() => setSelectedCat(cat === selectedCat ? null : cat)}
             className={`px-2 py-0.5 rounded-lg text-[9px] font-medium cursor-pointer transition-all ${selectedCat === cat ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700 hover:text-white'}`}
           >
-            {t(`calorieCalc.categories.${cat}`)}
+            {tt(`calorieCalc.categories.${cat}`)}
           </button>
         ))}
       </div>
@@ -312,7 +396,7 @@ export default function CalorieCalc() {
       {/* Food list */}
       <div className="max-h-48 overflow-y-auto scrollbar-none space-y-1 mb-4">
         {filtered.map((food, i) => {
-          const name = food.name[lang] || food.name.tr;
+          const name = food.name[activeLang] || food.name.tr;
           const isSelected = selectedFood === food;
           return (
             <button
@@ -338,7 +422,7 @@ export default function CalorieCalc() {
             exit={{ opacity: 0, height: 0 }}
           >
             <div className="flex flex-wrap items-center gap-2 mb-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
-              <label className="text-[10px] text-slate-500 shrink-0">{t('calorieCalc.grams')}:</label>
+              <label className="text-[10px] text-slate-500 shrink-0">{tt('calorieCalc.grams')}:</label>
               <input
                 type="number" min="1" max="2000" step="10" value={grams}
                 onChange={e => setGrams(parseInt(e.target.value) || 0)}
@@ -346,33 +430,40 @@ export default function CalorieCalc() {
               />
               <span className="text-[10px] text-slate-500">g</span>
               <span className="min-w-0 flex-1 truncate text-right text-[10px] text-emerald-400 font-semibold">
-                {selectedFood.name[lang] || selectedFood.name.tr}
+                {selectedFood.name[activeLang] || selectedFood.name.tr}
               </span>
+              <div className="flex w-full gap-1 overflow-x-auto pb-0.5">
+                {[50, 100, 150, 200, 250].map((portion) => (
+                  <button key={portion} type="button" onClick={() => setGrams(portion)} className={`min-h-8 min-w-12 rounded-lg border px-2 text-[10px] font-semibold ${grams === portion ? 'border-emerald-500/50 bg-emerald-500/15 text-emerald-300' : 'border-slate-800 bg-slate-950 text-slate-500'}`}>
+                    {portion}g
+                  </button>
+                ))}
+              </div>
               <button
                 type="button"
                 onClick={addToMeal}
                 className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-slate-950 transition-colors hover:bg-emerald-400"
               >
-                <Plus size={14} /> {t('calorieCalc.add')}
+                <Plus size={14} /> {tt('calorieCalc.add')}
               </button>
             </div>
 
             {calc && (
               <div className="grid grid-cols-4 gap-1.5">
                 <div className="bg-slate-950/60 border border-slate-800/50 rounded-xl p-2 text-center">
-                  <p className="text-[8px] text-slate-500">{t('calorieCalc.cal')}</p>
+                  <p className="text-[8px] text-slate-500">{tt('calorieCalc.cal')}</p>
                   <p className="text-sm font-bold text-white font-outfit">{calc.cal}</p>
                 </div>
                 <div className="bg-slate-950/60 border border-slate-800/50 rounded-xl p-2 text-center">
-                  <p className="text-[8px] text-slate-500">{t('calorieCalc.protein')}</p>
+                  <p className="text-[8px] text-slate-500">{tt('calorieCalc.protein')}</p>
                   <p className="text-sm font-bold text-orange-400 font-outfit">{calc.p}g</p>
                 </div>
                 <div className="bg-slate-950/60 border border-slate-800/50 rounded-xl p-2 text-center">
-                  <p className="text-[8px] text-slate-500">{t('calorieCalc.carbs')}</p>
+                  <p className="text-[8px] text-slate-500">{tt('calorieCalc.carbs')}</p>
                   <p className="text-sm font-bold text-blue-400 font-outfit">{calc.c}g</p>
                 </div>
                 <div className="bg-slate-950/60 border border-slate-800/50 rounded-xl p-2 text-center">
-                  <p className="text-[8px] text-slate-500">{t('calorieCalc.fat')}</p>
+                  <p className="text-[8px] text-slate-500">{tt('calorieCalc.fat')}</p>
                   <p className="text-sm font-bold text-purple-400 font-outfit">{calc.f}g</p>
                 </div>
               </div>
@@ -384,18 +475,18 @@ export default function CalorieCalc() {
       {mealItems.length > 0 && (
         <div className="mt-4 border-t border-slate-800 pt-4">
           <div className="mb-3 flex items-center justify-between">
-            <h4 className="text-xs font-bold text-white">{t('calorieCalc.mealTotal')}</h4>
+            <h4 className="text-xs font-bold text-white">{tt('calorieCalc.mealTotal')}</h4>
             <button type="button" onClick={() => setMealItems([])} className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 hover:text-red-400">
-              <RotateCcw size={12} /> {t('calorieCalc.clear')}
+              <RotateCcw size={12} /> {tt('calorieCalc.clear')}
             </button>
           </div>
           <div className="mb-3 space-y-1.5">
             {mealItems.map(item => (
               <div key={item.id} className="flex items-center gap-2 rounded-lg bg-slate-950/70 px-3 py-2">
-                <span className="min-w-0 flex-1 truncate text-xs text-slate-300">{item.food.name[lang] || item.food.name.tr}</span>
+                <span className="min-w-0 flex-1 truncate text-xs text-slate-300">{item.food.name[activeLang] || item.food.name.tr}</span>
                 <span className="text-[10px] text-slate-500">{item.grams}g</span>
                 <span className="w-14 text-right text-[10px] font-semibold text-white">{item.cal} kcal</span>
-                <button type="button" aria-label={t('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
+                <button type="button" aria-label={tt('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
                   <Trash2 size={13} />
                 </button>
               </div>
@@ -403,10 +494,10 @@ export default function CalorieCalc() {
           </div>
           <div className="grid grid-cols-4 gap-1.5">
             {[
-              [t('calorieCalc.cal'), Math.round(totals.cal), 'text-white', ''],
-              [t('calorieCalc.protein'), totals.p.toFixed(1), 'text-orange-400', 'g'],
-              [t('calorieCalc.carbs'), totals.c.toFixed(1), 'text-blue-400', 'g'],
-              [t('calorieCalc.fat'), totals.f.toFixed(1), 'text-purple-400', 'g'],
+              [tt('calorieCalc.cal'), Math.round(totals.cal), 'text-white', ''],
+              [tt('calorieCalc.protein'), totals.p.toFixed(1), 'text-orange-400', 'g'],
+              [tt('calorieCalc.carbs'), totals.c.toFixed(1), 'text-blue-400', 'g'],
+              [tt('calorieCalc.fat'), totals.f.toFixed(1), 'text-purple-400', 'g'],
             ].map(([label, value, color, unit]) => (
               <div key={label} className="rounded-xl border border-slate-800/50 bg-slate-950/60 p-2 text-center">
                 <p className="text-[8px] text-slate-500">{label}</p>
@@ -414,7 +505,23 @@ export default function CalorieCalc() {
               </div>
             ))}
           </div>
-          <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{t('calorieCalc.disclaimer')}</p>
+          <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
+            <AlertTriangle size={15} className="mt-0.5 shrink-0 text-amber-400" />
+            <div>
+              <p className="text-[10px] font-bold text-amber-200">{tt('calorieCalc.estimateRange')}: {estimateRange.low}-{estimateRange.high} kcal</p>
+              <p className="mt-1 text-[9px] leading-relaxed text-slate-500">{tt('calorieCalc.estimateHelper')}</p>
+            </div>
+          </div>
+          {photo && (
+            <div className="mt-2 flex gap-2">
+              <button type="button" onClick={() => { setSelectedCat('sauce'); setSearch(''); }} className="min-h-10 flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 text-[10px] font-bold text-slate-300">{tt('calorieCalc.addOilSauce')}</button>
+              <button type="button" onClick={() => { setSelectedCat('drink'); setSearch(''); }} className="min-h-10 flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 text-[10px] font-bold text-slate-300">{tt('calorieCalc.addDrink')}</button>
+            </div>
+          )}
+          <button type="button" onClick={() => trackEvent('meal_estimate_completed', { surface: language ? 'public_tool' : 'dashboard', language: activeLang, photo_assisted: Boolean(photo), item_count: mealItems.length })} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
+            {tt('calorieCalc.confirmEstimate')}
+          </button>
+          <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{tt('calorieCalc.disclaimer')}</p>
         </div>
       )}
     </motion.div>

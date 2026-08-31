@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { getAlternatesForTurkishPath } from '../data/internationalSeoPages';
 import { trackLandingCta } from '../lib/analytics';
@@ -21,6 +21,8 @@ import {
   UtensilsCrossed,
   Waves,
 } from 'lucide-react';
+
+const CalorieCalc = lazy(() => import('./CalorieCalc'));
 
 const BASE_URL = 'https://fullbalance.app';
 const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png`;
@@ -51,19 +53,19 @@ const pages = {
     accent: '#f97316',
     title: 'Günlük Kalori İhtiyacı ve',
     titleAccent: 'Makro Takibi',
-    metaTitle: 'Günlük Kalori İhtiyacı Hesaplama ve Makro Takibi | Full Balance',
-    description: 'Alman gereken günlük kaloriyi BMR, TDEE, hedef ve aktiviteye göre hesapla; protein, karbonhidrat ve yağ hedeflerini ücretsiz takip et.',
-    keywords: 'günlük kalori ihtiyacı hesaplama, almam gereken kalori, besin kalori hesaplama, makro takip, BMR hesaplama, TDEE hesaplama',
-    heroCopy: 'Günlük enerji ihtiyacını hesapla; sonucu hedefe uygun makrolara, öğünlere ve 7 günlük kişisel plana dönüştür.',
+    metaTitle: 'Fotoğrafla Yemek Kalori Hesaplama ve Makro Takibi | Full Balance',
+    description: 'Yemek fotoğrafını referans al, görünen besinleri ve porsiyonları doğrula; öğün kalorisi ile makroları ücretsiz ve gerçekçi bir aralıkta hesapla.',
+    keywords: 'fotoğraftan kalori hesaplama, yemek fotoğrafı kalori, besin kalori hesaplama, öğün kalori hesaplama, makro takip',
+    heroCopy: 'Öğün fotoğrafını referans al; yiyecekleri, porsiyonları, yağları, sosları ve içecekleri doğrulayarak gerçekçi kalori ve makro aralığını gör.',
     sections: [
-      { title: 'Alman gereken kaloriyi hesapla', body: 'Boy, kilo, yaş, cinsiyet ve aktivite bilgilerine göre BMR ve günlük toplam enerji ihtiyacı için başlangıç tahmini oluşturulur.' },
-      { title: 'Hedefe göre makrolar', body: 'Kas gelişimi veya yağ yakımı gibi hedeflere göre protein, karbonhidrat ve yağ dağılımı önerilir.' },
-      { title: '7 günlük menü fikri', body: 'Kullanıcının bütçe ve tercih bilgilerine göre daha uygulanabilir beslenme planı oluşturulur.' },
+      { title: 'Fotoğrafla daha hızlı başla', body: 'Öğün fotoğrafını cihazında aç; fotoğrafta görünen yiyecekleri 200’den fazla besin arasından seç.' },
+      { title: 'Porsiyonu ve gizli kalorileri doğrula', body: 'Gramı kontrol et; fotoğrafın gösteremediği yağ, sos, şeker ve içecekleri ayrıca ekle.' },
+      { title: 'Kesin olmayanı kesinmiş gibi göstermez', body: 'Tarif ve porsiyon belirsizliğini saklamak yerine tek bir sayı ile birlikte gerçekçi bir tahmin aralığı sunar.' },
     ],
     faqs: [
-      ['Günlük kaç kalori almam gerekir?', 'İhtiyaç yaş, boy, kilo, cinsiyet, aktivite ve hedefe göre değişir. Full Balance BMR ve TDEE üzerinden bir başlangıç tahmini oluşturur.'],
-      ['Makro hedefleri kişisel mi?', 'Evet. Hedef, kilo, aktivite ve profil bilgilerine göre kişiselleştirilir.'],
-      ['Beslenme planı ücretsiz mi?', 'Evet. Full Balance içindeki beslenme ve kalori özellikleri ücretsizdir.'],
+      ['Fotoğraftan kalori kesin hesaplanabilir mi?', 'Hayır. Tek fotoğraf porsiyon hacmini, pişirme yağını ve gizli malzemeleri kesin göstermez. Full Balance bu nedenle kullanıcı doğrulaması ve tahmin aralığı kullanır.'],
+      ['Fotoğrafım sunucuya yüklenir mi?', 'Hayır. Fotoğraf yalnızca cihazındaki araçta önizlenir; hesabına kaydedilmez ve sunucuya gönderilmez.'],
+      ['Öğün kalori aracı ücretsiz mi?', 'Evet. Fotoğrafla başlayan öğün kalori ve makro aracı kayıt olmadan ücretsiz kullanılabilir.'],
     ],
   },
   'evde-spor-programi': {
@@ -677,6 +679,21 @@ export default function SeoLandingPage({ slug }) {
           </div>
         </div>
       </section>
+
+      {canonicalSlug === 'kalori-makro-takibi' && (
+        <section className="border-b border-slate-800/60 bg-slate-950 px-4 py-14">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-7 text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">Ücretsiz öğün aracı</p>
+              <h2 className="mt-3 font-outfit text-3xl font-extrabold text-white">Fotoğrafla öğün kalori tahmini</h2>
+              <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">Fotoğraftaki yiyecekleri ekle, porsiyonları doğrula ve yağ, sos ile içecekleri unutma. Araç kesinmiş gibi tek sayı vermek yerine gerçekçi bir tahmin aralığı gösterir.</p>
+            </div>
+            <Suspense fallback={<div className="h-72 animate-pulse rounded-2xl bg-slate-900" />}>
+              <CalorieCalc language="tr" />
+            </Suspense>
+          </div>
+        </section>
+      )}
 
       <section className="border-y border-slate-800/60 bg-slate-900/35 px-4 py-14">
         <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-3">

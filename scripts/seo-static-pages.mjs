@@ -2,8 +2,8 @@ const common = ['Kişisel hedef ve deneyim seviyesine göre plan', 'Beslenme, su
 
 const intentDetails = {
   'kalori-makro-takibi': {
-    benefits: ['Yaş, boy, kilo, aktivite ve hedefe göre BMR ve TDEE başlangıç tahmini', 'Protein, karbonhidrat ve yağ hedeflerini günlük plana bağlama', 'Sonucu öğün, alışveriş listesi ve ilerleme takibiyle birlikte kullanma'],
-    faqs: [['Günlük kaç kalori almam gerekir?', 'İhtiyaç yaş, boy, kilo, cinsiyet, aktivite ve hedefe göre değişir. Hesaplama bir başlangıç tahmini verir.'], ['BMR ve TDEE nedir?', 'BMR dinlenme enerjisini, TDEE ise aktivite dahil tahmini günlük toplam enerji harcamasını ifade eder.']],
+    benefits: ['Öğün fotoğrafını yalnızca cihazda referans olarak kullanma', 'Görünen yiyecek, porsiyon, yağ, sos ve içecekleri doğrulama', 'Kesinmiş gibi tek sonuç yerine gerçekçi kalori aralığı ve makrolar'],
+    faqs: [['Fotoğraftan kalori kesin hesaplanabilir mi?', 'Hayır. Tek fotoğraf porsiyon hacmini ve gizli malzemeleri kesin göstermez; araç doğrulama ve tahmin aralığı kullanır.'], ['Fotoğraf yüklenir veya saklanır mı?', 'Hayır. Fotoğraf yalnızca cihazında önizlenir; sunucuya veya hesabına kaydedilmez.']],
   },
   'evde-spor-programi': {
     benefits: ['Makine veya spor salonu ekipmanı istemeyen vücut ağırlığı hareketleri', 'Zorluk seviyesine göre kolay alternatifler ve kontrollü progresyon', 'Egzersiz sırası, set, tekrar, dinlenme ve haftalık toparlanma planı'],
@@ -25,7 +25,7 @@ const intentDetails = {
 
 export const seoLandingPages = [
   ['ucretsiz-fitness-uygulamasi', 'Ücretsiz Fitness ve Wellness Uygulaması', 'Kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates planlarını beslenme ve ilerleme takibiyle birleştiren ücretsiz uygulama.'],
-  ['kalori-makro-takibi', 'Günlük Kalori İhtiyacı Hesaplama ve Makro Takibi', 'Alman gereken günlük kaloriyi BMR, TDEE, hedef ve aktiviteye göre hesapla; protein, karbonhidrat ve yağ hedeflerini ücretsiz takip et.'],
+  ['kalori-makro-takibi', 'Fotoğrafla Yemek Kalori Hesaplama ve Makro Takibi', 'Yemek fotoğrafını referans al, görünen besinleri ve porsiyonları doğrula; öğün kalorisi ile makroları ücretsiz ve gerçekçi bir aralıkta hesapla.'],
   ['antrenman-programi', 'Kişisel Antrenman Programı', 'Hedef ve seviyeye göre set, tekrar, dinlenme ve haftalık plan sunan ücretsiz kişisel antrenman uygulaması.'],
   ['ilerleme-takibi', 'İlerleme ve Gelişim Takibi', 'Kilo, ölçüm, antrenman, su ve uyku eğilimlerini tek ücretsiz panelde takip et ve raporla.'],
   ['su-uyku-kilo-takibi', 'Su, Uyku ve Kilo Takibi', 'Günlük su, uyku ve kilo kayıtlarını sade bir akışta tut; haftalık eğilimlerini ücretsiz gör.'],
