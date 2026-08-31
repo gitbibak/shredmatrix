@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Activity, ArrowRight, BarChart3, BookOpen, Brain, Check,
+  Activity, ArrowRight, BarChart3, BookOpen, Brain, Camera, Check,
   ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
   HeartPulse, House, Languages, Leaf, Lock, MapPin, PackageOpen, Salad, ShieldCheck,
   Sparkles, Sun, Target, TrendingUp,
@@ -60,6 +60,10 @@ const copy = {
     longevityTitle: 'Longevity dengesi',
     longevityDesc: 'Hareket, kuvvet, mobilite, toparlanma ve beslenme alışkanlıklarını beş şeffaf başlıkta izle.',
     longevityNote: 'Biyolojik yaş veya yaşam süresi tahmini yapmaz; yalnızca kaydettiğin alışkanlıkları anlamlandırır.',
+    photoMealEyebrow: 'Yeni ücretsiz öğün aracı',
+    photoMealTitle: 'Öğün fotoğrafını gerçekçi bir kalori aralığına dönüştür',
+    photoMealDesc: 'Fotoğrafı referans al; yiyecekleri, porsiyonları, yağları, sosları ve içecekleri doğrula. Fotoğraf cihazından ayrılmaz ve sonuç tek bir kesin sayı gibi sunulmaz.',
+    photoMealCta: 'Fotoğrafla ücretsiz dene',
     freeTitle: 'Gerçekten ücretsiz ne demek?',
     freeDesc: 'Temel özellikleri göstermek için ödeme istemiyoruz. Full Balance’ın kişisel planları ve takip araçları ücretsiz kullanılabilir.',
     freeItems: ['Kredi kartı istenmez', 'Abonelik ve deneme süresi yok', '6 hedefin tamamı açık', 'Beslenme ve longevity dahil', 'Verilerini dışa aktarabilirsin', 'Türkçe, İngilizce ve İspanyolca'],
@@ -98,6 +102,9 @@ const copy = {
     nutritionTitle: 'Personal nutrition', nutritionDesc: 'Calories, macros, weekly menus, budget options and adjustments for health and allergy information.',
     progressTitle: 'Clear progress', progressDesc: 'Weight, measurements, photos, workouts, water and sleep trends, including Excel and report export.',
     longevityTitle: 'Longevity balance', longevityDesc: 'Track movement, strength, mobility, recovery and nutrition across five transparent pillars.', longevityNote: 'It does not predict biological age or lifespan; it only helps you understand recorded habits.',
+    photoMealEyebrow: 'New free meal tool', photoMealTitle: 'Turn a meal photo into a realistic calorie range',
+    photoMealDesc: 'Use the photo as a reference, then confirm foods, portions, oils, sauces and drinks. The photo stays on your device and the result is not presented as a falsely exact number.',
+    photoMealCta: 'Try it free with a photo',
     freeTitle: 'What does truly free mean?', freeDesc: 'We do not ask for payment to reveal essential features. Personal plans and tracking tools are free to use.',
     freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
     stepsEyebrow: 'Simple start', stepsTitle: 'Your personal plan in three steps', steps: [['Choose your goal', 'Select one of six goals and your experience level.'], ['Add the essentials', 'Complete the short profile, health and allergy preferences.'], ['Start today', 'See your workout and nutrition plan; recommendations adapt as you progress.']],
@@ -123,6 +130,9 @@ const copy = {
     nutritionTitle: 'Nutrición personal', nutritionDesc: 'Calorías, macros, menú semanal, presupuesto y ajustes según salud y alergias.',
     progressTitle: 'Progreso claro', progressDesc: 'Peso, medidas, fotos, entrenamientos, agua y sueño, con exportación Excel e informes.',
     longevityTitle: 'Equilibrio de longevidad', longevityDesc: 'Observa movimiento, fuerza, movilidad, recuperación y nutrición en cinco pilares transparentes.', longevityNote: 'No predice edad biológica ni longevidad; solo interpreta los hábitos registrados.',
+    photoMealEyebrow: 'Nueva herramienta gratuita', photoMealTitle: 'Convierte una foto de tu comida en un rango realista de calorías',
+    photoMealDesc: 'Usa la foto como referencia y confirma alimentos, porciones, aceites, salsas y bebidas. La foto permanece en tu dispositivo y el resultado no se muestra como una cifra falsamente exacta.',
+    photoMealCta: 'Probar gratis con una foto',
     freeTitle: '¿Qué significa realmente gratis?', freeDesc: 'No pedimos pagos para mostrar funciones esenciales. Los planes y herramientas de seguimiento son gratuitos.',
     freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
     stepsEyebrow: 'Inicio sencillo', stepsTitle: 'Tu plan personal en tres pasos', steps: [['Elige tu objetivo', 'Selecciona uno de seis objetivos y tu nivel.'], ['Añade lo esencial', 'Completa el perfil breve y tus preferencias de salud y alergias.'], ['Empieza hoy', 'Consulta entrenamiento y nutrición; las recomendaciones se adaptan a tu progreso.']],
@@ -188,6 +198,11 @@ export default function LandingPage({ onStart }) {
     { slug: 'kuvvet-antrenmani-ve-saglikli-yaslanma', image: '/images/blog/strength-healthy-aging.jpg', title: c.guideTitles[1] },
     { slug: 'uyku-toparlanma-ve-longevity', image: '/images/blog/sleep-recovery.jpg', title: c.guideTitles[2] },
   ];
+  const photoMealPath = lang === 'es'
+    ? '/es/calculadora-calorias-macros'
+    : lang === 'en'
+      ? '/en/calorie-macro-calculator'
+      : '/kalori-makro-takibi';
 
   const handleShare = async () => {
     const shareData = {
@@ -344,6 +359,28 @@ export default function LandingPage({ onStart }) {
               </article>
             ))}
           </div>
+          <Link
+            to={photoMealPath}
+            onClick={() => {
+              recordAcquisitionContent(`landing_${lang}_photo_meal_tool`);
+              trackLandingCta('photo_meal_tool');
+            }}
+            className="mt-5 flex flex-col gap-5 border border-cyan-500/35 bg-cyan-500/[0.07] p-5 transition-colors hover:border-cyan-400/70 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+          >
+            <div className="flex min-w-0 items-start gap-4">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-cyan-500/10 text-cyan-300">
+                <Camera size={23} />
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs font-bold uppercase text-cyan-300">{c.photoMealEyebrow}</p>
+                <h3 className="mt-2 font-outfit text-xl font-bold text-white sm:text-2xl">{c.photoMealTitle}</h3>
+                <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">{c.photoMealDesc}</p>
+              </div>
+            </div>
+            <span className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-cyan-400 px-5 font-outfit text-sm font-bold text-slate-950">
+              {c.photoMealCta}<ChevronRight size={17} />
+            </span>
+          </Link>
           <div className="mt-5 flex items-start gap-3 border-l-2 border-emerald-500 bg-emerald-500/5 p-4 text-sm leading-6 text-slate-400">
             <Activity size={19} className="mt-0.5 shrink-0 text-emerald-400" />
             <p>{c.longevityNote} <Link to="/blog/longevity-nedir-saglikli-yasam-aliskanliklari" className="font-semibold text-emerald-400 underline underline-offset-4">{c.readGuide}</Link></p>

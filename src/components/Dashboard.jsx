@@ -63,16 +63,16 @@ function warmProfileAssets() {
   preloadProfilePhoto().catch(() => {});
 }
 
-function DisclosureSection({ title, description, icon: Icon, open, onToggle, children }) {
+function DisclosureSection({ title, description, icon: Icon, open, onToggle, children, highlight = false }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
+    <section className={`overflow-hidden rounded-2xl border ${highlight ? 'border-cyan-500/35 bg-cyan-500/[0.06] shadow-lg shadow-cyan-950/20' : 'border-slate-800 bg-slate-900'}`}>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         className="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-slate-800/30 sm:px-5"
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-950/60 text-slate-300">
+        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${highlight ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300' : 'border-slate-700 bg-slate-950/60 text-slate-300'}`}>
           <Icon size={18} />
         </span>
         <span className="min-w-0 flex-1">
@@ -366,18 +366,19 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="mx-auto max-w-5xl space-y-5">
                   <motion.div variants={columnVariants}>
-                    <NutritionPanel plan={plan} />
-                  </motion.div>
-                  <motion.div variants={columnVariants}>
                     <DisclosureSection
                       title={t('dashboard.simple.calculatorTitle')}
                       description={t('dashboard.simple.calculatorDesc')}
                       icon={Calculator}
                       open={showNutritionTools}
                       onToggle={() => setShowNutritionTools((value) => !value)}
+                      highlight
                     >
                       <CalorieCalc />
                     </DisclosureSection>
+                  </motion.div>
+                  <motion.div variants={columnVariants}>
+                    <NutritionPanel plan={plan} />
                   </motion.div>
                 </div>
               </motion.div>

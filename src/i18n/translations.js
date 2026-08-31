@@ -560,8 +560,8 @@ export const translations = {
       simple: {
         challengeTitle: 'Bugünün ekstra hedefi',
         challengeDesc: 'Ana hedefini tamamladıktan sonra isteğe bağlı bir mini hedef seç.',
-        calculatorTitle: 'Kalori hedefini yeniden hesapla',
-        calculatorDesc: 'Boyun, kilon veya günlük hareket düzeyin değiştiyse kullan.',
+        calculatorTitle: 'Fotoğrafla öğününü hesapla',
+        calculatorDesc: 'Fotoğraf çek veya seç; yiyecekleri ve porsiyonları doğrulayarak kalori aralığını gör.',
         workoutToolsTitle: 'Antrenman araçları',
         workoutToolsDesc: 'Zamanlayıcı, toparlanma ve program ayarları.',
         longevityTitle: 'Sağlık dengesi',
@@ -1652,8 +1652,8 @@ export const translations = {
       simple: {
         challengeTitle: "Today's optional challenge",
         challengeDesc: 'Choose a small extra goal after completing your main action.',
-        calculatorTitle: 'Recalculate your calorie target',
-        calculatorDesc: 'Use when your weight, height or daily activity changes.',
+        calculatorTitle: 'Estimate a meal from a photo',
+        calculatorDesc: 'Take or choose a photo, then confirm foods and portions to see a calorie range.',
         workoutToolsTitle: 'Workout tools',
         workoutToolsDesc: 'Timer, recovery and program settings.',
         longevityTitle: 'Health balance',
@@ -2682,8 +2682,8 @@ export const translations = {
       simple: {
         challengeTitle: 'Reto opcional de hoy',
         challengeDesc: 'Elige una meta extra pequeña después de completar tu acción principal.',
-        calculatorTitle: 'Recalcular tu objetivo calórico',
-        calculatorDesc: 'Úsalo si cambia tu peso, altura o actividad diaria.',
+        calculatorTitle: 'Estima una comida con una foto',
+        calculatorDesc: 'Toma o elige una foto y confirma alimentos y porciones para ver un rango de calorías.',
         workoutToolsTitle: 'Herramientas de entrenamiento',
         workoutToolsDesc: 'Temporizador, recuperación y ajustes del programa.',
         longevityTitle: 'Equilibrio de salud',
