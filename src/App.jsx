@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { PLAN_VERSION } from './data/planVersion';
+import { TURKISH_SEO_SLUGS } from './data/turkishSeoPages';
 
 // The plan engine is ~220 kB; load it only when a plan must be generated so
 // landing and SEO pages stay light.
@@ -46,32 +47,7 @@ const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const EditorialPolicy = lazy(() => import('./components/EditorialPolicy'));
 const FounderPage = lazy(() => import('./components/FounderPage'));
 
-const SEO_PAGE_SLUGS = [
-  'ucretsiz-fitness-uygulamasi',
-  'kalori-makro-takibi',
-  'antrenman-programi',
-  'ilerleme-takibi',
-  'su-uyku-kilo-takibi',
-  'yoga-pilates-reformer',
-  'excel-rapor-disari-aktarma',
-  'kas-gelisimi-programi',
-  'yag-yakimi-programi',
-  'yoga-uygulamasi',
-  'pilates-programi',
-  'reformer-pilates-programi',
-  'meditasyon-uygulamasi',
-  'bmi-hesaplama',
-  'protein-ihtiyaci-hesaplama',
-  'ucretsiz-beslenme-programi',
-  'alerjiye-gore-beslenme-programi',
-  'evde-spor-programi',
-  'evde-dambil-antrenman-programi',
-  'evde-kas-gelistirme-hareketleri',
-  'baslangic-pilates-programi',
-  'fotografla-kalori-hesaplama',
-  'gunluk-kalori-ihtiyaci-hesaplama',
-  'bazal-metabolizma-hesaplama',
-];
+const SEO_PAGE_SLUGS = TURKISH_SEO_SLUGS;
 
 function isPublicContentPath(pathname) {
   return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy'].includes(pathname)

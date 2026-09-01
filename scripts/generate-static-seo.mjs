@@ -6,14 +6,18 @@ import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
 
-import { formatSampleExercise, getSampleWeek } from '../src/data/sampleWeekMap.js';
+import { formatSampleExercise, getFourWeekPlan, getSampleWeek } from '../src/data/sampleWeekMap.js';
 
 function sampleWeekHtml(path, lang) {
   const sample = getSampleWeek(path, lang);
   if (!sample) return '';
   const { days, copy } = sample;
   const rows = days.map((day) => `<tr><th scope="row">${escapeHtml(day.day)}</th><td>${escapeHtml(day.rest ? copy.restDay : day.focus)}</td><td><ul>${day.exercises.map((exercise) => `<li>${escapeHtml(formatSampleExercise(exercise, copy))}</li>`).join('')}</ul></td></tr>`).join('');
-  return `<section><h2>${escapeHtml(copy.title)}</h2><p>${escapeHtml(copy.intro)}</p><table><thead><tr><th scope="col">${escapeHtml(copy.day)}</th><th scope="col">${escapeHtml(copy.focus)}</th><th scope="col">${escapeHtml(copy.exercises)}</th></tr></thead><tbody>${rows}</tbody></table><p>${escapeHtml(copy.progression)}</p></section>`;
+  const fourWeek = getFourWeekPlan(path, lang);
+  const fourWeekHtml = fourWeek
+    ? `<h3>${escapeHtml(fourWeek.title)}</h3><p>${escapeHtml(fourWeek.intro)}</p><table><thead><tr>${fourWeek.columns.map((column) => `<th scope="col">${escapeHtml(column)}</th>`).join('')}</tr></thead><tbody>${fourWeek.rows.map((row) => `<tr><th scope="row">${escapeHtml(row[0])}</th>${row.slice(1).map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
+    : '';
+  return `<section><h2>${escapeHtml(copy.title)}</h2><p>${escapeHtml(copy.intro)}</p><table><thead><tr><th scope="col">${escapeHtml(copy.day)}</th><th scope="col">${escapeHtml(copy.focus)}</th><th scope="col">${escapeHtml(copy.exercises)}</th></tr></thead><tbody>${rows}</tbody></table><p>${escapeHtml(copy.progression)}</p>${fourWeekHtml}</section>`;
 }
 
 const REVIEW_LABEL = { tr: 'Son güncelleme', en: 'Last reviewed', es: 'Última revisión' };
@@ -153,7 +157,7 @@ for (const page of seoLandingPages) {
       ...(page.faqs.length ? [{ '@type': 'FAQPage', mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }] : []),
     ],
   };
-  await writeRoute(`/${page.slug}`, buildDocument({ title: `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body, alternates }));
+  await writeRoute(`/${page.slug}`, buildDocument({ title: page.metaTitle || `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body, alternates }));
 }
 
 await writeRoute('/blog', buildDocument({ title: 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance', description: blogDescription, canonical: `${BASE_URL}/blog`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: blogSchema, body: blogBody }));

@@ -13,7 +13,69 @@ const SAMPLE_WEEK_BY_PATH = {
   '/evde-kas-gelistirme-hareketleri': 'muscle_bodyweight',
   '/en/home-muscle-building-workout': 'muscle_bodyweight',
   '/es/ejercicios-en-casa-ganar-musculo': 'muscle_bodyweight',
+  '/direnc-bandi-antrenman-programi': 'muscle_basic',
+  '/en/resistance-band-workout-plan': 'muscle_basic',
+  '/es/rutina-con-bandas-elasticas': 'muscle_basic',
+  '/30-gunluk-evde-spor-programi': 'fat_loss_bodyweight',
+  '/en/4-week-home-workout-plan': 'fat_loss_bodyweight',
+  '/es/rutina-4-semanas-en-casa': 'fat_loss_bodyweight',
+  '/kadinlar-icin-evde-spor-programi': 'fat_loss_bodyweight',
+  '/en/home-workout-plan-for-women': 'fat_loss_bodyweight',
+  '/es/rutina-en-casa-mujeres': 'fat_loss_bodyweight',
+  '/40-yas-ustu-evde-spor-programi': 'fat_loss_bodyweight',
+  '/en/beginner-workout-plan-over-40': 'fat_loss_bodyweight',
+  '/es/rutina-en-casa-mayores-40': 'fat_loss_bodyweight',
 };
+
+// Pages that present the sample as a 30-day / 4-week program get the
+// week-by-week progression table as well.
+const FOUR_WEEK_PATHS = new Set([
+  '/30-gunluk-evde-spor-programi', '/en/4-week-home-workout-plan', '/es/rutina-4-semanas-en-casa',
+  '/direnc-bandi-antrenman-programi', '/en/resistance-band-workout-plan', '/es/rutina-con-bandas-elasticas',
+  '/kadinlar-icin-evde-spor-programi', '/en/home-workout-plan-for-women', '/es/rutina-en-casa-mujeres',
+  '/40-yas-ustu-evde-spor-programi', '/en/beginner-workout-plan-over-40', '/es/rutina-en-casa-mayores-40',
+]);
+
+export const FOUR_WEEK_PLAN = {
+  tr: {
+    title: '4 haftalık ilerleme',
+    intro: 'Egzersizler aynı kalır; her hafta set, tekrar veya tempo değişir. Ağrı bildirirsen o hafta yük artmaz.',
+    columns: ['Hafta', 'Odak', 'Set × tekrar', 'Not'],
+    rows: [
+      ['1', 'Hareketi öğren', '2 × aralığın alt yarısı', 'Form öncelikli; kolay varyasyonu seçmek serbest.'],
+      ['2', 'Tekrarı artır', '2 × aralığın üst yarısı', 'Her sette 1-2 tekrar ekle; dinlenme aynı kalsın.'],
+      ['3', 'Zorluğu artır', '3 × aralığın alt yarısı', 'Bir üst varyasyon veya 3 saniye iniş temposu.'],
+      ['4', 'Hacim ve hafif bitiriş', '3 × aralığın üst yarısı, son gün 2 set', 'Hafta sonunda bir sonraki faz açılır.'],
+    ],
+  },
+  en: {
+    title: '4-week progression',
+    intro: 'The exercises stay the same; each week changes sets, reps or tempo. If you report pain, that week does not add load.',
+    columns: ['Week', 'Focus', 'Sets × reps', 'Note'],
+    rows: [
+      ['1', 'Learn the movement', '2 × lower half of the range', 'Form first; easier variations are fine.'],
+      ['2', 'Add reps', '2 × upper half of the range', 'Add 1-2 reps per set; keep rest the same.'],
+      ['3', 'Add difficulty', '3 × lower half of the range', 'Next variation or a 3-second lowering tempo.'],
+      ['4', 'Volume and light finish', '3 × upper half, last day 2 sets', 'The next phase unlocks at the end of the week.'],
+    ],
+  },
+  es: {
+    title: 'Progresión de 4 semanas',
+    intro: 'Los ejercicios se mantienen; cada semana cambian series, repeticiones o tempo. Si reportas dolor, esa semana no sube la carga.',
+    columns: ['Semana', 'Enfoque', 'Series × reps', 'Nota'],
+    rows: [
+      ['1', 'Aprender el movimiento', '2 × mitad baja del rango', 'Técnica primero; vale usar la variante fácil.'],
+      ['2', 'Sumar repeticiones', '2 × mitad alta del rango', 'Añade 1-2 repeticiones por serie; mismo descanso.'],
+      ['3', 'Sumar dificultad', '3 × mitad baja del rango', 'Siguiente variante o bajada en 3 segundos.'],
+      ['4', 'Volumen y cierre ligero', '3 × mitad alta, último día 2 series', 'Al final de la semana se abre la siguiente fase.'],
+    ],
+  },
+};
+
+export function getFourWeekPlan(path, lang = 'tr') {
+  if (!FOUR_WEEK_PATHS.has(path)) return null;
+  return FOUR_WEEK_PLAN[lang] || FOUR_WEEK_PLAN.en;
+}
 
 export const SAMPLE_WEEK_COPY = {
   tr: {
@@ -29,6 +91,7 @@ export const SAMPLE_WEEK_COPY = {
     restDay: 'Dinlenme günü',
     progression: 'Nasıl ilerler? İlk 2 haftada verilen tekrar aralığının üst sınırına kontrollü ulaşınca sonraki fazda set sayısı, tempo veya hareket zorluğu artar. Ağrı varsa hareket kolay versiyonla değiştirilir.',
     cta: 'Kendi planını ücretsiz oluştur',
+    print: 'Yazdır / PDF olarak kaydet',
   },
   en: {
     eyebrow: 'Real example',
@@ -43,6 +106,7 @@ export const SAMPLE_WEEK_COPY = {
     restDay: 'Rest day',
     progression: 'How it progresses: once you reach the top of the rep range with control for two weeks, the next phase adds sets, slows the tempo or moves to a harder variation. Pain swaps the movement for an easier version.',
     cta: 'Build your free plan',
+    print: 'Print / save as PDF',
   },
   es: {
     eyebrow: 'Ejemplo real',
@@ -57,6 +121,7 @@ export const SAMPLE_WEEK_COPY = {
     restDay: 'Día de descanso',
     progression: 'Cómo progresa: cuando alcanzas con control el tope del rango de repeticiones durante dos semanas, la siguiente fase añade series, ralentiza el tempo o pasa a una variante más difícil. Si hay dolor, el movimiento se cambia por una versión más fácil.',
     cta: 'Crea tu plan gratis',
+    print: 'Imprimir / guardar como PDF',
   },
 };
 
