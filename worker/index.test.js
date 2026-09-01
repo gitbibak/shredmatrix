@@ -28,5 +28,6 @@ describe('meal analysis worker', () => {
       '@cf/moondream/moondream3.1-9B-A2B',
       expect.objectContaining({ stream: false }),
     );
+    expect(run).toHaveBeenCalledTimes(1);
   });
 });

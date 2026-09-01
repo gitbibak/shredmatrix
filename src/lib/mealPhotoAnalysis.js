@@ -91,8 +91,9 @@ function findKnownFood(name, foods) {
     || null;
 }
 
-function normalizeEstimatedGrams(value, category) {
+function normalizeEstimatedGrams(value, category, name) {
   const grams = Math.max(1, Number(value) || 1);
+  if (/\b(lemon|lime|limon).*\b(juice|suyu)\b/i.test(String(name || '')) && grams < 8) return 15;
   const minimums = { meat: 80, grain: 80, veggie: 25, fruit: 50, dairy: 20, sauce: 8, drink: 100 };
   const defaults = { meat: 150, grain: 150, veggie: 50, fruit: 100, dairy: 30, sauce: 14, drink: 250 };
   return grams < (minimums[category] || 1) ? (defaults[category] || grams) : grams;
@@ -101,7 +102,7 @@ function normalizeEstimatedGrams(value, category) {
 export function analysisItemsToMealItems(items, language, foods = []) {
   const candidates = items.map((item) => {
     const knownFood = findKnownFood(item.name, foods);
-    const grams = normalizeEstimatedGrams(item.grams, knownFood?.cat);
+    const grams = normalizeEstimatedGrams(item.grams, knownFood?.cat, item.name);
     const multiplier = grams / 100;
     const modelEnergy = (Number(item.protein) * 4) + (Number(item.carbs) * 4) + (Number(item.fat) * 9);
     const modelCalories = Number(item.calories) || 0;

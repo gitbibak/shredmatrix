@@ -48,4 +48,10 @@ describe('meal photo API client', () => {
     expect(result.find((item) => item.food.name.en === 'Olive Oil')).toMatchObject({ grams: 14, confidence: 0.9 });
     expect(result.find((item) => item.food.name.en === 'Lettuce')).toMatchObject({ grams: 50 });
   });
+
+  it('uses a realistic garnish amount for detected lemon juice', () => {
+    const foods = [{ name: { tr: 'Limon', en: 'Lemon', es: 'Limón' }, cal: 29, p: 1.1, c: 9, f: 0.3, cat: 'fruit' }];
+    const [item] = analysisItemsToMealItems([{ name: 'Lemon Juice', grams: 1, calories: 0 }], 'en', foods);
+    expect(item.grams).toBe(15);
+  });
 });

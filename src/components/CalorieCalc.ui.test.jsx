@@ -46,5 +46,9 @@ describe('meal photo controls', () => {
 
     expect(await screen.findByText('Otomatik tahmin hazır')).toBeInTheDocument();
     expect(screen.getByText('Tavuk')).toBeInTheDocument();
+    expect(screen.getByText('~150g')).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Yiyecek ara...')).not.toBeInTheDocument();
+    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+    expect(screen.getByText('Başka bir işlem yapman gerekmiyor.', { exact: false })).toBeInTheDocument();
   });
 });

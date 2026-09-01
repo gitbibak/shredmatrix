@@ -258,7 +258,6 @@ export default function CalorieCalc({ language, embedded = false }) {
   const [photoLoading, setPhotoLoading] = useState(false);
   const [photoAnalyzing, setPhotoAnalyzing] = useState(false);
   const [analysisRange, setAnalysisRange] = useState(null);
-  const [analysisNotes, setAnalysisNotes] = useState([]);
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -302,7 +301,6 @@ export default function CalorieCalc({ language, embedded = false }) {
     setPhotoError('');
     setPhotoLoading(true);
     setAnalysisRange(null);
-    setAnalysisNotes([]);
     setMealItems((items) => items.filter((item) => item.source !== 'photo'));
     try {
       const image = await prepareMealPhoto(file);
@@ -320,7 +318,6 @@ export default function CalorieCalc({ language, embedded = false }) {
       const analyzedCalories = analyzedItems.reduce((sum, item) => sum + item.cal, 0);
       setMealItems((items) => [...items.filter((item) => item.source !== 'photo'), ...analyzedItems]);
       setAnalysisRange(getMealEstimateRange(analyzedCalories, true));
-      setAnalysisNotes(Array.isArray(analysis.hiddenIngredients) ? analysis.hiddenIngredients : []);
       trackEvent('meal_photo_analyzed', { language: activeLang, item_count: analysis.items.length });
     } catch (error) {
       const readFailure = ['image_read_failed', 'image_decode_failed'].includes(error?.message);
@@ -336,21 +333,7 @@ export default function CalorieCalc({ language, embedded = false }) {
     setPhoto(null);
     setPhotoError('');
     setAnalysisRange(null);
-    setAnalysisNotes([]);
     setMealItems((items) => items.filter((item) => item.source !== 'photo'));
-  };
-
-  const updateMealItemGrams = (id, nextValue) => {
-    const nextGrams = Math.min(2000, Math.max(1, Number(nextValue) || 1));
-    setMealItems((items) => items.map((item) => item.id === id ? {
-      ...item,
-      grams: nextGrams,
-      cal: Math.round(item.food.cal * nextGrams / 100),
-      p: item.food.p * nextGrams / 100,
-      c: item.food.c * nextGrams / 100,
-      f: item.food.f * nextGrams / 100,
-    } : item));
-    setAnalysisRange(null);
   };
 
   const addToMeal = () => {
@@ -459,29 +442,18 @@ export default function CalorieCalc({ language, embedded = false }) {
         </div>
       )}
 
-      {photo && (
-        <ol className="mb-4 grid gap-2 sm:grid-cols-3">
-          {[tt('calorieCalc.photoStepFoods'), tt('calorieCalc.photoStepPortion'), tt('calorieCalc.photoStepHidden')].map((step, index) => (
-            <li key={step} className="flex items-start gap-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[10px] leading-relaxed text-slate-300">
-              <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-cyan-500/15 font-bold text-cyan-300">{index + 1}</span>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
-      )}
-
       {/* Search */}
-      <div className="relative mb-3">
+      {!photo && <div className="relative mb-3">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
         <input
           type="text" placeholder={tt('calorieCalc.search')}
           value={search} onChange={e => setSearch(e.target.value)}
           className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600 focus:border-emerald-500/50 transition-colors"
         />
-      </div>
+      </div>}
 
       {/* Category filter */}
-      <div className="flex flex-wrap gap-1 mb-3">
+      {!photo && <div className="flex flex-wrap gap-1 mb-3">
         <button
           onClick={() => setSelectedCat(null)}
           className={`px-2 py-0.5 rounded-lg text-[9px] font-medium cursor-pointer transition-all ${!selectedCat ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700 hover:text-white'}`}
@@ -496,10 +468,10 @@ export default function CalorieCalc({ language, embedded = false }) {
             {tt(`calorieCalc.categories.${cat}`)}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Food list */}
-      <div className="max-h-48 overflow-y-auto scrollbar-none space-y-1 mb-4">
+      {!photo && <div className="max-h-48 overflow-y-auto scrollbar-none space-y-1 mb-4">
         {filtered.map((food, i) => {
           const name = food.name[activeLang] || food.name.tr;
           const isSelected = selectedFood === food;
@@ -516,11 +488,11 @@ export default function CalorieCalc({ language, embedded = false }) {
         {filtered.length === 0 && (
           <p className="text-center text-xs text-slate-600 py-4">—</p>
         )}
-      </div>
+      </div>}
 
       {/* Gram input + Result */}
       <AnimatePresence>
-        {selectedFood && (
+        {selectedFood && !photo && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -592,11 +564,7 @@ export default function CalorieCalc({ language, embedded = false }) {
                   <span className="block truncate text-xs text-slate-300">{item.food.name[activeLang] || item.food.name.tr}</span>
                   {item.source === 'photo' && item.portion && <span className="mt-0.5 block truncate text-[9px] text-cyan-200/55">{item.portion}</span>}
                 </span>
-                {item.source === 'photo' ? (
-                  <label className="flex items-center gap-1 text-[10px] text-slate-500">
-                    <input type="number" min="1" max="2000" step="10" value={Math.round(item.grams)} onChange={(event) => updateMealItemGrams(item.id, event.target.value)} aria-label={tt('calorieCalc.grams')} className="h-8 w-16 rounded-lg border border-slate-700 bg-slate-900 px-1 text-center text-[11px] text-white" />g
-                  </label>
-                ) : <span className="text-[10px] text-slate-500">{item.grams}g</span>}
+                <span className="text-[10px] text-slate-500">~{Math.round(item.grams)}g</span>
                 <span className="w-14 text-right text-[10px] font-semibold text-white">{item.cal} kcal</span>
                 <button type="button" aria-label={tt('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
                   <Trash2 size={13} />
@@ -624,20 +592,9 @@ export default function CalorieCalc({ language, embedded = false }) {
               <p className="mt-1 text-[9px] leading-relaxed text-slate-500">{tt('calorieCalc.estimateHelper')}</p>
             </div>
           </div>
-          {analysisNotes.length > 0 && (
-            <p className="mt-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[9px] leading-relaxed text-slate-500">
-              <span className="font-bold text-slate-300">{tt('calorieCalc.possibleHidden')}:</span> {analysisNotes.join(', ')}
-            </p>
-          )}
-          {photo && (
-            <div className="mt-2 flex gap-2">
-              <button type="button" onClick={() => { setSelectedCat('sauce'); setSearch(''); }} className="min-h-10 flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 text-[10px] font-bold text-slate-300">{tt('calorieCalc.addOilSauce')}</button>
-              <button type="button" onClick={() => { setSelectedCat('drink'); setSearch(''); }} className="min-h-10 flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 text-[10px] font-bold text-slate-300">{tt('calorieCalc.addDrink')}</button>
-            </div>
-          )}
-          <button type="button" onClick={() => trackEvent('meal_estimate_completed', { surface: language ? 'public_tool' : 'dashboard', language: activeLang, photo_assisted: Boolean(photo), item_count: mealItems.length })} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
+          {!photo && <button type="button" onClick={() => trackEvent('meal_estimate_completed', { surface: language ? 'public_tool' : 'dashboard', language: activeLang, photo_assisted: false, item_count: mealItems.length })} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
             {tt('calorieCalc.confirmEstimate')}
-          </button>
+          </button>}
           <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{tt('calorieCalc.disclaimer')}</p>
         </div>
       )}

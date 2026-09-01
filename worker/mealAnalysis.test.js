@@ -24,4 +24,5 @@ describe('meal analysis response validation', () => {
     expect(normalizeMealAnalysis({ is_food: 'false', items: [] }).isFood).toBe(false);
     expect(normalizeMealAnalysis({ is_food: true, items: [] }).isFood).toBe(false);
   });
+
 });
