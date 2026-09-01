@@ -24,6 +24,7 @@ export const SAMPLE_WEEK_COPY = {
     focus: 'Odak',
     exercises: 'Egzersizler',
     sets: 'set',
+    setSingular: 'set',
     restBetween: 'dinlenme',
     restDay: 'Dinlenme günü',
     progression: 'Nasıl ilerler? İlk 2 haftada verilen tekrar aralığının üst sınırına kontrollü ulaşınca sonraki fazda set sayısı, tempo veya hareket zorluğu artar. Ağrı varsa hareket kolay versiyonla değiştirilir.',
@@ -37,6 +38,7 @@ export const SAMPLE_WEEK_COPY = {
     focus: 'Focus',
     exercises: 'Exercises',
     sets: 'sets',
+    setSingular: 'set',
     restBetween: 'rest',
     restDay: 'Rest day',
     progression: 'How it progresses: once you reach the top of the rep range with control for two weeks, the next phase adds sets, slows the tempo or moves to a harder variation. Pain swaps the movement for an easier version.',
@@ -50,6 +52,7 @@ export const SAMPLE_WEEK_COPY = {
     focus: 'Enfoque',
     exercises: 'Ejercicios',
     sets: 'series',
+    setSingular: 'serie',
     restBetween: 'descanso',
     restDay: 'Día de descanso',
     progression: 'Cómo progresa: cuando alcanzas con control el tope del rango de repeticiones durante dos semanas, la siguiente fase añade series, ralentiza el tempo o pasa a una variante más difícil. Si hay dolor, el movimiento se cambia por una versión más fácil.',
@@ -66,5 +69,7 @@ export function getSampleWeek(path, lang = 'tr') {
 
 export function formatSampleExercise(exercise, copy) {
   const rest = exercise.rest && exercise.rest !== '-' && exercise.rest !== '0s' ? `, ${exercise.rest} ${copy.restBetween}` : '';
-  return `${exercise.name}: ${exercise.sets} ${copy.sets} × ${exercise.reps}${rest}`;
+  const sets = Number(exercise.sets) || 0;
+  const setsLabel = sets === 1 ? (copy.setSingular || copy.sets) : copy.sets;
+  return `${exercise.name}: ${sets} ${setsLabel} × ${exercise.reps}${rest}`;
 }

@@ -33,6 +33,7 @@ describe('generated sample weeks', () => {
     expect(sample?.variant).toBe('fat_loss_bodyweight');
     expect(sample.days.some((day) => day.rest)).toBe(true);
     expect(formatSampleExercise({ name: 'Push-Up', sets: 3, reps: '8-12', rest: '60s' }, sample.copy)).toBe('Push-Up: 3 sets × 8-12, 60s rest');
+    expect(formatSampleExercise({ name: 'Brisk Walk', sets: 1, reps: '30-45 min', rest: '-' }, sample.copy)).toBe('Brisk Walk: 1 set × 30-45 min');
     expect(getSampleWeek('/bmi-hesaplama', 'tr')).toBeNull();
   });
 });
