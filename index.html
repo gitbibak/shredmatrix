@@ -10,6 +10,17 @@
     <style>
       html, body, #root { min-height: 100%; background: #020617; }
       body { margin: 0; }
+      /* Prerendered content shown until the app mounts (also what crawlers without JS read). */
+      #seo-static { max-width: 72rem; margin: 0 auto; padding: 4.5rem 1.25rem 3rem; color: #e2e8f0; font-family: Inter, system-ui, -apple-system, sans-serif; line-height: 1.6; }
+      #seo-static h1 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; font-weight: 800; color: #fff; margin: 0 0 1rem; }
+      #seo-static h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 2.25rem 0 .75rem; }
+      #seo-static h3 { font-size: 1.1rem; font-weight: 700; color: #fff; margin: 1.5rem 0 .5rem; }
+      #seo-static p, #seo-static li { color: #94a3b8; font-size: 1rem; }
+      #seo-static a { color: #fb923c; font-weight: 700; text-decoration: none; }
+      #seo-static .cta { display: inline-block; margin: 1.25rem .75rem 0 0; padding: .9rem 1.5rem; border-radius: .75rem; background: linear-gradient(90deg, #f97316, #3b82f6); color: #fff; }
+      #seo-static table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+      #seo-static th, #seo-static td { border-bottom: 1px solid #1e293b; padding: .5rem; text-align: left; vertical-align: top; }
+      #seo-static picture, #seo-static img { display: block; max-width: 100%; height: auto; border-radius: 1rem; }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5" />
     <meta name="description" content="Full Balance; kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için kişisel planları beslenme, ilerleme ve longevity dengesiyle birleştiren tamamen ücretsiz uygulamadır." />
@@ -179,6 +190,17 @@
       <div style="text-align:center">FULL BALANCE<div style="width:28px;height:28px;margin:18px auto 0;border:3px solid #1e293b;border-top-color:#ff6d00;border-radius:50%;animation:fb-spin .8s linear infinite"></div></div>
     </div>
     <style>@keyframes fb-spin { to { transform: rotate(360deg); } }</style>
+    <div id="seo-static" data-home="true">
+      <p style="color:#34d399;font-weight:700;font-size:.85rem;margin:0 0 .75rem">%100 ücretsiz · Kredi kartı gerekmez</p>
+      <h1>Tek Uygulamada Ücretsiz Kişisel Koçluk</h1>
+      <p>Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon için kişisel antrenman ve beslenme planı; su, uyku, kilo ve ilerleme takibi tek yerde. Evde ekipmansız, evde dambıllı veya salon seçeneğiyle.</p>
+      <a class="cta" href="/auth?mode=register">Ücretsiz Başla</a>
+      <a href="/evde-spor-programi" style="display:inline-block;margin-top:1.25rem">Ekipmansız ev programı</a>
+      <picture style="margin-top:2rem">
+        <source type="image/webp" srcset="/images/home-bodyweight-960.webp 960w, /images/home-bodyweight.webp 1536w" sizes="(min-width: 1152px) 1152px, 100vw" />
+        <img src="/images/home-bodyweight.jpg" alt="Evde ekipmansız antrenman yapan kişi" width="1536" height="1024" fetchpriority="high" />
+      </picture>
+    </div>
     <div id="root"></div>
     <script src="/boot-recovery.js"></script>
     <script type="module" src="/src/main.jsx"></script>

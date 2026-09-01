@@ -1,4 +1,9 @@
 (() => {
+  // index.html carries the home page's prerendered hero for fast first paint.
+  // On any other route served from the SPA fallback it would be wrong, so drop it.
+  const homeStatic = document.querySelector('#seo-static[data-home]');
+  if (homeStatic && window.location.pathname !== '/') homeStatic.remove();
+
   const recoveryKey = 'fullbalance_boot_recovery';
   const removeBootGuard = () => document.getElementById('boot-guard')?.remove();
   const hasAppStyles = () => {

@@ -56,7 +56,10 @@ function buildDocument({ title, description, canonical, image, type = 'website',
     .replace(/\s*<link rel="alternate"[^>]*>/gi, '')
     .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/i, '')
     .replace(/<noscript>[\s\S]*?<\/noscript>/i, '')
-    .replace('<div id="root"></div>', `<div id="root"><div id="seo-static">${body}</div></div>`);
+    // The static block sits beside #root, not inside it, so React's first
+    // commit cannot wipe it; the app removes it once the real page has mounted.
+    .replace(/<div id="seo-static"[\s\S]*?<\/div>\s*<div id="root"><\/div>/, '<div id="root"></div>')
+    .replace('<div id="root"></div>', `<div id="seo-static">${body}</div><div id="root"></div>`);
 
   html = html.replace(/<html lang="[^"]*">/i, `<html lang="${escapeHtml(lang)}">`);
   if (alternates) {

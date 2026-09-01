@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Component, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, Component, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
@@ -360,8 +360,23 @@ function LoadingScreen({ goal = 'muscle' }) {
   );
 }
 
+// ── Static SEO handoff ───────────────────────────────────
+// Prerendered pages ship their content in #seo-static next to #root. While the
+// app restores the session or loads a route chunk we keep that content on
+// screen instead of a spinner, and remove it in the same commit that mounts
+// the interactive page.
+const hasStaticSeo = () => typeof document !== 'undefined' && Boolean(document.getElementById('seo-static'));
+
+function StaticSeoCleanup() {
+  useLayoutEffect(() => {
+    document.getElementById('seo-static')?.remove();
+  }, []);
+  return null;
+}
+
 // ── Suspense fallback ────────────────────────────────────
 function PageLoader() {
+  if (hasStaticSeo()) return null;
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
@@ -761,6 +776,7 @@ function AppContent() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>
+        <StaticSeoCleanup />
       </Suspense>
 
       {user && (
