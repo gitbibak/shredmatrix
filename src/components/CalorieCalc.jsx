@@ -2,8 +2,9 @@ import { useState, useMemo, useRef, useCallback } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { translations } from '../i18n/translations';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, Calculator, Camera, ImagePlus, Plus, RotateCcw, Search, ShieldCheck, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Calculator, Camera, CheckCircle2, ImagePlus, LoaderCircle, Plus, RotateCcw, Search, ShieldCheck, Trash2, X } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
+import { analysisItemsToMealItems, analyzeMealPhoto, prepareMealPhoto } from '../lib/mealPhotoAnalysis';
 
 // ═══════════════════════════════════════════════════════════
 // 200+ foods database — per 100g values
@@ -255,6 +256,9 @@ export default function CalorieCalc({ language, embedded = false }) {
   const [photo, setPhoto] = useState(null);
   const [photoError, setPhotoError] = useState('');
   const [photoLoading, setPhotoLoading] = useState(false);
+  const [photoAnalyzing, setPhotoAnalyzing] = useState(false);
+  const [analysisRange, setAnalysisRange] = useState(null);
+  const [analysisNotes, setAnalysisNotes] = useState([]);
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -284,12 +288,9 @@ export default function CalorieCalc({ language, embedded = false }) {
     c: sum.c + item.c,
     f: sum.f + item.f,
   }), { cal: 0, p: 0, c: 0, f: 0 }), [mealItems]);
-  const estimateRange = useMemo(
-    () => getMealEstimateRange(totals.cal, Boolean(photo)),
-    [photo, totals.cal],
-  );
+  const estimateRange = useMemo(() => analysisRange || getMealEstimateRange(totals.cal, Boolean(photo)), [analysisRange, photo, totals.cal]);
 
-  const selectPhoto = (event) => {
+  const selectPhoto = async (event) => {
     const file = event.target.files?.[0];
     event.target.value = '';
     const validationError = validateMealPhoto(file);
@@ -300,27 +301,56 @@ export default function CalorieCalc({ language, embedded = false }) {
 
     setPhotoError('');
     setPhotoLoading(true);
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result !== 'string') {
-        setPhotoError(tt('calorieCalc.photoErrorRead'));
-        setPhotoLoading(false);
+    setAnalysisRange(null);
+    setAnalysisNotes([]);
+    setMealItems((items) => items.filter((item) => item.source !== 'photo'));
+    try {
+      const image = await prepareMealPhoto(file);
+      setPhoto({ url: image, name: file.name });
+      setPhotoLoading(false);
+      setPhotoAnalyzing(true);
+      trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
+      const analysis = await analyzeMealPhoto(image, activeLang);
+      if (!analysis.isFood || !Array.isArray(analysis.items) || analysis.items.length === 0) {
+        setPhotoError(tt('calorieCalc.photoErrorNoFood'));
+        trackEvent('meal_photo_analysis_failed', { reason: 'no_food', language: activeLang });
         return;
       }
-      setPhoto({ url: reader.result, name: file.name });
+      const analyzedItems = analysisItemsToMealItems(analysis.items, activeLang, FOODS);
+      const analyzedCalories = analyzedItems.reduce((sum, item) => sum + item.cal, 0);
+      setMealItems((items) => [...items.filter((item) => item.source !== 'photo'), ...analyzedItems]);
+      setAnalysisRange(getMealEstimateRange(analyzedCalories, true));
+      setAnalysisNotes(Array.isArray(analysis.hiddenIngredients) ? analysis.hiddenIngredients : []);
+      trackEvent('meal_photo_analyzed', { language: activeLang, item_count: analysis.items.length });
+    } catch (error) {
+      const readFailure = ['image_read_failed', 'image_decode_failed'].includes(error?.message);
+      setPhotoError(tt(readFailure ? 'calorieCalc.photoErrorRead' : 'calorieCalc.photoErrorAnalysis'));
+      trackEvent('meal_photo_analysis_failed', { reason: readFailure ? 'read' : 'service', language: activeLang });
+    } finally {
       setPhotoLoading(false);
-      trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
-    };
-    reader.onerror = () => {
-      setPhotoError(tt('calorieCalc.photoErrorRead'));
-      setPhotoLoading(false);
-    };
-    reader.readAsDataURL(file);
+      setPhotoAnalyzing(false);
+    }
   };
 
   const removePhoto = () => {
     setPhoto(null);
     setPhotoError('');
+    setAnalysisRange(null);
+    setAnalysisNotes([]);
+    setMealItems((items) => items.filter((item) => item.source !== 'photo'));
+  };
+
+  const updateMealItemGrams = (id, nextValue) => {
+    const nextGrams = Math.min(2000, Math.max(1, Number(nextValue) || 1));
+    setMealItems((items) => items.map((item) => item.id === id ? {
+      ...item,
+      grams: nextGrams,
+      cal: Math.round(item.food.cal * nextGrams / 100),
+      p: item.food.p * nextGrams / 100,
+      c: item.food.c * nextGrams / 100,
+      f: item.food.f * nextGrams / 100,
+    } : item));
+    setAnalysisRange(null);
   };
 
   const addToMeal = () => {
@@ -384,10 +414,10 @@ export default function CalorieCalc({ language, embedded = false }) {
               </span>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <button type="button" disabled={photoLoading} onClick={() => cameraInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cyan-500/25 bg-cyan-500/10 px-3 text-[11px] font-bold text-cyan-200 disabled:opacity-60">
+              <button type="button" disabled={photoLoading || photoAnalyzing} onClick={() => cameraInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cyan-500/25 bg-cyan-500/10 px-3 text-[11px] font-bold text-cyan-200 disabled:opacity-60">
                 <Camera size={16} /> {tt('calorieCalc.photoTake')}
               </button>
-              <button type="button" disabled={photoLoading} onClick={() => galleryInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 text-[11px] font-bold text-slate-200 disabled:opacity-60">
+              <button type="button" disabled={photoLoading || photoAnalyzing} onClick={() => galleryInputRef.current?.click()} className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-950/60 px-3 text-[11px] font-bold text-slate-200 disabled:opacity-60">
                 <ImagePlus size={16} /> {tt('calorieCalc.photoChoose')}
               </button>
             </div>
@@ -406,6 +436,26 @@ export default function CalorieCalc({ language, embedded = false }) {
         <div role="alert" className="mb-4 flex items-start gap-2 rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-[10px] leading-relaxed text-red-200">
           <AlertTriangle size={14} className="mt-0.5 shrink-0" />
           <span>{photoError}</span>
+        </div>
+      )}
+
+      {photoAnalyzing && (
+        <div role="status" className="mb-4 flex items-center gap-3 rounded-xl border border-cyan-500/25 bg-cyan-500/10 p-3 text-cyan-100">
+          <LoaderCircle size={18} className="shrink-0 animate-spin text-cyan-300" />
+          <div>
+            <p className="text-xs font-bold">{tt('calorieCalc.photoAnalyzing')}</p>
+            <p className="mt-0.5 text-[10px] leading-relaxed text-cyan-100/65">{tt('calorieCalc.photoAnalyzingHelper')}</p>
+          </div>
+        </div>
+      )}
+
+      {photo && !photoAnalyzing && mealItems.some((item) => item.source === 'photo') && (
+        <div className="mb-4 flex items-start gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-3">
+          <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-400" />
+          <div>
+            <p className="text-xs font-bold text-emerald-200">{tt('calorieCalc.photoAnalysisReady')}</p>
+            <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{tt('calorieCalc.photoAnalysisReadyHelper')}</p>
+          </div>
         </div>
       )}
 
@@ -538,8 +588,15 @@ export default function CalorieCalc({ language, embedded = false }) {
           <div className="mb-3 space-y-1.5">
             {mealItems.map(item => (
               <div key={item.id} className="flex items-center gap-2 rounded-lg bg-slate-950/70 px-3 py-2">
-                <span className="min-w-0 flex-1 truncate text-xs text-slate-300">{item.food.name[activeLang] || item.food.name.tr}</span>
-                <span className="text-[10px] text-slate-500">{item.grams}g</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-xs text-slate-300">{item.food.name[activeLang] || item.food.name.tr}</span>
+                  {item.source === 'photo' && item.portion && <span className="mt-0.5 block truncate text-[9px] text-cyan-200/55">{item.portion}</span>}
+                </span>
+                {item.source === 'photo' ? (
+                  <label className="flex items-center gap-1 text-[10px] text-slate-500">
+                    <input type="number" min="1" max="2000" step="10" value={Math.round(item.grams)} onChange={(event) => updateMealItemGrams(item.id, event.target.value)} aria-label={tt('calorieCalc.grams')} className="h-8 w-16 rounded-lg border border-slate-700 bg-slate-900 px-1 text-center text-[11px] text-white" />g
+                  </label>
+                ) : <span className="text-[10px] text-slate-500">{item.grams}g</span>}
                 <span className="w-14 text-right text-[10px] font-semibold text-white">{item.cal} kcal</span>
                 <button type="button" aria-label={tt('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
                   <Trash2 size={13} />
@@ -567,6 +624,11 @@ export default function CalorieCalc({ language, embedded = false }) {
               <p className="mt-1 text-[9px] leading-relaxed text-slate-500">{tt('calorieCalc.estimateHelper')}</p>
             </div>
           </div>
+          {analysisNotes.length > 0 && (
+            <p className="mt-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[9px] leading-relaxed text-slate-500">
+              <span className="font-bold text-slate-300">{tt('calorieCalc.possibleHidden')}:</span> {analysisNotes.join(', ')}
+            </p>
+          )}
           {photo && (
             <div className="mt-2 flex gap-2">
               <button type="button" onClick={() => { setSelectedCat('sauce'); setSearch(''); }} className="min-h-10 flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3 text-[10px] font-bold text-slate-300">{tt('calorieCalc.addOilSauce')}</button>
