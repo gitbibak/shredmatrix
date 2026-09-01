@@ -6,6 +6,16 @@ import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
 
+import { formatSampleExercise, getSampleWeek } from '../src/data/sampleWeekMap.js';
+
+function sampleWeekHtml(path, lang) {
+  const sample = getSampleWeek(path, lang);
+  if (!sample) return '';
+  const { days, copy } = sample;
+  const rows = days.map((day) => `<tr><th scope="row">${escapeHtml(day.day)}</th><td>${escapeHtml(day.rest ? copy.restDay : day.focus)}</td><td><ul>${day.exercises.map((exercise) => `<li>${escapeHtml(formatSampleExercise(exercise, copy))}</li>`).join('')}</ul></td></tr>`).join('');
+  return `<section><h2>${escapeHtml(copy.title)}</h2><p>${escapeHtml(copy.intro)}</p><table><thead><tr><th scope="col">${escapeHtml(copy.day)}</th><th scope="col">${escapeHtml(copy.focus)}</th><th scope="col">${escapeHtml(copy.exercises)}</th></tr></thead><tbody>${rows}</tbody></table><p>${escapeHtml(copy.progression)}</p></section>`;
+}
+
 const REVIEW_LABEL = { tr: 'Son güncelleme', en: 'Last reviewed', es: 'Última revisión' };
 const SHORT_ANSWER_LABEL = { tr: 'Kısa cevap', en: 'Short answer', es: 'Respuesta breve' };
 
@@ -128,7 +138,7 @@ for (const page of seoLandingPages) {
   const canonical = `${BASE_URL}/${page.slug}`;
   const alternates = getAlternatesForTurkishPath(`/${page.slug}`);
   const faqBody = page.faqs.length ? `<section><h2>Sık sorulan sorular</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section>` : '';
-  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header>${leadAnswerBlock(page.faqs, 'tr')}<section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
+  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header>${leadAnswerBlock(page.faqs, 'tr')}${sampleWeekHtml(`/${page.slug}`, 'tr')}<section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -249,7 +259,7 @@ for (const page of internationalSeoPages) {
   const canonical = `${BASE_URL}${page.path}`;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const relatedLabel = page.lang === 'es' ? 'Explora más objetivos y herramientas' : 'Explore more goals and tools';
-  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${leadAnswerBlock(page.faqs, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${leadAnswerBlock(page.faqs, page.lang)}${sampleWeekHtml(page.path, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [

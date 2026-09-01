@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
+const SampleHomeWeek = lazy(() => import('./SampleHomeWeek'));
 
 const BASE_URL = 'https://fullbalance.app';
 const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png`;
@@ -717,6 +718,10 @@ export default function SeoLandingPage({ slug }) {
           ))}
         </div>
       </section>
+
+      <Suspense fallback={null}>
+        <SampleHomeWeek path={`/${canonicalSlug}`} lang="tr" ctaId={`seo_${canonicalSlug}_sample_week`} />
+      </Suspense>
 
       <section className="px-4 py-14">
         <div className="mx-auto max-w-6xl">

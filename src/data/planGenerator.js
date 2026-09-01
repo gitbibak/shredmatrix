@@ -3266,9 +3266,150 @@ const deloadNoteMap = {
 
 // Tekrar (reps) alanındaki Türkçe kısaltmalar: 10/bacak, 3/taraf, 8/kol, 30 dk
 const repsTokenMap = {
-  en: [[/bacak/g, 'leg'], [/taraf/g, 'side'], [/\bkol\b/g, 'arm'], [/\bdk\b/g, 'min']],
-  es: [[/bacak/g, 'pierna'], [/taraf/g, 'lado'], [/\bkol\b/g, 'brazo'], [/\bdk\b/g, 'min']],
+  en: [[/bacak/g, 'leg'], [/taraf/g, 'side'], [/\bkol\b/g, 'arm'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'fast'], [/rahat/g, 'easy'], [/\/tip\b/g, '/letter']],
+  es: [[/bacak/g, 'pierna'], [/taraf/g, 'lado'], [/\bkol\b/g, 'brazo'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'rápido'], [/rahat/g, 'suave'], [/\/tip\b/g, '/letra']],
 };
+
+// ── Home program localization ──────────────────────────
+// Home (no-equipment / basic-equipment) programs are authored in Turkish in
+// homeWorkoutPrograms.js. These maps translate their exercise names and day
+// focus labels so English and Spanish members never see Turkish text.
+const homeExerciseNameMap = {
+  en: {
+    'Kontrollü Vücut Ağırlığı Squat': 'Controlled Bodyweight Squat',
+    'Eğimli Şınav': 'Incline Push-Up',
+    'Yüzüstü Lat Çekiş': 'Prone Lat Pulldown',
+    'Destekli Geri Lunge': 'Supported Reverse Lunge',
+    'Diz Üstü veya Standart Şınav': 'Knee or Standard Push-Up',
+    'Tek Bacak Glute Bridge': 'Single-Leg Glute Bridge',
+    'Pike Şınav': 'Pike Push-Up',
+    'Tek Bacak Calf Raise': 'Single-Leg Calf Raise',
+    'Standart Şınav': 'Standard Push-Up',
+    'Dar Tutuş Diz Üstü Şınav': 'Close-Grip Knee Push-Up',
+    'Tempo Şınav (3 sn iniş)': 'Tempo Push-Up (3 s lowering)',
+    'Ayakları Yükseltilmiş Pike Şınav': 'Feet-Elevated Pike Push-Up',
+    'Yüzüstü W İzometrik': 'Prone W Isometric Hold',
+    'Tempo Squat (3 sn iniş)': 'Tempo Squat (3 s lowering)',
+    'Geri Lunge': 'Reverse Lunge',
+    'Destekli Tek Bacak Squat': 'Supported Single-Leg Squat',
+    'Tek Bacak Hip Hinge': 'Single-Leg Hip Hinge',
+    'Tek Kol Dumbbell Row': 'Single-Arm Dumbbell Row',
+    'Şınav': 'Push-Up',
+    'Dar Tutuş Dumbbell Floor Press': 'Close-Grip Dumbbell Floor Press',
+    'Düşük Etkili Interval Yürüyüş': 'Low-Impact Interval Walk',
+    'Tempolu Yürüyüş': 'Brisk Walk',
+    'Tüm Vücut Mobilite Akışı': 'Full-Body Mobility Flow',
+    '20-30 dk rahat yürüyüş (opsiyonel)': '20-30 min easy walk (optional)',
+  },
+  es: {
+    'Kontrollü Vücut Ağırlığı Squat': 'Sentadilla Controlada con Peso Corporal',
+    'Eğimli Şınav': 'Flexión Inclinada',
+    'Yüzüstü Lat Çekiş': 'Jalón Dorsal Boca Abajo',
+    'Glute Bridge': 'Puente de Glúteo',
+    'Destekli Geri Lunge': 'Zancada Atrás con Apoyo',
+    'Diz Üstü veya Standart Şınav': 'Flexión de Rodillas o Estándar',
+    'Tek Bacak Glute Bridge': 'Puente de Glúteo a Una Pierna',
+    'Pike Şınav': 'Flexión Pike',
+    'Tek Bacak Calf Raise': 'Elevación de Talón a Una Pierna',
+    'Side Plank': 'Plancha Lateral',
+    'Standart Şınav': 'Flexión Estándar',
+    'Dar Tutuş Diz Üstü Şınav': 'Flexión de Rodillas Agarre Cerrado',
+    'Tempo Şınav (3 sn iniş)': 'Flexión con Tempo (3 s bajada)',
+    'Ayakları Yükseltilmiş Pike Şınav': 'Flexión Pike con Pies Elevados',
+    'Yüzüstü W İzometrik': 'W Isométrica Boca Abajo',
+    'Tempo Squat (3 sn iniş)': 'Sentadilla con Tempo (3 s bajada)',
+    'Geri Lunge': 'Zancada Atrás',
+    'Destekli Tek Bacak Squat': 'Sentadilla a Una Pierna con Apoyo',
+    'Tek Bacak Hip Hinge': 'Bisagra de Cadera a Una Pierna',
+    'Glute Bridge March': 'Marcha en Puente de Glúteo',
+    'Bent-Knee Calf Raise': 'Elevación de Talón con Rodilla Flexionada',
+    'Goblet Squat': 'Sentadilla Goblet',
+    'Dumbbell Floor Press': 'Press en el Suelo con Mancuernas',
+    'Tek Kol Dumbbell Row': 'Remo con Mancuerna a Un Brazo',
+    'Dumbbell Romanian Deadlift': 'Peso Muerto Rumano con Mancuernas',
+    'Dumbbell Reverse Lunge': 'Zancada Atrás con Mancuernas',
+    'Şınav': 'Flexión',
+    'Resistance Band Row': 'Remo con Banda',
+    'Dumbbell Glute Bridge': 'Puente de Glúteo con Mancuerna',
+    'Dumbbell Split Squat': 'Sentadilla Búlgara con Mancuernas',
+    'Dumbbell Shoulder Press': 'Press de Hombro con Mancuernas',
+    'Resistance Band Pull-Apart': 'Apertura con Banda',
+    'Suitcase March': 'Marcha Maleta',
+    'Dumbbell Curl': 'Curl con Mancuernas',
+    'Dar Tutuş Dumbbell Floor Press': 'Press en el Suelo Agarre Cerrado',
+    'Dumbbell Lateral Raise': 'Elevación Lateral con Mancuernas',
+    'Dumbbell Reverse Fly': 'Pájaro con Mancuernas',
+    'Hammer Curl': 'Curl Martillo',
+    'Dumbbell Overhead Triceps Extension': 'Extensión de Tríceps sobre la Cabeza',
+    'Standing Calf Raise': 'Elevación de Talones de Pie',
+    'Dumbbell Step-Up': 'Subida al Cajón con Mancuernas',
+    'Resistance Band Hamstring Curl': 'Curl Femoral con Banda',
+    'Düşük Etkili Interval Yürüyüş': 'Caminata por Intervalos de Bajo Impacto',
+    'Tempolu Yürüyüş': 'Caminata Rápida',
+    'Tüm Vücut Mobilite Akışı': 'Flujo de Movilidad de Cuerpo Completo',
+    '20-30 dk rahat yürüyüş (opsiyonel)': '20-30 min de caminata suave (opcional)',
+  },
+};
+
+const homeFocusMap = {
+  en: {
+    'Dinlenme / Rahat Yürüyüş': 'Rest / Easy Walk',
+    'Tam Vücut A — Temel Kuvvet': 'Full Body A — Foundation Strength',
+    'Tam Vücut B — Tek Taraflı Kontrol': 'Full Body B — Unilateral Control',
+    'Tam Vücut C — Tempo ve Denge': 'Full Body C — Tempo and Balance',
+    'Üst Vücut A — İtiş ve Sırt Kontrolü': 'Upper Body A — Push and Back Control',
+    'Üst Vücut B — Tempo ve Postür': 'Upper Body B — Tempo and Posture',
+    'Alt Vücut A — Squat ve Kalça': 'Lower Body A — Squat and Hips',
+    'Alt Vücut B — Tek Taraflı Kuvvet': 'Lower Body B — Unilateral Strength',
+    'Tam Vücut A — Dumbbell Temeli': 'Full Body A — Dumbbell Foundation',
+    'Tam Vücut B — Denge ve Çekiş': 'Full Body B — Balance and Pull',
+    'Tam Vücut C — Omuz ve Kalça': 'Full Body C — Shoulders and Hips',
+    'Üst Vücut A — Yatay İtiş ve Çekiş': 'Upper Body A — Horizontal Push and Pull',
+    'Üst Vücut B — Omuz ve Sırt': 'Upper Body B — Shoulders and Back',
+    'Alt Vücut A — Squat Odaklı': 'Lower Body A — Squat Focus',
+    'Alt Vücut B — Tek Taraflı ve Kalça': 'Lower Body B — Unilateral and Hips',
+    'Tempolu Yürüyüş + Mobilite': 'Brisk Walk + Mobility',
+    'Düşük Etkili Interval Yürüyüş': 'Low-Impact Interval Walk',
+  },
+  es: {
+    'Dinlenme / Rahat Yürüyüş': 'Descanso / Caminata Suave',
+    'Tam Vücut A — Temel Kuvvet': 'Cuerpo Completo A — Fuerza Base',
+    'Tam Vücut B — Tek Taraflı Kontrol': 'Cuerpo Completo B — Control Unilateral',
+    'Tam Vücut C — Tempo ve Denge': 'Cuerpo Completo C — Tempo y Equilibrio',
+    'Üst Vücut A — İtiş ve Sırt Kontrolü': 'Tren Superior A — Empuje y Control de Espalda',
+    'Üst Vücut B — Tempo ve Postür': 'Tren Superior B — Tempo y Postura',
+    'Alt Vücut A — Squat ve Kalça': 'Tren Inferior A — Sentadilla y Cadera',
+    'Alt Vücut B — Tek Taraflı Kuvvet': 'Tren Inferior B — Fuerza Unilateral',
+    'Tam Vücut A — Dumbbell Temeli': 'Cuerpo Completo A — Base con Mancuernas',
+    'Tam Vücut B — Denge ve Çekiş': 'Cuerpo Completo B — Equilibrio y Tracción',
+    'Tam Vücut C — Omuz ve Kalça': 'Cuerpo Completo C — Hombros y Cadera',
+    'Üst Vücut A — Yatay İtiş ve Çekiş': 'Tren Superior A — Empuje y Tracción Horizontal',
+    'Üst Vücut B — Omuz ve Sırt': 'Tren Superior B — Hombros y Espalda',
+    'Alt Vücut A — Squat Odaklı': 'Tren Inferior A — Enfoque en Sentadilla',
+    'Alt Vücut B — Tek Taraflı ve Kalça': 'Tren Inferior B — Unilateral y Cadera',
+    'Tempolu Yürüyüş + Mobilite': 'Caminata Rápida + Movilidad',
+    'Düşük Etkili Interval Yürüyüş': 'Caminata por Intervalos de Bajo Impacto',
+  },
+};
+
+const homeFocusSuffixMap = {
+  en: { ' + Kas Koruma': ' + Muscle Retention' },
+  es: { ' + Kas Koruma': ' + Mantener Músculo' },
+};
+
+function localizeHomeFocus(focus, lang) {
+  if (typeof focus !== 'string' || lang === 'tr') return focus;
+  const direct = homeFocusMap[lang]?.[focus];
+  if (direct) return direct;
+  for (const [suffix, translated] of Object.entries(homeFocusSuffixMap[lang] || {})) {
+    if (focus.endsWith(suffix)) {
+      const base = focus.slice(0, -suffix.length);
+      const localizedBase = homeFocusMap[lang]?.[base];
+      if (localizedBase) return `${localizedBase}${translated}`;
+    }
+  }
+  return focus;
+}
 
 function localizeExerciseEntry(ex, lang) {
   if (!ex || lang === 'tr') return ex;
@@ -3276,8 +3417,11 @@ function localizeExerciseEntry(ex, lang) {
   let reps = ex.reps;
   if (typeof name === 'string') {
     const dl = deloadNoteMap[lang]?.[name];
+    const home = homeExerciseNameMap[lang]?.[name];
     if (dl) {
       name = dl;
+    } else if (home) {
+      name = home;
     } else if (name.startsWith('Süperset:')) {
       name = name.replace('Süperset:', supersetPrefixMap[lang] || 'Superset:');
     }
@@ -3297,7 +3441,7 @@ export function localizePlan(plan, lang) {
   const localizeDay = (day) => ({
     ...day,
     day: dMap[day.day] || day.day,
-    focus: fMap[day.focus] || day.focus,
+    focus: fMap[day.focus] || localizeHomeFocus(day.focus, lang),
     exercises: day.exercises?.map(ex => {
       const loc = localizeExerciseEntry(ex, lang);
       return { ...loc, name: loc.name === 'Tam Dinlenme' ? restName : loc.name };

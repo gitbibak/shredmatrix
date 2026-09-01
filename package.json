@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seo:samples": "vite-node scripts/generate-sample-weeks.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
