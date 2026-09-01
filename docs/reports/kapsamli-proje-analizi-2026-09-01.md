@@ -106,3 +106,16 @@ Hacim kaynağı yok (Ahrefs/Similarweb bağlantıları yetkisiz); talep kanıtı
 
 - Statik içerik artık `#root` yanında duruyor ve stillendirildi; ana sayfa `index.html` içinde önceden çizilmiş hero taşıyor. Uygulama, rota yüklenince statik bloğu aynı commit'te kaldırıyor. Yerel Lighthouse: ana sayfa gözlenen ilk boyama 47 ms.
 - Canlıda (fullbalance.app) yerel headless Chrome ile gözlenen ilk boyama tutarlı biçimde ~2,4 s ölçüldü; sayfa yükü 0,6 s'de bitmesine rağmen. CSP, Cloudflare beacon, service worker, fontlar ve boot betiği tek tek engellenerek dışlandı. Aynı Chrome ile `developers.cloudflare.com` da 0,9 s yükte 2,7 s ilk boyama verdi; `example.com` 0,2 s. Sonuç: Cloudflare'da barındırılan siteler için bu ölçüm ortamına özgü bir artefakt; gerçek kullanıcı verisi Search Console Core Web Vitals ve PageSpeed Insights (tarayıcıdan) ile doğrulanmalı. Bugünkü API kotası dolduğu için PSI çalıştırılamadı.
+
+## 8. Ek: 2 Eylül tamamlanan maddeler
+
+Bölüm 5'teki sıra tamamlandı:
+1. Deploy artık her turda yapılıyor; canlı sürüm 9162e7ff.
+2. Fotoğrafla kalori (TR/EN/ES) ve TR günlük kalori/BMR hesaplayıcı sayfaları yayında.
+3. Statik içerik geçişi ve görsel/font/paket optimizasyonları yayında.
+4. İspanyolca metin borcu kapatıldı (58 profil metni çeviri dosyasında).
+5. Direnç bandı, 30 günlük/4 haftalık, kadınlar için ve 40 yaş üstü programları üç dilde; pilates mi yoga mı ve uyku meditasyonu Türkçe. Örnek haftada 4 haftalık ilerleme tablosu ve yazdır/PDF düğmesi.
+6. Google Play TWA: adım adım rehber `docs/google-play-twa-rehberi.md`; hesap, ödeme ve imza anahtarı kurucuda olduğu için yayın kurucu tarafından yapılmalı.
+7. Forum varlığı: hazır cevap şablonları `marketing/forum-cevap-sablonlari.md`; paylaşımı kurucu yapmalı.
+
+Ayrıca Türkçe SEO sayfa verisi tek modüle taşındı (`src/data/turkishSeoPages.js`); statik SSS eksikliği 27 sayfanın tamamında kapandı. Toplam 82 statik sayfa, 85 sitemap URL'si. Yeni URL'ler IndexNow ile bildirildi.
