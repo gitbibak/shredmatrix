@@ -101,3 +101,8 @@ Hacim kaynağı yok (Ahrefs/Similarweb bağlantıları yetkisiz); talep kanıtı
 - Mevsimsellik TR: https://egirisim.com/2026/01/26/turkiyede-aralik-2025-ve-ocak-2026nin-ilk-10-gununde-kullanicilar-ne-aradi/ , https://www.marketingturkiye.com.tr/haberler/google-verilerine-gore-turkiye-sonbaharda-spora-donuyor/
 - Mevsimsellik ES: https://ighenatt.es/recursos/seo-sectorial/seo-para-gimnasios-fitness/
 - EN hacim listesi: https://www.seopital.co/blog/fitness-seo-keywords
+
+## 7. Ek: 2 Eylül canlı ölçüm notu
+
+- Statik içerik artık `#root` yanında duruyor ve stillendirildi; ana sayfa `index.html` içinde önceden çizilmiş hero taşıyor. Uygulama, rota yüklenince statik bloğu aynı commit'te kaldırıyor. Yerel Lighthouse: ana sayfa gözlenen ilk boyama 47 ms.
+- Canlıda (fullbalance.app) yerel headless Chrome ile gözlenen ilk boyama tutarlı biçimde ~2,4 s ölçüldü; sayfa yükü 0,6 s'de bitmesine rağmen. CSP, Cloudflare beacon, service worker, fontlar ve boot betiği tek tek engellenerek dışlandı. Aynı Chrome ile `developers.cloudflare.com` da 0,9 s yükte 2,7 s ilk boyama verdi; `example.com` 0,2 s. Sonuç: Cloudflare'da barındırılan siteler için bu ölçüm ortamına özgü bir artefakt; gerçek kullanıcı verisi Search Console Core Web Vitals ve PageSpeed Insights (tarayıcıdan) ile doğrulanmalı. Bugünkü API kotası dolduğu için PSI çalıştırılamadı.
