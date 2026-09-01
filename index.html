@@ -21,6 +21,8 @@
       #seo-static table { width: 100%; border-collapse: collapse; font-size: .9rem; }
       #seo-static th, #seo-static td { border-bottom: 1px solid #1e293b; padding: .5rem; text-align: left; vertical-align: top; }
       #seo-static picture, #seo-static img { display: block; max-width: 100%; height: auto; border-radius: 1rem; }
+      /* The boot overlay must never hide prerendered content; it only guards routes without it. */
+      body:has(#seo-static) #boot-guard { display: none !important; }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5" />
     <meta name="description" content="Full Balance; kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates için kişisel planları beslenme, ilerleme ve longevity dengesiyle birleştiren tamamen ücretsiz uygulamadır." />
