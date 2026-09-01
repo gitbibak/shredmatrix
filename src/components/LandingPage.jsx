@@ -63,7 +63,7 @@ const copy = {
     longevityNote: 'Biyolojik yaş veya yaşam süresi tahmini yapmaz; yalnızca kaydettiğin alışkanlıkları anlamlandırır.',
     photoMealEyebrow: 'Yeni ücretsiz öğün aracı',
     photoMealTitle: 'Öğün fotoğrafını gerçekçi bir kalori aralığına dönüştür',
-    photoMealDesc: 'Fotoğrafı referans al; yiyecekleri, porsiyonları, yağları, sosları ve içecekleri doğrula. Fotoğraf cihazından ayrılmaz ve sonuç tek bir kesin sayı gibi sunulmaz.',
+    photoMealDesc: 'Tabağını fotoğrafla; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makrolar veritabanından hesaplansın. Gizli yağ ve sos önerilerini onayla, porsiyonu düzelt. Fotoğraf yalnızca analiz için işlenir, saklanmaz; sonuç tek bir kesin sayı gibi sunulmaz.',
     photoMealCta: 'Fotoğrafla ücretsiz dene',
     freeTitle: 'Gerçekten ücretsiz ne demek?',
     freeDesc: 'Temel özellikleri göstermek için ödeme istemiyoruz. Full Balance’ın kişisel planları ve takip araçları ücretsiz kullanılabilir.',
@@ -104,7 +104,7 @@ const copy = {
     progressTitle: 'Clear progress', progressDesc: 'Weight, measurements, photos, workouts, water and sleep trends, including Excel and report export.',
     longevityTitle: 'Longevity balance', longevityDesc: 'Track movement, strength, mobility, recovery and nutrition across five transparent pillars.', longevityNote: 'It does not predict biological age or lifespan; it only helps you understand recorded habits.',
     photoMealEyebrow: 'New free meal tool', photoMealTitle: 'Turn a meal photo into a realistic calorie range',
-    photoMealDesc: 'Use the photo as a reference, then confirm foods, portions, oils, sauces and drinks. The photo stays on your device and the result is not presented as a falsely exact number.',
+    photoMealDesc: 'Snap your plate; AI recognises the foods and portions and calories come from the food database. Confirm suggested hidden oils or sauces and fix any portion. The photo is processed only for the analysis and never stored, and the result is shown as a range rather than a falsely exact number.',
     photoMealCta: 'Try it free with a photo',
     freeTitle: 'What does truly free mean?', freeDesc: 'We do not ask for payment to reveal essential features. Personal plans and tracking tools are free to use.',
     freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
@@ -132,7 +132,7 @@ const copy = {
     progressTitle: 'Progreso claro', progressDesc: 'Peso, medidas, fotos, entrenamientos, agua y sueño, con exportación Excel e informes.',
     longevityTitle: 'Equilibrio de longevidad', longevityDesc: 'Observa movimiento, fuerza, movilidad, recuperación y nutrición en cinco pilares transparentes.', longevityNote: 'No predice edad biológica ni longevidad; solo interpreta los hábitos registrados.',
     photoMealEyebrow: 'Nueva herramienta gratuita', photoMealTitle: 'Convierte una foto de tu comida en un rango realista de calorías',
-    photoMealDesc: 'Usa la foto como referencia y confirma alimentos, porciones, aceites, salsas y bebidas. La foto permanece en tu dispositivo y el resultado no se muestra como una cifra falsamente exacta.',
+    photoMealDesc: 'Fotografía tu plato; la IA reconoce alimentos y porciones y las calorías salen de la base de datos de alimentos. Confirma los aceites o salsas ocultos que sugiere y corrige cualquier porción. La foto se procesa solo para el análisis y nunca se guarda; el resultado se muestra como un rango, no como una cifra falsamente exacta.',
     photoMealCta: 'Probar gratis con una foto',
     freeTitle: '¿Qué significa realmente gratis?', freeDesc: 'No pedimos pagos para mostrar funciones esenciales. Los planes y herramientas de seguimiento son gratuitos.',
     freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
@@ -399,7 +399,7 @@ export default function LandingPage({ onStart }) {
                   <div className="text-sm text-amber-400" aria-label={`${item.rating}/5`}>{'★'.repeat(item.rating)}</div>
                   {item.result_summary && <p className="mt-3 text-xs font-bold text-cyan-300">{item.result_summary}</p>}
                   <p className="mt-3 text-sm leading-6 text-slate-300">“{item.body}”</p>
-                  <p className="mt-4 text-[10px] uppercase text-slate-600">{lang === 'tr' ? 'Doğrulanmış kullanıcı · anonim' : 'Verified user · anonymous'}</p>
+                  <p className="mt-4 text-[10px] uppercase text-slate-600">{lang === 'tr' ? 'Doğrulanmış kullanıcı · anonim' : lang === 'es' ? 'Usuario verificado · anónimo' : 'Verified user · anonymous'}</p>
                 </article>
               ))}
             </div>
@@ -469,7 +469,7 @@ export default function LandingPage({ onStart }) {
               <Link to="/privacy" className="hover:text-white">{t('auth.privacyLink') || 'Gizlilik'}</Link>
               <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>
               <Link to="/contact" className="hover:text-white">{t('contact.link') || 'İletişim'}</Link>
-              <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : 'Editorial policy'}</Link>
+              <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : lang === 'es' ? 'Política editorial' : 'Editorial policy'}</Link>
               <Link to={lang === 'tr' ? '/kurucu-tolga-deveci' : lang === 'es' ? '/es/fundador-tolga-deveci' : '/en/founder-tolga-deveci'} className="hover:text-white">{c.founderLink}</Link>
             </div>
           </div>
