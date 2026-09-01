@@ -31,8 +31,8 @@ describe('international SEO pages', () => {
   });
 
   it('finds localized counterparts from a Turkish path', () => {
-    expect(getAlternatesForTurkishPath('/kalori-makro-takibi')).toEqual({
-      tr: '/kalori-makro-takibi',
+    expect(getAlternatesForTurkishPath('/gunluk-kalori-ihtiyaci-hesaplama')).toEqual({
+      tr: '/gunluk-kalori-ihtiyaci-hesaplama',
       en: '/en/calorie-macro-calculator',
       es: '/es/calculadora-calorias-macros',
     });
@@ -43,8 +43,8 @@ describe('international SEO pages', () => {
     expect(getInternationalRelatedPages(page).slice(0, 4).map((item) => item.topic)).toEqual([
       'calories',
       'protein',
+      'photoCalories',
       'nutrition',
-      'fatLoss',
     ]);
   });
 
@@ -73,5 +73,21 @@ describe('international SEO pages', () => {
     expect(spanish.metaTitle).toContain('Casa con Mancuernas');
     expect(spanish.hero).toContain('mancuernas o bandas');
     expect(spanish.alternates.tr).toBe('/evde-dambil-antrenman-programi');
+  });
+});
+
+describe('photo calorie pages', () => {
+  it('exist in three languages and only they embed the meal tool', () => {
+    const photo = findInternationalSeoPage('/en/photo-calorie-counter');
+    expect(photo?.mealTool).toBe(true);
+    expect(photo?.calculator).toBeNull();
+    expect(getAlternatesForTurkishPath('/fotografla-kalori-hesaplama')).toEqual({
+      tr: '/fotografla-kalori-hesaplama',
+      en: '/en/photo-calorie-counter',
+      es: '/es/contar-calorias-con-foto',
+    });
+    const calories = findInternationalSeoPage('/es/calculadora-calorias-macros');
+    expect(calories?.mealTool).toBe(false);
+    expect(calories?.calculator).toBe('calories');
   });
 });

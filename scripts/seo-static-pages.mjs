@@ -21,6 +21,18 @@ const intentDetails = {
     benefits: ['Nefes, nötr hizalanma ve kontrollü hareket açıklığıyla başlangıç', 'Core stabilitesi, pelvis kontrolü, koordinasyon ve postür odağı', 'Kısa mat seanslarından kademeli süre ve zorluk artışına geçiş'],
     faqs: [['Reformer gerekir mi?', 'Hayır. Bu program evde mat üzerinde uygulanacak başlangıç pilates planıdır.'], ['Daha önce pilates yapmadım, uygun mu?', 'Evet. Kısa seanslar ve erişilebilir hareketlerle başlar.']],
   },
+  'fotografla-kalori-hesaplama': {
+    benefits: ['Yapay zeka ile yiyecek ve porsiyon tanıma', 'Kalori ve makrolar 200+ yiyecekli veritabanından', 'Gizli yağ ve sos önerileri, düzenlenebilir porsiyon, güvenli aralık'],
+    faqs: [['Fotoğraftan kalori kesin hesaplanabilir mi?', 'Hayır. Tek bir fotoğraf porsiyon hacmini, pişirme yağını ve gizli malzemeleri kesin gösteremez. Araç yiyecekleri tanır, gramları tahmin eder ve tek sayı yerine güvenli bir aralık verir; porsiyonu düzeltebilirsin.'], ['Fotoğrafım saklanıyor mu?', 'Hayır. Fotoğraf cihazında küçültülür ve yalnızca analiz için geçici işlenir; hesabına veya sunucuya kaydedilmez.'], ['Üyelik gerekir mi?', 'Hayır. Araç ücretsizdir ve üyelik gerektirmez; hesap yalnızca kişisel plan ve ilerleme takibi için gerekir.']],
+  },
+  'gunluk-kalori-ihtiyaci-hesaplama': {
+    benefits: ['Bazal metabolizma, koruma kalorisi ve hedef kalori tek ekranda', 'Protein, karbonhidrat ve yağ gramlarına bölünmüş sonuç', 'Sonucu ücretsiz kişisel plana kaydetme'],
+    faqs: [['Kilo vermek için günde kaç kalori almalıyım?', 'Koruma kalorinin yaklaşık %15 altı, çoğu yetişkin için günde 300-500 kcal açık, sürdürülebilir bir başlangıçtır. Bazal metabolizmanın altına inmek önerilmez.'], ['Kalori açığı nasıl hesaplanır?', 'Bazal metabolizma × aktivite çarpanı koruma kalorisini verir; hedefe göre bu sayıdan bir yüzde düşülür. Hesaplayıcı yağ yakımı için %15 açık uygular.'], ['Sonuç ne kadar güvenilir?', 'Formül nüfus ortalamasına dayanır; kişisel sapma ±%10 civarındadır. 2-3 hafta kilo trendini izleyip hedefi 100-150 kcal ayarlamak en iyi yöntemdir.']],
+  },
+  'bazal-metabolizma-hesaplama': {
+    benefits: ['Mifflin-St Jeor formülüyle bazal metabolizma', 'Aktivite çarpanıyla koruma kalorisi', 'Hedefe göre günlük kalori ve makrolar'],
+    faqs: [['Bazal metabolizma nedir?', 'Tamamen dinlenme halinde, yalnızca yaşamsal işlevler için harcanan günlük enerjidir; kilo, boy, yaş, cinsiyet ve kas kütlesine bağlıdır.'], ['BMR nasıl hesaplanır?', 'En yaygın pratik yöntem Mifflin-St Jeor formülüdür: erkek için 10×kilo + 6,25×boy − 5×yaş + 5; kadın için aynı formül −161.'], ['BMR kadar kalori alırsam kilo verir miyim?', 'Kısa vadede evet, ancak sürdürülebilir değildir ve kas kaybı riski taşır. Koruma kalorisinden %10-20 açık vermek önerilir.']],
+  },
 };
 
 export const seoLandingPages = [
@@ -45,6 +57,9 @@ export const seoLandingPages = [
   ['evde-dambil-antrenman-programi', 'Evde Dambıl Antrenman Programı', 'Hedef ve seviyene göre evde dambıl veya direnç bandıyla uygulanabilen, salon makinesi içermeyen ücretsiz kişisel antrenman ve beslenme planı oluştur.'],
   ['evde-kas-gelistirme-hareketleri', 'Evde Kas Geliştirme Hareketleri | Ücretsiz', 'Evde kas geliştirme hareketlerini seviyene göre uygula. Ekipmansız ücretsiz programda set, tekrar, progresyon, dinlenme, protein ve kalori hedeflerini gör.'],
   ['baslangic-pilates-programi', 'Başlangıç Pilates Programı', 'Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.'],
+  ['fotografla-kalori-hesaplama', 'Fotoğrafla Kalori Hesaplama | Ücretsiz Yapay Zeka Öğün Tahmini', 'Öğün fotoğrafını yükle; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makroları gerçekçi bir aralıkla hesaplasın. Ücretsiz, üyeliksiz, fotoğraf saklanmaz.'],
+  ['gunluk-kalori-ihtiyaci-hesaplama', 'Günlük Kalori İhtiyacı Hesaplama | BMR, Koruma ve Kalori Açığı', 'Yaş, boy, kilo, cinsiyet ve aktiviteye göre günlük kalori ihtiyacını hesapla; bazal metabolizma, koruma kalorisi ve hedef kaloriyi ücretsiz gör.'],
+  ['bazal-metabolizma-hesaplama', 'Bazal Metabolizma Hızı (BMR) Hesaplama', 'Bazal metabolizma hızını Mifflin-St Jeor formülüyle hesapla; koruma kalorisi ve hedef kaloriyi ücretsiz gör.'],
 ].map(([slug, title, description]) => ({
   slug,
   title,

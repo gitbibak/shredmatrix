@@ -14,7 +14,7 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - Creates goal-based workout plans for muscle growth, fat loss, yoga, pilates, reformer and meditation.
 - Separates no-equipment home, basic home-equipment and gym plans so exercises match the user's actual setup.
 - Provides BMR, TDEE, BMI, daily calorie and macro tracking.
-- Includes a privacy-first photo-assisted meal estimator: the image remains on-device, while the user confirms foods, portions, oils, sauces and drinks before receiving a calorie range.
+- Includes a free AI photo calorie counter: a vision model recognises foods and portions, nutrition comes from the built-in food database, hidden oils and sauces are suggested for confirmation, and the result is shown as a calorie range. The photo is downsized on-device and never stored.
 - Tracks water, sleep, weight, body measurements and progress photos.
 - Exports progress data as Excel/report files.
 - Supports Strava activity integration and mobile reminders.
@@ -36,8 +36,13 @@ Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. U
 - Protein Need Calculator: https://fullbalance.app/protein-ihtiyaci-hesaplama
 - BMI Calculator: https://fullbalance.app/bmi-hesaplama
 - Calorie and Macro Tracking: https://fullbalance.app/kalori-makro-takibi
-- Photo-assisted Meal Estimate (English): https://fullbalance.app/en/calorie-macro-calculator
-- Estimación de Comidas con Foto (Spanish): https://fullbalance.app/es/calculadora-calorias-macros
+- Photo Calorie Counter (Turkish): https://fullbalance.app/fotografla-kalori-hesaplama
+- Photo Calorie Counter (English): https://fullbalance.app/en/photo-calorie-counter
+- Contar Calorías con Foto (Spanish): https://fullbalance.app/es/contar-calorias-con-foto
+- Daily Calorie Calculator (Turkish): https://fullbalance.app/gunluk-kalori-ihtiyaci-hesaplama
+- BMR Calculator (Turkish): https://fullbalance.app/bazal-metabolizma-hesaplama
+- Daily Calorie Calculator (English): https://fullbalance.app/en/calorie-macro-calculator
+- Calculadora de Calorías Diarias (Spanish): https://fullbalance.app/es/calculadora-calorias-macros
 - Workout Planner: https://fullbalance.app/antrenman-programi
 - No-Equipment Home Workout: https://fullbalance.app/en/home-workout-no-equipment
 - Home Dumbbell Workout: https://fullbalance.app/en/home-dumbbell-workout-plan

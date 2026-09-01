@@ -58,6 +58,9 @@ const SEO_PAGE_SLUGS = [
   'evde-dambil-antrenman-programi',
   'evde-kas-gelistirme-hareketleri',
   'baslangic-pilates-programi',
+  'fotografla-kalori-hesaplama',
+  'gunluk-kalori-ihtiyaci-hesaplama',
+  'bazal-metabolizma-hesaplama',
 ];
 
 function isPublicContentPath(pathname) {

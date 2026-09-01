@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { SEO_LAST_REVIEWED, formatReviewedDate, getAlternatesForTurkishPath } from '../data/internationalSeoPages';
 import { trackLandingCta } from '../lib/analytics';
 import {
+  Activity,
   Award,
   BarChart3,
   Brain,
@@ -24,6 +25,7 @@ import {
 
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const SampleHomeWeek = lazy(() => import('./SampleHomeWeek'));
+const PublicHealthCalculator = lazy(() => import('./PublicHealthCalculator'));
 
 const BASE_URL = 'https://fullbalance.app';
 const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png`;
@@ -369,6 +371,73 @@ const pages = {
       ['Meditasyon uygulaması ücretsiz mi?', 'Evet. Meditasyon hedefi ücretsizdir.'],
     ],
   },
+  'fotografla-kalori-hesaplama': {
+    icon: UtensilsCrossed,
+    accent: '#06b6d4',
+    mealTool: true,
+    title: 'Fotoğrafla Kalori',
+    titleAccent: 'Hesaplama',
+    metaTitle: 'Fotoğrafla Kalori Hesaplama | Ücretsiz Yapay Zeka Öğün Tahmini | Full Balance',
+    description: 'Öğün fotoğrafını yükle; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makroları gerçekçi bir aralıkla hesaplasın. Ücretsiz, üyeliksiz, fotoğraf saklanmaz.',
+    keywords: 'fotoğrafla kalori hesaplama, yapay zeka ile kalori hesaplama, fotoğraftan kalori, öğün kalori hesaplama, ücretsiz kalori hesaplama uygulaması',
+    heroCopy: 'Tabağın fotoğrafını çek; yiyecekler, tahmini gramlar, kalori ve makrolar otomatik gelsin. Gizli yağ ve sos önerilerini tek dokunuşla ekle, porsiyonu düzelt.',
+    sections: [
+      { title: 'Nasıl çalışır?', body: 'Görüntü modeli tabaktaki her yiyeceği ayrı tanır ve gram tahmin eder; kalori ve makrolar 200+ yiyecekli beslenme veritabanından hesaplanır, modelin uydurduğu sayılar kullanılmaz.' },
+      { title: 'Neden tek sayı değil, aralık?', body: 'Tek fotoğraf porsiyon hacmini, emilen pişirme yağını ve sosu kesin gösteremez. Araç model güvenine göre alt-üst sınır verir; gizli içerikleri sen onaylarsın.' },
+      { title: 'Fotoğraf saklanmaz', body: 'Görsel cihazında küçültülür, yalnızca analiz için işlenir; hesabına veya sunucuya kaydedilmez. Üyelik gerekmez.' },
+    ],
+    faqs: [
+      ['Fotoğraftan kalori kesin hesaplanabilir mi?', 'Hayır. Tek bir fotoğraf porsiyon hacmini, pişirme yağını ve gizli malzemeleri kesin gösteremez. Bu yüzden araç yiyecekleri tanır, gramları tahmin eder ve tek bir kesin sayı yerine güvenli bir aralık verir; porsiyonu düzeltebilirsin.'],
+      ['Fotoğrafım nereye gidiyor, saklanıyor mu?', 'Fotoğraf cihazında küçültülür ve yalnızca analiz için geçici işlenir. Hesabına, galeriye veya sunucuya kaydedilmez.'],
+      ['Hangi yiyecekleri tanıyor?', 'Model tabaktaki görünür her yiyeceği ayrı listeler; 200\'den fazla Türk ve dünya mutfağı yiyeceği içeren veritabanıyla eşleşenlerin kalori ve makroları veritabanından gelir. Eşleşmeyenler "model tahmini" olarak işaretlenir.'],
+      ['Ücretsiz mi, üyelik gerekir mi?', 'Araç tamamen ücretsizdir ve üyelik gerektirmez. Hesap yalnızca kişisel plan ve ilerleme takibi için gerekir.'],
+      ['Yapay zeka hangi durumlarda yanılır?', 'Üst üste yığılmış yiyecekler, çorba ve güveç gibi karışık yemekler, kadraj dışında kalan parçalar ve emilmiş yağ en sık hata kaynaklarıdır. Bu durumlarda araç düşük güven gösterir ve gizli içerik önerir; gramı elle düzeltmek sonucu iyileştirir.'],
+    ],
+  },
+  'gunluk-kalori-ihtiyaci-hesaplama': {
+    icon: Flame,
+    accent: '#f97316',
+    calculator: 'calories',
+    title: 'Günlük Kalori İhtiyacı',
+    titleAccent: 'Hesaplama',
+    metaTitle: 'Günlük Kalori İhtiyacı Hesaplama | BMR, Koruma ve Kalori Açığı | Full Balance',
+    description: 'Yaş, boy, kilo, cinsiyet ve aktiviteye göre günlük kalori ihtiyacını hesapla. Bazal metabolizma, koruma kalorisi ve kilo vermek ya da kas kazanmak için hedef kaloriyi ücretsiz gör.',
+    keywords: 'günlük kalori ihtiyacı hesaplama, kalori ihtiyacı hesaplama, kilo vermek için kaç kalori, kalori açığı hesaplama, koruma kalorisi',
+    heroCopy: 'Mifflin-St Jeor formülüyle bazal metabolizmanı, aktivite çarpanıyla koruma kalorini ve hedefine göre günlük hedef kalorini saniyeler içinde hesapla.',
+    sections: [
+      { title: 'Üç sayı, tek ekran', body: 'Bazal metabolizma (dinlenirken harcadığın), koruma kalorisi (aktiviteyle birlikte) ve hedef kalori (yağ yakımı için %15 açık, kas kazanımı için %10 fazla) birlikte gösterilir.' },
+      { title: 'Makrolara bölünmüş', body: 'Hedef kalori protein, karbonhidrat ve yağ gramlarına bölünür; protein hedefi kilona göre belirlenir.' },
+      { title: 'Plana dönüşür', body: 'Sonucu ücretsiz kişisel plana kaydedersen 7 günlük öğün planı, alışveriş listesi ve antrenman programı aynı kalori hedefiyle oluşturulur.' },
+    ],
+    faqs: [
+      ['Kilo vermek için günde kaç kalori almalıyım?', 'Koruma kalorinin yaklaşık %15 altı, çoğu yetişkin için günde 300-500 kcal açık, sürdürülebilir bir başlangıçtır. Bazal metabolizmanın altına inmek önerilmez; hesaplayıcı bu sınırı gösterir.'],
+      ['Kalori açığı nasıl hesaplanır?', 'Önce koruma kalorin bulunur: bazal metabolizma × aktivite çarpanı. Bu sayıdan hedefe göre bir yüzde düşülür. Hesaplayıcı yağ yakımı hedefinde %15 açık uygular.'],
+      ['Bazal metabolizma ile günlük kalori ihtiyacı farkı nedir?', 'Bazal metabolizma tamamen dinlenirken harcanan enerjidir. Günlük ihtiyaç buna günlük hareket ve antrenman eklenerek bulunur; aktivite düzeyine göre %20-90 daha yüksektir.'],
+      ['Sonuç ne kadar güvenilir?', 'Formül nüfus ortalamasına dayanır; kişisel sapma ±%10 civarındadır. En iyi yöntem 2-3 hafta kilo trendini izleyip hedefi 100-150 kcal ayarlamaktır; uygulama bunu otomatik önerir.'],
+    ],
+  },
+  'bazal-metabolizma-hesaplama': {
+    icon: Activity,
+    accent: '#22c55e',
+    calculator: 'calories',
+    title: 'Bazal Metabolizma',
+    titleAccent: 'Hesaplama',
+    metaTitle: 'Bazal Metabolizma Hızı (BMR) Hesaplama | Ücretsiz | Full Balance',
+    description: 'Bazal metabolizma hızını (BMR) yaş, boy, kilo ve cinsiyete göre Mifflin-St Jeor formülüyle hesapla; koruma kalorisi ve hedef kaloriyi ücretsiz gör.',
+    keywords: 'bazal metabolizma hesaplama, bmr hesaplama, bazal metabolizma hızı, metabolizma hızı hesaplama',
+    heroCopy: 'Vücudunun tamamen dinlenirken harcadığı enerjiyi öğren; ardından aktivite ve hedefle günlük ihtiyacına dönüştür.',
+    sections: [
+      { title: 'Bazal metabolizma nedir?', body: 'Nefes alma, dolaşım, hücre yenilenmesi gibi temel işlevler için harcanan enerjidir; günlük toplam harcamanın çoğu yetişkinde %60-70\'ini oluşturur.' },
+      { title: 'Hangi formül kullanılır?', body: 'Mifflin-St Jeor: erkek için 10×kilo + 6,25×boy − 5×yaş + 5; kadın için aynı formül −161. Araştırmalarda en tutarlı sonuç veren pratik formüldür.' },
+      { title: 'Sonrası ne?', body: 'BMR tek başına hedef değildir. Aktivite çarpanıyla koruma kalorisi, hedefle günlük kalori bulunur; uygulama bunu 7 günlük plana çevirir.' },
+    ],
+    faqs: [
+      ['Bazal metabolizma nedir?', 'Tamamen dinlenme halinde, yalnızca yaşamsal işlevler için harcanan günlük enerjidir. Kilo, boy, yaş, cinsiyet ve kas kütlesine bağlıdır.'],
+      ['BMR nasıl hesaplanır?', 'En yaygın pratik yöntem Mifflin-St Jeor formülüdür; hesaplayıcı bunu kullanır. Vücut yağ oranı biliniyorsa uygulama içinde Katch-McArdle alternatifi de dikkate alınır.'],
+      ['BMR kadar kalori alırsam kilo verir miyim?', 'Kısa vadede evet, ancak sürdürülebilir değildir ve kas kaybı riski taşır. Önerilen yöntem koruma kalorisinden %10-20 açık vermektir.'],
+      ['Kas kütlesi bazal metabolizmayı artırır mı?', 'Evet, kas dokusu dinlenirken yağ dokusundan daha fazla enerji harcar; kuvvet antrenmanı bu yüzden yağ yakımı planlarının parçasıdır.'],
+    ],
+  },
   'bmi-hesaplama': {
     icon: Scale,
     accent: '#0ea5e9',
@@ -692,7 +761,13 @@ export default function SeoLandingPage({ slug }) {
         </div>
       </section>
 
-      {canonicalSlug === 'kalori-makro-takibi' && (
+      {page.calculator && (
+        <Suspense fallback={<div className="mx-auto my-10 h-72 max-w-4xl animate-pulse rounded-2xl bg-slate-900" />}>
+          <PublicHealthCalculator type={page.calculator} lang="tr" />
+        </Suspense>
+      )}
+
+      {(canonicalSlug === 'kalori-makro-takibi' || page.mealTool) && (
         <section className="border-b border-slate-800/60 bg-slate-950 px-4 py-14">
           <div className="mx-auto max-w-4xl">
             <div className="mb-7 text-center">

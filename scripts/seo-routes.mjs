@@ -33,11 +33,16 @@ export const publicPages = [
   ['/evde-dambil-antrenman-programi', '2026-08-24'],
   ['/evde-kas-gelistirme-hareketleri', '2026-08-16'],
   ['/baslangic-pilates-programi', '2026-08-16'],
+  ['/fotografla-kalori-hesaplama', '2026-09-02'],
+  ['/gunluk-kalori-ihtiyaci-hesaplama', '2026-09-02'],
+  ['/bazal-metabolizma-hesaplama', '2026-09-02'],
   ['/blog', '2026-08-10'],
   ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
   ...internationalSeoPages.map((page) => [
     page.path,
-    page.topic === 'reformer'
+    ['photoCalories', 'calories'].includes(page.topic)
+      ? '2026-09-02'
+      : page.topic === 'reformer'
       ? '2026-08-28'
       : (['homeWorkout', 'homeDumbbell', 'homeMuscle', 'beginnerPilates'].includes(page.topic) ? '2026-08-24' : '2026-08-14'),
   ]),

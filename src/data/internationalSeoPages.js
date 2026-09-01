@@ -2,7 +2,7 @@ export const INTERNATIONAL_LOCALES = ['en', 'es'];
 
 // Visible "last reviewed" date for every public landing page. Update it when
 // the copy, tools or FAQ answers change; AI search engines weigh freshness.
-export const SEO_LAST_REVIEWED = '2026-09-01';
+export const SEO_LAST_REVIEWED = '2026-09-02';
 
 export function formatReviewedDate(lang = 'en', value = SEO_LAST_REVIEWED) {
   const locale = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' }[lang] || 'en-US';
@@ -156,21 +156,39 @@ const pageDefinitions = {
     },
   },
   calories: {
-    paths: { tr: '/kalori-makro-takibi', en: '/en/calorie-macro-calculator', es: '/es/calculadora-calorias-macros' },
+    paths: { tr: '/gunluk-kalori-ihtiyaci-hesaplama', en: '/en/calorie-macro-calculator', es: '/es/calculadora-calorias-macros' },
     category: 'nutrition', calculator: 'calories',
     en: {
-      title: 'Free Meal Calorie Calculator', accent: 'from a Photo', metaTitle: 'Free Meal Calorie Calculator from a Photo | Full Balance',
-      description: 'Use a meal photo as a reference, confirm visible foods and portions, then estimate calories and macros in a realistic range. Free, private and no signup.',
-      hero: 'Start with a meal photo, confirm each visible food and portion, then add oils, sauces and drinks that a camera cannot reliably reveal.',
-      sections: [['Photo-assisted, not falsely automatic', 'The photo stays on your device and helps you review the whole plate without claiming perfect recognition.'], ['Editable portions and ingredients', 'Choose foods from the built-in database, confirm grams and add hidden oils, sauces, sugar or drinks.'], ['A useful range instead of false precision', 'Recipes and portions vary, so the tool makes uncertainty visible while still calculating calories and macros.']],
-      faqs: [['Can a photo calculate exact calories?', 'No. A single image cannot reliably reveal portion volume, cooking oil or hidden ingredients. Full Balance asks you to confirm them and shows an estimate range.'], ['Is my meal photo uploaded?', 'No. It is previewed only on your device and is not saved to your account.'], ['Do I need an account?', 'No. The meal tool is free without signup; an account is only needed for a personal plan and progress tracking.']],
+      title: 'Free Daily Calorie Calculator', accent: 'BMR, Maintenance and Deficit', metaTitle: 'Daily Calorie Calculator: BMR, Maintenance and Deficit | Full Balance',
+      description: 'Calculate your basal metabolic rate, maintenance calories and a target for fat loss or muscle gain from age, height, weight, sex and activity. Free, no signup, with macros.',
+      hero: 'Get three numbers in seconds: BMR (what you burn at rest), maintenance (with your activity) and a daily target for your goal, split into protein, carbs and fat.',
+      sections: [['Mifflin-St Jeor, the formula that holds up', 'BMR = 10 × kg + 6.25 × cm − 5 × age + 5 for men, −161 for women; the most consistent practical equation in validation studies.'], ['A deficit that you can keep', 'Fat loss uses a 15% deficit from maintenance, about 300-500 kcal for most adults, never below your BMR. Muscle gain adds 10%.'], ['Macros and a plan, not just a number', 'Protein is set from body weight, carbs and fat fill the rest. Save the result and the free plan builds seven days of meals and workouts around it.']],
+      faqs: [['How many calories should I eat to lose weight?', 'About 15% below your maintenance calories, which is 300-500 kcal per day for most adults. Going below your BMR is not recommended; the calculator shows that floor.'], ['How is a calorie deficit calculated?', 'Maintenance = BMR × activity factor. A percentage is then removed depending on the goal; this calculator applies a 15% deficit for fat loss.'], ['What is the difference between BMR and maintenance calories?', 'BMR is the energy you burn at complete rest. Maintenance adds daily movement and training, typically 20-90% more depending on activity.'], ['How accurate is this?', 'The formula is based on population averages; individual error is around ±10%. Track your weight trend for two to three weeks and adjust by 100-150 kcal; the app suggests this automatically.']],
     },
     es: {
-      title: 'Calculadora de Calorías de una Foto', accent: 'Gratis y Editable', metaTitle: 'Calculadora Gratis de Calorías con Foto | Full Balance',
-      description: 'Usa una foto como referencia, confirma alimentos y porciones y estima calorías y macros en un rango realista. Gratis, privado y sin registro.',
-      hero: 'Empieza con una foto, confirma cada alimento y porción visible y añade aceites, salsas y bebidas que la cámara no puede revelar bien.',
-      sections: [['Asistida por foto, no falsamente automática', 'La foto permanece en tu dispositivo y ayuda a revisar el plato sin prometer reconocimiento perfecto.'], ['Porciones e ingredientes editables', 'Elige alimentos, confirma gramos y añade aceites, salsas, azúcar o bebidas ocultas.'], ['Un rango útil sin falsa precisión', 'Las recetas y porciones cambian; la herramienta muestra esa incertidumbre y calcula calorías y macros.']],
-      faqs: [['¿Una foto calcula calorías exactas?', 'No. Una imagen no muestra con precisión el volumen, el aceite ni ingredientes ocultos. Full Balance pide confirmarlos y muestra un rango.'], ['¿Se sube mi foto?', 'No. Solo se previsualiza en tu dispositivo y no se guarda en tu cuenta.'], ['¿Necesito una cuenta?', 'No. La herramienta es gratis sin registro; la cuenta solo sirve para guardar un plan y seguir tu progreso.']],
+      title: 'Calculadora de Calorías Diarias', accent: 'TMB, Mantenimiento y Déficit', metaTitle: 'Calculadora de Calorías Diarias: TMB, Mantenimiento y Déficit | Full Balance',
+      description: 'Calcula tu tasa metabólica basal, tus calorías de mantenimiento y un objetivo para adelgazar o ganar músculo según edad, altura, peso, sexo y actividad. Gratis, sin registro y con macros.',
+      hero: 'Tres cifras en segundos: TMB (lo que gastas en reposo), mantenimiento (con tu actividad) y un objetivo diario para tu meta, repartido en proteína, carbohidratos y grasa.',
+      sections: [['Mifflin-St Jeor, la fórmula que mejor funciona', 'TMB = 10 × kg + 6,25 × cm − 5 × edad + 5 en hombres, −161 en mujeres; la ecuación práctica más consistente en estudios de validación.'], ['Un déficit que puedes mantener', 'Para perder grasa o bajar de peso se aplica un 15% por debajo del mantenimiento, unas 300-500 kcal para la mayoría de adultos, nunca por debajo de la TMB. Para ganar músculo se suma un 10%.'], ['Macros y un plan, no solo un número', 'La proteína se fija según el peso corporal; carbohidratos y grasa completan el resto. Guarda el resultado y el plan gratis crea siete días de comidas y entrenamientos.']],
+      faqs: [['¿Cuántas calorías debo comer para adelgazar o bajar de peso?', 'Alrededor de un 15% por debajo de tu mantenimiento, es decir 300-500 kcal diarias para la mayoría de adultos. No conviene bajar de la TMB; la calculadora muestra ese límite.'], ['¿Cómo se calcula el déficit calórico?', 'Mantenimiento = TMB × factor de actividad. Luego se resta un porcentaje según el objetivo; esta calculadora aplica un 15% para perder grasa.'], ['¿Qué diferencia hay entre TMB y calorías de mantenimiento?', 'La TMB es la energía que gastas en reposo absoluto. El mantenimiento añade el movimiento diario y el entrenamiento, normalmente un 20-90% más según la actividad.'], ['¿Qué tan precisa es?', 'La fórmula se basa en promedios poblacionales; el error individual ronda el ±10%. Sigue tu tendencia de peso dos o tres semanas y ajusta 100-150 kcal; la app lo sugiere automáticamente.']],
+    },
+  },
+  photoCalories: {
+    paths: { tr: '/fotografla-kalori-hesaplama', en: '/en/photo-calorie-counter', es: '/es/contar-calorias-con-foto' },
+    category: 'nutrition', mealTool: true,
+    en: {
+      title: 'Free Photo Calorie Counter', accent: 'AI Meal Estimate in Your Browser', metaTitle: 'Free Photo Calorie Counter: AI Meal Estimate, No App Needed | Full Balance',
+      description: 'Upload a meal photo and let AI recognise the foods and portions, then get calories and macros in a realistic range. Free, no signup, no subscription, photo never stored.',
+      hero: 'Snap your plate; foods, estimated grams, calories and macros come back automatically. Add suspected oil or sauce with one tap and fix any portion.',
+      sections: [['How it works', 'A vision model lists every visible food and estimates grams; calories and macros come from a 200+ food nutrition database, not from numbers the model makes up.'], ['Why a range instead of one number', 'One photo cannot reveal portion depth, absorbed cooking oil or sauce. The tool shows a low-high range based on model confidence and asks you to confirm hidden ingredients.'], ['Your photo is not stored', 'The image is downsized on your device and processed only for the analysis. It is never saved to an account or server, and no signup is required.']],
+      faqs: [['Can AI calculate exact calories from a photo?', 'No. A single image cannot reliably show portion volume, cooking oil or hidden ingredients. The tool recognises foods, estimates grams and shows a safe range that you can correct.'], ['Is my meal photo uploaded or kept?', 'It is downsized on your device and processed only for the analysis. It is not saved to your account, gallery or server.'], ['Do I need an app or an account?', 'No. It runs in the browser, is free and needs no signup. An account is only for a personal plan and progress tracking.'], ['When does the AI get it wrong?', 'Stacked foods, mixed dishes like soups and stews, items outside the frame and absorbed oil are the usual causes. In those cases confidence drops, hidden ingredients are suggested and editing the grams improves the result.']],
+    },
+    es: {
+      title: 'Contar Calorías con Foto', accent: 'Gratis con IA, sin App', metaTitle: 'Contar Calorías con Foto Gratis: Estimación con IA sin App | Full Balance',
+      description: 'Sube la foto de tu comida y deja que la IA reconozca alimentos y porciones; recibe calorías y macros en un rango realista. Gratis, sin registro, sin suscripción y sin guardar la foto.',
+      hero: 'Fotografía tu plato; alimentos, gramos estimados, calorías y macros llegan automáticamente. Añade aceite o salsa sospechosa con un toque y corrige cualquier porción.',
+      sections: [['Cómo funciona', 'Un modelo de visión lista cada alimento visible y estima los gramos; calorías y macros salen de una base de datos de más de 200 alimentos, no de cifras inventadas por el modelo.'], ['Por qué un rango y no una cifra', 'Una foto no revela el volumen, el aceite absorbido ni la salsa. La herramienta muestra un rango según la confianza del modelo y pide confirmar los ingredientes ocultos.'], ['Tu foto no se guarda', 'La imagen se reduce en tu dispositivo y se procesa solo para el análisis. Nunca se guarda en una cuenta ni en un servidor, y no hace falta registrarse.']],
+      faqs: [['¿La IA calcula calorías exactas con una foto?', 'No. Una sola imagen no muestra con fiabilidad el volumen, el aceite ni los ingredientes ocultos. La herramienta reconoce alimentos, estima gramos y muestra un rango seguro que puedes corregir.'], ['¿Se sube o se guarda mi foto?', 'Se reduce en tu dispositivo y se procesa solo para el análisis. No se guarda en tu cuenta, galería ni servidor.'], ['¿Necesito una app o una cuenta?', 'No. Funciona en el navegador, es gratis y no requiere registro. La cuenta solo sirve para un plan personal y el seguimiento.'], ['¿Cuándo falla la IA?', 'Alimentos apilados, platos mixtos como sopas y guisos, partes fuera del encuadre y aceite absorbido son las causas habituales. En esos casos baja la confianza, se sugieren ingredientes ocultos y editar los gramos mejora el resultado.']],
     },
   },
   protein: {
@@ -254,6 +272,7 @@ export const internationalSeoPages = Object.entries(pageDefinitions).flatMap(([t
     alternates: definition.paths,
     category: definition.category,
     calculator: definition.calculator || null,
+    mealTool: Boolean(definition.mealTool),
     ...shared[lang],
     ...definition[lang],
   })),
@@ -266,7 +285,9 @@ export function findInternationalSeoPage(pathname) {
 
 export function getInternationalRelatedPages(page) {
   const priorityByTopic = {
-    bmi: ['calories', 'protein', 'nutrition', 'fatLoss', 'workout', 'home'],
+    bmi: ['calories', 'protein', 'photoCalories', 'nutrition', 'fatLoss', 'workout', 'home'],
+    calories: ['photoCalories', 'protein', 'bmi', 'nutrition', 'fatLoss', 'muscle', 'home'],
+    photoCalories: ['calories', 'protein', 'nutrition', 'bmi', 'fatLoss', 'home'],
     workout: ['homeWorkout', 'homeDumbbell', 'homeMuscle', 'muscle', 'fatLoss', 'beginnerPilates', 'nutrition', 'bmi'],
     homeWorkout: ['homeDumbbell', 'workout', 'homeMuscle', 'beginnerPilates', 'fatLoss', 'nutrition', 'bmi'],
     homeDumbbell: ['homeWorkout', 'homeMuscle', 'workout', 'muscle', 'fatLoss', 'nutrition', 'protein'],
