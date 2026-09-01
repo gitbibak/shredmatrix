@@ -48,8 +48,22 @@ export default defineConfig({
               priority: 10,
             },
             {
+              // Translations, data access and analytics are shared by every route.
+              // Naming them keeps rolldown from folding them into the plan-data chunk.
+              name: 'app-core',
+              test: /[\\/]src[\\/](i18n|lib|utils)[\\/]/,
+              priority: 9,
+            },
+            {
+              // Tiny modules shared by the app shell and public pages. Kept out of
+              // the heavy data chunk so landing pages never preload the plan engine.
+              name: 'app-meta',
+              test: /[\\/]src[\\/]data[\\/](planVersion|moduleAssets|sampleWeekMap|sampleHomeWeeks)/,
+              priority: 8,
+            },
+            {
               name: 'data',
-              test: /[\\/]src[\\/]data[\\/](planGenerator|mealDatabase|exerciseDatabase)/,
+              test: /[\\/]src[\\/]data[\\/](planGenerator|mealDatabase|exerciseDatabase|homeWorkoutPrograms|workoutAdaptation|adaptiveEngine)/,
               priority: 5,
             },
           ],

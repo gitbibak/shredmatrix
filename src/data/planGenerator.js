@@ -10,7 +10,8 @@ import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWork
 
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
-export const PLAN_VERSION = 19;
+import { PLAN_VERSION } from './planVersion.js';
+export { PLAN_VERSION };
 
 // ── Kalori Hesaplama ─────────────────────────────────────
 function calculateBMR(weight, bodyFat, age, height, gender) {

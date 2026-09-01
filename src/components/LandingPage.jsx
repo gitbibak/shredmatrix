@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
+import OptimizedImage from './OptimizedImage';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import { getApprovedTestimonials } from '../lib/dataService';
 import { recordAcquisitionContent } from '../lib/acquisition';
@@ -256,7 +257,7 @@ export default function LandingPage({ onStart }) {
       </nav>
 
       <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
-        <img src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
+        <OptimizedImage src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} sizes="100vw" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" width="1536" height="1024" />
         <div className="absolute inset-0 bg-slate-950/70" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/20" />
         <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-6 sm:pb-24">
@@ -284,7 +285,7 @@ export default function LandingPage({ onStart }) {
               { image: '/images/home-equipment.jpg', icon: PackageOpen, title: c.equipmentTitle, desc: c.equipmentDesc, color: 'text-cyan-400' },
             ].map((item) => (
               <article key={item.title} className="overflow-hidden border border-slate-800 bg-slate-900/55">
-                <img src={item.image} alt={item.title} width="1536" height="1024" loading="lazy" className="aspect-[3/2] w-full object-cover" />
+                <OptimizedImage src={item.image} alt={item.title} sizes="(min-width: 768px) 50vw, 100vw" width="1536" height="1024" loading="lazy" className="aspect-[3/2] w-full object-cover" />
                 <div className="p-5 sm:p-6">
                   <item.icon size={22} className={item.color} />
                   <h3 className="mt-4 font-outfit text-xl font-bold text-white">{item.title}</h3>
@@ -317,7 +318,7 @@ export default function LandingPage({ onStart }) {
               <div><strong className="block text-xl text-emerald-400">{lang === 'tr' ? '%100' : '100%'}</strong><span className="text-xs text-slate-500">{c.stats[2]}</span></div>
             </div>
           </div>
-          <img src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" width="1200" height="630" className="w-full border border-slate-800 object-cover" />
+          <OptimizedImage src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" sizes="(min-width: 1024px) 50vw, 100vw" width="1200" height="630" loading="lazy" className="w-full border border-slate-800 object-cover" />
         </div>
       </section>
 
@@ -331,7 +332,7 @@ export default function LandingPage({ onStart }) {
               const title = translated && translated !== `landing.goals.${goal.key}.title` ? translated : goal.fallback;
               return (
                 <motion.article key={goal.key} custom={index} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group overflow-hidden border border-slate-800 bg-slate-900/55">
-                  <img src={goalAssets[goal.key]} alt={title} width="1600" height="900" loading="lazy" className="aspect-[4/3] w-full object-cover opacity-85 transition-opacity group-hover:opacity-100" />
+                  <OptimizedImage src={goalAssets[goal.key]} alt={title} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="900" loading="lazy" className="aspect-[4/3] w-full object-cover opacity-85 transition-opacity group-hover:opacity-100" />
                   <div className="p-4">
                     <Icon size={19} style={{ color: goal.color }} />
                     <h3 className="mt-3 break-words font-outfit text-sm font-bold text-white">{title}</h3>
@@ -444,7 +445,7 @@ export default function LandingPage({ onStart }) {
           <div className="grid gap-4 md:grid-cols-3">
             {guides.map((guide) => (
               <Link key={guide.slug} to={`/blog/${guide.slug}`} className="group overflow-hidden border border-slate-800 bg-slate-900/50">
-                <img src={guide.image} alt="" width="1600" height="900" loading="lazy" className="aspect-video w-full object-cover opacity-80 transition-opacity group-hover:opacity-100" />
+                <OptimizedImage src={guide.image} alt="" sizes="(min-width: 768px) 33vw, 100vw" width="1600" height="900" loading="lazy" className="aspect-video w-full object-cover opacity-80 transition-opacity group-hover:opacity-100" />
                 <div className="p-5"><BookOpen size={18} className="text-emerald-400" /><h3 className="mt-3 font-outfit text-lg font-bold leading-snug text-white">{guide.title}</h3><span className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-emerald-400">{c.readGuide}<ArrowRight size={14} /></span></div>
               </Link>
             ))}

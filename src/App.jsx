@@ -2,7 +2,11 @@ import { useState, useEffect, useMemo, Component, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
-import { generatePlan, regeneratePlanWithPhase, localizePlan, PLAN_VERSION } from './data/planGenerator';
+import { PLAN_VERSION } from './data/planVersion';
+
+// The plan engine is ~220 kB; load it only when a plan must be generated so
+// landing and SEO pages stay light.
+const loadPlanEngine = () => import('./data/planGenerator');
 import { getSession, onAuthStateChange, loadPlan, recordActivityDay, savePlan, signOut as authSignOut } from './lib/dataService';
 import { isSupabaseReady } from './lib/supabase';
 import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
@@ -388,9 +392,10 @@ function AppContent() {
     'Crecimiento Muscular': 'muscle', 'Quema de Grasa': 'fat_loss', 'Meditación': 'meditation',
     'Yoga': 'yoga', 'Pilates': 'pilates', 'Reformer': 'reformer',
   };
-  const upgradePlanIfNeeded = (savedPlan, email) => {
+  const upgradePlanIfNeeded = async (savedPlan, email) => {
     if ((savedPlan.planVersion || 0) < PLAN_VERSION) {
       console.log(`[App] Plan upgrade: v${savedPlan.planVersion || 0} → v${PLAN_VERSION}`);
+      const { generatePlan, localizePlan } = await loadPlanEngine();
       const userMetrics = {
         name: savedPlan.userName, age: savedPlan.userAge, gender: savedPlan.userGender,
         height: savedPlan.userHeight, weight: savedPlan.userWeight,
@@ -443,7 +448,7 @@ function AppContent() {
           try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
           const savedPlan = await loadPlan(u.email);
           if (savedPlan) {
-            upgradePlanIfNeeded(savedPlan, u.email);
+            await upgradePlanIfNeeded(savedPlan, u.email);
             if (!['/dashboard', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/dashboard', { replace: true });
           } else {
             if (!['/onboarding', '/loading', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/onboarding', { replace: true });
@@ -456,7 +461,7 @@ function AppContent() {
               setUser(cachedUser);
               const savedPlan = await loadPlan(cachedUser.email);
               if (savedPlan) {
-                upgradePlanIfNeeded(savedPlan, cachedUser.email);
+                await upgradePlanIfNeeded(savedPlan, cachedUser.email);
                 if (!['/dashboard', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/dashboard', { replace: true });
               } else {
                 if (!['/onboarding', '/loading', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/onboarding', { replace: true });
@@ -503,6 +508,7 @@ function AppContent() {
   // Regenerate plan when language changes
   useEffect(() => {
     if (!plan || plan.lang === lang) return;
+    let cancelled = false;
     const userMetrics = {
       name: plan.userName, age: plan.userAge, gender: plan.userGender,
       height: plan.userHeight, weight: plan.userWeight,
@@ -513,16 +519,21 @@ function AppContent() {
       healthConditions: plan.healthConditions || ['none'],
       allergies: plan.allergies || ['none'],
     };
-    const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
-    const newPlan = localizePlan(rawPlan, lang);
-    setPlan(newPlan);
-    savePlan(newPlan, user?.email).catch(() => {});
+    loadPlanEngine().then(({ generatePlan, localizePlan }) => {
+      if (cancelled) return;
+      const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
+      const newPlan = localizePlan(rawPlan, lang);
+      setPlan(newPlan);
+      savePlan(newPlan, user?.email).catch(() => {});
+    }).catch((error) => console.warn('[App]', error?.message || error));
+    return () => { cancelled = true; };
   }, [lang]);
 
   // Handle loading → dashboard transition
   useEffect(() => {
     if (location.pathname === '/loading' && pendingFormData) {
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
+        const { generatePlan, localizePlan } = await loadPlanEngine();
         const rawPlan = generatePlan(pendingFormData, 0, lang);
         const generatedPlan = localizePlan(rawPlan, lang);
         setPlan(generatedPlan);
@@ -558,7 +569,7 @@ function AppContent() {
     try {
       const savedPlan = await loadPlan(userData.email);
       if (savedPlan) {
-        upgradePlanIfNeeded(savedPlan, userData.email);
+        await upgradePlanIfNeeded(savedPlan, userData.email);
         if (location.pathname !== '/dashboard') navigate('/dashboard', { replace: true });
       } else {
         if (location.pathname !== '/onboarding') navigate('/onboarding', { replace: true });
