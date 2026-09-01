@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { getAlternatesForTurkishPath } from '../data/internationalSeoPages';
+import { SEO_LAST_REVIEWED, formatReviewedDate, getAlternatesForTurkishPath } from '../data/internationalSeoPages';
 import { trackLandingCta } from '../lib/analytics';
 import {
   Award,
@@ -544,6 +544,7 @@ function useSeo(page, slug) {
           name: page.metaTitle,
           description: page.description,
           inLanguage: 'tr',
+          dateModified: SEO_LAST_REVIEWED,
           isPartOf: { '@id': `${BASE_URL}/#website` },
           about: { '@id': `${BASE_URL}/#app` },
         },
@@ -645,6 +646,16 @@ export default function SeoLandingPage({ slug }) {
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
                 {page.heroCopy}
               </p>
+              {page.faqs?.[0] && (
+                <div className="mt-6 max-w-2xl rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400">Kısa cevap</p>
+                  <h2 className="mt-2 font-outfit text-lg font-bold text-white">{page.faqs[0][0]}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-300">{page.faqs[0][1]}</p>
+                  <p className="mt-3 text-[11px] text-slate-500">
+                    Son güncelleme: <time dateTime={SEO_LAST_REVIEWED}>{formatReviewedDate('tr')}</time>
+                  </p>
+                </div>
+              )}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/auth?mode=register"
@@ -745,7 +756,7 @@ export default function SeoLandingPage({ slug }) {
           <div className="space-y-4">
             {page.faqs.map(([question, answer]) => (
               <article key={question} className="rounded-2xl border border-slate-800/70 bg-slate-900/60 p-5">
-                <h3 className="font-outfit text-base font-bold text-white">{question}</h3>
+                <h2 className="font-outfit text-base font-bold text-white">{question}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{answer}</p>
               </article>
             ))}

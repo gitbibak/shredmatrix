@@ -4,7 +4,16 @@ import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
-import { internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
+import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
+
+const REVIEW_LABEL = { tr: 'Son güncelleme', en: 'Last reviewed', es: 'Última revisión' };
+const SHORT_ANSWER_LABEL = { tr: 'Kısa cevap', en: 'Short answer', es: 'Respuesta breve' };
+
+function leadAnswerBlock(faqs, lang) {
+  const first = Array.isArray(faqs) ? faqs[0] : null;
+  if (!first) return '';
+  return `<section><p>${escapeHtml(SHORT_ANSWER_LABEL[lang] || SHORT_ANSWER_LABEL.en)}</p><h2>${escapeHtml(first[0])}</h2><p>${escapeHtml(first[1])}</p><p>${escapeHtml(REVIEW_LABEL[lang] || REVIEW_LABEL.en)}: <time datetime="${SEO_LAST_REVIEWED}">${escapeHtml(formatReviewedDate(lang))}</time></p></section>`;
+}
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(rootDir, 'dist');
@@ -118,12 +127,12 @@ const blogSchema = { '@context': 'https://schema.org', '@type': 'Blog', name: 'F
 for (const page of seoLandingPages) {
   const canonical = `${BASE_URL}/${page.slug}`;
   const alternates = getAlternatesForTurkishPath(`/${page.slug}`);
-  const faqBody = page.faqs.length ? `<section><h2>Sık sorulan sorular</h2>${page.faqs.map(([question, answer]) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join('')}</section>` : '';
-  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header><section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
+  const faqBody = page.faqs.length ? `<section><h2>Sık sorulan sorular</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section>` : '';
+  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header>${leadAnswerBlock(page.faqs, 'tr')}<section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', name: page.title, description: page.description, url: canonical, inLanguage: 'tr-TR' },
+      { '@type': 'WebPage', name: page.title, description: page.description, url: canonical, inLanguage: 'tr-TR', dateModified: SEO_LAST_REVIEWED },
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: BASE_URL },
         { '@type': 'ListItem', position: 2, name: page.title, item: canonical },
@@ -240,11 +249,11 @@ for (const page of internationalSeoPages) {
   const canonical = `${BASE_URL}${page.path}`;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const relatedLabel = page.lang === 'es' ? 'Explora más objetivos y herramientas' : 'Explore more goals and tools';
-  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header><article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${leadAnswerBlock(page.faqs, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', name: page.metaTitle, description: page.description, url: canonical, inLanguage: page.locale, isPartOf: { '@id': `${BASE_URL}/#website` }, about: { '@id': `${BASE_URL}/#app` } },
+      { '@type': 'WebPage', name: page.metaTitle, description: page.description, url: canonical, inLanguage: page.locale, dateModified: SEO_LAST_REVIEWED, isPartOf: { '@id': `${BASE_URL}/#website` }, about: { '@id': `${BASE_URL}/#app` } },
       { '@type': 'FAQPage', mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/${page.lang}` }, { '@type': 'ListItem', position: 2, name: page.title, item: canonical }] },
       { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: BASE_URL, applicationCategory: 'HealthApplication', operatingSystem: 'Web, iOS, Android, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },

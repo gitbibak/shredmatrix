@@ -6,6 +6,11 @@ import TodayFocusPanel from './TodayFocusPanel';
 
 vi.mock('../lib/dataService', () => ({
   getWorkoutLogs: vi.fn(),
+  getStreakFreezes: vi.fn().mockResolvedValue([]),
+  getReferralSummary: vi.fn().mockResolvedValue({ code: 'FBTEST22', invited: 0, activated: 0 }),
+  getLocalReminderHour: vi.fn().mockReturnValue(null),
+  saveStreakFreeze: vi.fn(),
+  updateReminderHour: vi.fn().mockResolvedValue(18),
 }));
 
 vi.mock('../lib/analytics', () => ({

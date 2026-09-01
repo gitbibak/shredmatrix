@@ -89,3 +89,10 @@
 - Airship, Push notification benchmarks 2025: https://www.airship.com/resources/benchmark-report/mobile-app-push-notification-benchmarks-for-2025/
 - UXCam, retention benchmarks: https://uxcam.com/blog/mobile-app-retention-benchmarks/
 - Web Share API desteği: https://caniuse.com/web-share
+
+## 6. Aynı gün uygulanan ikinci paket
+
+- **Seri dondurma.** Seri artık planın dinlenme günlerinde bozulmuyor. Haftada 1 ücretsiz dondurma + davetle katılıp plan oluşturan her arkadaş için +1 bonus. Bugün ekranı kaçırılan günü tespit edip tek dokunuşla dondurmayı öneriyor; takvimde dondurulan gün mavi görünüyor. Tablo: `streak_freezes` (canlıda uygulandı).
+- **Paylaşım kartı.** Antrenman sonrası davet penceresinde ve seri kutusunda "Görsel paylaş" düğmesi 1080x1080 kart üretip cihaz paylaşımıyla gönderiyor; desteklenmeyen tarayıcıda indiriyor.
+- **Günlük taahhüt.** Bugün ekranında "Bugün ne zaman?" saat seçimi; seçilen saat push hatırlatma saatine yazılıyor, saat geçince kısa versiyon önerisi çıkıyor.
+- **Cevap blokları.** Tüm TR/EN/ES giriş sayfalarında ilk SSS "Kısa cevap" olarak H2 + doğrudan cevap biçiminde üste taşındı, görünür "Son güncelleme" tarihi ve `dateModified` eklendi. SSS başlıkları H2 oldu. Not: statik üreticideki TR SSS listesi yalnızca 5 sayfada var; diğer TR sayfalar için `scripts/seo-static-pages.mjs` içine SSS eklenmeli.

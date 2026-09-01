@@ -10,6 +10,7 @@ import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
+import { computeStreaks, getRestDayIndexes, mondayOf, toDateStr, workoutDatesFromLogs } from '../utils/streaks';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -594,7 +595,16 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
       // Emotional peak: the workout is logged and feedback is saved. Offer the
       // invite once here instead of interrupting the feedback form.
       if (!feedbackPain) {
-        setInviteMoment({ workoutCount: Math.max(1, previousLogs.length) });
+        const workoutDates = workoutDatesFromLogs(previousLogs);
+        const weekStart = toDateStr(mondayOf(new Date()));
+        setInviteMoment({
+          workoutCount: Math.max(1, previousLogs.length),
+          streak: computeStreaks(workoutDates, { restDayIndexes: getRestDayIndexes(plan) }).current,
+          weekCount: [...workoutDates].filter((date) => date >= weekStart).length,
+          focus: celebration.focus,
+          exercises: celebration.exercises,
+          sets: celebration.sets,
+        });
         trackEvent('invite_prompt_view', { surface: 'workout' });
       }
     } catch (error) {
@@ -910,8 +920,20 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                   surface="workout"
                   userName={plan?.userName}
                   workoutCount={inviteMoment.workoutCount}
+                  streak={inviteMoment.streak}
                   title={t('referral.workoutTitle')}
                   description={t('referral.workoutDesc')}
+                  imageCard={{
+                    eyebrow: t('referral.imageEyebrow'),
+                    headline: t('referral.imageHeadlineWorkout', { count: inviteMoment.workoutCount }),
+                    subline: inviteMoment.focus || '',
+                    stats: [
+                      { label: t('referral.statExercises'), value: inviteMoment.exercises || 0 },
+                      { label: t('referral.statSets'), value: inviteMoment.sets || 0 },
+                      { label: t('referral.statStreak'), value: inviteMoment.streak || 0 },
+                      { label: t('referral.statWeek'), value: inviteMoment.weekCount || 0 },
+                    ],
+                  }}
                 />
               </Suspense>
               <button type="button" onClick={() => setInviteMoment(null)} className="mt-3 min-h-11 w-full rounded-xl border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white">

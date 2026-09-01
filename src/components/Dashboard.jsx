@@ -443,7 +443,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <ProgressTracker userName={plan.userName} />
                   </motion.div>
                   <motion.div variants={columnVariants} className="space-y-6">
-                    <StreakCalendar />
+                    <StreakCalendar plan={plan} />
                   </motion.div>
                 </div>
                 <div className="mt-6">

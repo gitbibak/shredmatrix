@@ -1,5 +1,14 @@
 export const INTERNATIONAL_LOCALES = ['en', 'es'];
 
+// Visible "last reviewed" date for every public landing page. Update it when
+// the copy, tools or FAQ answers change; AI search engines weigh freshness.
+export const SEO_LAST_REVIEWED = '2026-09-01';
+
+export function formatReviewedDate(lang = 'en', value = SEO_LAST_REVIEWED) {
+  const locale = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' }[lang] || 'en-US';
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+}
+
 const shared = {
   en: {
     locale: 'en-US',

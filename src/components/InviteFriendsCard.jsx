@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Check, Copy, MessageCircle, Share2, Users } from 'lucide-react';
+import { Check, Copy, ImageDown, MessageCircle, Share2, Users } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getReferralSummary } from '../lib/dataService';
 import { trackShare } from '../lib/analytics';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
+import { renderShareCard, shareCardImage } from '../lib/shareImage';
 
 const SURFACE_CAMPAIGN = {
   today: 'invite_today',
@@ -38,10 +39,12 @@ export default function InviteFriendsCard({
   title,
   description,
   className = '',
+  imageCard = null,
 }) {
   const { t, lang } = useTranslation();
   const [summary, setSummary] = useState({ code: '', invited: 0, activated: 0 });
   const [copied, setCopied] = useState(false);
+  const [imageBusy, setImageBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -84,6 +87,18 @@ export default function InviteFriendsCard({
     }
   };
 
+  const shareImage = async () => {
+    if (!imageCard || imageBusy) return;
+    setImageBusy(true);
+    try {
+      const blob = await renderShareCard(imageCard);
+      const outcome = await shareCardImage({ blob, text: message, url: shareUrl, filename: `fullbalance-${surface}.png` });
+      trackShare(`invite_image_${surface}_${outcome}`);
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
   const hasProgress = summary.invited > 0;
 
   return (
@@ -109,6 +124,12 @@ export default function InviteFriendsCard({
             <p className="text-[9px] text-slate-500">{t('referral.statActivated')}</p>
           </div>
         </div>
+      )}
+
+      {imageCard && (
+        <button type="button" onClick={shareImage} disabled={imageBusy} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3 text-xs font-bold text-slate-950 shadow-lg shadow-orange-500/20 disabled:opacity-60">
+          <ImageDown size={16} /> {imageBusy ? '…' : t('referral.shareImage')}
+        </button>
       )}
 
       <div className="mt-3 grid grid-cols-3 gap-2">

@@ -9,10 +9,33 @@ import {
   Flame,
   Moon,
   ChevronDown,
+  Clock,
+  Snowflake,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { getWorkoutLogs } from '../lib/dataService';
+import { getLocalReminderHour, getReferralSummary, getStreakFreezes, getWorkoutLogs, saveStreakFreeze, updateReminderHour } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
+import { computeFreezeAllowance, computeStreaks, findFreezeCandidate, getRestDayIndexes } from '../utils/streaks';
+
+const COMMIT_OPTIONS = [
+  { hour: 7, key: 'commitMorning' },
+  { hour: 12, key: 'commitNoon' },
+  { hour: 18, key: 'commitEvening' },
+  { hour: 20, key: 'commitNight' },
+];
+
+function commitmentKey(date) {
+  return `fb_commit_${date}`;
+}
+
+function readCommitment(date) {
+  try {
+    const value = Number(localStorage.getItem(commitmentKey(date)));
+    return Number.isInteger(value) && value >= 7 && value <= 21 ? value : null;
+  } catch {
+    return null;
+  }
+}
 
 const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = {
@@ -81,11 +104,23 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
   const { t, lang } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [showWeek, setShowWeek] = useState(false);
+  const [freezes, setFreezes] = useState([]);
+  const [activatedReferrals, setActivatedReferrals] = useState(0);
+  const [freezeState, setFreezeState] = useState('idle');
+  const [commitHour, setCommitHour] = useState(() => readCommitment(todayISO()) ?? null);
 
   useEffect(() => {
+    let cancelled = false;
     getWorkoutLogs()
-      .then((data) => setLogs(Array.isArray(data) ? data : []))
-      .catch(() => setLogs([]));
+      .then((data) => { if (!cancelled) setLogs(Array.isArray(data) ? data : []); })
+      .catch(() => { if (!cancelled) setLogs([]); });
+    getStreakFreezes()
+      .then((data) => { if (!cancelled) setFreezes(Array.isArray(data) ? data : []); })
+      .catch(() => {});
+    getReferralSummary()
+      .then((data) => { if (!cancelled) setActivatedReferrals(Number(data?.activated) || 0); })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   const workoutDates = useMemo(() => {
@@ -117,6 +152,40 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         return bTime - aTime;
       })[0] || null;
   }, [logs]);
+  const restDayIndexes = useMemo(() => getRestDayIndexes(plan), [plan]);
+  const frozenDates = useMemo(() => new Set(freezes.map((entry) => entry?.date).filter(Boolean)), [freezes]);
+  const freezeCandidate = useMemo(
+    () => findFreezeCandidate(workoutDates, { restDayIndexes, frozenDates }),
+    [workoutDates, restDayIndexes, frozenDates],
+  );
+  const protectedStreak = useMemo(() => {
+    if (!freezeCandidate) return 0;
+    return computeStreaks(workoutDates, { restDayIndexes, frozenDates: new Set([...frozenDates, freezeCandidate]) }).current;
+  }, [workoutDates, restDayIndexes, frozenDates, freezeCandidate]);
+  const allowance = useMemo(() => computeFreezeAllowance({ freezes, activatedReferrals }), [freezes, activatedReferrals]);
+  const showFreezeCard = Boolean(freezeCandidate) && protectedStreak > 0 && freezeState !== 'done';
+
+  const applyFreeze = async () => {
+    if (!freezeCandidate || !allowance.nextSource || freezeState === 'saving') return;
+    setFreezeState('saving');
+    try {
+      const saved = await saveStreakFreeze(freezeCandidate, allowance.nextSource);
+      setFreezes((entries) => [saved, ...entries.filter((entry) => entry?.date !== saved.date)]);
+      setFreezeState('done');
+      trackEvent('streak_freeze_used', { source: allowance.nextSource, streak: protectedStreak });
+    } catch {
+      setFreezeState('idle');
+    }
+  };
+
+  const chooseCommitment = async (hour) => {
+    setCommitHour(hour);
+    try { localStorage.setItem(commitmentKey(todayISO()), String(hour)); } catch { /* Optional. */ }
+    trackEvent('daily_commitment_set', { hour });
+    if (getLocalReminderHour() !== hour) await updateReminderHour(hour).catch(() => {});
+  };
+  const commitPassed = commitHour !== null && new Date().getHours() >= commitHour;
+
   const recoveryNotice = latestFeedback?.pain_reported
     ? t('todayFocus.painFollowUp')
     : Number(latestFeedback?.perceived_exertion) === 3
@@ -197,6 +266,72 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
           {t('todayFocus.todayLoad')} <strong className="ml-1 text-slate-200">{restToday ? t('todayFocus.rest') : `${todayExerciseCount} ${t('todayFocus.exercise')}`}</strong>
         </span>
       </div>
+
+      {showFreezeCard && (
+        <div className="mt-3 rounded-xl border border-sky-400/30 bg-sky-500/10 p-3">
+          <div className="flex items-start gap-2">
+            <Snowflake size={16} className="mt-0.5 shrink-0 text-sky-300" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-sky-100">{t('todayFocus.freezeTitle')}</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-sky-100/80">
+                {allowance.total > 0 ? t('todayFocus.freezeBody', { count: protectedStreak }) : t('todayFocus.freezeNone')}
+              </p>
+            </div>
+          </div>
+          {allowance.total > 0 && (
+            <div className="mt-2 flex items-center justify-between gap-3">
+              <span className="text-[10px] text-sky-200/70">{t('todayFocus.freezeLeft', { count: allowance.total })}</span>
+              <button
+                type="button"
+                onClick={applyFreeze}
+                disabled={freezeState === 'saving'}
+                className="min-h-10 rounded-lg border border-sky-400/40 bg-sky-500/20 px-3 text-[11px] font-bold text-sky-100 hover:bg-sky-500/30 disabled:opacity-60"
+              >
+                {t('todayFocus.freezeCta')}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {freezeState === 'done' && (
+        <p className="mt-3 text-xs leading-relaxed text-sky-200">
+          <Snowflake size={13} className="mr-1.5 inline" />
+          {t('todayFocus.freezeDone')}
+        </p>
+      )}
+
+      {!restToday && !todayCompleted && (
+        <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/50 p-3">
+          <div className="flex items-center gap-2">
+            <Clock size={14} className="text-orange-300" />
+            <p className="text-xs font-bold text-slate-200">{t('todayFocus.commitTitle')}</p>
+          </div>
+          {commitHour === null ? (
+            <>
+              <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{t('todayFocus.commitHint')}</p>
+              <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                {COMMIT_OPTIONS.map((option) => (
+                  <button
+                    key={option.hour}
+                    type="button"
+                    onClick={() => chooseCommitment(option.hour)}
+                    className="min-h-10 rounded-lg border border-slate-700 bg-slate-900 px-2 text-[11px] font-semibold text-slate-300 hover:border-orange-400/50 hover:text-orange-200"
+                  >
+                    {t(`todayFocus.${option.key}`)}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className={`mt-1 text-[11px] leading-relaxed ${commitPassed ? 'text-amber-200/90' : 'text-slate-400'}`}>
+              {commitPassed
+                ? t('todayFocus.commitPassed')
+                : t('todayFocus.commitSet', { time: `${String(commitHour).padStart(2, '0')}:00` })}
+            </p>
+          )}
+        </div>
+      )}
 
       {todayCompleted && nextTraining?.dayPlan?.focus && (
         <p className="mt-3 text-xs leading-relaxed text-emerald-300/80">

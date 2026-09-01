@@ -1339,3 +1339,89 @@ export async function getReferralSummary() {
     local: false,
   };
 }
+
+// ══════════════════════════════════════════════
+// STREAK FREEZES
+// ══════════════════════════════════════════════
+
+const STREAK_FREEZE_KEY = 'fb_streak_freezes';
+
+export async function getStreakFreezes(limit = 60) {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) return lsGet(STREAK_FREEZE_KEY, []).slice(0, limit);
+
+  try {
+    const { data, error } = await supabase
+      .from('streak_freezes')
+      .select('date, source')
+      .eq('user_id', userId)
+      .order('date', { ascending: false })
+      .limit(Math.min(Math.max(Number(limit) || 60, 1), 200));
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
+    return lsGet(STREAK_FREEZE_KEY, []).slice(0, limit);
+  }
+}
+
+export async function saveStreakFreeze(date, source = 'weekly') {
+  const normalized = {
+    date: String(date || '').slice(0, 10),
+    source: source === 'referral' ? 'referral' : 'weekly',
+  };
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized.date)) throw new Error('invalid_date');
+
+  const persistLocally = () => {
+    const list = lsGet(STREAK_FREEZE_KEY, []).filter((entry) => entry?.date !== normalized.date);
+    list.unshift(normalized);
+    lsSet(STREAK_FREEZE_KEY, list.slice(0, 200));
+    return normalized;
+  };
+
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) return persistLocally();
+
+  try {
+    const { data, error } = await supabase
+      .from('streak_freezes')
+      .upsert({ user_id: userId, ...normalized }, { onConflict: 'user_id,date' })
+      .select('date, source')
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
+    return persistLocally();
+  }
+}
+
+// ══════════════════════════════════════════════
+// DAILY COMMITMENT (reminder hour)
+// ══════════════════════════════════════════════
+
+const REMINDER_HOUR_KEY = 'fb_reminder_hour';
+
+export function getLocalReminderHour() {
+  const value = Number(lsGet(REMINDER_HOUR_KEY, null));
+  return Number.isInteger(value) && value >= 7 && value <= 21 ? value : null;
+}
+
+/** Aligns the daily push reminder with the hour the member committed to. */
+export async function updateReminderHour(hour) {
+  const safeHour = Math.max(7, Math.min(21, Math.round(Number(hour) || 9)));
+  lsSet(REMINDER_HOUR_KEY, safeHour);
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) return safeHour;
+
+  try {
+    const { error } = await supabase
+      .from('push_subscriptions')
+      .update({ notification_hour: safeHour, updated_at: new Date().toISOString() })
+      .eq('user_id', userId);
+    if (error) throw error;
+  } catch (err) {
+    console.warn('[DataService]', err?.message || err);
+  }
+  return safeHour;
+}

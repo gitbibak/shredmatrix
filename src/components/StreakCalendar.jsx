@@ -1,8 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Calendar, Trophy } from 'lucide-react';
+import { Flame, Calendar, Trophy, Share2, Snowflake } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { getWorkoutLogs } from '../lib/dataService';
+import { getReferralSummary, getStreakFreezes, getWorkoutLogs } from '../lib/dataService';
+import { computeFreezeAllowance, computeStreaks, getRestDayIndexes } from '../utils/streaks';
+import { renderShareCard, shareCardImage } from '../lib/shareImage';
+import { buildTrackedShareUrl } from '../lib/shareLinks';
+import { trackShare } from '../lib/analytics';
 
 // ── Constants ────────────────────────────────
 const TOTAL_WEEKS = 12;
@@ -97,47 +101,8 @@ const INTENSITY_CLASSES = [
   'bg-emerald-400',           // 3 — full
 ];
 
-function computeStreaks(workoutDates) {
-  if (!workoutDates.size) return { current: 0, longest: 0 };
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // Current streak: count back from today (or yesterday if today has no workout)
-  let current = 0;
-  let cursor = new Date(today);
-
-  // If today doesn't have a workout, start from yesterday
-  if (!workoutDates.has(toDateStr(cursor))) {
-    cursor.setDate(cursor.getDate() - 1);
-  }
-
-  while (workoutDates.has(toDateStr(cursor))) {
-    current++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-
-  // Longest streak: scan all sorted dates
-  const sorted = Array.from(workoutDates).sort();
-  let longest = 0;
-  let run = 1;
-
-  for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1] + 'T00:00:00');
-    const curr = new Date(sorted[i] + 'T00:00:00');
-    const diff = (curr - prev) / (1000 * 60 * 60 * 24);
-
-    if (diff === 1) {
-      run++;
-    } else {
-      longest = Math.max(longest, run);
-      run = 1;
-    }
-  }
-  longest = Math.max(longest, run);
-
-  return { current, longest };
-}
+// Streak math lives in ../utils/streaks so the Today panel, share cards and
+// this calendar agree on rest days and freezes.
 
 function getThisWeekCount(workoutDates) {
   const today = new Date();
@@ -161,17 +126,32 @@ function getThisWeekCount(workoutDates) {
 // Component
 // ══════════════════════════════════════════════
 
-export default function StreakCalendar() {
-  const { t } = useTranslation();
+export default function StreakCalendar({ plan = null }) {
+  const { t, lang } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [freezes, setFreezes] = useState([]);
+  const [activatedReferrals, setActivatedReferrals] = useState(0);
+  const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     getWorkoutLogs()
-      .then((data) => setLogs(data || []))
-      .catch(() => setLogs([]))
-      .finally(() => setLoading(false));
+      .then((data) => { if (!cancelled) setLogs(data || []); })
+      .catch(() => { if (!cancelled) setLogs([]); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    getStreakFreezes()
+      .then((data) => { if (!cancelled) setFreezes(Array.isArray(data) ? data : []); })
+      .catch(() => {});
+    getReferralSummary()
+      .then((data) => { if (!cancelled) setActivatedReferrals(Number(data?.activated) || 0); })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
+
+  const restDayIndexes = useMemo(() => getRestDayIndexes(plan), [plan]);
+  const frozenDates = useMemo(() => new Set(freezes.map((entry) => entry?.date).filter(Boolean)), [freezes]);
+  const allowance = useMemo(() => computeFreezeAllowance({ freezes, activatedReferrals }), [freezes, activatedReferrals]);
 
   // Build a map: date → exercise count
   const dateMap = useMemo(() => {
@@ -190,11 +170,32 @@ export default function StreakCalendar() {
   const monthLabels = useMemo(() => getMonthLabels(days), [days]);
 
   const { current: currentStreak, longest: longestStreak } = useMemo(
-    () => computeStreaks(workoutDates),
-    [workoutDates],
+    () => computeStreaks(workoutDates, { restDayIndexes, frozenDates }),
+    [workoutDates, restDayIndexes, frozenDates],
   );
 
   const thisWeekCount = useMemo(() => getThisWeekCount(workoutDates), [workoutDates]);
+
+  const shareStreak = async () => {
+    if (sharing || currentStreak <= 0) return;
+    setSharing(true);
+    try {
+      const url = buildTrackedShareUrl({ language: lang, source: 'member_referral', medium: 'referral', campaign: `streak_${lang}` });
+      const blob = await renderShareCard({
+        eyebrow: t('streak.currentStreak'),
+        headline: t('streak.shareHeadline', { count: currentStreak }),
+        subline: plan?.userName || '',
+        stats: [
+          { label: t('streak.longestStreak'), value: longestStreak },
+          { label: t('streak.thisWeek'), value: thisWeekCount },
+        ],
+      });
+      const outcome = await shareCardImage({ blob, text: t('streak.shareText', { count: currentStreak }), url, filename: 'fullbalance-streak.png' });
+      trackShare(`streak_image_${outcome}`);
+    } finally {
+      setSharing(false);
+    }
+  };
 
   // ── Render ──────────────────────────────────
   return (
@@ -266,14 +267,32 @@ export default function StreakCalendar() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center justify-center gap-2 mb-4 py-2 px-3 rounded-xl bg-orange-500/10 border border-orange-500/20"
+              className="flex items-center justify-between gap-2 mb-3 py-2 px-3 rounded-xl bg-orange-500/10 border border-orange-500/20"
             >
-              <span className="text-lg">🔥</span>
-              <span className="text-sm font-bold text-orange-300 font-outfit">
-                {t('streak.streakMessage', { count: currentStreak })}
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="text-lg">🔥</span>
+                <span className="truncate text-sm font-bold text-orange-300 font-outfit">
+                  {t('streak.streakMessage', { count: currentStreak })}
+                </span>
               </span>
+              <button
+                type="button"
+                onClick={shareStreak}
+                disabled={sharing}
+                className="flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border border-orange-400/40 bg-orange-500/15 px-2.5 text-[11px] font-bold text-orange-200 hover:bg-orange-500/25 disabled:opacity-60"
+              >
+                <Share2 size={13} /> {t('streak.share')}
+              </button>
             </motion.div>
           )}
+
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-500">
+            <span>{t('streak.restAware')}</span>
+            <span className="flex items-center gap-1 text-sky-300/80">
+              <Snowflake size={11} />
+              {t('streak.freezeAllowance')}: {allowance.total} ({allowance.weekly} {t('streak.freezeWeekly')}{allowance.bonus > 0 ? ` + ${allowance.bonus} ${t('streak.freezeReferral')}` : ''})
+            </span>
+          </div>
 
           {/* ── Heatmap ──────────────────────── */}
           <div className="overflow-x-auto -mx-1 px-1">
@@ -313,9 +332,11 @@ export default function StreakCalendar() {
                     if (!day) return <div key={col} className="w-[13px] h-[13px]" />;
 
                     const exerciseCount = dateMap.get(day.date) || 0;
+                    const frozen = !exerciseCount && frozenDates.has(day.date);
                     const intensity = day.isFuture ? -1 : getIntensity(exerciseCount);
-                    const colorClass =
-                      intensity < 0 ? 'bg-slate-800/20' : INTENSITY_CLASSES[intensity];
+                    const colorClass = frozen
+                      ? 'bg-sky-400/50'
+                      : intensity < 0 ? 'bg-slate-800/20' : INTENSITY_CLASSES[intensity];
 
                     return (
                       <motion.div
@@ -327,7 +348,7 @@ export default function StreakCalendar() {
                           delay: Math.min(dayIndex * 0.004, 0.4),
                           ease: 'easeOut',
                         }}
-                        title={`${day.date} — ${exerciseCount} ${t('streak.exercises')}`}
+                        title={frozen ? `${day.date} — ${t('streak.frozen')}` : `${day.date} — ${exerciseCount} ${t('streak.exercises')}`}
                         className={`w-[13px] h-[13px] rounded-[3px] ${colorClass} transition-colors`}
                       />
                     );
