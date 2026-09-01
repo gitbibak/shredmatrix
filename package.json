@@ -9,6 +9,7 @@
     "seo:generate": "node scripts/generate-sitemap.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
     "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.analytics.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
