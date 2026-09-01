@@ -1296,3 +1296,46 @@ export async function updateLeaderboardScore() {
 }
 
 // ══════════════════════════════════════════════
+
+// ══════════════════════════════════════════════
+// REFERRALS
+// ══════════════════════════════════════════════
+
+const LOCAL_REFERRAL_KEY = 'fb_referral_code';
+
+function localReferralCode() {
+  try {
+    let code = localStorage.getItem(LOCAL_REFERRAL_KEY);
+    if (!code || !/^[A-Z0-9]{4,16}$/.test(code)) {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      code = 'FB';
+      for (let i = 0; i < 6; i += 1) code += alphabet[Math.floor(Math.random() * alphabet.length)];
+      localStorage.setItem(LOCAL_REFERRAL_KEY, code);
+    }
+    return code;
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Invite code plus aggregate counts for the signed-in member.
+ * Falls back to a device-local code when Supabase is unavailable so the
+ * invite card keeps working; server counts stay at zero in that mode.
+ */
+export async function getReferralSummary() {
+  if (!isSupabaseReady() || !getUserId()) {
+    return { code: localReferralCode(), invited: 0, activated: 0, local: true };
+  }
+  const { data, error } = await supabase.rpc('get_referral_summary');
+  if (error) throw error;
+  const summary = data && typeof data === 'object' ? data : {};
+  const code = typeof summary.code === 'string' && /^[A-Z0-9]{4,16}$/.test(summary.code) ? summary.code : localReferralCode();
+  try { localStorage.setItem(LOCAL_REFERRAL_KEY, code); } catch { /* Optional cache. */ }
+  return {
+    code,
+    invited: Number(summary.invited) || 0,
+    activated: Number(summary.activated) || 0,
+    local: false,
+  };
+}

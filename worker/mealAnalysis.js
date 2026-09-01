@@ -1,4 +1,6 @@
 const MAX_ITEMS = 12;
+const MAX_VOCABULARY = 320;
+const MAX_KCAL_PER_GRAM = 9;
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value) || 0));
 
@@ -13,6 +15,31 @@ export function extractJsonObject(value) {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
+function cleanText(value, max) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+/**
+ * Validates the optional canonical food vocabulary sent by the client.
+ * The vocabulary lets the model answer with names that map 1:1 onto the
+ * nutrition database, which is far more reliable than free-text guesses.
+ */
+export function sanitizeVocabulary(value) {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set();
+  const output = [];
+  for (const entry of value) {
+    if (typeof entry !== 'string') continue;
+    const name = cleanText(entry, 40).replace(/[^\p{L}\p{N} ()'&/-]/gu, '');
+    const key = name.toLowerCase();
+    if (!name || seen.has(key)) continue;
+    seen.add(key);
+    output.push(name);
+    if (output.length >= MAX_VOCABULARY) break;
+  }
+  return output;
+}
+
 export function normalizeMealAnalysis(raw) {
   const parsed = extractJsonObject(raw);
   const isFood = parsed.is_food !== false && parsed.is_food !== 'false';
@@ -25,12 +52,16 @@ export function normalizeMealAnalysis(raw) {
       1,
       2000,
     ));
+    // Nothing edible exceeds pure fat density; cap runaway calorie guesses.
+    const calories = Math.round(clamp(item.calories ?? nutrition.calories, 0, Math.min(4000, grams * MAX_KCAL_PER_GRAM)));
+    const canonical = cleanText(item.canonical_name ?? item.canonical ?? item.name_en ?? '', 80);
     return {
       id: `ai-${index + 1}`,
-      name: String(item.name || '').trim().slice(0, 80),
-      portion: String(item.portion_description || item.portion || '').trim().slice(0, 100),
+      name: cleanText(item.display_name ?? item.name ?? canonical, 80),
+      canonical,
+      portion: cleanText(item.portion_description ?? item.portion ?? '', 100),
       grams,
-      calories: Math.round(clamp(item.calories ?? nutrition.calories, 0, 4000)),
+      calories,
       protein: Math.round(clamp(item.protein_g ?? item.protein ?? nutrition.protein_g ?? nutrition.protein, 0, 500) * 10) / 10,
       carbs: Math.round(clamp(item.carbs_g ?? item.carbs ?? nutrition.carbs_g ?? nutrition.carbs, 0, 800) * 10) / 10,
       fat: Math.round(clamp(item.fat_g ?? item.fat ?? nutrition.fat_g ?? nutrition.fat, 0, 500) * 10) / 10,
@@ -45,14 +76,14 @@ export function normalizeMealAnalysis(raw) {
   const totalCalories = items.reduce((sum, item) => sum + item.calories, 0);
   const confidence = Math.round(clamp(parsed.confidence, 0.2, 0.95) * 100) / 100;
   const hiddenIngredients = (Array.isArray(parsed.hidden_ingredients) ? parsed.hidden_ingredients : [])
-    .map((entry) => String(entry?.name || entry?.ingredient || entry || '').trim().slice(0, 80))
+    .map((entry) => cleanText(entry?.name || entry?.ingredient || entry || '', 80))
     .filter(Boolean)
     .slice(0, 5);
   const uncertainty = hiddenIngredients.length > 0 || confidence < 0.7 ? 0.32 : 0.24;
 
   return {
     isFood: true,
-    mealName: String(parsed.meal_name || '').trim().slice(0, 100),
+    mealName: cleanText(parsed.meal_name ?? '', 100),
     items,
     confidence,
     hiddenIngredients,
@@ -63,7 +94,42 @@ export function normalizeMealAnalysis(raw) {
   };
 }
 
-export function buildMealPrompt(language = 'en') {
-  const outputLanguage = language === 'tr' ? 'Turkish' : language === 'es' ? 'Spanish' : 'English';
-  return `Analyze this meal photo as a diet logging assistant. Inspect the entire plate, every bowl, glass and side dish. List each distinct visible edible food or caloric drink exactly once, including small grains, toppings, oil, sauce, dressing and sugar. Do not list plates, bowls, cutlery, water, duplicates or ingredients that are not visibly supported. estimated_grams must be a realistic total edible weight in grams, never an item count. Use visual area, depth and common serving sizes: cooked meat 100-200 g, cooked grain 120-220 g, vegetables 30-150 g, cheese 15-50 g, one tablespoon oil 14 g. Calculate calories and macros for the estimated grams of every item; do not leave nutrition at zero unless it is truly calorie-free. Put only plausible but invisible cooking oil or sauce in hidden_ingredients. If this is not food or drink, return is_food false. Use ${outputLanguage} names. Return ONLY valid JSON: {"is_food":true,"meal_name":"","confidence":0.0,"hidden_ingredients":[""],"items":[{"name":"","portion_description":"","estimated_grams":0,"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0,"confidence":0.0}]}.`;
+const OUTPUT_LANGUAGE = { tr: 'Turkish', en: 'English', es: 'Spanish' };
+
+export const MEAL_JSON_SCHEMA = {
+  type: 'object',
+  properties: {
+    is_food: { type: 'boolean' },
+    meal_name: { type: 'string' },
+    confidence: { type: 'number' },
+    hidden_ingredients: { type: 'array', items: { type: 'string' } },
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          canonical_name: { type: 'string' },
+          display_name: { type: 'string' },
+          portion_description: { type: 'string' },
+          estimated_grams: { type: 'number' },
+          calories: { type: 'number' },
+          protein_g: { type: 'number' },
+          carbs_g: { type: 'number' },
+          fat_g: { type: 'number' },
+          confidence: { type: 'number' },
+        },
+        required: ['canonical_name', 'display_name', 'estimated_grams', 'calories'],
+      },
+    },
+  },
+  required: ['is_food', 'items'],
+};
+
+export function buildMealPrompt(language = 'en', vocabulary = []) {
+  const outputLanguage = OUTPUT_LANGUAGE[language] || 'English';
+  const vocabularyLine = vocabulary.length > 0
+    ? ` For canonical_name, use exactly one of these names whenever the food matches (this is the nutrition database): ${vocabulary.join('; ')}. If nothing matches, write a short generic English food name.`
+    : ' For canonical_name, write a short generic English food name.';
+
+  return `You are a careful dietitian estimating a meal from one photo. Inspect the whole plate, every bowl, glass and side dish. List each distinct visible edible food or caloric drink exactly once, including bread, rice, sauces, dressings, oil, sugar and toppings. Never list plates, cutlery, napkins, plain water, or ingredients that are not visibly supported. Separate mixed dishes into their main components when the components are visible (for example rice, chicken and salad on one plate), but keep a single composite dish (pizza, burger, lasagna, soup) as one item.${vocabularyLine} display_name must be the natural ${outputLanguage} name. estimated_grams is the realistic cooked edible weight in grams for what is visible, never a piece count. Use the plate as scale (a dinner plate is about 26 cm) and standard portions: cooked meat or fish 100-200 g, cooked rice/pasta/bulgur 120-220 g, one slice of bread 30 g, one egg 50 g, cheese 15-50 g, salad vegetables 30-150 g, one tablespoon of oil 14 g, one glass of juice or soda 250 g. Calories and macros must match estimated_grams using typical nutrition values. Put only plausible invisible cooking oil, butter, sugar or sauce in hidden_ingredients (max 3). confidence is 0-1 and should be lower when portions are hidden, stacked or partially out of frame. If there is no food or drink, return is_food false with an empty items list. Return ONLY valid JSON with this shape: {"is_food":true,"meal_name":"","confidence":0.0,"hidden_ingredients":[""],"items":[{"canonical_name":"","display_name":"","portion_description":"","estimated_grams":0,"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0,"confidence":0.0}]}`;
 }

@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import CalorieCalc from './CalorieCalc';
 import { LanguageProvider } from '../i18n/LanguageContext';
 
-vi.mock('../lib/mealPhotoAnalysis', () => ({
+vi.mock('../lib/mealPhotoAnalysis', async (importOriginal) => ({
+  ...(await importOriginal()),
   prepareMealPhoto: vi.fn().mockResolvedValue('data:image/jpeg;base64,compressed'),
   analyzeMealPhoto: vi.fn().mockResolvedValue({
     isFood: true,
@@ -46,9 +47,18 @@ describe('meal photo controls', () => {
 
     expect(await screen.findByText('Otomatik tahmin hazır')).toBeInTheDocument();
     expect(screen.getByText('Tavuk')).toBeInTheDocument();
-    expect(screen.getByText('~150g')).toBeInTheDocument();
+    expect(screen.getByText('150g')).toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Yiyecek ara...')).not.toBeInTheDocument();
     expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
     expect(screen.getByText('Başka bir işlem yapman gerekmiyor.', { exact: false })).toBeInTheDocument();
+
+    // Portions stay editable after the automatic estimate.
+    fireEvent.click(screen.getByLabelText('Porsiyonu artır'));
+    expect(screen.getByText('175g')).toBeInTheDocument();
+    expect(screen.getByText('280 kcal')).toBeInTheDocument();
+
+    // Manual search can be reopened to add a missed food.
+    fireEvent.click(screen.getByText('Eksik yiyecek ekle'));
+    expect(screen.getByPlaceholderText('Yiyecek ara...')).toBeInTheDocument();
   });
 });

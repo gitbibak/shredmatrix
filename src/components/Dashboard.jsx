@@ -28,6 +28,7 @@ const StreakCalendar = lazy(() => import('./StreakCalendar'));
 const LongevityPanel = lazy(() => import('./LongevityPanel'));
 const PushPermission = lazy(() => import('./PushPermission'));
 const MilestoneStoryPrompt = lazy(() => import('./MilestoneStoryPrompt'));
+const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -346,6 +347,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <DailyChallenge />
                   </DisclosureSection>
                   <PushPermission daysSinceJoin={daysSinceJoin} />
+                  <InviteFriendsCard surface="today" compact userName={plan?.userName || user?.name} />
                 </motion.div>
               </motion.div>
               </Suspense>

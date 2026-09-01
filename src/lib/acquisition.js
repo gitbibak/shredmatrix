@@ -86,8 +86,21 @@ export function captureAcquisitionContext(language) {
     result.acquisition_content = stored.acquisition_content;
   }
 
+  // Invite attribution: the latest valid invite code wins so the inviter gets credit.
+  const referralCode = readReferralCode();
+  if (referralCode) result.referral_code = referralCode;
+
   writeStored(result);
   return result;
+}
+
+export function readReferralCode() {
+  try {
+    const code = String(localStorage.getItem('fb_referred_by') || '').trim().toUpperCase();
+    return /^[A-Z0-9]{4,16}$/.test(code) ? code : null;
+  } catch {
+    return null;
+  }
 }
 
 export function getAcquisitionContext(language) {

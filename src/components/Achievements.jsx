@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Lock, Star, Medal } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { getWorkoutLogs, getWaterHistory, getWater, getProgress, getFirstLogin, getMeasurements } from '../lib/dataService';
+import { getWorkoutLogs, getWaterHistory, getWater, getProgress, getFirstLogin, getMeasurements, getReferralSummary } from '../lib/dataService';
 
 // ── helpers ──────────────────────────────────────────────
 
@@ -104,7 +104,7 @@ function computeMaxWeightImprovement(logs) {
 }
 
 // ── Achievement definitions ─────────────────────────────
-function buildAchievements(plan, { workoutLogs, progressEntries, waterStreak, daysSinceFirst, maxWorkoutsWeek, maxWeightGain }) {
+function buildAchievements(plan, { workoutLogs, progressEntries, waterStreak, daysSinceFirst, maxWorkoutsWeek, maxWeightGain, friendsInvited = 0 }) {
 
   return [
     {
@@ -178,6 +178,24 @@ function buildAchievements(plan, { workoutLogs, progressEntries, waterStreak, da
       unlocked: maxWeightGain >= 10,
       progress: Math.min(Math.round(maxWeightGain), 10),
       target: 10,
+    },
+    {
+      id: 'team_builder',
+      emoji: '🤝',
+      title: 'Takım Kurucu',
+      description: 'Davetinle bir arkadaşın katıldı',
+      unlocked: friendsInvited >= 1,
+      progress: Math.min(friendsInvited, 1),
+      target: 1,
+    },
+    {
+      id: 'community_leader',
+      emoji: '🌟',
+      title: 'Topluluk Lideri',
+      description: 'Davetinle 3 arkadaşın katıldı',
+      unlocked: friendsInvited >= 3,
+      progress: Math.min(friendsInvited, 3),
+      target: 3,
     },
   ];
 }
@@ -315,7 +333,7 @@ export default function Achievements({ plan, user }) {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const badgeKeys = ['firstStep', 'ironFist', 'waterMonster', 'scaleTracker', 'macroMaster', 'weekWarrior', 'consistencyKing', 'strengthGain'];
+  const badgeKeys = ['firstStep', 'ironFist', 'waterMonster', 'scaleTracker', 'macroMaster', 'weekWarrior', 'consistencyKing', 'strengthGain', 'teamBuilder', 'communityLeader'];
 
   // Load data from dataService and compute achievements
   useEffect(() => {
@@ -323,12 +341,13 @@ export default function Achievements({ plan, user }) {
     async function loadAchievements() {
       try {
         const todayStr = new Date().toISOString().slice(0, 10);
-        const [workoutLogs, waterHistory, todayWaterData, progressEntries, firstLoginDate] = await Promise.all([
+        const [workoutLogs, waterHistory, todayWaterData, progressEntries, firstLoginDate, referralSummary] = await Promise.all([
           getWorkoutLogs(),
           getWaterHistory(),
           getWater(todayStr),
           getProgress(),
           getFirstLogin(),
+          getReferralSummary().catch(() => ({ invited: 0 })),
         ]);
         if (cancelled) return;
 
@@ -344,6 +363,7 @@ export default function Achievements({ plan, user }) {
           daysSinceFirst,
           maxWorkoutsWeek,
           maxWeightGain,
+          friendsInvited: Number(referralSummary?.invited) || 0,
         });
         // Attach translated titles/descriptions
         raw.forEach((a, i) => {

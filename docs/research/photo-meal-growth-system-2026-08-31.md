@@ -49,3 +49,23 @@ Fully automatic multi-food recognition and portion estimation would require a vi
 - Thames et al., CVPR 2021, [Nutrition5k: Towards Automatic Nutritional Understanding of Generic Food](https://openaccess.thecvf.com/content/CVPR2021/papers/Thames_Nutrition5k_Towards_Automatic_Nutritional_Understanding_of_Generic_Food_CVPR_2021_paper.pdf)
 - USDA, [FoodData Central API Guide](https://fdc.nal.usda.gov/api-guide/)
 - Open Food Facts, [API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/)
+
+## Update: 2026-09-01
+
+Automatic recognition is now enabled through Cloudflare Workers AI, so the
+"Automatic recognition boundary" section above describes the previous state.
+The accuracy protocol that section asked for is implemented as follows:
+
+- The model receives the English food vocabulary of the nutrition database and
+  must answer with a canonical name; nutrition values for matched foods come
+  from the database, not from the model.
+- Model calories are capped at 9 kcal per gram in the worker and at 600 kcal
+  per 100 g for unmatched foods on the client.
+- Suspected hidden ingredients (oil, butter, sugar, dressing) are shown as
+  one-tap suggestions instead of being silently dropped.
+- Every portion is editable with plus/minus controls; the calorie range widens
+  with lower model confidence and with unconfirmed hidden ingredients.
+- The endpoint is rate limited per IP (12 requests per minute) and the model is
+  configurable through the `MEAL_MODEL` variable in `wrangler.toml`.
+- Analytics record matched-food ratio, hidden-ingredient count and confidence
+  per analysis so accuracy can be tracked without storing photos.

@@ -49,4 +49,28 @@ Disallow: /admin
 Disallow: /loading
 Disallow: /strava/callback
 
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
+User-agent: Applebot
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /admin
+Disallow: /loading
+Disallow: /strava/callback
+
 Sitemap: https://fullbalance.app/sitemap.xml

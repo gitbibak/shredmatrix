@@ -12,6 +12,7 @@ import { generatePlan } from '../data/planGenerator';
 import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, deleteProgressPhoto } from '../lib/dataService';
 import { useToast } from './ToastProvider';
 import UserStoryForm from './UserStoryForm';
+import InviteFriendsCard from './InviteFriendsCard';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const PHOTO_EXPIRY_KEY = 'shredmatrix_profile_photo_expires';
@@ -731,6 +732,16 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
             )}
           </AnimatePresence>
         </div>
+      </motion.div>
+
+      {/* ── Invite friends ── */}
+      <motion.div variants={itemV}>
+        <InviteFriendsCard
+          surface="profile"
+          userName={plan.userName}
+          title={t('referral.profileTitle')}
+          description={t('referral.profileDesc')}
+        />
       </motion.div>
 
       {/* ── Body Stats ── */}

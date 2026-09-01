@@ -1,5 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { getWorkoutLogs, recordProductStep, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+
+const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 import { trackEvent } from '../lib/analytics';
 import { getExerciseInfo, getDifficultyLabel } from '../data/exerciseDatabase';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -435,6 +437,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
   });
   const [completedDays, setCompletedDays] = useState({});
   const [celebration, setCelebration] = useState(null);
+  const [inviteMoment, setInviteMoment] = useState(null);
   const [feedbackEffort, setFeedbackEffort] = useState(null);
   const [feedbackPain, setFeedbackPain] = useState(null);
   const [feedbackEnergy, setFeedbackEnergy] = useState(null);
@@ -588,6 +591,12 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
       if (feedbackPain) toast.info(t('workout.feedbackPainAdvice'));
       else toast.success(t('workout.feedbackSaved'));
       setCelebration(null);
+      // Emotional peak: the workout is logged and feedback is saved. Offer the
+      // invite once here instead of interrupting the feedback form.
+      if (!feedbackPain) {
+        setInviteMoment({ workoutCount: Math.max(1, previousLogs.length) });
+        trackEvent('invite_prompt_view', { surface: 'workout' });
+      }
     } catch (error) {
       setFeedbackError(t('workout.feedbackError'));
       console.warn('[WorkoutFeedback]', error?.message || error);
@@ -867,6 +876,45 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                 {feedbackSaving ? t('workout.feedbackSaving') : t('workout.feedbackSave')}
               </motion.button>
               <button type="button" onClick={() => setCelebration(null)} className="mt-2 min-h-11 px-4 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
+                {t('workout.feedbackSkip')}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 🤝 Post-workout invite moment */}
+      <AnimatePresence>
+        {inviteMoment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="workout-invite-title"
+          >
+            <motion.div
+              initial={{ y: 48, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 48, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+              className="w-full rounded-t-3xl border border-slate-700 bg-slate-900 p-4 shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-5"
+              style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
+            >
+              <div className="mx-auto mb-3 h-1 w-12 rounded-full bg-slate-700 sm:hidden" />
+              <h2 id="workout-invite-title" className="sr-only">{t('referral.workoutTitle')}</h2>
+              <Suspense fallback={null}>
+                <InviteFriendsCard
+                  surface="workout"
+                  userName={plan?.userName}
+                  workoutCount={inviteMoment.workoutCount}
+                  title={t('referral.workoutTitle')}
+                  description={t('referral.workoutDesc')}
+                />
+              </Suspense>
+              <button type="button" onClick={() => setInviteMoment(null)} className="mt-3 min-h-11 w-full rounded-xl border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white">
                 {t('workout.feedbackSkip')}
               </button>
             </motion.div>

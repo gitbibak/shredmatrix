@@ -8,6 +8,7 @@ vi.mock('../lib/dataService', () => ({
   recordProductStep: vi.fn().mockResolvedValue(true),
   saveWorkoutFeedback: vi.fn(),
   saveWorkoutLog: vi.fn(),
+  getReferralSummary: vi.fn().mockResolvedValue({ code: 'FBTEST22', invited: 0, activated: 0 }),
 }));
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
 vi.mock('../i18n/LanguageContext', () => ({ useTranslation: () => ({ t: (key) => key }) }));
@@ -52,6 +53,10 @@ describe('WorkoutPanel feedback flow', () => {
     await waitFor(() => expect(onPlanUpdate).toHaveBeenCalledWith(expect.objectContaining({
       workoutSplit: expect.arrayContaining([expect.objectContaining({ adaptationAction: 'reduce' })]),
     })));
+    // The feedback dialog closes and the invite moment takes its place.
+    await waitFor(() => expect(screen.queryByText('workout.feedbackSave')).not.toBeInTheDocument());
+    expect(await screen.findByText('WhatsApp')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('workout.feedbackSkip'));
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });
