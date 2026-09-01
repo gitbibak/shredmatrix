@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Droplets, Plus, Minus, RotateCcw } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { saveWater, getWater } from '../lib/dataService';
+import { trackLogWater } from '../lib/analytics';
 
 
 const TARGET_GLASSES = 8;
@@ -61,7 +62,11 @@ export default function WaterTracker({ compact = false }) {
   }, []);
 
   const add = useCallback(() => {
-    setGlasses((g) => g + 1);
+    setGlasses((g) => {
+      const next = g + 1;
+      trackLogWater(next >= TARGET_GLASSES);
+      return next;
+    });
   }, []);
 
   const remove = useCallback(() => {

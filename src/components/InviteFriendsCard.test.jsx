@@ -7,7 +7,7 @@ const getReferralSummary = vi.fn();
 vi.mock('../lib/dataService', () => ({
   getReferralSummary: (...args) => getReferralSummary(...args),
 }));
-vi.mock('../lib/analytics', () => ({ trackShare: vi.fn() }));
+vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn(), trackShare: vi.fn() }));
 
 const t = (key) => ({
   'referral.message': 'generic',

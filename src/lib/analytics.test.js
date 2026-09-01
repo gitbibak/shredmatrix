@@ -9,6 +9,7 @@ async function loadAnalytics() {
 describe('privacy-safe analytics', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     document.head.querySelectorAll('script[data-fullbalance-ga]').forEach((script) => script.remove());
     delete window.gtag;
     delete window.dataLayer;
@@ -18,7 +19,7 @@ describe('privacy-safe analytics', () => {
   it('does not send events before analytics consent', async () => {
     const analytics = await loadAnalytics();
     analytics.initAnalytics();
-    analytics.trackEvent('complete_workout', { module: 'muscle' });
+    analytics.trackEvent('workout_completed', { module: 'muscle' });
 
     expect(window.dataLayer).toHaveLength(1);
     expect(document.head.querySelector('script[data-fullbalance-ga]')).toBeNull();
@@ -37,12 +38,13 @@ describe('privacy-safe analytics', () => {
     const summary = analytics.getAnalyticsSummary(1);
     const today = new Date().toISOString().split('T')[0];
     expect(summary[today]).toMatchObject({
+      visitor_started: 1,
       landing_cta_click: 1,
       auth_view: 1,
-      sign_up_start: 1,
-      sign_up: 1,
-      generate_plan: 1,
-      plan_created: 1,
+      signup_started: 1,
+      signup_completed: 1,
+      plan_generation_started: 1,
+      plan_generated: 1,
     });
   });
 
@@ -50,16 +52,35 @@ describe('privacy-safe analytics', () => {
     const analytics = await loadAnalytics();
     analytics.initAnalytics();
     analytics.setAnalyticsConsent('granted');
-    analytics.trackEvent('wellbeing_checkin_saved', {
+    analytics.trackEvent('workout_completed', {
       module: 'yoga',
       weight: 75,
       health_condition: 'private',
       user_id: 'private-id',
     });
 
-    const event = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'wellbeing_checkin_saved');
+    const event = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'workout_completed');
     expect(event[2]).toEqual({ module: 'yoga' });
     expect(document.head.querySelector('script[data-fullbalance-ga="G-TEST123"]')).not.toBeNull();
+  });
+
+  it('rejects incomplete structured growth events without throwing', async () => {
+    const analytics = await loadAnalytics();
+    expect(() => analytics.trackEvent('challenge_joined', { source: 'dashboard' })).not.toThrow();
+
+    const summary = analytics.getAnalyticsSummary(1);
+    const today = new Date().toISOString().split('T')[0];
+    expect(summary[today]?.challenge_joined).toBeUndefined();
+  });
+
+  it('completes a pending OAuth signup after the redirect returns', async () => {
+    const analytics = await loadAnalytics();
+    analytics.trackSignUpStart('google');
+    analytics.trackPendingAuthCompletion();
+
+    const summary = analytics.getAnalyticsSummary(1);
+    const today = new Date().toISOString().split('T')[0];
+    expect(summary[today]).toMatchObject({ signup_started: 1, signup_completed: 1 });
   });
 
   it('removes query strings and hashes from SPA page views', async () => {

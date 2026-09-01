@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'fb_acquisition';
 const SUPPORTED_LANGUAGES = ['tr', 'en', 'es'];
+const CODE_PATTERN = /^[A-Z0-9_-]{4,40}$/;
 
 function clean(value, maxLength = 120) {
   const printable = [...String(value || '')]
@@ -47,12 +48,30 @@ function normalizeSource(hostname) {
   return host;
 }
 
+function cleanCode(value, maxLength = 40) {
+  const code = clean(value, maxLength)?.toUpperCase();
+  return code && CODE_PATTERN.test(code) ? code : null;
+}
+
+export function parseAttributionParams(search = '') {
+  const params = new URLSearchParams(search);
+  return {
+    utm_source: clean(params.get('utm_source'), 80),
+    utm_medium: clean(params.get('utm_medium'), 80),
+    utm_campaign: clean(params.get('utm_campaign'), 120),
+    utm_content: clean(params.get('utm_content'), 120),
+    utm_term: clean(params.get('utm_term'), 120),
+    referral_code: cleanCode(params.get('ref'), 16),
+    creator_code: cleanCode(params.get('creator') || params.get('creator_code'), 40),
+  };
+}
+
 export function captureAcquisitionContext(language) {
   if (typeof window === 'undefined') return {};
 
-  const params = new URLSearchParams(window.location.search);
+  const params = parseAttributionParams(window.location.search);
   const hasCampaign = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
-    .some((key) => params.has(key));
+    .some((key) => Boolean(params[key]));
   const stored = readStored();
   const referrer = externalReferrer();
   const detectedLanguage = clean(navigator.language, 10)?.slice(0, 2).toLowerCase();
@@ -63,11 +82,11 @@ export function captureAcquisitionContext(language) {
       : SUPPORTED_LANGUAGES.includes(detectedLanguage) ? detectedLanguage : 'en';
 
   const fresh = {
-    acquisition_source: clean(params.get('utm_source'), 80) || referrer || 'direct',
-    acquisition_medium: clean(params.get('utm_medium'), 80) || (referrer ? 'referral' : 'none'),
-    acquisition_campaign: clean(params.get('utm_campaign'), 120),
-    acquisition_content: clean(params.get('utm_content'), 120),
-    acquisition_term: clean(params.get('utm_term'), 120),
+    acquisition_source: params.utm_source || referrer || 'direct',
+    acquisition_medium: params.utm_medium || (referrer ? 'referral' : 'none'),
+    acquisition_campaign: params.utm_campaign,
+    acquisition_content: params.utm_content,
+    acquisition_term: params.utm_term,
     landing_path: clean(window.location.pathname, 160) || '/',
     app_language: appLanguage,
     browser_locale: clean(navigator.language, 20),
@@ -86,9 +105,26 @@ export function captureAcquisitionContext(language) {
     result.acquisition_content = stored.acquisition_content;
   }
 
-  // Invite attribution: the latest valid invite code wins so the inviter gets credit.
-  const referralCode = readReferralCode();
+  if (params.referral_code) {
+    try { localStorage.setItem('fb_referred_by', params.referral_code); } catch { /* Optional attribution. */ }
+  }
+  if (params.creator_code) {
+    try { localStorage.setItem('fb_creator_code', params.creator_code); } catch { /* Optional attribution. */ }
+  }
+
+  // Conversion attribution may follow the latest valid invite, while the
+  // dedicated first_* fields below remain immutable across later visits.
+  const referralCode = params.referral_code || readReferralCode();
   if (referralCode) result.referral_code = referralCode;
+  const creatorCode = params.creator_code || readCreatorCode();
+  if (creatorCode) result.creator_code = creatorCode;
+
+  result.first_source = stored?.first_source || fresh.acquisition_source;
+  result.first_medium = stored?.first_medium || fresh.acquisition_medium;
+  result.first_campaign = stored?.first_campaign || fresh.acquisition_campaign;
+  result.first_referral_code = stored?.first_referral_code || referralCode;
+  result.first_creator_code = stored?.first_creator_code || creatorCode;
+  result.first_landing_page = stored?.first_landing_page || fresh.landing_path;
 
   writeStored(result);
   return result;
@@ -101,6 +137,26 @@ export function readReferralCode() {
   } catch {
     return null;
   }
+}
+
+export function readCreatorCode() {
+  try {
+    return cleanCode(localStorage.getItem('fb_creator_code'), 40);
+  } catch {
+    return null;
+  }
+}
+
+export function getFirstTouchAttribution(language) {
+  const context = captureAcquisitionContext(language);
+  return {
+    first_source: context.first_source || null,
+    first_medium: context.first_medium || null,
+    first_campaign: context.first_campaign || null,
+    first_referral_code: context.first_referral_code || null,
+    first_creator_code: context.first_creator_code || null,
+    first_landing_page: context.first_landing_page || null,
+  };
 }
 
 export function getAcquisitionContext(language) {

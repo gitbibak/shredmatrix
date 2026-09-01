@@ -13,7 +13,17 @@ import { Dumbbell, Flame, Brain, Leaf, Target, Wrench } from 'lucide-react';
 import { ToastProvider } from './components/ToastProvider';
 import OfflineBanner from './components/OfflineBanner';
 import InstallPrompt from './components/InstallPrompt';
-import { initAnalytics, trackGeneratePlan, trackPageView, trackPlanCreated, trackReferral } from './lib/analytics';
+import {
+  clearAnalyticsIdentity,
+  identifyUser,
+  initAnalytics,
+  trackEvent,
+  trackGeneratePlan,
+  trackPageView,
+  trackPendingAuthCompletion,
+  trackPlanCreated,
+  trackReferral,
+} from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
 import { captureAcquisitionContext } from './lib/acquisition';
 
@@ -439,11 +449,19 @@ function AppContent() {
   // Restore session on mount
   useEffect(() => {
     captureAcquisitionContext(lang);
-    initAnalytics();
+    initAnalytics(lang);
     const referralCode = new URLSearchParams(window.location.search).get('ref');
     if (referralCode && /^[A-Z0-9]{4,16}$/i.test(referralCode)) {
       try { localStorage.setItem('fb_referred_by', referralCode.toUpperCase()); } catch { /* Optional attribution. */ }
       trackReferral();
+    }
+    const creatorCode = new URLSearchParams(window.location.search).get('creator')
+      || new URLSearchParams(window.location.search).get('creator_code');
+    if (creatorCode && /^[A-Z0-9_-]{4,40}$/i.test(creatorCode)) {
+      trackEvent('creator_link_opened', {
+        creatorCode: creatorCode.toUpperCase(),
+        source: 'creator_link',
+      });
     }
     const restoreSession = async () => {
       const currentPath = window.location.pathname;
@@ -461,6 +479,8 @@ function AppContent() {
         const sessionData = await getSession();
         if (sessionData?.user) {
           const u = sessionData.user;
+          identifyUser(u.id, lang);
+          trackPendingAuthCompletion();
           const userData = { name: u.name, email: u.email, id: u.id };
           setUser(userData);
           try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
@@ -500,10 +520,12 @@ function AppContent() {
     // Listen for auth state changes
     const subscription = onAuthStateChange((event, userData) => {
       if (event === 'SIGNED_IN' && userData) {
+        identifyUser(userData.id, lang);
         const u = { name: userData.name, email: userData.email, id: userData.id };
         setUser(u);
         try { localStorage.setItem('shredmatrix_user', JSON.stringify(u)); } catch (err) { console.warn('[App]', err?.message || err); }
       } else if (event === 'SIGNED_OUT') {
+        clearAnalyticsIdentity();
         setUser(null);
         setPlan(null);
         try { localStorage.removeItem('shredmatrix_user'); } catch (err) { console.warn('[App]', err?.message || err); }
@@ -581,6 +603,7 @@ function AppContent() {
   }, [location.pathname, pendingFormData, user, lang]);
 
   const handleAuth = async (userData) => {
+    identifyUser(userData.id, lang);
     setUser(userData);
     // Persist user info as fallback (in case Supabase session isn't ready)
     try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
@@ -598,7 +621,11 @@ function AppContent() {
   };
 
   const handleSubmit = (formData) => {
-    trackGeneratePlan();
+    trackGeneratePlan({
+      goalType: formData.primaryGoal,
+      environment: formData.trainingEnvironment,
+      language: lang,
+    });
     setOnboardingInitialData(null);
     setPendingFormData(formData);
     navigate('/loading', { replace: true });
@@ -630,6 +657,7 @@ function AppContent() {
 
   const handleLogout = async () => {
     await authSignOut();
+    clearAnalyticsIdentity();
     setUser(null);
     setPlan(null);
     try { localStorage.removeItem('shredmatrix_user'); } catch (err) { console.warn('[App]', err?.message || err); }

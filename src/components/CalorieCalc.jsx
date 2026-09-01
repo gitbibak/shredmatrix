@@ -700,7 +700,12 @@ export default function CalorieCalc({ language, embedded = false }) {
               <p className="mt-1 text-[9px] leading-relaxed text-slate-500">{tt('calorieCalc.estimateHelper')}</p>
             </div>
           </div>
-          <button type="button" onClick={() => trackEvent('meal_estimate_completed', { surface: language ? 'public_tool' : 'dashboard', language: activeLang, photo_assisted: Boolean(photo), item_count: mealItems.length })} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
+          <button type="button" onClick={() => {
+            trackEvent('nutrition_logged', {
+              source: language ? 'public_tool' : 'dashboard',
+              photoAssisted: Boolean(photo),
+            });
+          }} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
             {tt('calorieCalc.confirmEstimate')}
           </button>
           <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{tt('calorieCalc.disclaimer')}</p>

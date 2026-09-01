@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { signUp, signIn, resetPassword, signInWithGoogle } from '../lib/dataService';
-import { trackAuthView, trackEvent, trackLogin, trackSignUp, trackSignUpStart } from '../lib/analytics';
+import { trackAuthView, trackEvent, trackLogin, trackLoginStart, trackSignUp, trackSignUpStart } from '../lib/analytics';
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -627,7 +627,7 @@ export default function AuthScreen({ onAuth, onBack }) {
                 onClick={async () => {
                   try {
                     if (mode === 'register') trackSignUpStart('google');
-                    else trackEvent('login_start', { method: 'google' });
+                    else trackLoginStart('google');
                     await signInWithGoogle();
                   } catch (err) {
                     setFormError(err.message || 'Google sign-in failed');

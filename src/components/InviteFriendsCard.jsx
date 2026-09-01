@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Check, Copy, ImageDown, MessageCircle, Share2, Users } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getReferralSummary } from '../lib/dataService';
-import { trackShare } from '../lib/analytics';
+import { trackEvent, trackShare } from '../lib/analytics';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import { renderShareCard, shareCardImage } from '../lib/shareImage';
 
@@ -47,12 +47,13 @@ export default function InviteFriendsCard({
   const [imageBusy, setImageBusy] = useState(false);
 
   useEffect(() => {
+    trackEvent('invite_opened', { source: surface });
     let cancelled = false;
     getReferralSummary()
       .then((data) => { if (!cancelled && data?.code) setSummary(data); })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, []);
+  }, [surface]);
 
   const shareUrl = buildTrackedShareUrl({
     language: lang,
@@ -69,18 +70,21 @@ export default function InviteFriendsCard({
       await navigator.clipboard.writeText(fullText);
       setCopied(true);
       trackShare(`invite_copy_${surface}`);
+      trackEvent('invite_sent', { cardType: 'invite', destination: 'copy', source: surface, referralCode: summary.code || undefined });
       setTimeout(() => setCopied(false), 2000);
     } catch { /* Clipboard may be unavailable in some webviews. */ }
   };
 
   const shareWhatsApp = () => {
     trackShare(`invite_whatsapp_${surface}`);
+    trackEvent('invite_sent', { cardType: 'invite', destination: 'whatsapp', source: surface, referralCode: summary.code || undefined });
     window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank', 'noopener,noreferrer');
   };
 
   const shareNative = async () => {
     if (navigator.share) {
       trackShare(`invite_native_${surface}`);
+      trackEvent('invite_sent', { cardType: 'invite', destination: 'native', source: surface, referralCode: summary.code || undefined });
       await navigator.share({ title: 'Full Balance', text: message, url: shareUrl }).catch(() => {});
     } else {
       await copyLink();

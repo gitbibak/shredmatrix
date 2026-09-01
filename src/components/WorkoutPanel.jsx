@@ -469,7 +469,10 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
 
   useEffect(() => {
     if (openIndex < 0 || !plan?.workoutSplit?.[openIndex]) return;
-    trackEvent('workout_day_opened');
+    trackEvent('workout_started', {
+      module: resolveGoalKey(plan.goal || plan.primaryGoal || ''),
+      source: 'workout_panel',
+    });
     recordProductStep('workout_day_opened').catch((error) => console.warn('[Activation]', error?.message || error));
   }, [openIndex, plan]);
 
@@ -534,7 +537,8 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
       setFeedbackEnergy(null);
       setFeedbackDuration(45);
       setFeedbackError('');
-      trackEvent('workout_completed');
+      trackEvent('workout_completed', { module: goalKey, source: 'workout_panel' });
+      if (goalKey === 'meditation') trackEvent('meditation_completed', { source: 'workout_panel' });
       recordProductStep('workout_completed').catch((error) => console.warn('[Activation]', error?.message || error));
 
       // 🎉 CELEBRATION!

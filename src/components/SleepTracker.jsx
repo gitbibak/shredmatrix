@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Moon, Save } from 'lucide-react';
 import { getSleep, saveSleep as saveSleepEntry } from '../lib/dataService';
 import { useToast } from './ToastProvider';
+import { trackLogSleep } from '../lib/analytics';
 
 
 
@@ -27,6 +28,7 @@ export default function SleepTracker({ compact = false }) {
     const today = todayISO();
     try {
       await saveSleepEntry(today, h);
+      trackLogSleep();
       setEntries(prev => {
         const idx = prev.findIndex(e => e.date === today);
         const entry = { date: today, hours: h };

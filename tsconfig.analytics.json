@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
     "noEmit": true,
     "strict": true,
     "target": "ES2022",
@@ -12,9 +10,9 @@
     "types": ["vite/client"]
   },
   "include": [
-    "src/lib/analytics.js",
-    "src/lib/analyticsEventSchema.js",
+    "src/lib/analytics.d.ts",
+    "src/lib/analytics.typecheck.ts",
     "src/lib/analyticsTypes.d.ts",
-    "src/lib/acquisition.js"
+    "src/lib/acquisition.d.ts"
   ]
 }

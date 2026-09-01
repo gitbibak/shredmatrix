@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs, getWaterHistory, getProgress } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
 
 const itemV = {
   hidden: { opacity: 0, y: 16 },
@@ -117,6 +118,7 @@ export default function WeeklyReport({ plan }) {
         setWorkoutData(logs || []);
         setWaterData(water || []);
         setProgressData(progress || []);
+        trackEvent('weekly_progress_viewed', { source: 'progress', period: 'current_week' });
       } catch (err) {
         console.error('Failed to load weekly report data:', err);
       } finally {
@@ -373,6 +375,12 @@ export default function WeeklyReport({ plan }) {
       const file = new File([blob], 'fullbalance-weekly-report.png', { type: 'image/png' });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ title: 'Full Balance', text: t('report.weeklyTitle'), files: [file] });
+        trackEvent('weekly_progress_shared', {
+          cardType: 'weekly_progress',
+          destination: 'native',
+          source: 'progress',
+          period: 'current_week',
+        });
       } else {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -382,6 +390,12 @@ export default function WeeklyReport({ plan }) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        trackEvent('weekly_progress_shared', {
+          cardType: 'weekly_progress',
+          destination: 'download',
+          source: 'progress',
+          period: 'current_week',
+        });
       }
     } catch (err) {
       if (err?.name !== 'AbortError') console.warn('[WeeklyReport] Share failed:', err?.message || err);

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { captureAcquisitionContext, recordAcquisitionContent } from './acquisition';
+import { captureAcquisitionContext, getFirstTouchAttribution, recordAcquisitionContent } from './acquisition';
 
 describe('first-party acquisition attribution', () => {
   beforeEach(() => {
@@ -25,6 +25,33 @@ describe('first-party acquisition attribution', () => {
     window.history.replaceState({}, '', '/auth?mode=register');
 
     expect(captureAcquisitionContext('en').acquisition_source).toBe('google');
+  });
+
+  it('preserves first-touch while allowing later conversion attribution', () => {
+    captureAcquisitionContext('en');
+    window.history.replaceState({}, '', '/es?utm_source=pinterest&utm_campaign=pilates');
+    const context = captureAcquisitionContext('es');
+
+    expect(context).toMatchObject({
+      acquisition_source: 'pinterest',
+      first_source: 'google',
+      first_campaign: 'free_fitness',
+      first_landing_page: '/en',
+    });
+    expect(getFirstTouchAttribution('es').first_source).toBe('google');
+  });
+
+  it('captures referral and creator codes without keeping the query string', () => {
+    window.history.replaceState({}, '', '/en?ref=fb12ab&creator=coach_42&utm_source=creator');
+    const context = captureAcquisitionContext('en');
+
+    expect(context).toMatchObject({
+      referral_code: 'FB12AB',
+      creator_code: 'COACH_42',
+      first_referral_code: 'FB12AB',
+      first_creator_code: 'COACH_42',
+      first_landing_page: '/en',
+    });
   });
 
   it('records the first internal conversion content without replacing campaign attribution', () => {

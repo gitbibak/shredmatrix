@@ -126,6 +126,10 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
 
+  useEffect(() => {
+    trackEvent('onboarding_started', { source: initialData ? 'edit_plan' : 'signup' });
+  }, []);
+
   // Translated data arrays (need t() from hook)
   const STEPS = STEP_IDS.map((id, i) => ({
     id,
@@ -280,7 +284,11 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const nextStep = () => {
     if (step < STEPS.length - 1 && canNext()) {
-      trackEvent('onboarding_step_complete', { step_name: STEP_IDS[step], step_number: step + 1 });
+      trackEvent('onboarding_step_completed', {
+        stepName: STEP_IDS[step],
+        stepNumber: step + 1,
+        goalType: primaryGoal || undefined,
+      });
       setDirection(1);
       setStep(step + 1);
     }
@@ -288,8 +296,15 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
 
   const submitOnboarding = () => {
     if (STEP_IDS[step] !== 'safety' || !canNext()) return;
-    trackEvent('onboarding_step_complete', { step_name: 'safety', step_number: STEP_IDS.length });
-    trackEvent('onboarding_complete');
+    trackEvent('onboarding_step_completed', {
+      stepName: 'safety',
+      stepNumber: STEP_IDS.length,
+      goalType: primaryGoal || undefined,
+    });
+    trackEvent('onboarding_completed', {
+      goalType: primaryGoal || undefined,
+      environment: normalizeTrainingEnvironment(primaryGoal, trainingEnvironment),
+    });
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     onSubmit({
       name, age, gender, height, weight,
