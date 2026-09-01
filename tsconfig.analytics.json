@@ -13,6 +13,8 @@
     "src/lib/analytics.d.ts",
     "src/lib/analytics.typecheck.ts",
     "src/lib/analyticsTypes.d.ts",
-    "src/lib/acquisition.d.ts"
+    "src/lib/acquisition.d.ts",
+    "src/utils/balanceScore.d.ts",
+    "src/utils/balanceScore.typecheck.ts"
   ]
 }

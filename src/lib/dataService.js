@@ -403,24 +403,29 @@ export async function saveWorkoutFeedback({
   return data;
 }
 
-export async function getWorkoutLogs() {
+export async function getWorkoutLogs(limit) {
   const userId = getUserId();
+  const normalizedLimit = Number.isInteger(limit) && limit > 0 ? Math.min(limit, 365) : null;
 
   if (!isSupabaseReady() || !userId) {
-    return lsGet('shredmatrix_workout_log', []);
+    const logs = lsGet('shredmatrix_workout_log', []);
+    return normalizedLimit ? logs.slice(-normalizedLimit).reverse() : logs;
   }
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('workout_logs')
       .select('*')
       .eq('user_id', userId)
       .order('date', { ascending: false });
+    if (normalizedLimit) query = query.limit(normalizedLimit);
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
-    return lsGet('shredmatrix_workout_log', []);
+    const logs = lsGet('shredmatrix_workout_log', []);
+    return normalizedLimit ? logs.slice(-normalizedLimit).reverse() : logs;
   }
 }
 

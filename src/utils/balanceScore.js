@@ -1,194 +1,248 @@
 /**
- * Full Balance Score — Birleşik Sağlık Puanı (0-100)
+ * Explainable Full Balance score (0-100).
  *
- * Ağırlıklar:
- *   🏋️ Antrenman tutarlılığı  — %30
- *   🥗 Beslenme uyumu         — %20
- *   💧 Su tüketimi            — %15
- *   😴 Uyku kalitesi          — %15
- *   📊 Kilo trendi            — %10
- *   📏 Ölçüm takibi           — %10
+ * Only observed, non-sensitive wellness actions are scored. Missing categories
+ * are excluded from the weighted average so a user is never penalized for data
+ * they have not provided.
  */
 
-// ── Helpers ─────────────────────────────────────────────
-function clamp(val, min = 0, max = 100) {
-  return Math.max(min, Math.min(max, val));
+const DAY_MS = 86_400_000;
+const PRIMARY_CATEGORIES = ['activity', 'nutrition', 'recovery', 'consistency'];
+const CATEGORY_WEIGHTS = {
+  activity: 0.35,
+  nutrition: 0.25,
+  recovery: 0.25,
+  consistency: 0.15,
+  hydration: 0.1,
+  mindfulness: 0.1,
+};
+
+function clamp(value, min = 0, max = 100) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
 }
 
-function daysBetween(d1, d2) {
-  return Math.abs(Math.floor((d1 - d2) / 86400000));
+function getDateKey(value, timeZone) {
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
-// ── Individual Scores ───────────────────────────────────
-
-/**
- * Antrenman Tutarlılığı (0-100)
- * Son 7 günde kaç antrenman yapıldı / haftalık hedef
- */
-function workoutScore(workoutLogs = [], weeklyTarget = 4) {
-  const now = new Date();
-  const weekAgo = new Date(now.getTime() - 7 * 86400000);
-  const recentLogs = workoutLogs.filter(log => {
-    const d = new Date(log.date || log.createdAt);
-    return d >= weekAgo && d <= now;
+function dateKeysEndingAt(referenceDate, days, timeZone) {
+  const endKey = getDateKey(referenceDate, timeZone);
+  if (!endKey) return [];
+  const [year, month, day] = endKey.split('-').map(Number);
+  const anchor = Date.UTC(year, month - 1, day, 12);
+  return Array.from({ length: days }, (_, index) => {
+    const date = new Date(anchor - ((days - 1 - index) * DAY_MS));
+    return date.toISOString().slice(0, 10);
   });
-  const uniqueDays = new Set(recentLogs.map(l => (l.date || l.createdAt || '').split('T')[0]));
-  const ratio = uniqueDays.size / Math.max(1, weeklyTarget);
-  return clamp(Math.round(ratio * 100));
 }
 
-/**
- * Su Tüketimi (0-100)
- * Son 7 günde hedef bardak sayısına ulaşma oranı
- */
-function waterScore(waterHistory = [], targetGlasses = 8) {
-  if (waterHistory.length === 0) return 0;
-  const recent = waterHistory.slice(-7);
-  const avgRatio = recent.reduce((sum, entry) => {
-    const glasses = entry.glasses || entry.amount || 0;
-    return sum + Math.min(glasses / targetGlasses, 1);
-  }, 0) / recent.length;
-  return clamp(Math.round(avgRatio * 100));
+function entriesInWindow(entries, windowKeys, timeZone) {
+  const allowed = new Set(windowKeys);
+  return (Array.isArray(entries) ? entries : [])
+    .map((entry) => ({ entry, dateKey: getDateKey(entry?.date || entry?.created_at || entry?.createdAt, timeZone) }))
+    .filter(({ dateKey }) => dateKey && allowed.has(dateKey));
 }
 
-/**
- * Uyku Kalitesi (0-100)
- * Hedef: 7-9 saat. Bu aralığa yakınlık.
- */
-function sleepScore(sleepEntries = []) {
-  if (sleepEntries.length === 0) return 0;
-  const recent = sleepEntries.slice(-7);
-  const avgQuality = recent.reduce((sum, entry) => {
-    const h = entry.hours || 0;
-    if (h >= 7 && h <= 9) return sum + 1;       // ideal
-    if (h >= 6 && h < 7) return sum + 0.7;       // ok
-    if (h > 9 && h <= 10) return sum + 0.7;      // slightly over
-    if (h >= 5 && h < 6) return sum + 0.4;       // poor
-    return sum + 0.2;                             // very poor
-  }, 0) / recent.length;
-  return clamp(Math.round(avgQuality * 100));
+function uniqueDays(entries) {
+  return new Set(entries.map(({ dateKey }) => dateKey)).size;
 }
 
-/**
- * Kilo Trendi (0-100)
- * Hedefe doğru ilerleme — son 30 günde tutarlı değişim
- */
-function weightTrendScore(progressEntries = [], goalType = 'muscle') {
-  if (progressEntries.length < 2) return 50; // not enough data → neutral
-  const sorted = [...progressEntries]
-    .filter(e => e.weight)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  if (sorted.length < 2) return 50;
-
-  const recent = sorted.slice(-10); // last 10 entries
-  const first = recent[0].weight;
-  const last = recent[recent.length - 1].weight;
-  const change = last - first;
-
-  if (goalType === 'fat_loss') {
-    // Weight should decrease
-    if (change < -0.5) return clamp(80 + Math.min(Math.abs(change) * 4, 20));
-    if (change <= 0.5) return 60; // stable
-    return clamp(40 - change * 5); // gaining = bad
-  } else if (goalType === 'muscle') {
-    // Weight should increase slightly
-    if (change > 0.3) return clamp(80 + Math.min(change * 5, 20));
-    if (change >= -0.5) return 60; // stable
-    return clamp(40 + change * 5); // losing = bad
-  }
-  // Other goals (yoga, meditation, pilates) — stability is good
-  if (Math.abs(change) < 1) return 85;
-  return clamp(70 - Math.abs(change) * 3);
+function scoreActivity(workouts, weeklyTarget) {
+  if (workouts.length === 0) return null;
+  const target = Math.max(1, Math.min(7, Math.round(Number(weeklyTarget) || 4)));
+  return Math.round(clamp((uniqueDays(workouts) / target) * 100));
 }
 
-/**
- * Ölçüm Takibi (0-100)
- * Son 30 günde düzenli ölçüm yapma tutarlılığı
- */
-function measurementScore(measurements = []) {
-  if (measurements.length === 0) return 0;
-  const now = new Date();
-  const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);
-  const recent = measurements.filter(m => new Date(m.date) >= thirtyDaysAgo);
-  // Ideal: at least 4 measurements per month (weekly)
-  const ratio = Math.min(recent.length / 4, 1);
-  return clamp(Math.round(ratio * 100));
+function scoreNutrition(checkins) {
+  const valid = checkins.filter(({ entry }) => typeof entry?.nutrition_aligned === 'boolean');
+  if (valid.length === 0) return null;
+  const aligned = valid.filter(({ entry }) => entry.nutrition_aligned).length;
+  return Math.round(clamp((aligned / valid.length) * 100));
 }
 
-// ── Level System ────────────────────────────────────────
+function sleepQuality(hours) {
+  const value = Number(hours);
+  if (!Number.isFinite(value) || value <= 0 || value > 24) return null;
+  if (value >= 7 && value <= 9) return 100;
+  if ((value >= 6 && value < 7) || (value > 9 && value <= 10)) return 75;
+  if ((value >= 5 && value < 6) || (value > 10 && value <= 11)) return 45;
+  return 20;
+}
+
+function scoreRecovery(sleepEntries, checkins) {
+  const sleepScores = sleepEntries
+    .map(({ entry }) => sleepQuality(entry?.hours))
+    .filter((value) => value != null);
+  const energyScores = checkins
+    .map(({ entry }) => Number(entry?.energy))
+    .filter((value) => [1, 2, 3].includes(value))
+    .map((value) => ({ 1: 35, 2: 70, 3: 100 })[value]);
+
+  if (sleepScores.length === 0 && energyScores.length === 0) return null;
+  const sleepAverage = sleepScores.length
+    ? sleepScores.reduce((sum, value) => sum + value, 0) / sleepScores.length
+    : null;
+  const energyAverage = energyScores.length
+    ? energyScores.reduce((sum, value) => sum + value, 0) / energyScores.length
+    : null;
+  if (sleepAverage == null) return Math.round(energyAverage);
+  if (energyAverage == null) return Math.round(sleepAverage);
+  return Math.round((sleepAverage * 0.7) + (energyAverage * 0.3));
+}
+
+function scoreConsistency(allEntries, windowLength) {
+  const observedDays = uniqueDays(allEntries);
+  if (observedDays < 2) return null;
+  return Math.round(clamp((observedDays / Math.max(1, windowLength)) * 100));
+}
+
+function scoreHydration(waterEntries, targetGlasses) {
+  const valid = waterEntries.filter(({ entry }) => Number.isFinite(Number(entry?.glasses ?? entry?.amount)));
+  if (valid.length === 0) return null;
+  const target = Math.max(1, Number(targetGlasses) || 8);
+  const average = valid.reduce((sum, { entry }) => {
+    const ratio = entry?.target_met === true
+      ? 1
+      : clamp(Number(entry?.glasses ?? entry?.amount) / target, 0, 1);
+    return sum + ratio;
+  }, 0) / valid.length;
+  return Math.round(average * 100);
+}
+
+function isMindfulnessLog(log, goalType) {
+  if (goalType === 'meditation') return true;
+  const exercises = Array.isArray(log?.exercises) ? log.exercises : [];
+  const text = [log?.day_focus, log?.focus, log?.notes, ...exercises]
+    .filter(Boolean)
+    .map((value) => typeof value === 'string' ? value : value?.name)
+    .filter(Boolean)
+    .join(' ');
+  return /meditat|mindful|nefes|breath|farkındalık|mantra|vücut tarama|body scan/i.test(text);
+}
+
+function scoreMindfulness(workouts, goalType, weeklyTarget) {
+  const sessions = workouts.filter(({ entry }) => isMindfulnessLog(entry, goalType));
+  if (sessions.length === 0) return null;
+  const target = goalType === 'meditation'
+    ? Math.max(1, Math.min(7, Math.round(Number(weeklyTarget) || 4)))
+    : 3;
+  return Math.round(clamp((uniqueDays(sessions) / target) * 100));
+}
+
+function weightedAverage(categoryScores) {
+  const available = Object.entries(categoryScores).filter(([, value]) => value != null);
+  const weightTotal = available.reduce((sum, [key]) => sum + CATEGORY_WEIGHTS[key], 0);
+  if (weightTotal === 0) return null;
+  return Math.round(available.reduce((sum, [key, value]) => (
+    sum + (value * CATEGORY_WEIGHTS[key])
+  ), 0) / weightTotal);
+}
+
+function rankedInsights(categoryScores) {
+  const ranked = Object.entries(categoryScores)
+    .filter(([, value]) => value != null)
+    .map(([category, score]) => ({ category, score }))
+    .sort((a, b) => b.score - a.score || a.category.localeCompare(b.category));
+  return {
+    strengths: ranked.filter(({ score }) => score >= 70).slice(0, 2),
+    improvementAreas: [...ranked].reverse().filter(({ score }) => score < 70).slice(0, 2),
+  };
+}
+
 const LEVELS = [
-  { min: 0,  max: 30,  key: 'beginner',    emoji: '🔴', color: 'text-red-400',     bg: 'bg-red-500/15',     border: 'border-red-500/30' },
-  { min: 31, max: 50,  key: 'developing',   emoji: '🟠', color: 'text-orange-400',  bg: 'bg-orange-500/15',  border: 'border-orange-500/30' },
-  { min: 51, max: 70,  key: 'consistent',   emoji: '🟡', color: 'text-yellow-400',  bg: 'bg-yellow-500/15',  border: 'border-yellow-500/30' },
-  { min: 71, max: 85,  key: 'strong',       emoji: '🟢', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
-  { min: 86, max: 100, key: 'elite',        emoji: '💎', color: 'text-cyan-400',    bg: 'bg-cyan-500/15',    border: 'border-cyan-500/30' },
+  { min: 0, max: 30, key: 'beginner', color: 'text-red-400', bg: 'bg-red-500/15', border: 'border-red-500/30' },
+  { min: 31, max: 50, key: 'developing', color: 'text-orange-400', bg: 'bg-orange-500/15', border: 'border-orange-500/30' },
+  { min: 51, max: 70, key: 'consistent', color: 'text-yellow-400', bg: 'bg-yellow-500/15', border: 'border-yellow-500/30' },
+  { min: 71, max: 85, key: 'strong', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
+  { min: 86, max: 100, key: 'elite', color: 'text-cyan-400', bg: 'bg-cyan-500/15', border: 'border-cyan-500/30' },
 ];
 
 export function getLevel(score) {
-  return LEVELS.find(l => score >= l.min && score <= l.max) || LEVELS[0];
+  const normalized = clamp(score);
+  return LEVELS.find((level) => normalized >= level.min && normalized <= level.max) || LEVELS[0];
 }
 
-// ── Main Calculator ─────────────────────────────────────
 /**
- * Calculate the Full Balance Score
  * @param {Object} data
- * @param {Array} data.workoutLogs - Workout history
- * @param {Array} data.waterHistory - Water intake history
- * @param {Array} data.sleepEntries - Sleep entries
- * @param {Array} data.progressEntries - Weight/body fat entries
- * @param {Array} data.measurements - Body measurements
- * @param {number} data.weeklyTarget - Target workout days per week
- * @param {string} data.goalType - Primary goal key
- * @returns {{ score: number, breakdown: Object, level: Object, trend: string }}
+ * @returns {import('./balanceScore').BalanceScoreResult}
  */
 export function calculateBalanceScore({
   workoutLogs = [],
   waterHistory = [],
   sleepEntries = [],
-  progressEntries = [],
-  measurements = [],
+  checkins = [],
   weeklyTarget = 4,
-  goalType = 'muscle',
+  targetGlasses = 8,
+  goalType = 'unknown',
+  referenceDate = new Date(),
+  timeZone = 'UTC',
 } = {}) {
-  const breakdown = {
-    workout:     workoutScore(workoutLogs, weeklyTarget),
-    water:       waterScore(waterHistory),
-    sleep:       sleepScore(sleepEntries),
-    weightTrend: weightTrendScore(progressEntries, goalType),
-    measurement: measurementScore(measurements),
+  const windowKeys = dateKeysEndingAt(referenceDate, 7, timeZone);
+  const workouts = entriesInWindow(workoutLogs, windowKeys, timeZone);
+  const water = entriesInWindow(waterHistory, windowKeys, timeZone);
+  const sleep = entriesInWindow(sleepEntries, windowKeys, timeZone);
+  const wellbeing = entriesInWindow(checkins, windowKeys, timeZone);
+  const allEntries = [...workouts, ...water, ...sleep, ...wellbeing];
+
+  const categoryScores = {
+    activity: scoreActivity(workouts, weeklyTarget),
+    nutrition: scoreNutrition(wellbeing),
+    recovery: scoreRecovery(sleep, wellbeing),
+    consistency: scoreConsistency(allEntries, windowKeys.length),
+    hydration: scoreHydration(water, targetGlasses),
+    mindfulness: scoreMindfulness(workouts, goalType, weeklyTarget),
   };
 
-  // Beslenme uyumu şu an beslenme takibi olmadığı için
-  // antrenman + su + uyku'nun ortalamasını kullanıyoruz
-  breakdown.nutrition = Math.round(
-    (breakdown.workout * 0.4 + breakdown.water * 0.3 + breakdown.sleep * 0.3)
-  );
+  const availableCategories = Object.keys(categoryScores).filter((key) => categoryScores[key] != null);
+  const missingCategories = Object.keys(categoryScores).filter((key) => categoryScores[key] == null);
+  const availablePrimary = PRIMARY_CATEGORIES.filter((key) => categoryScores[key] != null);
+  const signalCount = allEntries.length;
+  const observedDays = uniqueDays(allEntries);
+  const sufficient = availablePrimary.length >= 2 && signalCount >= 3 && observedDays >= 2;
+  const calculatedScore = weightedAverage(categoryScores);
+  const overallScore = sufficient ? calculatedScore : null;
+  const insights = rankedInsights(categoryScores);
+  const dataCompleteness = {
+    percentage: Math.round((availablePrimary.length / PRIMARY_CATEGORIES.length) * 100),
+    availableCategories,
+    missingCategories,
+    signalCount,
+    sufficient,
+  };
 
-  // Weighted total
-  const score = clamp(Math.round(
-    breakdown.workout     * 0.30 +
-    breakdown.nutrition   * 0.20 +
-    breakdown.water       * 0.15 +
-    breakdown.sleep       * 0.15 +
-    breakdown.weightTrend * 0.10 +
-    breakdown.measurement * 0.10
-  ));
-
-  const level = getLevel(score);
-
-  // Trend: compare to previous week (simplified)
-  const trend = score >= 50 ? 'up' : 'down';
-
-  return { score, breakdown, level, trend };
+  return {
+    overallScore,
+    categoryScores,
+    strengths: sufficient ? insights.strengths : [],
+    improvementAreas: sufficient ? insights.improvementAreas : [],
+    dataCompleteness,
+    period: { start: windowKeys[0] || null, end: windowKeys.at(-1) || null },
+    score: overallScore,
+    breakdown: categoryScores,
+    level: getLevel(overallScore ?? 0),
+    trend: 'stable',
+  };
 }
 
-// ── Mood System ─────────────────────────────────────────
 export const MOODS = [
-  { id: 'exhausted',  emoji: '😴', intensity: 0.6,  key: 'mood.exhausted' },
-  { id: 'low',        emoji: '😐', intensity: 0.85, key: 'mood.low' },
-  { id: 'normal',     emoji: '💪', intensity: 1.0,  key: 'mood.normal' },
-  { id: 'energetic',  emoji: '🔥', intensity: 1.2,  key: 'mood.energetic' },
-  { id: 'zen',        emoji: '🧘', intensity: 0.7,  key: 'mood.zen' },
+  { id: 'exhausted', emoji: '😴', intensity: 0.6, key: 'mood.exhausted' },
+  { id: 'low', emoji: '😐', intensity: 0.85, key: 'mood.low' },
+  { id: 'normal', emoji: '💪', intensity: 1.0, key: 'mood.normal' },
+  { id: 'energetic', emoji: '🔥', intensity: 1.2, key: 'mood.energetic' },
+  { id: 'zen', emoji: '🧘', intensity: 0.7, key: 'mood.zen' },
 ];
 
 const MOOD_STORAGE_KEY = 'shredmatrix_mood';
@@ -199,7 +253,7 @@ export function saveMood(moodId) {
     const history = JSON.parse(localStorage.getItem(MOOD_STORAGE_KEY) || '{}');
     history[today] = { mood: moodId, timestamp: Date.now() };
     localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(history));
-  } catch { /* ignore */ }
+  } catch { /* Optional local preference. */ }
 }
 
 export function getTodayMood() {
@@ -213,15 +267,14 @@ export function getTodayMood() {
 export function getMoodHistory(days = 30) {
   try {
     const history = JSON.parse(localStorage.getItem(MOOD_STORAGE_KEY) || '{}');
-    const entries = Object.entries(history)
+    return Object.entries(history)
       .map(([date, data]) => ({ date, ...data }))
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, days);
-    return entries;
   } catch { return []; }
 }
 
 export function getMoodIntensity(moodId) {
-  const mood = MOODS.find(m => m.id === moodId);
-  return mood ? mood.intensity : 1.0;
+  const mood = MOODS.find((item) => item.id === moodId);
+  return mood ? mood.intensity : 1;
 }
