@@ -360,6 +360,8 @@ function StaticSeoCleanup() {
   return null;
 }
 
+const removeStaticSeo = () => document.getElementById('seo-static')?.remove();
+
 // ── Suspense fallback ────────────────────────────────────
 function PageLoader() {
   if (hasStaticSeo()) return null;
@@ -515,6 +517,17 @@ function AppContent() {
   useEffect(() => {
     trackPageView(document.title, location.pathname);
   }, [location.pathname]);
+
+  // Safety net for the prerendered block: the marketing hero must never sit
+  // above a signed-in member's app, a non-home route, or a slow route chunk.
+  useEffect(() => {
+    if (user || location.pathname !== '/') removeStaticSeo();
+  }, [user, location.pathname]);
+  useEffect(() => {
+    if (isRestoring) return undefined;
+    const timer = setTimeout(removeStaticSeo, 4000);
+    return () => clearTimeout(timer);
+  }, [isRestoring]);
 
   useEffect(() => {
     if (!user?.id) return;
