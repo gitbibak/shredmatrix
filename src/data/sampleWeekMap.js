@@ -38,7 +38,7 @@ const FOUR_WEEK_PATHS = new Set([
 
 export const FOUR_WEEK_PLAN = {
   tr: {
-    title: '4 haftalık ilerleme',
+    title: '8 haftalık ilerleme: ilk 30 gün ve sonraki faz',
     intro: 'Egzersizler aynı kalır; her hafta set, tekrar veya tempo değişir. Ağrı bildirirsen o hafta yük artmaz.',
     columns: ['Hafta', 'Odak', 'Set × tekrar', 'Not'],
     rows: [
@@ -46,10 +46,14 @@ export const FOUR_WEEK_PLAN = {
       ['2', 'Tekrarı artır', '2 × aralığın üst yarısı', 'Her sette 1-2 tekrar ekle; dinlenme aynı kalsın.'],
       ['3', 'Zorluğu artır', '3 × aralığın alt yarısı', 'Bir üst varyasyon veya 3 saniye iniş temposu.'],
       ['4', 'Hacim ve hafif bitiriş', '3 × aralığın üst yarısı, son gün 2 set', 'Hafta sonunda bir sonraki faz açılır.'],
+      ['5', 'İkinci faz: yeni varyasyonlar', '3 × aralığın alt yarısı', 'Uygulama 30 gün sonunda bir üst fazı açar; hareketler zorlaşır, dinlenme aynı.'],
+      ['6', 'Tekrarı artır', '3 × aralığın üst yarısı', 'Çift ilerleme kuralı: önce tekrar, tekrar üst sınırdayken zorluk.'],
+      ['7', 'Hacim', '4 × aralığın alt yarısı', 'En zor hafta; uyku ve protein takibi önemli.'],
+      ['8', 'Deload', '2 × aralığın alt yarısı', 'Toparlanma haftası; ardından 9-12. hafta için üçüncü faz.'],
     ],
   },
   en: {
-    title: '4-week progression',
+    title: '8-week progression: the first 30 days and the next phase',
     intro: 'The exercises stay the same; each week changes sets, reps or tempo. If you report pain, that week does not add load.',
     columns: ['Week', 'Focus', 'Sets × reps', 'Note'],
     rows: [
@@ -57,10 +61,14 @@ export const FOUR_WEEK_PLAN = {
       ['2', 'Add reps', '2 × upper half of the range', 'Add 1-2 reps per set; keep rest the same.'],
       ['3', 'Add difficulty', '3 × lower half of the range', 'Next variation or a 3-second lowering tempo.'],
       ['4', 'Volume and light finish', '3 × upper half, last day 2 sets', 'The next phase unlocks at the end of the week.'],
+      ['5', 'Phase two: new variations', '3 × lower half of the range', 'The app unlocks the next phase after 30 days; movements get harder, rest stays the same.'],
+      ['6', 'Add reps', '3 × upper half of the range', 'Double progression: reps first, difficulty once you hit the top of the range.'],
+      ['7', 'Volume', '4 × lower half of the range', 'Hardest week; sleep and protein tracking matter most here.'],
+      ['8', 'Deload', '2 × lower half of the range', 'Recovery week, then phase three for weeks 9-12.'],
     ],
   },
   es: {
-    title: 'Progresión de 4 semanas',
+    title: 'Progresión de 8 semanas: los primeros 30 días y la siguiente fase',
     intro: 'Los ejercicios se mantienen; cada semana cambian series, repeticiones o tempo. Si reportas dolor, esa semana no sube la carga.',
     columns: ['Semana', 'Enfoque', 'Series × reps', 'Nota'],
     rows: [
@@ -68,6 +76,10 @@ export const FOUR_WEEK_PLAN = {
       ['2', 'Sumar repeticiones', '2 × mitad alta del rango', 'Añade 1-2 repeticiones por serie; mismo descanso.'],
       ['3', 'Sumar dificultad', '3 × mitad baja del rango', 'Siguiente variante o bajada en 3 segundos.'],
       ['4', 'Volumen y cierre ligero', '3 × mitad alta, último día 2 series', 'Al final de la semana se abre la siguiente fase.'],
+      ['5', 'Segunda fase: nuevas variantes', '3 × mitad baja del rango', 'La app abre la siguiente fase a los 30 días; los movimientos se endurecen, el descanso se mantiene.'],
+      ['6', 'Sumar repeticiones', '3 × mitad alta del rango', 'Doble progresión: primero repeticiones, luego dificultad al llegar al tope.'],
+      ['7', 'Volumen', '4 × mitad baja del rango', 'La semana más dura; el sueño y la proteína importan más aquí.'],
+      ['8', 'Descarga', '2 × mitad baja del rango', 'Semana de recuperación; después, tercera fase para las semanas 9-12.'],
     ],
   },
 };

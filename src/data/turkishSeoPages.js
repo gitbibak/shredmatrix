@@ -351,13 +351,14 @@ export const turkishSeoPages = {
     metaTitle: 'Fotoğrafla Kalori Hesaplama | Ücretsiz Yapay Zeka Öğün Tahmini | Full Balance',
     description: 'Öğün fotoğrafını yükle; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makroları gerçekçi bir aralıkla hesaplasın. Ücretsiz, üyeliksiz, fotoğraf saklanmaz.',
     keywords: 'fotoğrafla kalori hesaplama, yapay zeka ile kalori hesaplama, fotoğraftan kalori, öğün kalori hesaplama, ücretsiz kalori hesaplama uygulaması',
-    heroCopy: 'Tabağın fotoğrafını çek; yiyecekler, tahmini gramlar, kalori ve makrolar otomatik gelsin. Gizli yağ ve sos önerilerini tek dokunuşla ekle, porsiyonu düzelt.',
+    heroCopy: 'Uygulama indirmeden, üyelik olmadan, tarayıcıda çalışır ve kullanım sınırı yoktur. Tabağın fotoğrafını çek; yiyecekler, tahmini gramlar, kalori ve makrolar otomatik gelsin. Türk mutfağı dahil 200+ yiyecekli veritabanı; gizli yağ ve sos önerilerini tek dokunuşla ekle, porsiyonu düzelt.',
     sections: [
       { title: 'Nasıl çalışır?', body: 'Görüntü modeli tabaktaki her yiyeceği ayrı tanır ve gram tahmin eder; kalori ve makrolar 200+ yiyecekli beslenme veritabanından hesaplanır, modelin uydurduğu sayılar kullanılmaz.' },
       { title: 'Neden tek sayı değil, aralık?', body: 'Tek fotoğraf porsiyon hacmini, emilen pişirme yağını ve sosu kesin gösteremez. Araç model güvenine göre alt-üst sınır verir; gizli içerikleri sen onaylarsın.' },
       { title: 'Fotoğraf saklanmaz', body: 'Görsel cihazında küçültülür, yalnızca analiz için işlenir; hesabına veya sunucuya kaydedilmez. Üyelik gerekmez.' },
     ],
     faqs: [
+      ['Uygulama indirmeden, üyeliksiz ve sınırsız kullanabilir miyim?', 'Evet. Araç tarayıcıda çalışır; uygulama indirmek, hesap açmak veya kredi kartı girmek gerekmez ve günlük fotoğraf sınırı yoktur. Kötüye kullanımı önlemek için yalnızca dakikada 12 analiz sınırı vardır.'],
       ['Fotoğraftan kalori kesin hesaplanabilir mi?', 'Hayır. Tek bir fotoğraf porsiyon hacmini, pişirme yağını ve gizli malzemeleri kesin gösteremez. Bu yüzden araç yiyecekleri tanır, gramları tahmin eder ve tek bir kesin sayı yerine güvenli bir aralık verir; porsiyonu düzeltebilirsin.'],
       ['Fotoğrafım nereye gidiyor, saklanıyor mu?', 'Fotoğraf cihazında küçültülür ve yalnızca analiz için geçici işlenir. Hesabına, galeriye veya sunucuya kaydedilmez.'],
       ['Hangi yiyecekleri tanıyor?', 'Model tabaktaki görünür her yiyeceği ayrı listeler; 200\'den fazla Türk ve dünya mutfağı yiyeceği içeren veritabanıyla eşleşenlerin kalori ve makroları veritabanından gelir. Eşleşmeyenler "model tahmini" olarak işaretlenir.'],
