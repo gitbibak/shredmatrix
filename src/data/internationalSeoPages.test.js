@@ -58,9 +58,9 @@ describe('international SEO pages', () => {
     expect(englishBmi.description).toContain('no signup');
     expect(findInternationalSeoPage('/en/personal-workout-plan').metaTitle).toContain('Home or Gym');
     const spanishWorkout = findInternationalSeoPage('/es/plan-entrenamiento-personalizado');
-    expect(spanishWorkout.metaTitle).toContain('Casa con Mancuernas');
-    expect(spanishWorkout.description).toContain('tonificación');
-    expect(spanishWorkout.faqs.some(([question]) => question.includes('tonificación'))).toBe(true);
+    expect(spanishWorkout.metaTitle).toContain('Entrenamiento Personalizado Gratis');
+    expect(spanishWorkout.description).toContain('casa o gimnasio');
+    expect(spanishWorkout.faqs.some(([question]) => question.includes('casa o gimnasio'))).toBe(true);
     expect(findInternationalSeoPage('/en/protein-calculator').hero).toContain('without an account');
   });
 

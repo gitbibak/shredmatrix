@@ -22,6 +22,7 @@ function sampleWeekHtml(path, lang) {
 
 const REVIEW_LABEL = { tr: 'Son güncelleme', en: 'Last reviewed', es: 'Última revisión' };
 const SHORT_ANSWER_LABEL = { tr: 'Kısa cevap', en: 'Short answer', es: 'Respuesta breve' };
+const OG_LOCALES = { tr: 'tr_TR', en: 'en_US', es: 'es_ES' };
 
 function leadAnswerBlock(faqs, lang) {
   const first = Array.isArray(faqs) ? faqs[0] : null;
@@ -59,7 +60,9 @@ function buildDocument({ title, description, canonical, image, type = 'website',
     .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/i, `<link rel="canonical" href="${escapeHtml(canonical)}" />`)
     .replace(/\s*<link rel="alternate"[^>]*>/gi, '')
     .replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/i, '')
-    .replace(/<noscript>[\s\S]*?<\/noscript>/i, '')
+    // Static pages already contain a complete localized body. Remove every
+    // template fallback so crawlers do not see Turkish copy on EN/ES pages.
+    .replace(/<noscript>[\s\S]*?<\/noscript>/gi, '')
     // The static block sits beside #root, not inside it, so React's first
     // commit cannot wipe it; the app removes it once the real page has mounted.
     .replace(/<div id="seo-static"[\s\S]*?<\/div>\s*<div id="root"><\/div>/, '<div id="root"></div>')
@@ -83,6 +86,15 @@ function buildDocument({ title, description, canonical, image, type = 'website',
   html = replaceMeta(html, 'property', 'og:image', image);
   html = replaceMeta(html, 'property', 'og:image:secure_url', image);
   html = replaceMeta(html, 'property', 'og:image:type', 'image/jpeg');
+  html = html.replace(/\s*<meta property="og:locale(?::alternate)?"[^>]*>/gi, '');
+  const ogLocale = OG_LOCALES[lang] || OG_LOCALES.en;
+  const ogLocaleTags = [
+    `<meta property="og:locale" content="${ogLocale}" />`,
+    ...Object.entries(OG_LOCALES)
+      .filter(([alternateLang]) => alternateLang !== lang)
+      .map(([, locale]) => `<meta property="og:locale:alternate" content="${locale}" />`),
+  ].join('\n    ');
+  html = html.replace('</head>', `    ${ogLocaleTags}\n  </head>`);
   html = replaceMeta(html, 'name', 'twitter:card', 'summary_large_image');
   html = replaceMeta(html, 'name', 'twitter:title', title);
   html = replaceMeta(html, 'name', 'twitter:description', description);
