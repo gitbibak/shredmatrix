@@ -2,7 +2,17 @@
   // index.html carries the home page's prerendered hero for fast first paint.
   // On any other route served from the SPA fallback it would be wrong, so drop it.
   const homeStatic = document.querySelector('#seo-static[data-home]');
-  if (homeStatic && window.location.pathname !== '/') homeStatic.remove();
+  if (homeStatic) {
+    // A signed-in member is sent to the dashboard right after boot, and the
+    // installed app opens at "/", so the marketing hero would flash for them.
+    let signedIn = false;
+    try {
+      signedIn = Boolean(localStorage.getItem('shredmatrix_user'))
+        || Object.keys(localStorage).some((key) => /^sb-.*-auth-token$/.test(key));
+    } catch { /* Storage may be blocked; keep the hero for visitors. */ }
+    const standalone = window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (window.location.pathname !== '/' || signedIn || standalone) homeStatic.remove();
+  }
 
   const recoveryKey = 'fullbalance_boot_recovery';
   const removeBootGuard = () => document.getElementById('boot-guard')?.remove();
