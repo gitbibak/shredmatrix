@@ -1,8 +1,0 @@
--- Deprecated helper.
---
--- Use supabase/migration.sql instead. It contains the full idempotent schema,
--- RLS policies, storage bucket policies, auth profile trigger, account deletion
--- RPC, and trainer-client connection RPCs in one canonical script.
---
--- Keeping this file prevents older docs/bookmarks from running the previous
--- weaker FOR ALL policies without WITH CHECK.

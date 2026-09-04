@@ -1,4 +1,0 @@
--- Deprecated helper.
---
--- Push subscriptions, leaderboard, and referral tables/policies are now part of
--- supabase/migration.sql. Run that canonical idempotent script instead.

@@ -1152,20 +1152,6 @@ export async function getFirstLogin() {
   return profile?.first_login_at;
 }
 
-export async function setFirstLogin() {
-  const userId = getUserId();
-  const now = new Date().toISOString();
-
-  if (!isSupabaseReady() || !userId) {
-    if (!localStorage.getItem('shredmatrix_first_login')) {
-      localStorage.setItem('shredmatrix_first_login', now);
-    }
-    return;
-  }
-
-  // Profile trigger already sets first_login_at on signup
-}
-
 // ══════════════════════════════════════════════
 // DELETE ALL USER DATA
 // ══════════════════════════════════════════════

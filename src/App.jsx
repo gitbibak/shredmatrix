@@ -400,7 +400,6 @@ function AppContent() {
   };
   const upgradePlanIfNeeded = async (savedPlan, email) => {
     if ((savedPlan.planVersion || 0) < PLAN_VERSION) {
-      console.log(`[App] Plan upgrade: v${savedPlan.planVersion || 0} → v${PLAN_VERSION}`);
       const { generatePlan, localizePlan } = await loadPlanEngine();
       const userMetrics = {
         name: savedPlan.userName, age: savedPlan.userAge, gender: savedPlan.userGender,
