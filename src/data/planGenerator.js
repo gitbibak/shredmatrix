@@ -11,6 +11,7 @@ import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWork
 // Plan şablonu versiyonu — egzersiz/beslenme değişikliklerinde artır
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
 import { PLAN_VERSION } from './planVersion.js';
+import { FOCUS_AREAS, MAX_ADDED_SETS, WEEK_SLOTS, WEEKDAY_NAMES, WEEKLY_SET_CAP, normalizeFocusAreas, normalizeTrainingDays } from './focusAreas.js';
 export { PLAN_VERSION };
 
 // ── Kalori Hesaplama ─────────────────────────────────────
@@ -2569,6 +2570,120 @@ function applyMealTiming(meals, workSchedule) {
 }
 
 // ── Ana Fonksiyon ────────────────────────────────────────
+// ── Haftalık gün sayısı ve bölgesel odak ─────────────────
+function exerciseTargetsArea(exercise, areaKey) {
+  const area = FOCUS_AREAS[areaKey];
+  if (!area || !exercise?.name) return false;
+  const mapped = EXERCISE_MUSCLE_MAP[exercise.name];
+  if (mapped && mapped.some((muscle) => area.muscles.includes(muscle))) return true;
+  const labels = Array.isArray(exercise.muscles) ? exercise.muscles.join(' ').toLowerCase() : '';
+  return area.keywords.some((keyword) => labels.includes(keyword));
+}
+
+function dayAllowsArea(day, areaKey) {
+  const area = FOCUS_AREAS[areaKey];
+  const category = getFocusMuscleCategory(day.focus || '');
+  if (['full_body', 'hiit'].includes(category)) return true;
+  const allowed = FOCUS_ALLOWED_MUSCLES[category] || [];
+  return area.muscles.some((muscle) => allowed.includes(muscle));
+}
+
+function countAreaSets(workoutSplit, areaKey) {
+  return workoutSplit.reduce((total, day) => {
+    if (isRestLikeDay(day)) return total;
+    return total + (day.exercises || []).reduce((sum, exercise) => {
+      const sets = Number(exercise.sets);
+      return exerciseTargetsArea(exercise, areaKey) && Number.isFinite(sets) ? sum + sets : sum;
+    }, 0);
+  }, 0);
+}
+
+/**
+ * Adds a capped amount of extra volume for the member's priority regions:
+ * one extra set on up to two existing exercises per compatible day, and one
+ * accessory exercise on up to two days per week. Never exceeds WEEKLY_SET_CAP.
+ */
+export function applyFocusEmphasis(workoutSplit, focusAreas, environment) {
+  const areas = normalizeFocusAreas(focusAreas);
+  if (areas.length === 0) return workoutSplit;
+  const envKey = ['home_basic', 'home_bodyweight'].includes(environment) ? environment : 'gym';
+
+  return areas.reduce((split, areaKey) => {
+    const baseSets = countAreaSets(split, areaKey);
+    let budget = baseSets >= WEEKLY_SET_CAP ? 0 : Math.min(MAX_ADDED_SETS, WEEKLY_SET_CAP - baseSets);
+    if (budget <= 0) return split;
+    const pool = FOCUS_AREAS[areaKey].accessories[envKey] || FOCUS_AREAS[areaKey].accessories.home_bodyweight;
+    let accessoriesAdded = 0;
+    let poolIndex = 0;
+
+    return split.map((day) => {
+      if (budget <= 0 || isRestLikeDay(day) || !Array.isArray(day.exercises) || !dayAllowsArea(day, areaKey)) return day;
+      const exercises = day.exercises.map((exercise) => ({ ...exercise }));
+      // Accessory first so the region gets a dedicated movement before extra sets.
+      if (accessoriesAdded < 2 && budget >= 2) {
+        const accessory = pool[poolIndex % pool.length];
+        poolIndex += 1;
+        if (!exercises.some((exercise) => exercise.name === accessory.name)) {
+          exercises.push({ ...accessory, focusArea: areaKey });
+          accessoriesAdded += 1;
+          budget -= accessory.sets;
+        }
+      }
+      let bumped = 0;
+      for (const exercise of exercises) {
+        if (bumped >= 1 || budget <= 0) break;
+        const sets = Number(exercise.sets);
+        if (exercise.focusArea || !exerciseTargetsArea(exercise, areaKey) || !Number.isFinite(sets) || sets >= 5) continue;
+        exercise.sets = sets + 1;
+        exercise.focusBoost = areaKey;
+        bumped += 1;
+        budget -= 1;
+      }
+      return { ...day, exercises, focusAreas: [...(day.focusAreas || []), areaKey] };
+    });
+  }, workoutSplit);
+}
+
+/**
+ * Trims a phase template to the number of training days the member can do,
+ * keeping the most diverse set of sessions and spreading them over the week.
+ */
+export function applyTrainingDays(workoutSplit, requestedDays) {
+  const days = normalizeTrainingDays(requestedDays);
+  if (!days) return workoutSplit;
+  const training = workoutSplit.filter((day) => !isRestLikeDay(day));
+  if (training.length <= days) return workoutSplit;
+
+  const chosen = [];
+  const seenCategories = new Set();
+  for (const day of training) {
+    const category = getFocusMuscleCategory(day.focus || '');
+    if (chosen.length < days && !seenCategories.has(category)) {
+      chosen.push(day);
+      seenCategories.add(category);
+    }
+  }
+  for (const day of training) {
+    if (chosen.length >= days) break;
+    if (!chosen.includes(day)) chosen.push(day);
+  }
+  const ordered = training.filter((day) => chosen.includes(day));
+  const restTemplate = workoutSplit.find(isRestLikeDay) || {};
+  const slots = WEEK_SLOTS[days];
+
+  return WEEKDAY_NAMES.map((dayName, index) => {
+    const slot = slots.indexOf(index);
+    if (slot >= 0) return { ...ordered[slot], day: dayName };
+    return {
+      ...restTemplate,
+      day: dayName,
+      focus: 'Dinlenme',
+      emoji: '😴',
+      exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }],
+    };
+  });
+}
+
 export function normalizeTrainingEnvironment(primaryGoal, environment) {
   if (primaryGoal === 'reformer') {
     return ['studio', 'home_reformer'].includes(environment) ? environment : 'studio';
@@ -2583,8 +2698,11 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     bodyFatPercentage: rawBF, experience, activityLevel,
     primaryGoal, workSchedule, budget,
     healthConditions = [], allergies = [], trainingEnvironment: rawTrainingEnvironment,
+    focusAreas: rawFocusAreas = [], trainingDaysPerWeek: rawTrainingDays = null,
   } = userMetrics;
   const trainingEnvironment = normalizeTrainingEnvironment(primaryGoal, rawTrainingEnvironment);
+  const focusAreas = ['muscle', 'fat_loss'].includes(primaryGoal) ? normalizeFocusAreas(rawFocusAreas) : [];
+  const trainingDaysPerWeek = normalizeTrainingDays(rawTrainingDays);
 
   // ── Input Validation — NaN/Infinity koruması ──
   const age = Math.max(14, Math.min(80, Number(rawAge) || 25));
@@ -2615,9 +2733,11 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
 
   const isHomeStrengthPlan = ['muscle', 'fat_loss'].includes(primaryGoal)
     && ['home_bodyweight', 'home_basic'].includes(trainingEnvironment);
-  const rawSplit = isHomeStrengthPlan
+  const templateSplit = isHomeStrengthPlan
     ? buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase)
     : (workoutPhases[primaryGoal] || workoutPhases.muscle)[safePhase];
+  const rawSplit = applyTrainingDays(templateSplit, trainingDaysPerWeek);
+  const templateTrainingDays = templateSplit.filter((day) => !isRestLikeDay(day)).length;
 
   // Inject core finisher + cardio note into each training day
   let trainingDayCounter = 0;
@@ -2677,11 +2797,12 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
   workoutSplit = applyHomeCoreEnvironment(workoutSplit, trainingEnvironment);
   workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
+  workoutSplit = applyFocusEmphasis(workoutSplit, focusAreas, trainingEnvironment);
 
   let equipmentViolations = findHomeEquipmentViolations(workoutSplit, trainingEnvironment);
   if (equipmentViolations.length > 0) {
     console.error('[PlanGenerator] Home equipment validation failed', equipmentViolations);
-    workoutSplit = buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase);
+    workoutSplit = applyTrainingDays(buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase), trainingDaysPerWeek);
     workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
     workoutSplit = applyHomeCoreEnvironment(workoutSplit, trainingEnvironment);
     workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
@@ -2750,6 +2871,9 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     userWorkSchedule: workSchedule,
     trainingEnvironment,
     primaryGoal,
+    focusAreas,
+    trainingDaysPerWeek,
+    trainingDays: workoutSplit.filter((day) => !isRestLikeDay(day)).length,
     // Faz bilgisi
     phase: safePhase,
     planQuality: {
@@ -2797,6 +2921,9 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
       appliedPhase: safePhase,
       trainingEnvironment,
       environmentAdjusted: ['home_bodyweight', 'home_basic'].includes(trainingEnvironment),
+      focusAreasApplied: focusAreas,
+      trainingDaysRequested: trainingDaysPerWeek,
+      trainingDaysAdjusted: Boolean(trainingDaysPerWeek) && trainingDaysPerWeek < templateTrainingDays,
       equipmentValidated: equipmentViolations.length === 0
         && (primaryGoal !== 'reformer' || ['studio', 'home_reformer'].includes(trainingEnvironment)),
       allergyValidated: allergyViolations.length === 0,
@@ -3489,6 +3616,8 @@ export function regeneratePlanWithPhase(existingPlan, phase) {
     trainingEnvironment: existingPlan.trainingEnvironment,
     healthConditions: existingPlan.healthConditions || [],
     allergies: existingPlan.allergies || [],
+    focusAreas: existingPlan.focusAreas || [],
+    trainingDaysPerWeek: existingPlan.trainingDaysPerWeek || null,
   };
   return generatePlan(userMetrics, phase, planLang);
 }

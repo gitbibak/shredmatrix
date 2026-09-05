@@ -125,6 +125,11 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
                     {exercise.tempo}
                   </span>
                 )}
+                {(exercise.focusArea || exercise.focusBoost) && (
+                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-300 font-medium">
+                    {t('workout.focusBadge')}
+                  </span>
+                )}
               </div>
             )}
           </div>

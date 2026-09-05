@@ -19,18 +19,24 @@ import {
   House,
   Building2,
   PackageOpen,
+  Target,
+  CalendarDays,
 } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import { normalizeTrainingEnvironment } from '../data/planGenerator';
+import { FOCUS_AREA_KEYS, MAX_FOCUS_AREAS, TRAINING_DAY_OPTIONS, normalizeFocusAreas, normalizeTrainingDays } from '../data/focusAreas';
 
 // ── Step Configuration ───────────────────────────────────
-const STEP_IDS = ['goal', 'basics', 'safety'];
-const STEP_ICONS = [TrendingUp, User, HeartPulse];
+const STEP_IDS = ['goal', 'basics', 'focus', 'safety'];
+const STEP_ICONS = [TrendingUp, User, Target, HeartPulse];
 const STEP_LABEL_KEYS = {
   goal: 'onboarding.step4.title',
   basics: 'onboarding.step2.title',
-    safety: 'onboarding.step5.title',
+  focus: 'onboarding.stepFocus.title',
+  safety: 'onboarding.step5.title',
 };
+const FOCUS_AREA_EMOJI = { glutes_legs: '🍑', core: '🎯', back_posture: '🧍', chest_arms: '💪', shoulders: '🏋️' };
+const FOCUS_AREA_LABEL_KEYS = { glutes_legs: 'glutesLegs', core: 'coreArea', back_posture: 'backPosture', chest_arms: 'chestArms', shoulders: 'shouldersArea' };
 
 // ── Animation Variants ───────────────────────────────────
 const pageVariants = {
@@ -192,6 +198,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
   const [trainingEnvironment, setTrainingEnvironment] = useState('gym');
   const [healthConditions, setHealthConditions] = useState(['none']);
   const [allergies, setAllergies] = useState(['none']);
+  const [focusAreas, setFocusAreas] = useState([]);
+  const [trainingDaysPerWeek, setTrainingDaysPerWeek] = useState(null);
 
   const asksForTrainingEnvironment = ['muscle', 'fat_loss', 'reformer'].includes(primaryGoal);
   const trainingEnvironmentOptions = primaryGoal === 'reformer'
@@ -248,6 +256,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
         }
         if (Array.isArray(saved.healthConditions)) setHealthConditions(saved.healthConditions.length ? saved.healthConditions : ['none']);
         if (Array.isArray(saved.allergies)) setAllergies(saved.allergies.length ? saved.allergies : ['none']);
+        if (Array.isArray(saved.focusAreas)) setFocusAreas(normalizeFocusAreas(saved.focusAreas));
+        if (saved.trainingDaysPerWeek) setTrainingDaysPerWeek(normalizeTrainingDays(saved.trainingDaysPerWeek));
         if (typeof saved.step === 'number') setStep(Math.min(saved.step, STEP_IDS.length - 1));
       } else if (defaultName) {
         setName(defaultName);
@@ -262,9 +272,10 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
         draftVersion: DRAFT_VERSION,
         name, age, gender, height, weight,
         experience, activityLevel, primaryGoal, trainingEnvironment, healthConditions, allergies, step,
+        focusAreas, trainingDaysPerWeek,
       }));
     } catch (err) { console.warn('[Onboarding] save:', err); }
-  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, trainingEnvironment, healthConditions, allergies, step]);
+  }, [name, age, gender, height, weight, experience, activityLevel, primaryGoal, trainingEnvironment, healthConditions, allergies, step, focusAreas, trainingDaysPerWeek]);
 
   const selectGoal = (goal) => {
     setPrimaryGoal(goal);
@@ -277,7 +288,8 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
     switch (step) {
       case 0: return primaryGoal;
       case 1: return name.trim().length > 0 && gender && weight > 0 && height > 0;
-      case 2: return healthConditions.length > 0 && allergies.length > 0;
+      case 2: return true;
+      case 3: return healthConditions.length > 0 && allergies.length > 0;
       default: return true;
     }
   };
@@ -319,8 +331,20 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       budget: 'moderate',
       healthConditions,
       allergies,
+      focusAreas: ['muscle', 'fat_loss'].includes(primaryGoal) ? normalizeFocusAreas(focusAreas) : [],
+      trainingDaysPerWeek: primaryGoal === 'meditation' ? null : normalizeTrainingDays(trainingDaysPerWeek),
     });
   };
+
+  const toggleFocusArea = (area) => {
+    setFocusAreas((prev) => {
+      if (prev.includes(area)) return prev.filter((key) => key !== area);
+      if (prev.length >= MAX_FOCUS_AREAS) return [...prev.slice(1), area];
+      return [...prev, area];
+    });
+  };
+  const showsFocusAreas = ['muscle', 'fat_loss'].includes(primaryGoal);
+  const showsTrainingDays = primaryGoal !== 'meditation';
 
   const advanceOrSubmit = () => {
     if (!canNext()) return;
@@ -590,8 +614,64 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
                 </div>
               )}
 
-              {/* ─── STEP 2: Güvenlik ─────────────────── */}
+              {/* ─── STEP 2: Odak bölge ve gün sayısı ── */}
               {step === 2 && (
+                <div className="space-y-6 flex-1">
+                  {showsTrainingDays && (
+                    <>
+                      <div>
+                        <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.daysTitle')}</h2>
+                        <p className="text-sm text-slate-500">{t('onboarding.fields.daysSubtitle')}</p>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2">
+                        <SelectCard selected={trainingDaysPerWeek === null} onClick={() => setTrainingDaysPerWeek(null)} className="min-h-[72px] p-3">
+                          <CalendarDays size={18} className={trainingDaysPerWeek === null ? 'text-orange-300' : 'text-slate-500'} />
+                          <span className={`text-xs font-semibold font-outfit ${trainingDaysPerWeek === null ? 'text-white' : 'text-slate-400'}`}>{t('onboarding.fields.daysAuto')}</span>
+                        </SelectCard>
+                        {TRAINING_DAY_OPTIONS.map((days) => {
+                          const selected = trainingDaysPerWeek === days;
+                          return (
+                            <SelectCard key={days} selected={selected} onClick={() => setTrainingDaysPerWeek(days)} className="min-h-[72px] p-3">
+                              <span className={`text-2xl font-extrabold font-outfit ${selected ? 'text-white' : 'text-slate-300'}`}>{days}</span>
+                              <span className={`text-[10px] font-semibold ${selected ? 'text-orange-200' : 'text-slate-500'}`}>{t('onboarding.fields.daysUnit')}</span>
+                            </SelectCard>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+
+                  {showsFocusAreas && (
+                    <>
+                      <div className={showsTrainingDays ? 'border-t border-slate-800 pt-5' : ''}>
+                        <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.focusTitle')}</h2>
+                        <p className="text-sm text-slate-500">{t('onboarding.fields.focusSubtitle')}</p>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {FOCUS_AREA_KEYS.map((area) => {
+                          const selected = focusAreas.includes(area);
+                          return (
+                            <SelectCard key={area} selected={selected} onClick={() => toggleFocusArea(area)} className="min-h-[88px] p-3">
+                              <span className="text-2xl">{FOCUS_AREA_EMOJI[area]}</span>
+                              <span className={`text-xs font-semibold font-outfit ${selected ? 'text-white' : 'text-slate-400'}`}>
+                                {t(`onboarding.fields.${FOCUS_AREA_LABEL_KEYS[area]}`)}
+                              </span>
+                            </SelectCard>
+                          );
+                        })}
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-slate-500">{t('onboarding.fields.focusHonesty')}</p>
+                    </>
+                  )}
+
+                  {!showsFocusAreas && !showsTrainingDays && (
+                    <p className="text-sm text-slate-500">{t('onboarding.fields.focusNotNeeded')}</p>
+                  )}
+                </div>
+              )}
+
+              {/* ─── STEP 3: Güvenlik ─────────────────── */}
+              {step === 3 && (
                 <div className="space-y-6 flex-1">
                   <div>
                     <h2 className="text-xl font-bold font-outfit text-white mb-1">{t('onboarding.fields.healthTitle')}</h2>

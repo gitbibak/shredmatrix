@@ -25,6 +25,14 @@ describe('Onboarding step flow', () => {
     fireEvent.change(await screen.findByPlaceholderText(/Adınızı girin/i), { target: { value: 'Tolga' } });
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
+    // Focus step: weekly day count plus optional priority regions.
+    expect(await screen.findByText(/Haftada kaç gün antrenman yapabilirsin/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /^3\s*gün \/ hafta/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Kalça & Bacak/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Karın & Core/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Omuz$/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
+
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();
     expect(await screen.findByText(/Gıda alerjiniz veya beslenme tercihiniz var mı/i)).toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: /Programı Oluştur/i }));
@@ -33,6 +41,9 @@ describe('Onboarding step flow', () => {
       bodyFatPercentage: null,
       healthConditions: ['none'],
       allergies: ['none'],
+      trainingDaysPerWeek: 3,
+      // Selecting a third region replaces the oldest choice.
+      focusAreas: ['core', 'shoulders'],
     }));
   });
 
@@ -61,6 +72,8 @@ describe('Onboarding step flow', () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
+    expect(await screen.findByText(/Öncelikli bölge/i)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /Devam/i }));
 
     expect(await screen.findByText(/Herhangi bir sağlık sorununuz var mı/i)).toBeInTheDocument();

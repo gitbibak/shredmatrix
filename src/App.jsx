@@ -410,6 +410,8 @@ function AppContent() {
         trainingEnvironment: savedPlan.trainingEnvironment,
         healthConditions: savedPlan.healthConditions || ['none'],
         allergies: savedPlan.allergies || ['none'],
+        focusAreas: savedPlan.focusAreas || [],
+        trainingDaysPerWeek: savedPlan.trainingDaysPerWeek || null,
       };
       const targetLang = savedPlan.lang || lang || 'tr';
       const rawPlan = generatePlan(userMetrics, savedPlan.phase || 0, targetLang);
@@ -546,6 +548,8 @@ function AppContent() {
       trainingEnvironment: plan.trainingEnvironment,
       healthConditions: plan.healthConditions || ['none'],
       allergies: plan.allergies || ['none'],
+      focusAreas: plan.focusAreas || [],
+      trainingDaysPerWeek: plan.trainingDaysPerWeek || null,
     };
     loadPlanEngine().then(({ generatePlan, localizePlan }) => {
       if (cancelled) return;
@@ -636,6 +640,8 @@ function AppContent() {
         budget: plan.userBudget || 'moderate',
         healthConditions: plan.healthConditions || ['none'],
         allergies: plan.allergies || ['none'],
+        focusAreas: plan.focusAreas || [],
+        trainingDaysPerWeek: plan.trainingDaysPerWeek || null,
       });
     }
     try { localStorage.removeItem('fb_onboarding_draft'); } catch (err) { console.warn('[App]', err?.message || err); }

@@ -119,3 +119,12 @@ Bölüm 5'teki sıra tamamlandı:
 7. Forum varlığı: hazır cevap şablonları `marketing/forum-cevap-sablonlari.md`; paylaşımı kurucu yapmalı.
 
 Ayrıca Türkçe SEO sayfa verisi tek modüle taşındı (`src/data/turkishSeoPages.js`); statik SSS eksikliği 27 sayfanın tamamında kapandı. Toplam 82 statik sayfa, 85 sitemap URL'si. Yeni URL'ler IndexNow ile bildirildi.
+
+## 9. Ek: 5 Eylül, bölgesel odak ve haftalık gün sayısı
+
+- Kayıt akışına "Odak & Program" adımı eklendi: haftada 3/4/5 gün seçimi (veya otomatik) ve kas gelişimi/yağ yakımı hedeflerinde en fazla iki öncelikli bölge (kalça-bacak, karın-core, sırt-duruş, göğüs-kol, omuz).
+- Gün sayısı seçimi faz şablonunu kırpar: en çeşitli seansları tutar, haftaya yayar (3 gün: Pzt-Çar-Cum; 4 gün: Pzt-Sal-Per-Cum; 5 gün: Pzt-Sal-Çar-Cum-Cmt). Şablondan fazla gün eklenmez.
+- Odak bölge katmanı bölgeye haftada en fazla 6 set ekler: uyumlu günlere bir ek hareket (salon, dambıl/bant ve ekipmansız havuzları ayrı) ve mevcut bir harekete +1 set; bölge zaten 26 sert sete ulaşmışsa eklemez. Ev planlarında ekipman doğrulaması korunur.
+- Kayıt ekranında dürüst not: kas bölgesel gelişir, yağ bölgesel yakılmaz. Beslenme motoru değişmedi.
+- Antrenman ekranında odak hareketleri "Odak bölge" etiketiyle görünür. Plan `focusAreas`, `trainingDaysPerWeek` ve `trainingDays` alanlarını taşır; dil değişimi, faz değişimi ve hedef değişiminde korunur.
+- 9 yeni motor testi, onboarding testleri güncellendi; toplam 205 test.

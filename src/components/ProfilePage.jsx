@@ -361,6 +361,8 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
         : (plan.trainingEnvironment === 'studio' || plan.trainingEnvironment === 'home_reformer' ? 'gym' : plan.trainingEnvironment),
       healthConditions: plan.healthConditions || ['none'],
       allergies: plan.allergies || ['none'],
+      focusAreas: plan.focusAreas || [],
+      trainingDaysPerWeek: plan.trainingDaysPerWeek || null,
     };
     const newPlan = generatePlan(userMetrics, 0);
     // Reset phase tracking
