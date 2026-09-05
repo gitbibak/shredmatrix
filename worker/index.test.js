@@ -16,6 +16,13 @@ function mealRequest(body = { image: 'data:image/jpeg;base64,YQ==', language: 'e
 }
 
 describe('meal analysis worker', () => {
+  it.each([null, [], 'meal', 42, true])('rejects a non-object payload: %j', async (body) => {
+    const run = vi.fn();
+    const response = await worker.fetch(mealRequest(body), { AI: { run } });
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: 'invalid_request' });
+    expect(run).not.toHaveBeenCalled();
+  });
   it('waits for the complete model answer before normalizing it', async () => {
     const run = vi.fn().mockResolvedValue({ result: { answer: analysisAnswer }, usage: {} });
 

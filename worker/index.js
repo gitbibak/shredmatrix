@@ -99,6 +99,9 @@ async function analyzeMeal(request, env) {
     return json({ error: 'invalid_request' }, 400);
   }
 
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return json({ error: 'invalid_request' }, 400);
+  }
   const image = typeof body.image === 'string' ? body.image : '';
   const language = ['tr', 'en', 'es'].includes(body.language) ? body.language : 'en';
   if (!ALLOWED_IMAGE.test(image) || image.length > MAX_IMAGE_CHARS) {

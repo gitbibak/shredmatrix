@@ -5,10 +5,11 @@ import { Moon, Save } from 'lucide-react';
 import { getSleep, saveSleep as saveSleepEntry } from '../lib/dataService';
 import { useToast } from './ToastProvider';
 import { trackLogSleep } from '../lib/analytics';
+import { localDateKey, recentCalendarEntries } from '../utils/calendarDate';
 
 
 
-function todayISO() { return new Date().toISOString().split('T')[0]; }
+function todayISO() { return localDateKey(); }
 
 export default function SleepTracker({ compact = false }) {
   const { t } = useTranslation();
@@ -36,15 +37,15 @@ export default function SleepTracker({ compact = false }) {
         return [...prev, entry].sort((a,b) => a.date.localeCompare(b.date));
       });
       toast.success(t('errors.saveSuccess'));
+      setHours('');
     } catch (err) {
       console.warn('[SleepTracker]', err);
       toast.error(t('errors.saveFailed'));
     }
-    setHours('');
   };
 
   // Last 7 days
-  const last7 = entries.slice(-7);
+  const last7 = recentCalendarEntries(entries);
   const avg7 = last7.length > 0
     ? (last7.reduce((s, e) => s + e.hours, 0) / last7.length).toFixed(1)
     : '–';

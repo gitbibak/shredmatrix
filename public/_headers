@@ -38,3 +38,33 @@
 
 /apple-touch-icon.png
   Cache-Control: no-cache, must-revalidate
+
+/auth
+  X-Robots-Tag: noindex
+
+/auth/*
+  X-Robots-Tag: noindex
+
+/dashboard
+  X-Robots-Tag: noindex
+
+/dashboard/*
+  X-Robots-Tag: noindex
+
+/onboarding
+  X-Robots-Tag: noindex
+
+/onboarding/*
+  X-Robots-Tag: noindex
+
+/admin
+  X-Robots-Tag: noindex
+
+/admin/*
+  X-Robots-Tag: noindex
+
+/loading
+  X-Robots-Tag: noindex
+
+/strava/callback
+  X-Robots-Tag: noindex

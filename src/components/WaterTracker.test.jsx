@@ -23,6 +23,24 @@ function renderTracker(props = {}) {
 }
 
 describe('WaterTracker', () => {
+  it('does not save values merely read from storage', async () => {
+    renderTracker({ compact: true });
+    await waitFor(() => expect(screen.getByRole('button', { name: '+1' })).toBeEnabled());
+    expect(saveWaterMock).not.toHaveBeenCalled();
+  });
+
+  it('does not overwrite water after a read error and recovers on focus', async () => {
+    getWaterMock.mockRejectedValueOnce(new Error('offline'));
+    renderTracker({ compact: true });
+    await waitFor(() => expect(getWaterMock).toHaveBeenCalled());
+    expect(screen.getByRole('button', { name: '+1' })).toBeDisabled();
+    expect(saveWaterMock).not.toHaveBeenCalled();
+    fireEvent.focus(window);
+    await waitFor(() => expect(screen.getByRole('button', { name: '+1' })).toBeEnabled());
+    expect(saveWaterMock).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: '+1' }));
+    await waitFor(() => expect(saveWaterMock).toHaveBeenLastCalledWith(expect.any(String), 9, true));
+  });
   beforeEach(() => {
     localStorage.clear();
     getWaterMock.mockReset().mockResolvedValue({ glasses: 8 });
@@ -32,6 +50,8 @@ describe('WaterTracker', () => {
   it('allows logging water beyond the two-litre target', async () => {
     renderTracker();
     const addButton = await screen.findByRole('button', { name: '+1' });
+
+    await waitFor(() => expect(addButton).toBeEnabled());
 
     fireEvent.click(addButton);
     fireEvent.click(addButton);
@@ -52,7 +72,7 @@ describe('WaterTracker', () => {
     renderTracker({ compact: true });
     const addButton = await screen.findByRole('button', { name: '+1' });
 
-    expect(addButton).toBeEnabled();
+    await waitFor(() => expect(addButton).toBeEnabled());
     fireEvent.click(addButton);
     expect(screen.getByText('9')).toBeInTheDocument();
   });

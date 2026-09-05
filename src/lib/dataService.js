@@ -699,7 +699,7 @@ export async function saveWater(date, glasses, targetMet = false) {
   }
 }
 
-export async function getWater(date) {
+export async function getWater(date, { strict = false } = {}) {
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
@@ -719,6 +719,7 @@ export async function getWater(date) {
     return data || { date, glasses: 0 };
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
+    if (strict) throw err;
     // Table may not exist — fallback to localStorage
     const data = lsGet('shredmatrix_water');
     if (data?.date === date) return data;

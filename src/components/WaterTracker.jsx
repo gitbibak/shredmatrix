@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Droplets, Plus, Minus, RotateCcw } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { saveWater, getWater } from '../lib/dataService';
 import { trackLogWater } from '../lib/analytics';
+import { localDateKey } from '../utils/calendarDate';
 
 
 const TARGET_GLASSES = 8;
@@ -11,7 +12,7 @@ const ML_PER_GLASS = 250;
 const TARGET_ML = TARGET_GLASSES * ML_PER_GLASS;
 
 function getTodayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateKey();
 }
 
 
@@ -29,6 +30,8 @@ export default function WaterTracker({ compact = false }) {
   const { t } = useTranslation();
   const [glasses, setGlasses] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const entry = useRef(null);
+  const writes = useRef(Promise.resolve());
 
   const getMessage = (pct) => {
     if (pct >= 100) return t('water.messages.done');
@@ -38,44 +41,53 @@ export default function WaterTracker({ compact = false }) {
     return t('water.messages.start');
   };
 
-  // Load today's water on mount
+  // Reads never write back. Wait for queued edits before refreshing the counter.
   useEffect(() => {
-    getWater(getTodayStr()).then(d => {
-      setGlasses(d.glasses || 0);
-      setLoaded(true);
-    }).catch((err) => { console.warn('[WaterTracker]', err); setLoaded(true); });
-  }, []);
-
-  // Persist on every change
-  useEffect(() => {
-    if (!loaded) return; // skip until initial data is loaded
-    saveWater(getTodayStr(), glasses, glasses >= TARGET_GLASSES).catch((err) => { console.warn('[WaterTracker]', err); });
-  }, [glasses, loaded]);
-
-  // Auto-reset check when tab regains focus
-  useEffect(() => {
-    const check = () => {
-      getWater(getTodayStr()).then(d => setGlasses(d.glasses || 0)).catch((err) => { console.warn('[WaterTracker]', err); });
+    let active = true;
+    let requestId = 0;
+    const check = async () => {
+      const id = ++requestId;
+      entry.current = null;
+      setLoaded(false);
+      try {
+        await writes.current;
+        const date = getTodayStr();
+        const data = await getWater(date, { strict: true });
+        if (!active || id !== requestId) return;
+        entry.current = { date, glasses: data.glasses || 0 };
+        setGlasses(entry.current.glasses);
+        setLoaded(true);
+      } catch (err) { console.warn('[WaterTracker]', err); }
     };
+    check();
     window.addEventListener('focus', check);
-    return () => window.removeEventListener('focus', check);
+    const timer = setInterval(() => {
+      if (entry.current && entry.current.date !== getTodayStr()) check();
+    }, 60_000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+      window.removeEventListener('focus', check);
+    };
   }, []);
 
-  const add = useCallback(() => {
-    setGlasses((g) => {
-      const next = g + 1;
-      trackLogWater(next >= TARGET_GLASSES);
-      return next;
-    });
+  const change = useCallback((delta) => {
+    if (!entry.current) return;
+    if (entry.current.date !== getTodayStr()) {
+      window.dispatchEvent(new Event('focus'));
+      return;
+    }
+    const date = entry.current.date;
+    const next = delta === null ? 0 : Math.max(0, entry.current.glasses + delta);
+    entry.current = { date, glasses: next };
+    setGlasses(next);
+    writes.current = writes.current.then(() => saveWater(date, next, next >= TARGET_GLASSES))
+      .catch(err => console.warn('[WaterTracker]', err));
+    if (delta === 1) trackLogWater(next >= TARGET_GLASSES);
   }, []);
-
-  const remove = useCallback(() => {
-    setGlasses((g) => Math.max(g - 1, 0));
-  }, []);
-
-  const reset = useCallback(() => {
-    setGlasses(0);
-  }, []);
+  const add = () => change(1);
+  const remove = () => change(-1);
+  const reset = () => change(null);
 
   const percentage = Math.round((glasses / TARGET_GLASSES) * 100);
   const mlConsumed = glasses * ML_PER_GLASS;
@@ -113,7 +125,7 @@ export default function WaterTracker({ compact = false }) {
           <button
             type="button"
             onClick={remove}
-            disabled={glasses <= 0}
+            disabled={!loaded || glasses <= 0}
             aria-label="-1"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-slate-400 disabled:opacity-30"
           >
@@ -124,6 +136,7 @@ export default function WaterTracker({ compact = false }) {
             type="button"
             onClick={add}
             aria-label="+1"
+            disabled={!loaded}
             className="flex h-9 w-12 shrink-0 items-center justify-center gap-1 rounded-xl bg-blue-500 text-sm font-bold text-white"
           >
             <Plus size={15} />1
@@ -247,7 +260,7 @@ export default function WaterTracker({ compact = false }) {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           onClick={remove}
-          disabled={glasses <= 0}
+          disabled={!loaded || glasses <= 0}
           className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-medium
                      hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
         >
@@ -259,6 +272,7 @@ export default function WaterTracker({ compact = false }) {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           onClick={add}
+          disabled={!loaded}
           className="flex items-center gap-1 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#ff6d00] to-[#00b0ff] text-white text-xs font-bold
                      shadow-lg shadow-orange-500/20 cursor-pointer transition-colors"
         >
@@ -270,7 +284,7 @@ export default function WaterTracker({ compact = false }) {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           onClick={reset}
-          disabled={glasses === 0}
+          disabled={!loaded || glasses === 0}
           className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-medium
                      hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
         >
