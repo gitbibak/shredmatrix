@@ -415,7 +415,7 @@ function AppContent() {
       };
       const targetLang = savedPlan.lang || lang || 'tr';
       const rawPlan = generatePlan(userMetrics, savedPlan.phase || 0, targetLang);
-      const newPlan = localizePlan(rawPlan, targetLang);
+      const newPlan = { ...savedPlan, ...localizePlan(rawPlan, targetLang) };
       setPlan(newPlan);
       savePlan(newPlan, email).catch(() => {});
       return newPlan;

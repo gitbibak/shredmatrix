@@ -16,6 +16,14 @@ function mealRequest(body = { image: 'data:image/jpeg;base64,YQ==', language: 'e
 }
 
 describe('meal analysis worker', () => {
+  it('supports multimodal chat answers without treating a truncated answer as complete', async () => {
+    const run = vi.fn().mockResolvedValue({ choices: [{ finish_reason: 'stop', message: { content: analysisAnswer } }] });
+    const env = { AI: { run }, MEAL_MODEL: '@cf/qwen/qwen3.8-27b' };
+    expect((await worker.fetch(mealRequest(), env)).status).toBe(200);
+    expect(run.mock.calls[0][1].messages[0].content[1].image_url.url).toBe('data:image/jpeg;base64,YQ==');
+    run.mockResolvedValue({ choices: [{ finish_reason: 'length', message: { content: analysisAnswer } }] });
+    expect((await worker.fetch(mealRequest(), env)).status).toBe(503);
+  });
   it.each([null, [], 'meal', 42, true])('rejects a non-object payload: %j', async (body) => {
     const run = vi.fn();
     const response = await worker.fetch(mealRequest(body), { AI: { run } });

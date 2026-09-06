@@ -39,6 +39,7 @@ export async function prepareMealPhoto(file) {
 /** English names of the nutrition database, sent to the model as a canonical vocabulary. */
 export function buildFoodVocabulary(foods = []) {
   return foods
+    .filter((food) => food.photoMatch !== false)
     .map((food) => String(food?.name?.en || '').trim())
     .filter((name) => name && !/^(salt|water)$/i.test(name));
 }
@@ -64,8 +65,8 @@ export async function analyzeMealPhoto(image, language, fetchImpl = fetch, vocab
 // ── Food name matching ─────────────────────────────────────
 
 const FOOD_ALIASES = {
-  'bulgur wheat': 'bulgur',
-  'bulgur pilaf': 'bulgur',
+  'bulgur wheat': 'bulgur cooked',
+  'bulgur pilaf': 'bulgur cooked',
   'feta cheese': 'white cheese',
   feta: 'white cheese',
   'mixed greens': 'lettuce',
@@ -79,8 +80,6 @@ const FOOD_ALIASES = {
   'cherry tomatoes': 'tomato',
   lentils: 'lentil',
   eggs: 'egg',
-  'omelette': 'egg',
-  'omelet': 'egg',
   'chicken': 'chicken breast',
   'chicken kebab': 'chicken breast',
   'beef': 'beef tenderloin',
@@ -106,20 +105,17 @@ const FOOD_ALIASES = {
   'oil': 'olive oil',
   'vegetable oil': 'sunflower oil',
   'cooking oil': 'sunflower oil',
-  'dressing': 'olive oil',
-  'salad dressing': 'olive oil',
   'yoghurt': 'yogurt',
   'plain yogurt': 'yogurt',
   'cheese': 'white cheese',
   'lemon juice': 'lemon',
   'orange juice': 'orange juice',
   'cola': 'cola',
-  'soda': 'cola',
   'coke': 'cola',
 };
 
 const SHAPE_WORDS = ['sauce', 'soup', 'juice', 'oil', 'paste', 'bread', 'cake', 'cookie', 'chips', 'fries', 'pie', 'jam', 'smoothie', 'shake', 'milk', 'cheese', 'butter', 'cream', 'salad', 'pilaf', 'white', 'whole', 'sweet', 'egg'];
-const PREPARATION_WORDS = /\b(grilled|roasted|boiled|cooked|steamed|fresh|raw|fried|scrambled|poached|baked|sauteed|sliced|chopped|diced|plain|homemade|izgara|pisirilmis|haslanmis|kizartma|a la plancha|cocido|asado|frito)\b/g;
+const PREPARATION_WORDS = /\b(grilled|roasted|boiled|cooked|steamed|fresh|poached|baked|sliced|chopped|diced|plain|izgara|pisirilmis|haslanmis|a la plancha|cocido|asado)\b/g;
 
 export function normalizeFoodName(value) {
   const normalized = String(value || '')
@@ -160,11 +156,14 @@ function scoreCandidate(targetTokens, keyTokens) {
 
 export function findKnownFood(name, foods, canonical = '') {
   if (!Array.isArray(foods) || foods.length === 0) return null;
+  // Do not replace an uncertain preparation with a lean/raw database entry.
+  if (/\b(fried|scrambled|raw|breaded|battered|kizartma|frito|omelet|omelette)\b/i.test(normalizeFoodName(name))) return null;
   const targets = [normalizeFoodName(canonical), normalizeFoodName(name)].filter(Boolean);
   if (targets.length === 0) return null;
 
   let best = null;
   foods.forEach((food) => {
+    if (food.photoMatch === false) return;
     Object.values(food?.name || {}).forEach((label) => {
       const key = normalizeFoodName(label);
       if (!key) return;
@@ -180,16 +179,12 @@ export function findKnownFood(name, foods, canonical = '') {
 
 // ── Portion and nutrition sanity ──────────────────────────
 
-const CATEGORY_MIN_GRAMS = { meat: 30, grain: 30, veggie: 10, fruit: 30, dairy: 10, sauce: 3, drink: 100, snack: 10, dessert: 20, fastfood: 60 };
-const CATEGORY_DEFAULT_GRAMS = { meat: 120, grain: 150, veggie: 60, fruit: 100, dairy: 30, sauce: 14, drink: 250, snack: 30, dessert: 90, fastfood: 200 };
 const MAX_KCAL_PER_100G = { drink: 120, veggie: 250, fruit: 350, sauce: 900, snack: 700, default: 600 };
 
-export function normalizeEstimatedGrams(value, category, name) {
-  const grams = Math.max(1, Number(value) || 1);
-  if (/\b(lemon|lime|limon)\b.*\b(juice|suyu|jugo)\b/i.test(String(name || '')) && grams < 8) return 15;
-  const minimum = CATEGORY_MIN_GRAMS[category] || 5;
-  // Small numbers are almost always a piece count the model mislabelled as grams.
-  return grams < minimum ? (CATEGORY_DEFAULT_GRAMS[category] || Math.max(grams, 30)) : Math.min(grams, 1500);
+export function normalizeEstimatedGrams(value) {
+  const grams = Number(value);
+  // A teaspoon, garnish or sip can genuinely weigh only a few grams.
+  return Number.isFinite(grams) && grams > 0 && grams <= 2000 ? grams : 0;
 }
 
 function plausibleEnergy(item, modelCalories) {
@@ -198,7 +193,7 @@ function plausibleEnergy(item, modelCalories) {
 }
 
 export function analysisItemsToMealItems(items, language, foods = []) {
-  const candidates = (Array.isArray(items) ? items : []).map((item) => {
+  const candidates = (Array.isArray(items) ? items : []).filter((item) => item && normalizeEstimatedGrams(item.grams) > 0).map((item) => {
     const knownFood = findKnownFood(item.name, foods, item.canonical);
     const category = knownFood?.cat || 'photo';
     const grams = normalizeEstimatedGrams(item.grams, knownFood?.cat, item.canonical || item.name);

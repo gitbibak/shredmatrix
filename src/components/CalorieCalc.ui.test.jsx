@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import CalorieCalc from './CalorieCalc';
 import { LanguageProvider } from '../i18n/LanguageContext';
+import { analyzeMealPhoto } from '../lib/mealPhotoAnalysis';
 
 vi.mock('../lib/mealPhotoAnalysis', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -27,6 +28,18 @@ function renderCalculator() {
 }
 
 describe('meal photo controls', () => {
+  it('does not restore results after the photo was removed during analysis', async () => {
+    let finish;
+    analyzeMealPhoto.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve; }));
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), { target: { files: [new File(['photo'], 'meal.jpg', { type: 'image/jpeg' })] } });
+    await screen.findByAltText('Kalori tahmini için seçilen öğün');
+    await waitFor(() => expect(finish).toBeTypeOf('function'));
+    fireEvent.click(screen.getByRole('button', { name: 'Öğün fotoğrafını kaldır' }));
+    finish({ isFood: true, items: [{ name: 'Tavuk', grams: 150, calories: 240 }] });
+    await waitFor(() => expect(screen.queryByText('Otomatik tahmin hazır')).not.toBeInTheDocument());
+    expect(screen.queryByAltText('Kalori tahmini için seçilen öğün')).not.toBeInTheDocument();
+  });
   it('keeps camera capture separate from the photo library', () => {
     renderCalculator();
 

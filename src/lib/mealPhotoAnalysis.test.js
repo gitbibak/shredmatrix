@@ -44,13 +44,13 @@ describe('food matching', () => {
 
   it('prefers the most specific variant and keeps egg white separate from egg', () => {
     expect(findKnownFood('Egg', FOODS)).toBe(byEn('Egg'));
-    expect(findKnownFood('Fried eggs', FOODS)).toBe(byEn('Egg'));
+    expect(findKnownFood('Fried eggs', FOODS)).toBeNull();
     expect(findKnownFood('Egg white', FOODS)).toBe(byEn('Egg White'));
     expect(findKnownFood('Whole wheat bread', FOODS)).toBe(byEn('Whole Wheat Bread'));
   });
 
   it('understands common aliases and localized names', () => {
-    expect(findKnownFood('Bulgur pilaf', FOODS)).toBe(byEn('Bulgur'));
+    expect(findKnownFood('Bulgur pilaf', FOODS)).toBe(byEn('Bulgur Cooked'));
     expect(findKnownFood('Feta', FOODS)).toBe(byEn('White Cheese'));
     expect(findKnownFood('Beyaz peynir', FOODS)).toBe(byEn('White Cheese'));
     expect(findKnownFood('Aceite de oliva', FOODS)).toBe(byEn('Olive Oil'));
@@ -81,10 +81,10 @@ describe('analysis item conversion', () => {
     expect(item.cal).toBe(1200);
   });
 
-  it('does not treat a visible item count as grams', () => {
+  it('does not inflate a small amount of oil to a tablespoon', () => {
     const [item] = analysisItemsToMealItems([{ name: 'Olive Oil', grams: 1, calories: 20 }], 'en', FOODS);
-    expect(item.grams).toBe(14);
-    expect(item.cal).toBe(124);
+    expect(item.grams).toBe(1);
+    expect(item.cal).toBe(9);
   });
 
   it('does not overwrite a realistic small portion with a default', () => {
@@ -105,9 +105,9 @@ describe('analysis item conversion', () => {
     expect(result.find((item) => item.food.name.en === 'Lettuce')).toMatchObject({ grams: 50 });
   });
 
-  it('uses a realistic garnish amount for detected lemon juice', () => {
+  it('preserves a small garnish amount instead of inventing more food', () => {
     const [item] = analysisItemsToMealItems([{ name: 'Lemon Juice', grams: 1, calories: 0 }], 'en', FOODS);
-    expect(item.grams).toBe(15);
+    expect(item.grams).toBe(1);
   });
 
   it('rescales a meal item when the user edits the weight', () => {

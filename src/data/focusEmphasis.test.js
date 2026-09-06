@@ -32,7 +32,12 @@ describe('applyTrainingDays', () => {
     const sessions = trainingDays(reduced);
     expect(sessions).toHaveLength(3);
     expect(sessions.map((day) => day.day)).toEqual(['Pazartesi', 'Çarşamba', 'Cuma']);
-    expect(new Set(sessions.map((day) => day.focus.split(' ')[0])).size).toBe(3);
+    expect(sessions.map((day) => day.focus)).toEqual(['Full Body A', 'Full Body B', 'Full Body C']);
+    sessions.forEach((day) => {
+      expect(day.exercises.some((ex) => /leg press|squat|lunge/i.test(ex.name))).toBe(true);
+      expect(day.exercises.some((ex) => /row|pulldown/i.test(ex.name))).toBe(true);
+      expect(day.exercises.some((ex) => /bench press|shoulder press|incline.*press/i.test(ex.name))).toBe(true);
+    });
     expect(reduced.trainingDays).toBe(3);
     expect(reduced.personalization.trainingDaysAdjusted).toBe(true);
   });

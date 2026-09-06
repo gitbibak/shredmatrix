@@ -184,10 +184,14 @@ describe('planGenerator safety personalization', () => {
     for (const goal of ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation']) {
       const plan = generatePlan({ ...baseMetrics, primaryGoal: goal }, 0, 'tr');
       const weeklyAverage = Math.round(
-        plan.dailyNutrition.reduce((sum, day) => sum + day.calories, 0) / plan.dailyNutrition.length,
+        plan.dailyNutrition.reduce((sum, day) => sum + day.targetCalories, 0) / plan.dailyNutrition.length,
       );
 
       expect(Math.abs(weeklyAverage - plan.dailyCalories)).toBeLessThanOrEqual(1);
+      plan.dailyNutrition.forEach((day) => {
+        expect(day.calories).toBe(day.meals.reduce((sum, meal) => sum + meal.calories, 0));
+        expect(Math.abs(day.calories - day.targetCalories) / day.targetCalories).toBeLessThan(0.1);
+      });
       expect(plan.macros.protein).toBeGreaterThanOrEqual(Math.round(baseMetrics.weight * 1.2));
       expect(plan.macros.fat).toBeGreaterThanOrEqual(Math.round(baseMetrics.weight * 0.8));
       expect(plan.macros.carbs).toBeGreaterThan(0);

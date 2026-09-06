@@ -8,6 +8,15 @@ export function buildShoppingList(days, dayIndexes) {
 
   selectedDays.forEach(day => {
     day.meals?.forEach(meal => {
+      if (Array.isArray(meal.ingredients) && meal.ingredients.length) {
+        meal.ingredients.forEach((item) => {
+          const id = `${item.foodId}:${item.state}`;
+          const current = grouped.get(id);
+          const grams = (current?.grams || 0) + item.grams;
+          grouped.set(id, { id, grams, label: `${item.label}: ${Math.round(grams * 10) / 10} g`, count: 1 });
+        });
+        return;
+      }
       meal.items?.forEach(rawItem => {
         cleanIngredient(rawItem).split(/\s*\+\s*/).forEach(part => {
           const label = cleanIngredient(part);

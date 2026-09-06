@@ -5,6 +5,7 @@
  */
 
 import { buildMealTemplates, dayLabelMap } from './mealDatabase';
+import { calculateNutritionDays, recipeAllergens } from './recipeNutrition';
 import { getWorkoutDayImage } from './moduleAssets';
 import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWorkoutPrograms';
 
@@ -1244,7 +1245,9 @@ export function findMealAllergyViolations(dailyNutrition, allergies = []) {
 
   return (dailyNutrition || []).flatMap((day) =>
     (day.meals || []).flatMap((meal) =>
-      (meal.items || []).flatMap((item) => {
+      meal.ingredients?.length ? meal.ingredients.flatMap((ingredient) =>
+        activeAllergies.filter((allergy) => recipeAllergens(ingredient.foodId).includes(allergy))
+          .map((allergy) => ({ day: day.day, meal: meal.name, item: ingredient.label, allergy }))) : (meal.items || []).flatMap((item) => {
         const matches = activeAllergies.filter((allergy) => itemMatchesAllergy(item, allergy));
         return matches.map((allergy) => ({ day: day.day, meal: meal.name, item, allergy }));
       }),
@@ -2684,6 +2687,22 @@ export function applyTrainingDays(workoutSplit, requestedDays) {
   });
 }
 
+function buildThreeDayStrengthWeek() {
+  const sessions = [
+    ['Leg Press', 'Bench Press', 'Seated Cable Row', 'Romanian Deadlift', 'Standing Calf Raise'],
+    ['Goblet Squat', 'Dumbbell Shoulder Press', 'Lat Pulldown', 'Hip Thrust', 'Leg Curl'],
+    ['Reverse Lunge', 'Incline Dumbbell Press', 'Seated Cable Row', 'Romanian Deadlift', 'Lateral Raise'],
+  ];
+  return WEEKDAY_NAMES.map((day, index) => {
+    const slot = WEEK_SLOTS[3].indexOf(index);
+    if (slot < 0) return { day, focus: 'Dinlenme', exercises: [{ name: 'Tam Dinlenme', sets: '-', reps: '-', rest: '-' }] };
+    return {
+      day, focus: `Full Body ${['A', 'B', 'C'][slot]}`,
+      exercises: sessions[slot].map((name) => ({ name, sets: 3, reps: '8-12', rest: '90s' })),
+    };
+  });
+}
+
 export function normalizeTrainingEnvironment(primaryGoal, environment) {
   if (primaryGoal === 'reformer') {
     return ['studio', 'home_reformer'].includes(environment) ? environment : 'studio';
@@ -2736,7 +2755,9 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   const templateSplit = isHomeStrengthPlan
     ? buildHomeWorkoutProgram(primaryGoal, trainingEnvironment, safePhase)
     : (workoutPhases[primaryGoal] || workoutPhases.muscle)[safePhase];
-  const rawSplit = applyTrainingDays(templateSplit, trainingDaysPerWeek);
+  const rawSplit = trainingDaysPerWeek === 3 && !isHomeStrengthPlan && ['muscle', 'fat_loss'].includes(primaryGoal)
+    ? buildThreeDayStrengthWeek()
+    : applyTrainingDays(templateSplit, trainingDaysPerWeek);
   const templateTrainingDays = templateSplit.filter((day) => !isRestLikeDay(day)).length;
 
   // Inject core finisher + cardio note into each training day
@@ -2773,7 +2794,8 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     return enriched;
   });
 
-  // Apply health condition exercise filters
+  workoutSplit = applyFocusEmphasis(workoutSplit, focusAreas, trainingEnvironment);
+  // Apply health condition exercise filters, including new focus accessories.
   if (!isHomeStrengthPlan && healthConditions.length > 0 && !healthConditions.includes('none')) {
     workoutSplit.forEach((day) => {
       if (!day.exercises) return;
@@ -2797,7 +2819,6 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   workoutSplit = enhanceWorkoutQuality(workoutSplit, primaryGoal, safePhase);
   workoutSplit = applyHomeCoreEnvironment(workoutSplit, trainingEnvironment);
   workoutSplit = applyHomeHealthGuard(workoutSplit, healthConditions, trainingEnvironment);
-  workoutSplit = applyFocusEmphasis(workoutSplit, focusAreas, trainingEnvironment);
 
   let equipmentViolations = findHomeEquipmentViolations(workoutSplit, trainingEnvironment);
   if (equipmentViolations.length > 0) {
@@ -2813,7 +2834,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
   const dailyCalorieTargets = buildDailyCalorieTargets(baseCalories, mealTypes);
 
   // Her gün için özel beslenme planı oluştur
-  const dailyNutrition = workoutSplit.map((day, dayIndex) => {
+  let dailyNutrition = workoutSplit.map((day, dayIndex) => {
     const mealType = getDayMealType(day.focus);
     const dayCalories = dailyCalorieTargets[dayIndex];
     const dayMacros = calculateMacros(dayCalories, primaryGoal, weight);
@@ -2855,6 +2876,7 @@ export function generatePlan(userMetrics, phase = 0, lang = 'tr') {
     });
   }
 
+  dailyNutrition = calculateNutritionDays(dailyNutrition, { lang, allergies, budget });
   const allergyViolations = findMealAllergyViolations(dailyNutrition, allergies);
 
   return {

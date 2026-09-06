@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { mealNameMap, getMealAlternatives, currencyMap, recipeSearchSuffix, MEAL_KEYS } from '../data/mealDatabase';
-import { personalizeMealItems } from '../data/planGenerator';
+import { mealNameMap, recipeSearchSuffix, MEAL_KEYS } from '../data/mealDatabase';
+import { buildCalculatedMeal, calculateNutritionDays, summarizeNutritionDay } from '../data/recipeNutrition';
 import { buildShoppingList } from '../utils/shoppingList';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -106,23 +106,11 @@ function MacroCard({ icon: Icon, label, grams, percentage, color }) {
   );
 }
 
-function getAlternativeItems(meal, altIndex, lang, allergies, budget) {
-  const mealAlternatives = getMealAlternatives(lang);
-  const key = meal.mealKey;
-  if (key && mealAlternatives[key]) {
-    const items = mealAlternatives[key][altIndex % mealAlternatives[key].length] || null;
-    return items ? personalizeMealItems(items, { allergies, budget, lang }) : null;
-  }
-  return null;
-}
-
 /* ─── meal card with image ─── */
-function MealCard({ meal, index, t, lang, currency, allergies, budget }) {
+function MealCard({ meal, index, t, lang, onSwap }) {
   const MealIcon = mealIconsByKey[meal.mealKey] || Utensils;
-  const [altIndex, setAltIndex] = useState(0);
-  const isSwapped = altIndex > 0;
-  const altItems = isSwapped ? getAlternativeItems(meal, altIndex - 1, lang, allergies, budget) : null;
-  const displayItems = altItems || meal.items;
+  const isSwapped = Boolean(meal.swapped);
+  const displayItems = meal.items;
 
   return (
     <motion.div
@@ -156,6 +144,7 @@ function MealCard({ meal, index, t, lang, currency, allergies, budget }) {
           <div className="flex items-center gap-2">
             <MealIcon size={16} className="text-orange-400" />
             <h4 className="font-outfit font-semibold text-white text-sm">{meal.name}</h4>
+            {!meal.image && <span className="text-xs font-semibold text-orange-400">{meal.calories} kcal</span>}
             <a
               href={`https://www.youtube.com/results?search_query=${encodeURIComponent(displayItems.join(' ') + ' ' + (recipeSearchSuffix[lang] || recipeSearchSuffix.tr))}`}
               target="_blank"
@@ -171,7 +160,7 @@ function MealCard({ meal, index, t, lang, currency, allergies, budget }) {
             <motion.button
               whileHover={{ rotate: 180 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setAltIndex((prev) => prev + 1)}
+              onClick={onSwap}
               className={[
                 'flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] cursor-pointer transition-colors',
                 isSwapped
@@ -207,7 +196,7 @@ function MealCard({ meal, index, t, lang, currency, allergies, budget }) {
         </ul>
 
         {/* macro badges */}
-        <div className="flex items-center gap-2 text-[11px] font-medium">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium">
           <span
             className="rounded-full px-2 py-0.5"
             style={{ backgroundColor: `${MACRO_COLORS.protein}20`, color: MACRO_COLORS.protein }}
@@ -240,13 +229,26 @@ export default function NutritionPanel({ plan }) {
   const {
     bmr,
     tdee,
-    macroPercentages = { protein: 30, carbs: 40, fat: 30 },
-    dailyNutrition,
+    dailyNutrition: savedNutrition,
     goal,
     allergies = [],
     userBudget = 'moderate',
     personalization,
   } = plan;
+  const calculatedNutrition = useMemo(() => {
+    if (!savedNutrition?.length) return savedNutrition;
+    return savedNutrition.every((day) => day.nutritionVersion === 1)
+      ? savedNutrition : calculateNutritionDays(savedNutrition, { lang, allergies, budget: userBudget });
+  }, [savedNutrition, lang, allergies, userBudget]);
+  const [mealOverrides, setMealOverrides] = useState({});
+  const dailyNutrition = useMemo(() => calculatedNutrition?.map((day, dayIndex) => summarizeNutritionDay(day,
+    day.meals.map((meal) => mealOverrides[`${dayIndex}:${meal.id}`]?.base === meal
+      ? mealOverrides[`${dayIndex}:${meal.id}`].meal : meal))), [calculatedNutrition, mealOverrides]);
+  const swapMeal = (meal) => {
+    const key = `${selectedDayIdx}:${meal.id}`;
+    const next = buildCalculatedMeal(meal, { lang, allergies, budget: userBudget, variant: (meal.recipeVariant || 0) + 1 });
+    setMealOverrides((previous) => ({ ...previous, [key]: { base: calculatedNutrition[selectedDayIdx].meals.find((item) => item.id === meal.id), meal: { ...next, swapped: true } } }));
+  };
 
   // Default to today's day of the week
   const todayDayIdx = useMemo(() => {
@@ -311,7 +313,9 @@ export default function NutritionPanel({ plan }) {
   );
 
   if (!dayData) return null;
-  const { calories: dayCalories, macros, totalPrice, mealLabel, day: dayName, emoji, focus } = dayData;
+  const { calories: dayCalories, macros, mealLabel, day: dayName, emoji, focus } = dayData;
+  const macroEnergy = macros.protein * 4 + macros.carbs * 4 + macros.fat * 9;
+  const macroPercentages = { protein: Math.round(macros.protein * 4 / macroEnergy * 100), carbs: Math.round(macros.carbs * 4 / macroEnergy * 100), fat: Math.round(macros.fat * 9 / macroEnergy * 100) };
 
   const donutData = [
     { name: t('nutrition.protein'), value: macros.protein },
@@ -338,7 +342,6 @@ export default function NutritionPanel({ plan }) {
   };
 
   // Haftalık toplam maliyet
-  const weeklyPrice = dailyNutrition.reduce((s, d) => s + d.totalPrice, 0);
 
   return (
     <motion.section
@@ -397,6 +400,7 @@ export default function NutritionPanel({ plan }) {
             <span className="text-xs font-bold bg-orange-500/10 text-orange-400 px-2.5 py-1 rounded-full border border-orange-500/20">
               {dayCalories} kcal
             </span>
+            <span className="text-xs text-slate-400">{lang === 'tr' ? 'Hedef' : lang === 'es' ? 'Objetivo' : 'Target'}: {dayData.targetCalories} kcal</span>
           </div>
         </div>
       </motion.div>
@@ -553,9 +557,9 @@ export default function NutritionPanel({ plan }) {
                 index={idx}
                 t={t}
                 lang={lang}
-                currency={currencyMap[lang] || '₺'}
                 allergies={allergies}
                 budget={userBudget}
+                onSwap={() => swapMeal(meal)}
               />
             ))}
           </motion.div>

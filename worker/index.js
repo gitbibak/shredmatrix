@@ -36,6 +36,11 @@ function clientKey(request) {
 }
 
 function pickModelText(result) {
+  const choice = result?.choices?.[0] ?? result?.result?.choices?.[0];
+  if (choice) {
+    if (choice.finish_reason !== 'stop' || !choice.message?.content) throw new Error('incomplete_model_response');
+    return choice.message.content;
+  }
   return result?.result?.answer
     ?? result?.result?.response
     ?? result?.response
@@ -45,6 +50,19 @@ function pickModelText(result) {
 }
 
 export async function runVisionModel(env, { image, prompt, model }) {
+  if (model === '@cf/qwen/qwen3.8-27b') {
+    const result = await env.AI.run(model, {
+      messages: [{ role: 'user', content: [
+        { type: 'text', text: prompt },
+        { type: 'image_url', image_url: { url: image } },
+      ] }],
+      chat_template_kwargs: { enable_thinking: false },
+      response_format: { type: 'json_object' },
+      max_completion_tokens: 2000,
+      stream: false,
+    });
+    return pickModelText(result);
+  }
   if (model.includes('moondream')) {
     const result = await env.AI.run(model, {
       task: 'query',

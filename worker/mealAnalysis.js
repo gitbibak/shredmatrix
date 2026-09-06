@@ -42,17 +42,28 @@ export function sanitizeVocabulary(value) {
 
 export function normalizeMealAnalysis(raw) {
   const parsed = extractJsonObject(raw);
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('invalid_model_response');
   const isFood = parsed.is_food !== false && parsed.is_food !== 'false';
+  if (!isFood) return { isFood: false, items: [], confidence: 0, hiddenIngredients: [] };
+  if (!Array.isArray(parsed.items) || parsed.items.length === 0) throw new Error('incomplete_model_response');
   const sourceItems = Array.isArray(parsed.items) ? parsed.items : [];
 
-  const items = sourceItems.slice(0, MAX_ITEMS).map((item, index) => {
+  if (sourceItems.length > MAX_ITEMS) throw new Error('incomplete_model_response');
+  const items = sourceItems.map((item, index) => {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) throw new Error('invalid_model_response');
+    const weight = Number(item.estimated_grams ?? item.estimated_weight_g ?? item.weight_g ?? item.grams ?? item.weight);
+    const kcal = Number(item.calories ?? item.nutrition?.calories);
+    if (!Number.isFinite(weight) || weight <= 0 || weight > 2000 || !Number.isFinite(kcal) || kcal < 0) {
+      throw new Error('invalid_model_response');
+    }
     const nutrition = item.nutrition && typeof item.nutrition === 'object' ? item.nutrition : {};
     const grams = Math.round(clamp(
       item.estimated_grams ?? item.estimated_weight_g ?? item.weight_g ?? item.grams ?? item.weight,
       1,
       2000,
     ));
-    // Nothing edible exceeds pure fat density; cap runaway calorie guesses.
+    if (kcal > weight * MAX_KCAL_PER_GRAM) throw new Error('invalid_model_response');
+    // Round only valid values; never repair an impossible model estimate.
     const calories = Math.round(clamp(item.calories ?? nutrition.calories, 0, Math.min(4000, grams * MAX_KCAL_PER_GRAM)));
     const canonical = cleanText(item.canonical_name ?? item.canonical ?? item.name_en ?? '', 80);
     return {
@@ -67,14 +78,15 @@ export function normalizeMealAnalysis(raw) {
       fat: Math.round(clamp(item.fat_g ?? item.fat ?? nutrition.fat_g ?? nutrition.fat, 0, 500) * 10) / 10,
       confidence: Math.round(clamp(item.confidence, 0, 1) * 100) / 100,
     };
-  }).filter((item) => item.name && item.calories >= 0);
+  });
+  if (items.some((item) => !item.name)) throw new Error('incomplete_model_response');
 
   if (!isFood || items.length === 0) {
     return { isFood: false, items: [], confidence: 0, hiddenIngredients: [] };
   }
 
   const totalCalories = items.reduce((sum, item) => sum + item.calories, 0);
-  const confidence = Math.round(clamp(parsed.confidence, 0.2, 0.95) * 100) / 100;
+  const confidence = Math.round(clamp(parsed.confidence, 0, 0.95) * 100) / 100;
   const hiddenIngredients = (Array.isArray(parsed.hidden_ingredients) ? parsed.hidden_ingredients : [])
     .map((entry) => cleanText(entry?.name || entry?.ingredient || entry || '', 80))
     .filter(Boolean)
