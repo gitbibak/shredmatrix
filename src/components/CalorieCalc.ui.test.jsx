@@ -28,6 +28,18 @@ function renderCalculator() {
 }
 
 describe('meal photo controls', () => {
+  it('retries the selected photo after an analysis failure', async () => {
+    analyzeMealPhoto.mockRejectedValueOnce(new Error('temporary failure'));
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), {
+      target: { files: [new File(['photo'], 'meal.jpg', { type: 'image/jpeg' })] },
+    });
+    const retry = await screen.findByRole('button', { name: 'Analizi tekrar dene' });
+    fireEvent.click(retry);
+    expect(await screen.findByText('Otomatik tahmin hazır')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Analizi tekrar dene' })).not.toBeInTheDocument();
+    expect(screen.getByAltText('Kalori tahmini için seçilen öğün')).toBeInTheDocument();
+  });
   it('does not restore results after the photo was removed during analysis', async () => {
     let finish;
     analyzeMealPhoto.mockImplementationOnce(() => new Promise((resolve) => { finish = resolve; }));

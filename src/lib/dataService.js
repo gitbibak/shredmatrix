@@ -541,30 +541,33 @@ export async function saveProgress(entry) {
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
-    const entries = lsGet('shredmatrix_progress', []);
+    const entries = lsGet('shredmatrix_progress', []).filter(item => item.date !== entry.date);
     entries.push(entry);
-    lsSet('shredmatrix_progress', entries);
+    localStorage.setItem('shredmatrix_progress', JSON.stringify(entries.sort((a, b) => a.date.localeCompare(b.date))));
     return;
   }
 
-  try {
-    const { error } = await supabase
-      .from('progress_entries')
-      .insert({ user_id: userId, date: entry.date, weight: entry.weight, body_fat: entry.bodyFat || entry.body_fat });
-    if (error) throw error;
-  } catch (err) {
-    console.warn('[DataService]', err?.message || err);
-    const entries = lsGet('shredmatrix_progress', []);
-    entries.push(entry);
-    lsSet('shredmatrix_progress', entries);
-  }
+  // The existing schema has no unique user/date constraint. Update that day's
+  // records without deleting historical rows or assuming an upsert constraint.
+  const { data: existing, error: readError } = await supabase
+    .from('progress_entries').select('id').eq('user_id', userId).eq('date', entry.date);
+  if (readError) throw readError;
+  const values = { weight: entry.weight, body_fat: entry.bodyFat ?? entry.body_fat ?? null };
+  const query = existing?.length
+    ? supabase.from('progress_entries').update(values).eq('user_id', userId).eq('date', entry.date)
+    : supabase.from('progress_entries').insert({ user_id: userId, date: entry.date, ...values });
+  const { data, error } = await query.select('id');
+  if (error) throw error;
+  if (!data?.length) throw new Error('Progress was not saved');
 }
 
 export async function getProgress() {
   const userId = getUserId();
 
   if (!isSupabaseReady() || !userId) {
-    return lsGet('shredmatrix_progress', []);
+    return lsGet('shredmatrix_progress', [])
+      .map(entry => ({ ...entry, bodyFat: entry.bodyFat ?? entry.body_fat ?? null }))
+      .sort((a, b) => a.date.localeCompare(b.date));
   }
 
   try {
@@ -574,7 +577,7 @@ export async function getProgress() {
       .eq('user_id', userId)
       .order('date', { ascending: true });
     if (error) throw error;
-    return data || [];
+    return (data || []).map(entry => ({ ...entry, bodyFat: entry.body_fat ?? null }));
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
     return lsGet('shredmatrix_progress', []);
@@ -586,22 +589,16 @@ export async function deleteProgress(dateToDelete) {
 
   if (!isSupabaseReady() || !userId) {
     const entries = lsGet('shredmatrix_progress', []);
-    lsSet('shredmatrix_progress', entries.filter(e => e.date !== dateToDelete));
+    localStorage.setItem('shredmatrix_progress', JSON.stringify(entries.filter(e => e.date !== dateToDelete)));
     return;
   }
 
-  try {
-    const { error } = await supabase
+  const { error } = await supabase
       .from('progress_entries')
       .delete()
       .eq('user_id', userId)
       .eq('date', dateToDelete);
-    if (error) throw error;
-  } catch (err) {
-    console.warn('[DataService]', err?.message || err);
-    const entries = lsGet('shredmatrix_progress', []);
-    lsSet('shredmatrix_progress', entries.filter(e => e.date !== dateToDelete));
-  }
+  if (error) throw error;
 }
 
 // ══════════════════════════════════════════════
