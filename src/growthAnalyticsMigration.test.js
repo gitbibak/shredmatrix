@@ -9,6 +9,11 @@ const migration = readFileSync(
 );
 
 describe('growth analytics migration', () => {
+  it('allows authenticated inserts to run the private CHECK validator without weakening RLS', () => {
+    const fix = readFileSync(join(cwd(), 'supabase/migrations/20260907185243_fix_growth_event_validator_permission.sql'), 'utf8');
+    expect(fix).toContain('GRANT EXECUTE ON FUNCTION private.analytics_properties_are_safe(JSONB) TO authenticated;');
+    expect(fix).not.toMatch(/TO (?:PUBLIC|anon)|SECURITY DEFINER|DISABLE ROW LEVEL SECURITY|DROP POLICY/i);
+  });
   it('is additive and stores no anonymous database writes', () => {
     expect(migration).toContain('CREATE TABLE IF NOT EXISTS public.growth_events');
     expect(migration).toContain('ALTER TABLE public.growth_events ENABLE ROW LEVEL SECURITY');
