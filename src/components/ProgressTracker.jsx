@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import EmptyState from './EmptyState';
 import { getProgress, saveProgress, deleteProgress } from '../lib/dataService';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -42,7 +42,8 @@ function formatDate(dateStr) {
 }
 
 function todayISO() {
-  return new Date().toISOString().split('T')[0];
+  const now = new Date();
+  return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
 }
 
 /* ─── custom chart tooltip ─── */
@@ -74,6 +75,8 @@ export default function ProgressTracker({ userName }) {
   const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const mutationLock = useRef(false);
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
   const [date, setDate] = useState(todayISO);
@@ -89,7 +92,9 @@ export default function ProgressTracker({ userName }) {
   const handleSave = useCallback(async () => {
     const w = parseFloat(weight);
     const bf = parseFloat(bodyFat);
-    if (!w || w <= 0) return;
+    if (mutationLock.current || !Number.isFinite(w) || w < 30 || w > 300 || !date || date > todayISO() || (bodyFat !== '' && (!Number.isFinite(bf) || bf < 3 || bf > 60))) return;
+    mutationLock.current = true;
+    setSaving(true);
 
     const newEntry = {
       date,
@@ -113,19 +118,23 @@ export default function ProgressTracker({ userName }) {
       });
       toast.success(t('errors.saveSuccess'));
       setShowEntryForm(false);
+      setWeight('');
+      setBodyFat('');
+      setDate(todayISO());
     } catch (err) {
       console.warn('[ProgressTracker]', err);
       toast.error(t('errors.saveFailed'));
+    } finally {
+      mutationLock.current = false;
+      setSaving(false);
     }
-
-    setWeight('');
-    setBodyFat('');
-    setDate(todayISO());
   }, [weight, bodyFat, date]);
 
   const handleDelete = useCallback(async (dateToDelete) => {
-    setEntries((prev) => prev.filter((e) => e.date !== dateToDelete));
-    try { await deleteProgress(dateToDelete); } catch (err) {
+    try {
+      await deleteProgress(dateToDelete);
+      setEntries((prev) => prev.filter((e) => e.date !== dateToDelete));
+    } catch (err) {
       console.warn('[ProgressTracker]', err);
       toast.error(t('errors.deleteFailed'));
     }
@@ -136,8 +145,9 @@ export default function ProgressTracker({ userName }) {
     if (period === 'all') return entries;
     const days = period === '7' ? 7 : 30;
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - days);
-    return entries.filter(e => new Date(e.date) >= cutoff);
+    cutoff.setHours(0, 0, 0, 0);
+    cutoff.setDate(cutoff.getDate() - (days - 1));
+    return entries.filter(e => new Date(e.date + 'T00:00:00') >= cutoff);
   })();
 
   const chartData = filteredEntries.slice(-MAX_CHART_ENTRIES).map((e) => ({
@@ -199,6 +209,7 @@ export default function ProgressTracker({ userName }) {
           </div>
           <button
             type="button"
+            aria-label={showEntryForm ? t('progress.hideForm') : t('progress.addMeasurement')}
             onClick={() => setShowEntryForm((value) => !value)}
             className="shrink-0 inline-flex items-center gap-2 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 py-2 text-xs font-outfit font-bold text-orange-300 hover:bg-orange-500/15 transition-colors"
           >
@@ -220,9 +231,9 @@ export default function ProgressTracker({ userName }) {
               <p className="font-outfit text-base font-bold text-white">{starting?.weight ?? '–'} kg</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-              <TrendingUp size={16} className={weightChange <= 0 ? 'text-emerald-400 mb-2' : 'text-rose-400 mb-2'} />
+              <TrendingUp size={16} className="text-cyan-400 mb-2" />
               <p className="text-[10px] text-slate-500">{t('progress.change')}</p>
-              <p className={`font-outfit text-base font-bold ${weightChange <= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              <p className="font-outfit text-base font-bold text-cyan-400">
                 {weightChange > 0 ? '+' : ''}{weightChange} kg
               </p>
             </div>
@@ -259,6 +270,7 @@ export default function ProgressTracker({ userName }) {
                 </label>
                 <input
                   type="date"
+                  max={todayISO()}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   aria-label={t('progress.date')}
@@ -276,6 +288,7 @@ export default function ProgressTracker({ userName }) {
                   max="300"
                   step="0.1"
                   placeholder="85.0"
+                  aria-label={t('progress.weight')}
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white placeholder-slate-600 focus:border-orange-500/50 transition-colors"
@@ -292,6 +305,7 @@ export default function ProgressTracker({ userName }) {
                   max="60"
                   step="0.1"
                   placeholder="18.0"
+                  aria-label={t('progress.bodyFat')}
                   value={bodyFat}
                   onChange={(e) => setBodyFat(e.target.value)}
                   className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white placeholder-slate-600 focus:border-orange-500/50 transition-colors"
@@ -303,7 +317,8 @@ export default function ProgressTracker({ userName }) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleSave}
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 cursor-pointer transition-shadow hover:shadow-orange-500/30"
+              disabled={saving || !weight || Number(weight) < 30 || Number(weight) > 300 || !date || date > todayISO() || (bodyFat !== '' && (Number(bodyFat) < 3 || Number(bodyFat) > 60))}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 cursor-pointer transition-shadow hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {t('progress.save')}
             </motion.button>
@@ -509,6 +524,7 @@ export default function ProgressTracker({ userName }) {
                     whileHover={{ scale: 1.15 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleDelete(entry.date)}
+                    aria-label={t('common.delete') + ' ' + entry.date}
                     className="p-1.5 rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
                   >
                     <Trash2 size={13} />

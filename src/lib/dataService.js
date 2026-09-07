@@ -505,13 +505,15 @@ export async function submitTestimonial({ rating, body, resultSummary, language 
   return data;
 }
 
-export async function getApprovedTestimonials(limit = 6) {
+export async function getApprovedTestimonials(limit = 6, language) {
   if (!isSupabaseReady()) return [];
-  const { data, error } = await supabase
+  let query = supabase
     .from('testimonials')
     .select('id, rating, body, result_summary, language, created_at')
     .eq('status', 'approved')
-    .eq('consent_public', true)
+    .eq('consent_public', true);
+  if (['tr', 'en', 'es'].includes(language)) query = query.eq('language', language);
+  const { data, error } = await query
     .order('created_at', { ascending: false })
     .limit(Math.max(1, Math.min(12, limit)));
   if (error) return [];

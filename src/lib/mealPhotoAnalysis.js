@@ -46,7 +46,7 @@ export function buildFoodVocabulary(foods = []) {
 
 export async function analyzeMealPhoto(image, language, fetchImpl = fetch, vocabulary = []) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 45_000);
+  const timeout = setTimeout(() => controller.abort(), 120_000);
   try {
     const response = await fetchImpl('/api/analyze-meal', {
       method: 'POST',

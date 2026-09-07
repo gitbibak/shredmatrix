@@ -80,6 +80,7 @@ export default function CalorieCalc({ language, embedded = false }) {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
   const photoRequestRef = useRef(0);
+  const photoFileRef = useRef(null);
 
   const filtered = useMemo(() => {
     let items = FOODS;
@@ -149,6 +150,7 @@ export default function CalorieCalc({ language, embedded = false }) {
     }
 
     const requestId = ++photoRequestRef.current;
+    photoFileRef.current = file;
     setPhotoError('');
     setPhotoLoading(true);
     setAnalysisMeta(null);
@@ -197,6 +199,7 @@ export default function CalorieCalc({ language, embedded = false }) {
   };
 
   const removePhoto = () => {
+    photoFileRef.current = null;
     photoRequestRef.current += 1;
     setPhotoLoading(false);
     setPhotoAnalyzing(false);
@@ -291,6 +294,7 @@ export default function CalorieCalc({ language, embedded = false }) {
         <div role="alert" className="mb-4 flex items-start gap-2 rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-[10px] leading-relaxed text-red-200">
           <AlertTriangle size={14} className="mt-0.5 shrink-0" />
           <span>{photoError}</span>
+          {photoFileRef.current && !photoAnalyzing && <button type="button" onClick={() => selectPhoto({ target: { files: [photoFileRef.current], value: '' } })} aria-label={activeLang === 'tr' ? 'Analizi tekrar dene' : activeLang === 'es' ? 'Reintentar análisis' : 'Retry analysis'} title={activeLang === 'tr' ? 'Analizi tekrar dene' : activeLang === 'es' ? 'Reintentar análisis' : 'Retry analysis'} className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-red-400/30"><RotateCcw size={18} /></button>}
         </div>
       )}
 

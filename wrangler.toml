@@ -17,9 +17,8 @@ html_handling = "drop-trailing-slash"
 binding = "AI"
 
 [vars]
-# Verified default. Switch to "@cf/meta/llama-3.2-11b-vision-instruct" (JSON mode)
-# or "@cf/meta/llama-4-scout-17b-16e-instruct" after an accuracy check on real meal photos.
-MEAL_MODEL = "@cf/moondream/moondream3.1-9B-A2B"
+# Multimodal JSON model tested on meal photos; weights remain estimates.
+MEAL_MODEL = "@cf/qwen/qwen3.8-27b"
 
 # Per-IP cap for the meal photo endpoint; period must be 10 or 60 seconds.
 [[ratelimits]]

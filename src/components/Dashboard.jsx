@@ -94,7 +94,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
   const [activeTab, setActiveTab] = useState('today');
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
-  const [showProgressDetails, setShowProgressDetails] = useState(false);
+  const [progressView, setProgressView] = useState('measurements');
   const [showNutritionTools, setShowNutritionTools] = useState(false);
   const [showWorkoutTools, setShowWorkoutTools] = useState(false);
   const [showLongevity, setShowLongevity] = useState(false);
@@ -440,52 +440,42 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             >
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <motion.div variants={columnVariants} className="lg:col-span-2">
-                    <ProgressTracker userName={plan.userName} />
-                  </motion.div>
-                  <motion.div variants={columnVariants} className="space-y-6">
-                    <StreakCalendar plan={plan} />
-                  </motion.div>
+                <div className="mb-6 grid grid-cols-3 gap-1 border-b border-slate-800" role="group" aria-label={t('progress.title')}>
+                  {[
+                    { key: 'measurements', icon: TrendingUp, label: lang === 'tr' ? 'Ölçümler' : lang === 'es' ? 'Medidas' : 'Measurements' },
+                    { key: 'reports', icon: CalendarCheck, label: lang === 'tr' ? 'Raporlar' : lang === 'es' ? 'Informes' : 'Reports' },
+                    { key: 'habits', icon: HeartPulse, label: lang === 'tr' ? 'Alışkanlıklar' : lang === 'es' ? 'Hábitos' : 'Habits' },
+                  ].map(({ key, icon: Icon, label }) => (
+                    <button key={key} type="button" aria-pressed={progressView === key} onClick={() => setProgressView(key)}
+                      className={'flex min-h-12 min-w-0 items-center justify-center gap-1.5 border-b-2 px-1 py-3 text-xs sm:text-sm font-semibold transition-colors ' + (progressView === key ? 'border-orange-400 text-orange-400' : 'border-transparent text-slate-400 hover:text-white')}>
+                      <Icon size={16} className="shrink-0" /><span className="break-words">{label}</span>
+                    </button>
+                  ))}
                 </div>
-                <div className="mt-6">
-                  <DisclosureSection
-                    title={t('dashboard.simple.longevityTitle')}
-                    description={t('dashboard.simple.longevityDesc')}
-                    icon={HeartPulse}
-                    open={showLongevity}
-                    onToggle={() => setShowLongevity((value) => !value)}
-                  >
-                    <LongevityPanel plan={plan} />
-                  </DisclosureSection>
-                </div>
-                <div className="mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setShowProgressDetails((value) => !value)}
-                    className="w-full flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 text-left text-sm font-outfit font-bold text-slate-300 hover:border-slate-700 transition-colors"
-                  >
-                    <span>{showProgressDetails ? t('dashboard.progressDetails.hide') : t('dashboard.progressDetails.show')}</span>
-                    <ChevronDown size={16} className={`text-slate-500 transition-transform ${showProgressDetails ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {showProgressDetails && (
-                    <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      <div className="lg:col-span-2 space-y-6">
-                        <WeeklyReport plan={plan} />
-                        <MonthlyReport plan={plan} />
-                        <Achievements plan={plan} user={user} />
-                      </div>
-                      <div className="space-y-6">
-                        <WaterTracker />
-                        <SleepTracker />
-                        <BodyMeasurements />
-                        <StravaActivitiesPanel />
-                        <Leaderboard plan={plan} />
-                      </div>
+                {progressView === 'measurements' && (
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <div className="lg:col-span-2"><ProgressTracker userName={plan.userName} /></div>
+                    <BodyMeasurements />
+                  </div>
+                )}
+                {progressView === 'reports' && (
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    <WeeklyReport plan={plan} /><MonthlyReport plan={plan} />
+                  </div>
+                )}
+                {progressView === 'habits' && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                      <StreakCalendar plan={plan} /><Achievements plan={plan} user={user} />
                     </div>
-                  )}
-                </div>
+                    <DisclosureSection title={t('dashboard.simple.longevityTitle')} description={t('dashboard.simple.longevityDesc')} icon={HeartPulse} open={showLongevity} onToggle={() => setShowLongevity((value) => !value)}>
+                      <LongevityPanel plan={plan} />
+                    </DisclosureSection>
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                      <StravaActivitiesPanel /><Leaderboard plan={plan} />
+                    </div>
+                  </div>
+                )}
               </motion.div>
               </Suspense>
             </motion.div>
