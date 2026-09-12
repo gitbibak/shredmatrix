@@ -133,6 +133,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     if (params.get('entry') !== 'push') return;
 
     const message = params.get('message') || 'unknown';
+    if (message === 'workout') setActiveTab('workout');
     trackEvent('push_notification_open', { message });
     params.delete('entry');
     params.delete('message');

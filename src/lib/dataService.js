@@ -1046,7 +1046,7 @@ export async function getProgressPhotos() {
   const { data, error } = await supabase.storage
     .from('user-photos')
     .list(`${userId}/progress`, { sortBy: { column: 'created_at', order: 'desc' } });
-  if (error) return [];
+  if (error) throw error;
 
   return await Promise.all((data || []).map(async (f) => {
     const { data: urlData } = await supabase.storage
@@ -1072,18 +1072,13 @@ export async function deleteProgressPhoto(photoName) {
     return filtered;
   }
 
-  try {
+  {
+    if (typeof photoName !== 'string' || photoName.includes('/')) throw new Error('Invalid photo name');
     const path = `${userId}/progress/${photoName}`;
     const { error } = await supabase.storage
       .from('user-photos')
       .remove([path]);
     if (error) throw error;
-  } catch (err) {
-    console.warn('[DataService]', err?.message || err);
-    // If supabase delete fails, still update localStorage
-    const photos = lsGet('shredmatrix_progress_photos', []);
-    const filtered = photos.filter((p) => p.name !== photoName);
-    lsSet('shredmatrix_progress_photos', filtered);
   }
 
   // Return updated list

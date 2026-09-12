@@ -1,0 +1,62 @@
+export const reminderCopy = {
+  tr: {
+    title: 'Hatırlatıcılar',
+    workout: 'Antrenman',
+    water: 'Su molaları',
+    time: 'Saat',
+    days: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'],
+    add: 'Saat ekle',
+    remove: 'Saati kaldır',
+    save: 'Kaydet',
+    saved: 'Hatırlatıcılar kaydedildi.',
+    error:
+      'Kaydedilemedi. Bağlantını ve bildirim iznini kontrol edip tekrar dene.',
+    loading: 'Yükleniyor…',
+    enable: 'Bildirimleri etkinleştir',
+    timezone: 'Saat dilimi',
+    note: 'Bildirimler seçtiğin gün ve saatlerde gönderilir. Cihaz ve bağlantı durumuna göre birkaç dakika gecikebilir.',
+    permission:
+      'Bildirim izni gerekli. iPhone’da uygulamayı ana ekrana ekleyip oradan aç.',
+    retry: 'Tekrar dene',
+  },
+  en: {
+    title: 'Reminders',
+    workout: 'Workout',
+    water: 'Water breaks',
+    time: 'Time',
+    days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    add: 'Add time',
+    remove: 'Remove time',
+    save: 'Save',
+    saved: 'Reminders saved.',
+    error:
+      'Could not save. Check your connection and notification permission, then try again.',
+    loading: 'Loading…',
+    enable: 'Enable notifications',
+    timezone: 'Time zone',
+    note: 'Notifications are sent on your selected days and times. Your device or connection may delay delivery by a few minutes.',
+    permission:
+      'Notification permission is required. On iPhone, add the app to your Home Screen and open it there.',
+    retry: 'Try again',
+  },
+  es: {
+    title: 'Recordatorios',
+    workout: 'Entrenamiento',
+    water: 'Pausas para beber agua',
+    time: 'Hora',
+    days: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    add: 'Añadir hora',
+    remove: 'Eliminar hora',
+    save: 'Guardar',
+    saved: 'Recordatorios guardados.',
+    error:
+      'No se pudo guardar. Revisa tu conexión y el permiso de notificaciones.',
+    loading: 'Cargando…',
+    enable: 'Activar notificaciones',
+    timezone: 'Zona horaria',
+    note: 'Se envían en los días y horas elegidos. El dispositivo o la conexión pueden retrasarlos unos minutos.',
+    permission:
+      'Se requiere permiso. En iPhone, añade la app a la pantalla de inicio y ábrela desde allí.',
+    retry: 'Reintentar',
+  },
+};

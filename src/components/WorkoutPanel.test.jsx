@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import WorkoutPanel from './WorkoutPanel';
 import { getWorkoutLogs, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
@@ -56,7 +56,7 @@ describe('WorkoutPanel feedback flow', () => {
     // The feedback dialog closes and the invite moment takes its place.
     await waitFor(() => expect(screen.queryByText('workout.feedbackSave')).not.toBeInTheDocument());
     expect(await screen.findByText('WhatsApp')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('workout.feedbackSkip'));
+    fireEvent.click(within(screen.getByRole('dialog', { name: 'referral.workoutTitle' })).getByText('workout.feedbackSkip'));
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });

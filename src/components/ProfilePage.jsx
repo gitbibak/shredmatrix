@@ -13,6 +13,8 @@ import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, del
 import { useToast } from './ToastProvider';
 import UserStoryForm from './UserStoryForm';
 import InviteFriendsCard from './InviteFriendsCard';
+import ReminderSettings from './ReminderSettings';
+import ProgressPhotoComparison from './ProgressPhotoComparison';
 
 const PHOTO_KEY = 'shredmatrix_profile_photo';
 const PHOTO_EXPIRY_KEY = 'shredmatrix_profile_photo_expires';
@@ -425,21 +427,16 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
     if (!window.confirm(t('profile.deletePhotoConfirm'))) return;
     // Find the photo to get its name for Supabase deletion
     const photo = gallery.find((p) => p.id === id);
-    // Optimistic UI update
-    const updated = gallery.filter((p) => p.id !== id);
-    setGallery(updated);
-    saveGallery(updated);
-    if (lightboxIdx !== null) setLightboxIdx(null);
-    // Delete from Supabase Storage
-    if (photo?.name) {
+    if (photo) {
       try {
-        const refreshed = await deleteProgressPhoto(photo.name);
+        const refreshed = await deleteProgressPhoto(photo.name || photo.id);
         if (refreshed) {
           setGallery(refreshed);
           saveGallery(refreshed);
         }
+        setLightboxIdx(null);
       } catch (err) {
-        console.warn('[Profile]', err?.message || err);
+        toast.error(t('errors.deleteFailed'));
       }
     }
   };
@@ -511,6 +508,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
         </div>
       </motion.div>
 
+      <ReminderSettings />
       {/* ── Progress Photos Gallery ── */}
       <motion.div variants={itemV}>
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
@@ -561,6 +559,7 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
                 transition={{ duration: 0.22, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
+                {!galleryLoading && <ProgressPhotoComparison gallery={gallery} onDelete={deleteGalleryPhoto} />}
                 {galleryLoading ? (
                   <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 px-4 py-4">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-orange-500/30 border-t-orange-500" />

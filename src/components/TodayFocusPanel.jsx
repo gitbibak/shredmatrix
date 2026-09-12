@@ -9,33 +9,13 @@ import {
   Flame,
   Moon,
   ChevronDown,
-  Clock,
   Snowflake,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { getLocalReminderHour, getReferralSummary, getStreakFreezes, getWorkoutLogs, saveStreakFreeze, updateReminderHour } from '../lib/dataService';
+import { getReferralSummary, getStreakFreezes, getWorkoutLogs, saveStreakFreeze } from '../lib/dataService';
+import ReminderSettings from './ReminderSettings';
 import { trackEvent } from '../lib/analytics';
 import { computeFreezeAllowance, computeStreaks, findFreezeCandidate, getRestDayIndexes } from '../utils/streaks';
-
-const COMMIT_OPTIONS = [
-  { hour: 7, key: 'commitMorning' },
-  { hour: 12, key: 'commitNoon' },
-  { hour: 18, key: 'commitEvening' },
-  { hour: 20, key: 'commitNight' },
-];
-
-function commitmentKey(date) {
-  return `fb_commit_${date}`;
-}
-
-function readCommitment(date) {
-  try {
-    const value = Number(localStorage.getItem(commitmentKey(date)));
-    return Number.isInteger(value) && value >= 7 && value <= 21 ? value : null;
-  } catch {
-    return null;
-  }
-}
 
 const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = {
@@ -107,7 +87,6 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
   const [freezes, setFreezes] = useState([]);
   const [activatedReferrals, setActivatedReferrals] = useState(0);
   const [freezeState, setFreezeState] = useState('idle');
-  const [commitHour, setCommitHour] = useState(() => readCommitment(todayISO()) ?? null);
 
   useEffect(() => {
     let cancelled = false;
@@ -177,14 +156,6 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
       setFreezeState('idle');
     }
   };
-
-  const chooseCommitment = async (hour) => {
-    setCommitHour(hour);
-    try { localStorage.setItem(commitmentKey(todayISO()), String(hour)); } catch { /* Optional. */ }
-    trackEvent('daily_commitment_set', { hour });
-    if (getLocalReminderHour() !== hour) await updateReminderHour(hour).catch(() => {});
-  };
-  const commitPassed = commitHour !== null && new Date().getHours() >= commitHour;
 
   const recoveryNotice = latestFeedback?.pain_reported
     ? t('todayFocus.painFollowUp')
@@ -301,37 +272,7 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         </p>
       )}
 
-      {!restToday && !todayCompleted && (
-        <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/50 p-3">
-          <div className="flex items-center gap-2">
-            <Clock size={14} className="text-orange-300" />
-            <p className="text-xs font-bold text-slate-200">{t('todayFocus.commitTitle')}</p>
-          </div>
-          {commitHour === null ? (
-            <>
-              <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{t('todayFocus.commitHint')}</p>
-              <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-                {COMMIT_OPTIONS.map((option) => (
-                  <button
-                    key={option.hour}
-                    type="button"
-                    onClick={() => chooseCommitment(option.hour)}
-                    className="min-h-10 rounded-lg border border-slate-700 bg-slate-900 px-2 text-[11px] font-semibold text-slate-300 hover:border-orange-400/50 hover:text-orange-200"
-                  >
-                    {t(`todayFocus.${option.key}`)}
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className={`mt-1 text-[11px] leading-relaxed ${commitPassed ? 'text-amber-200/90' : 'text-slate-400'}`}>
-              {commitPassed
-                ? t('todayFocus.commitPassed')
-                : t('todayFocus.commitSet', { time: `${String(commitHour).padStart(2, '0')}:00` })}
-            </p>
-          )}
-        </div>
-      )}
+      <ReminderSettings />
 
       {todayCompleted && nextTraining?.dayPlan?.focus && (
         <p className="mt-3 text-xs leading-relaxed text-emerald-300/80">

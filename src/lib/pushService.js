@@ -56,7 +56,7 @@ export function isPushSupported() {
  */
 export function getPushUnsupportedReason() {
   if (!('serviceWorker' in navigator)) return 'no-sw';
-  if (!('PushManager' in navigator)) return 'no-push-api';
+  if (!('PushManager' in window)) return 'no-push-api';
   if (!('Notification' in window)) return 'no-notification-api';
 
   const ios = getIOSVersion();
@@ -174,10 +174,10 @@ export async function subscribeToPush({ language = 'en' } = {}) {
     // Step 6: Send welcome notification
     try {
       const welcome = {
-        tr: { title: 'Hatırlatmalar açıldı', body: 'Planın için günde en fazla bir hatırlatma alacaksın.' },
-        en: { title: 'Reminders are on', body: 'You will receive at most one daily reminder for your plan.' },
-        es: { title: 'Recordatorios activados', body: 'Recibirás como máximo un recordatorio diario para tu plan.' },
-      }[language] || { title: 'Reminders are on', body: 'You will receive at most one daily reminder for your plan.' };
+        tr: { title: 'Hatırlatmalar açıldı', body: 'Antrenman ve su saatlerini hatırlatıcı ayarlarından seçebilirsin.' },
+        en: { title: 'Reminders are on', body: 'Choose workout and water times in your reminder settings.' },
+        es: { title: 'Recordatorios activados', body: 'Elige las horas de entrenamiento y agua en los ajustes.' },
+      }[language] || { title: 'Reminders are on', body: 'Choose your times in reminder settings.' };
       await registration.showNotification(welcome.title, {
         body: welcome.body,
         icon: '/icon-192.png',
@@ -197,15 +197,15 @@ export async function subscribeToPush({ language = 'en' } = {}) {
  * Save push subscription to Supabase
  */
 async function saveSubscription(subscription, language = 'en') {
-  if (!isSupabaseReady()) return;
+  if (!isSupabaseReady()) throw new Error('not-connected');
 
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) throw new Error('not-signed-in');
 
     const sub = subscription.toJSON();
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-    await supabase.from('push_subscriptions').upsert({
+    const { error } = await supabase.from('push_subscriptions').upsert({
       user_id: user.id,
       endpoint: sub.endpoint,
       p256dh: sub.keys?.p256dh || '',
@@ -216,8 +216,10 @@ async function saveSubscription(subscription, language = 'en') {
     }, {
       onConflict: 'user_id',
     });
+    if (error) throw error;
   } catch (err) {
     console.warn('[Push] Save subscription failed:', err?.message || err);
+    throw err;
   }
 }
 
