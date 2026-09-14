@@ -45,6 +45,20 @@ export default function InviteFriendsCard({
   const [summary, setSummary] = useState({ code: '', invited: 0, activated: 0 });
   const [copied, setCopied] = useState(false);
   const [imageBusy, setImageBusy] = useState(false);
+  const [format, setFormat] = useState('square');
+  const [prepared, setPrepared] = useState(null);
+  const cardKey = imageCard ? JSON.stringify({ ...imageCard, format }) : '';
+  useEffect(() => {
+    let cancelled = false;
+    let url;
+    setPrepared(null);
+    if (cardKey) renderShareCard(JSON.parse(cardKey)).then(blob => {
+      if (cancelled || !blob) return;
+      url = URL.createObjectURL(blob);
+      setPrepared({ blob, url, key: cardKey });
+    }).catch(() => {});
+    return () => { cancelled = true; if (url) URL.revokeObjectURL(url); };
+  }, [cardKey]);
 
   useEffect(() => {
     trackEvent('invite_opened', { source: surface });
@@ -92,10 +106,10 @@ export default function InviteFriendsCard({
   };
 
   const shareImage = async () => {
-    if (!imageCard || imageBusy) return;
+    if (!imageCard || imageBusy || prepared?.key !== cardKey) return;
     setImageBusy(true);
     try {
-      const blob = await renderShareCard(imageCard);
+      const blob = prepared.blob;
       const outcome = await shareCardImage({ blob, text: message, url: shareUrl, filename: `fullbalance-${surface}.png` });
       trackShare(`invite_image_${surface}_${outcome}`);
     } finally {
@@ -131,9 +145,15 @@ export default function InviteFriendsCard({
       )}
 
       {imageCard && (
-        <button type="button" onClick={shareImage} disabled={imageBusy} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3 text-xs font-bold text-slate-950 shadow-lg shadow-orange-500/20 disabled:opacity-60">
+        <div className="mt-3">
+          {imageCard.variant === 'workout' && <div className="mb-2 flex justify-end gap-2">
+            {['square', 'story'].map(value => <button key={value} type="button" aria-pressed={format === value} onClick={() => setFormat(value)} className={`min-h-11 px-3 text-xs ${format === value ? 'text-orange-300' : 'text-slate-400'}`}>{value === 'square' ? '1:1' : '9:16'}</button>)}
+          </div>}
+          {prepared?.key === cardKey && <img src={prepared.url} alt={imageCard.headline} className="mx-auto max-h-64 w-full object-contain" />}
+        <button type="button" onClick={shareImage} disabled={imageBusy || prepared?.key !== cardKey} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3 text-xs font-bold text-slate-950 shadow-lg shadow-orange-500/20 disabled:opacity-60">
           <ImageDown size={16} /> {imageBusy ? '…' : t('referral.shareImage')}
         </button>
+        </div>
       )}
 
       <div className="mt-3 grid grid-cols-3 gap-2">

@@ -919,7 +919,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 48, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-              className="w-full rounded-t-3xl border border-slate-700 bg-slate-900 p-4 shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-5"
+              className="max-h-[90dvh] w-full overflow-y-auto rounded-t-3xl border border-slate-700 bg-slate-900 p-4 shadow-2xl sm:max-w-md sm:rounded-2xl sm:p-5"
               style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
             >
               <div className="mx-auto mb-3 h-1 w-12 rounded-full bg-slate-700 sm:hidden" />
@@ -933,6 +933,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                   title={t('referral.workoutTitle')}
                   description={t('referral.workoutDesc')}
                   imageCard={{
+                    variant: 'workout',
                     eyebrow: t('referral.imageEyebrow'),
                     headline: t('referral.imageHeadlineWorkout', { count: inviteMoment.workoutCount }),
                     subline: inviteMoment.focus || '',
