@@ -1,9 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import InviteFriendsCard, { buildInviteMessage } from './InviteFriendsCard';
 import { LanguageProvider } from '../i18n/LanguageContext';
 
 const getReferralSummary = vi.fn();
+const renderShareCard = vi.fn();
+vi.mock('../lib/shareImage', () => ({ renderShareCard: (...args) => renderShareCard(...args), shareCardImage: vi.fn() }));
 vi.mock('../lib/dataService', () => ({
   getReferralSummary: (...args) => getReferralSummary(...args),
 }));
@@ -28,6 +30,8 @@ describe('buildInviteMessage', () => {
 describe('InviteFriendsCard', () => {
   beforeEach(() => {
     getReferralSummary.mockReset();
+    renderShareCard.mockReset();
+    renderShareCard.mockResolvedValue(new Blob(['image'], { type: 'image/png' }));
     localStorage.clear();
     localStorage.setItem('shredmatrix_lang', 'en');
   });
@@ -46,5 +50,15 @@ describe('InviteFriendsCard', () => {
     render(<LanguageProvider><InviteFriendsCard compact /></LanguageProvider>);
     expect(await screen.findByText('WhatsApp')).toBeInTheDocument();
     expect(screen.queryByText('Joined via invite')).not.toBeInTheDocument();
+  });
+  it('previews a data URL and exposes retry when the image fails to display', async () => {
+    getReferralSummary.mockResolvedValue({ code: 'FBTEST22' });
+    render(<LanguageProvider><InviteFriendsCard surface="workout" imageCard={{ variant: 'workout', headline: '18 workouts' }} /></LanguageProvider>);
+    const img = await screen.findByRole('img', { name: '18 workouts' });
+    expect(img.getAttribute('src')).toMatch(/^data:image\/png;base64,/);
+    expect(renderShareCard).toHaveBeenCalledWith(expect.objectContaining({ format: 'story' }));
+    fireEvent.error(img);
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 });

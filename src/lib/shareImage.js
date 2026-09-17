@@ -1,4 +1,6 @@
-// Generates 1080x1080 share cards (Instagram Story/WhatsApp friendly) for
+import { drawWorkoutArtwork } from './workoutShareArtwork';
+
+// Generates square and portrait share cards for
 // emotional peaks: a completed workout, a streak milestone, a weekly summary.
 // Everything is drawn on a canvas in the browser; nothing is uploaded.
 
@@ -36,7 +38,7 @@ function fitText(ctx, text, maxWidth, startSize, weight = 'bold') {
  * @param {string} [card.accent]  hex color for highlights
  * @returns {Promise<Blob|null>}
  */
-export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '', subline = '', stats = [], footer = 'fullbalance.app', accent = '#ff6d00', variant, format = 'square' }) {
+export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '', subline = '', stats = [], footer = 'fullbalance.app', accent = '#ff6d00', variant, format = 'square', imageSource, dateLabel }) {
   if (typeof document === 'undefined') return null;
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
@@ -45,50 +47,7 @@ export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '',
   if (!ctx) return null;
 
   if (variant === 'workout') {
-    const height = format === 'story' ? 1920 : 1080;
-    canvas.height = height;
-    ctx.fillStyle = '#080b10';
-    ctx.fillRect(0, 0, 1080, height);
-    const top = format === 'story' ? 270 : 80;
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 30px sans-serif';
-    ctx.fillText('FULL BALANCE', 80, top);
-    ctx.fillStyle = '#34d399';
-    ctx.beginPath();
-    ctx.arc(964, top - 10, 26, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#080b10';
-    ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.moveTo(952, top - 10); ctx.lineTo(961, top - 1); ctx.lineTo(977, top - 19); ctx.stroke();
-    ctx.fillStyle = '#34d399';
-    fitText(ctx, String(eyebrow).toUpperCase(), 920, 28);
-    ctx.fillText(String(eyebrow).toUpperCase(), 80, top + 140);
-    ctx.fillStyle = '#ffffff';
-    fitText(ctx, headline, 920, 100);
-    ctx.fillText(headline, 80, top + 270);
-    ctx.fillStyle = accent;
-    fitText(ctx, subline, 920, 38, '600');
-    ctx.fillText(subline, 80, top + 350);
-    const mainStats = stats.slice(0, 2);
-    mainStats.forEach((stat, index) => {
-      const x = 80 + index * 480;
-      ctx.fillStyle = '#30363e'; ctx.fillRect(x, top + 435, 440, 2);
-      ctx.fillStyle = '#ffffff';
-      fitText(ctx, String(stat.value), 430, 112);
-      ctx.fillText(String(stat.value), x, top + 575);
-      ctx.fillStyle = '#a8b3bf';
-      fitText(ctx, String(stat.label), 430, 30, '600');
-      ctx.fillText(String(stat.label), x, top + 635);
-    });
-    ctx.fillStyle = '#34d399';
-    const secondary = stats.slice(2).filter(stat => Number(stat.value) >= 2)
-      .map(stat => `${stat.value} ${stat.label}`).join('  /  ');
-    fitText(ctx, secondary, 920, 28, '600');
-    ctx.fillText(secondary, 80, top + 735);
-    ctx.fillStyle = '#a8b3bf';
-    ctx.font = '26px sans-serif';
-    ctx.fillText(footer, 80, height - (format === 'story' ? 240 : 90));
+    await drawWorkoutArtwork(ctx, canvas, { eyebrow, headline, subline, stats, footer, format, imageSource, dateLabel });
     return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   }
 

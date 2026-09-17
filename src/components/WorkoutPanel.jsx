@@ -560,6 +560,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
       setCelebration({
         focus,
         logId: savedLog?.id,
+        imageSource: getWorkoutDayImage(goalKey, day.image),
         date: today,
         exercises: (day.exercises || []).length,
         sets: (day.exercises || []).reduce((s, ex) => s + (parseInt(ex.sets) || 4), 0),
@@ -611,6 +612,8 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
           streak: computeStreaks(workoutDates, { restDayIndexes: getRestDayIndexes(plan) }).current,
           weekCount: [...workoutDates].filter((date) => date >= weekStart).length,
           focus: celebration.focus,
+          imageSource: celebration.imageSource,
+          date: celebration.date,
           exercises: celebration.exercises,
           sets: celebration.sets,
         });
@@ -934,6 +937,8 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                   description={t('referral.workoutDesc')}
                   imageCard={{
                     variant: 'workout',
+                    imageSource: inviteMoment.imageSource,
+                    dateLabel: inviteMoment.date,
                     eyebrow: t('referral.imageEyebrow'),
                     headline: t('referral.imageHeadlineWorkout', { count: inviteMoment.workoutCount }),
                     subline: inviteMoment.focus || '',

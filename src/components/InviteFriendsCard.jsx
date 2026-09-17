@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Check, Copy, ImageDown, MessageCircle, Share2, Users } from 'lucide-react';
+import { Check, Copy, ImageDown, MessageCircle, Share2, Users, Square, RectangleVertical, RefreshCw, LoaderCircle } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getReferralSummary } from '../lib/dataService';
 import { trackEvent, trackShare } from '../lib/analytics';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import { renderShareCard, shareCardImage } from '../lib/shareImage';
+import { sharePreviewDataUrl } from '../lib/workoutShareArtwork';
+
+const PREVIEW_COPY = {
+  tr: { square: 'Kare', story: 'Hikaye', loading: 'Görsel hazırlanıyor', error: 'Görsel hazırlanamadı. Tekrar deneyebilirsin.', retry: 'Tekrar dene' },
+  en: { square: 'Square', story: 'Story', loading: 'Preparing image', error: 'Could not prepare the image. Please try again.', retry: 'Try again' },
+  es: { square: 'Cuadrado', story: 'Historia', loading: 'Preparando imagen', error: 'No se pudo preparar la imagen. Inténtalo de nuevo.', retry: 'Reintentar' },
+};
 
 const SURFACE_CAMPAIGN = {
   today: 'invite_today',
@@ -45,20 +52,26 @@ export default function InviteFriendsCard({
   const [summary, setSummary] = useState({ code: '', invited: 0, activated: 0 });
   const [copied, setCopied] = useState(false);
   const [imageBusy, setImageBusy] = useState(false);
-  const [format, setFormat] = useState('square');
+  const [format, setFormat] = useState(surface === 'workout' ? 'story' : 'square');
   const [prepared, setPrepared] = useState(null);
+  const [previewError, setPreviewError] = useState(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const copy = PREVIEW_COPY[lang] || PREVIEW_COPY.en;
   const cardKey = imageCard ? JSON.stringify({ ...imageCard, format }) : '';
   useEffect(() => {
     let cancelled = false;
-    let url;
     setPrepared(null);
-    if (cardKey) renderShareCard(JSON.parse(cardKey)).then(blob => {
-      if (cancelled || !blob) return;
-      url = URL.createObjectURL(blob);
+    setPreviewError(false);
+    setPreviewLoaded(false);
+    if (cardKey) renderShareCard(JSON.parse(cardKey)).then(async blob => {
+      if (!blob) throw new Error('Image unavailable');
+      const url = await sharePreviewDataUrl(blob);
+      if (cancelled) return;
       setPrepared({ blob, url, key: cardKey });
-    }).catch(() => {});
-    return () => { cancelled = true; if (url) URL.revokeObjectURL(url); };
-  }, [cardKey]);
+    }).catch(() => { if (!cancelled) setPreviewError(true); });
+    return () => { cancelled = true; };
+  }, [cardKey, retry]);
 
   useEffect(() => {
     trackEvent('invite_opened', { source: surface });
@@ -106,12 +119,14 @@ export default function InviteFriendsCard({
   };
 
   const shareImage = async () => {
-    if (!imageCard || imageBusy || prepared?.key !== cardKey) return;
+    if (!imageCard || imageBusy || prepared?.key !== cardKey || !previewLoaded) return;
     setImageBusy(true);
     try {
       const blob = prepared.blob;
       const outcome = await shareCardImage({ blob, text: message, url: shareUrl, filename: `fullbalance-${surface}.png` });
       trackShare(`invite_image_${surface}_${outcome}`);
+    } catch {
+      setPreviewError(true);
     } finally {
       setImageBusy(false);
     }
@@ -120,7 +135,7 @@ export default function InviteFriendsCard({
   const hasProgress = summary.invited > 0;
 
   return (
-    <section className={`rounded-2xl border border-orange-500/25 bg-gradient-to-br from-orange-500/10 via-slate-900 to-slate-900 ${compact ? 'p-4' : 'p-5'} ${className}`}>
+    <section className={`${surface === 'workout' ? '' : `rounded-2xl border border-orange-500/25 bg-gradient-to-br from-orange-500/10 via-slate-900 to-slate-900 ${compact ? 'p-4' : 'p-5'}`} ${className}`}>
       <div className="flex items-start gap-3">
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-300">
           <Users size={18} />
@@ -146,11 +161,16 @@ export default function InviteFriendsCard({
 
       {imageCard && (
         <div className="mt-3">
-          {imageCard.variant === 'workout' && <div className="mb-2 flex justify-end gap-2">
-            {['square', 'story'].map(value => <button key={value} type="button" aria-pressed={format === value} onClick={() => setFormat(value)} className={`min-h-11 px-3 text-xs ${format === value ? 'text-orange-300' : 'text-slate-400'}`}>{value === 'square' ? '1:1' : '9:16'}</button>)}
+          {imageCard.variant === 'workout' && <div className="mb-3 grid grid-cols-2 gap-1 rounded-lg bg-slate-950 p-1">
+            {['square', 'story'].map(value => <button key={value} type="button" aria-pressed={format === value} onClick={() => setFormat(value)} className={`flex min-h-11 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold ${format === value ? 'bg-slate-700 text-white' : 'text-slate-400'}`}>{value === 'square' ? <Square size={16} /> : <RectangleVertical size={16} />}{copy[value]} <span className="text-slate-400">{value === 'square' ? '1:1' : '9:16'}</span></button>)}
           </div>}
-          {prepared?.key === cardKey && <img src={prepared.url} alt={imageCard.headline} className="mx-auto max-h-64 w-full object-contain" />}
-        <button type="button" onClick={shareImage} disabled={imageBusy || prepared?.key !== cardKey} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3 text-xs font-bold text-slate-950 shadow-lg shadow-orange-500/20 disabled:opacity-60">
+          <div className="relative mx-auto overflow-hidden rounded-lg bg-slate-950" style={{ aspectRatio: format === 'story' ? '9 / 16' : '1 / 1', width: '100%', maxWidth: format === 'story' ? 'min(100%, 30vh)' : '100%' }}>
+            {prepared?.key === cardKey && !previewError && <img src={prepared.url} alt={imageCard.headline} onLoad={() => setPreviewLoaded(true)} onError={() => setPreviewError(true)} className="h-full w-full object-contain" />}
+            {(!previewLoaded || previewError) && <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center text-xs text-slate-300" role={previewError ? 'alert' : 'status'}>
+              {previewError ? <><span>{copy.error}</span><button type="button" onClick={() => setRetry(value => value + 1)} className="flex min-h-11 items-center gap-2 text-orange-300"><RefreshCw size={16} />{copy.retry}</button></> : <><LoaderCircle size={22} className="animate-spin" /><span>{copy.loading}</span></>}
+            </div>}
+          </div>
+        <button type="button" onClick={shareImage} disabled={imageBusy || prepared?.key !== cardKey || !previewLoaded || previewError} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-3 text-xs font-bold text-slate-950 shadow-lg shadow-orange-500/20 disabled:opacity-60">
           <ImageDown size={16} /> {imageBusy ? '…' : t('referral.shareImage')}
         </button>
         </div>
