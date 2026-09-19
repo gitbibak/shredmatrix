@@ -70,6 +70,7 @@ export default function CalorieCalc({ language, embedded = false }) {
   const [grams, setGrams] = useState(100);
   const [selectedFood, setSelectedFood] = useState(null);
   const [mealItems, setMealItems] = useState([]);
+  const [completedItems, setCompletedItems] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [photoError, setPhotoError] = useState('');
   const [photoLoading, setPhotoLoading] = useState(false);
@@ -114,6 +115,19 @@ export default function CalorieCalc({ language, embedded = false }) {
       : getMealEstimateRange(totals.cal, Boolean(photo))
   ), [analysisMeta, hiddenSuggestions, photo, totals.cal]);
   const manualPanelVisible = !photo || showManualAdd;
+  const estimateCompleted = completedItems === mealItems;
+
+  const completeEstimate = () => {
+    if (!mealItems.length || photoLoading || photoAnalyzing || estimateCompleted) return;
+    setCompletedItems(mealItems);
+    // Measurement must never prevent the user from completing an estimate.
+    try {
+      Promise.resolve(trackEvent('nutrition_logged', {
+        source: language ? 'public_tool' : 'dashboard',
+        photoAssisted: Boolean(photo),
+      })).catch(() => {});
+    } catch { /* The result remains available when analytics is unavailable. */ }
+  };
 
   const updateItemGrams = (id, delta) => {
     setMealItems((items) => items.map((item) => (
@@ -513,13 +527,15 @@ export default function CalorieCalc({ language, embedded = false }) {
               <p className="mt-1 text-[9px] leading-relaxed text-slate-500">{tt('calorieCalc.estimateHelper')}</p>
             </div>
           </div>
-          <button type="button" onClick={() => {
-            trackEvent('nutrition_logged', {
-              source: language ? 'public_tool' : 'dashboard',
-              photoAssisted: Boolean(photo),
-            });
-          }} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400">
-            {tt('calorieCalc.confirmEstimate')}
+          {estimateCompleted && (
+            <div role="status" aria-live="polite" className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+              <p className="flex items-center gap-2 text-xs font-bold text-emerald-200"><CheckCircle2 size={16} />{tt('calorieCalc.estimateCompleted')}</p>
+              <p className="mt-2 text-lg font-bold text-white">{estimateRange.low}-{estimateRange.high} kcal</p>
+              <p className="mt-1 text-[10px] leading-relaxed text-slate-300">{tt('calorieCalc.estimateCompletedHelper')}</p>
+            </div>
+          )}
+          <button type="button" onClick={completeEstimate} disabled={estimateCompleted || photoLoading || photoAnalyzing} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-500 px-4 text-xs font-bold text-slate-950 hover:bg-emerald-400 disabled:opacity-60">
+            {tt(estimateCompleted ? 'calorieCalc.estimateCompleted' : 'calorieCalc.confirmEstimate')}
           </button>
           <p className="mt-2 text-[9px] leading-relaxed text-slate-600">{tt('calorieCalc.disclaimer')}</p>
         </div>

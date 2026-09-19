@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import CalorieCalc from './CalorieCalc';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { analyzeMealPhoto } from '../lib/mealPhotoAnalysis';
+import { trackEvent } from '../lib/analytics';
+
+vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
 
 vi.mock('../lib/mealPhotoAnalysis', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -28,6 +31,40 @@ function renderCalculator() {
 }
 
 describe('meal photo controls', () => {
+  it('completes the estimate visibly once and permits completion after portion changes', async () => {
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), {
+      target: { files: [new File(['photo'], 'meal.jpg', { type: 'image/jpeg' })] },
+    });
+    const complete = await screen.findByRole('button', { name: 'Tahmini tamamla' });
+    trackEvent.mockClear();
+    fireEvent.click(complete);
+    expect(screen.getByRole('status')).toHaveTextContent('Tahmin tamamlandı');
+    expect(screen.getByRole('status')).toHaveTextContent('hesabına kaydedilmez');
+    expect(screen.getByRole('button', { name: 'Tahmin tamamlandı' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Tahmin tamamlandı' }));
+    expect(trackEvent).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByLabelText('Porsiyonu artır'));
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Tahmini tamamla' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Tahmin tamamlandı');
+    expect(trackEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it.each(['throw', 'reject'])('keeps completion working when analytics fails: %s', async (failure) => {
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), {
+      target: { files: [new File(['photo'], 'meal.jpg', { type: 'image/jpeg' })] },
+    });
+    const complete = await screen.findByRole('button', { name: 'Tahmini tamamla' });
+    trackEvent.mockImplementationOnce(() => {
+      if (failure === 'throw') throw new Error('analytics unavailable');
+      return Promise.reject(new Error('analytics unavailable'));
+    });
+    fireEvent.click(complete);
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Tahmin tamamlandı'));
+  });
+
   it('retries the selected photo after an analysis failure', async () => {
     analyzeMealPhoto.mockRejectedValueOnce(new Error('temporary failure'));
     renderCalculator();
