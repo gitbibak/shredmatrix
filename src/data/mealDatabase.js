@@ -1,4 +1,5 @@
 // ── Localized Meal Database ──────────────────────────────
+import { LOCALE_MEAL_TIMES } from './regionalRecipes';
 // Each language has 7 day-type templates (upper, back, shoulders, lower, hiit, rest, active_rest)
 // Each template has 5 meals with locale-appropriate foods
 
@@ -277,7 +278,14 @@ function buildMealTemplates(lang = 'tr') {
     },
   };
 
-  return foods[lang] || foods.tr;
+  const templates = foods[lang] || foods.tr;
+  const clocks = LOCALE_MEAL_TIMES[lang];
+  if (!clocks) return templates;
+  // Shift every template to the food culture's usual meal clock.
+  return Object.fromEntries(Object.entries(templates).map(([type, template]) => [type, {
+    ...template,
+    meals: (macros, cal) => template.meals(macros, cal).map((meal) => ({ ...meal, time: clocks[meal.mealKey] || meal.time })),
+  }]));
 }
 
 // ── Localized Meal Alternatives ──────────────────────────

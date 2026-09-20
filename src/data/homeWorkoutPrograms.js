@@ -185,7 +185,7 @@ function buildStrengthWeek(library, phase) {
   return layouts[phase].map((key, index) => key
     ? {
       day: DAYS[index],
-      image: '/images/modules/muscle-growth.jpg',
+      image: '/images/workout-art/muscle.png',
       ...library[key],
       exercises: library[key].exercises.map(progressExercise),
     }
@@ -200,14 +200,14 @@ function buildFatLossWeek(library, phase) {
       day: DAYS[index],
       focus: activeIndex === 0 && phase > 0 ? 'Düşük Etkili Interval Yürüyüş' : 'Tempolu Yürüyüş + Mobilite',
       emoji: '🚶',
-      image: '/images/modules/fat-loss.jpg',
+      image: '/images/workout-art/fat-loss.png',
       exercises: activeIndex === 0 && phase > 0
         ? [exercise('Düşük Etkili Interval Yürüyüş', 8, '1 dk hızlı / 1 dk rahat', '0s', ['Kardiyo'])]
         : [exercise('Tempolu Yürüyüş', 1, '30-45 dk', '-', ['Kardiyo']), exercise('Tüm Vücut Mobilite Akışı', 1, '8-10 dk', '-', ['Mobilite'])],
     };
   });
   return strength.map((day) => day.focus.includes('Tam Vücut') || day.focus.includes('Üst Vücut') || day.focus.includes('Alt Vücut')
-    ? { ...day, image: '/images/modules/fat-loss.jpg', focus: `${day.focus} + Kas Koruma` }
+    ? { ...day, image: '/images/workout-art/fat-loss.png', focus: `${day.focus} + Kas Koruma` }
     : day);
 }
 

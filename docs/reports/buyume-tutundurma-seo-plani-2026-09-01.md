@@ -96,3 +96,12 @@
 - **Paylaşım kartı.** Antrenman sonrası davet penceresinde ve seri kutusunda "Görsel paylaş" düğmesi 1080x1080 kart üretip cihaz paylaşımıyla gönderiyor; desteklenmeyen tarayıcıda indiriyor.
 - **Günlük taahhüt.** Bugün ekranında "Bugün ne zaman?" saat seçimi; seçilen saat push hatırlatma saatine yazılıyor, saat geçince kısa versiyon önerisi çıkıyor.
 - **Cevap blokları.** Tüm TR/EN/ES giriş sayfalarında ilk SSS "Kısa cevap" olarak H2 + doğrudan cevap biçiminde üste taşındı, görünür "Son güncelleme" tarihi ve `dateModified` eklendi. SSS başlıkları H2 oldu. Not: statik üreticideki TR SSS listesi yalnızca 5 sayfada var; diğer TR sayfalar için `scripts/seo-static-pages.mjs` içine SSS eklenmeli.
+
+## 10. Bölgesel beslenme, dil bazlı kalite notları ve figürsüz görseller (2026-09-20)
+
+- **Tarif motoru bölgesel oldu.** `src/data/regionalRecipes.js` her dil için ayrı yemek kültürü içerir (TR: serpme kahvaltı, menemen, köfte-makarna-cacık, levrek-bulgur; EN: oatmeal, tuna wrap, salmon-quinoa, beef pasta; ES: tostada con tomate y jamón, tortilla española, lentejas, lubina al horno). Öğün başına 2-4 tarif dönüşümlü çalışır; alerji/vegan/ekonomik bütçe değişimleri tarif adını dürüstçe tabak açıklamasına çevirir. Porsiyonlar tabak oranına bağlı kalır (tek bir garnitürün 450 g'a şişmesi engellendi), gün kalorisi hedefin ±8 bandında.
+- **Öğün görselleri geri geldi.** Hesaplanan tarifler `image: null` üretiyordu; artık öğün tipine göre görsel ve tarif başlığı gösterilir. `NUTRITION_VERSION = 2` ile kayıtlı planlar açılışta yeniden hesaplanır.
+- **Öğün saatleri yemek kültürüne göre.** ES: kahvaltı 08:30, öğle 14:00, akşam 21:30; EN: 07:30 / 12:30 / 19:00; TR şablon saatleri korunur. Vardiya kaydırması bunun üstüne uygulanır.
+- **Antrenman kalite notları EN/ES.** Isınma, soğuma, ilerleme kuralı, gerileme seçeneği, güvenlik notu, faz adı ve haftalık hedef (167 dize) `qualityTextMap.js` ile çevrilir; test tüm hedef × faz × ortam kombinasyonlarında Türkçe kalıntı olmadığını doğrular.
+- **İnsan figürü olmayan görseller.** `scripts/generate-workout-art.mjs` 13 SVG tabanlı görsel üretir (göğüs, sırt, bacak, omuz, tüm vücut, kardiyo, core, kas, yağ yakımı, yoga, pilates, reformer, meditasyon). Antrenman kartları ve ev programları bunları kullanır; eski `images/workouts/*` stok fotoğrafları silindi. Landing sayfasındaki modül fotoğrafları (pazarlama) değişmedi.
+- `PLAN_VERSION = 21`: mevcut üyelerin planı açılışta yenilenir.

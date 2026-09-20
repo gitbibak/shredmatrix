@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { mealNameMap, recipeSearchSuffix, MEAL_KEYS } from '../data/mealDatabase';
-import { buildCalculatedMeal, calculateNutritionDays, summarizeNutritionDay } from '../data/recipeNutrition';
+import { NUTRITION_VERSION, buildCalculatedMeal, calculateNutritionDays, summarizeNutritionDay } from '../data/recipeNutrition';
 import { buildShoppingList } from '../utils/shoppingList';
+import OptimizedImage from './OptimizedImage';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Utensils,
@@ -121,10 +122,11 @@ function MealCard({ meal, index, t, lang, onSwap }) {
       {/* Meal image */}
       {meal.image && (
         <div className="relative h-36 w-full overflow-hidden">
-          <img
+          <OptimizedImage
             src={meal.image}
-            alt={meal.name}
+            alt={meal.recipeTitle || meal.name}
             loading="lazy"
+            sizes="(max-width: 640px) 100vw, 640px"
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
@@ -185,6 +187,9 @@ function MealCard({ meal, index, t, lang, onSwap }) {
           </div>
         </div>
 
+        {meal.recipeTitle && (
+          <p className="mb-2 text-sm font-semibold text-slate-100">{meal.recipeTitle}</p>
+        )}
         {/* food items */}
         <ul className="mb-3 space-y-1">
           {displayItems.map((item, i) => (
@@ -237,7 +242,7 @@ export default function NutritionPanel({ plan }) {
   } = plan;
   const calculatedNutrition = useMemo(() => {
     if (!savedNutrition?.length) return savedNutrition;
-    return savedNutrition.every((day) => day.nutritionVersion === 1)
+    return savedNutrition.every((day) => day.nutritionVersion === NUTRITION_VERSION)
       ? savedNutrition : calculateNutritionDays(savedNutrition, { lang, allergies, budget: userBudget });
   }, [savedNutrition, lang, allergies, userBudget]);
   const [mealOverrides, setMealOverrides] = useState({});

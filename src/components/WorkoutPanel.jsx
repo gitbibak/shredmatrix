@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
 import { getWorkoutDayImage } from '../data/moduleAssets';
+import OptimizedImage from './OptimizedImage';
 import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
 import { computeStreaks, getRestDayIndexes, mondayOf, toDateStr, workoutDatesFromLogs } from '../utils/streaks';
 import confetti from 'canvas-confetti';
@@ -212,7 +213,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
 function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
   const rest = isRestDay(day);
   const exerciseCount = day.exercises?.length ?? 0;
-  const dayImage = getWorkoutDayImage(goalKey, day.image);
+  const dayImage = getWorkoutDayImage(goalKey, day.image, day.focus);
 
   return (
     <motion.div variants={cardVariants}>
@@ -236,10 +237,11 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
               transition={{ type: 'spring', stiffness: 280, damping: 28 }}
               className="relative overflow-hidden"
             >
-              <img
+              <OptimizedImage
                 src={dayImage}
                 alt={day.focus}
                 loading="lazy"
+                sizes="(max-width: 640px) 100vw, 640px"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />

@@ -1,3 +1,4 @@
+import { WORKOUT_ART } from './moduleAssets';
 import { describe, expect, it } from 'vitest';
 import {
   findMealAllergyViolations,
@@ -146,15 +147,9 @@ describe('planGenerator safety personalization', () => {
   });
 
   it('assigns a discipline-specific image to every active day', () => {
-    const expectedImages = {
-      fat_loss: '/images/modules/fat-loss.jpg',
-      yoga: '/images/modules/yoga.jpg',
-      pilates: '/images/modules/pilates.jpg',
-      reformer: '/images/modules/reformer.jpg',
-      meditation: '/images/modules/meditation.jpg',
-    };
+    const goals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
 
-    for (const [goal, expectedImage] of Object.entries(expectedImages)) {
+    for (const goal of goals) {
       const plan = generatePlan({
         ...baseMetrics,
         primaryGoal: goal,
@@ -166,7 +161,11 @@ describe('planGenerator safety personalization', () => {
       });
 
       expect(activeDays.length).toBeGreaterThan(0);
-      activeDays.forEach((day) => expect(day.image).toBe(expectedImage));
+      activeDays.forEach((day) => {
+        // Figure-free generated artwork only; never a stock photo of a person.
+        expect(day.image.startsWith('/images/workout-art/')).toBe(true);
+        if (!['muscle', 'fat_loss'].includes(goal)) expect(day.image).toBe(WORKOUT_ART[goal]);
+      });
     }
   });
 

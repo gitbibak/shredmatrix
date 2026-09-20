@@ -13,6 +13,7 @@ import { buildHomeWorkoutProgram, findHomeEquipmentViolations } from './homeWork
 // App.jsx kaydedilmiş planın versiyonunu kontrol eder, eskiyse yeniden oluşturur
 import { PLAN_VERSION } from './planVersion.js';
 import { FOCUS_AREAS, MAX_ADDED_SETS, WEEK_SLOTS, WEEKDAY_NAMES, WEEKLY_SET_CAP, normalizeFocusAreas, normalizeTrainingDays } from './focusAreas.js';
+import { localizeQualityText } from './qualityTextMap.js';
 export { PLAN_VERSION };
 
 // ── Kalori Hesaplama ─────────────────────────────────────
@@ -1351,7 +1352,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Üst Vücut A — Göğüs, Omuz & Triceps', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Lat Pulldown', sets: 4, reps: '8-10', rest: '90s' },
@@ -1363,7 +1364,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Alt Vücut A — Bacak & Kalça', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Squat', sets: 4, reps: '6-8', rest: '150s' },
           { name: 'Romanian Deadlift', sets: 3, reps: '8-10', rest: '120s' },
@@ -1378,7 +1379,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Üst Vücut B — Sırt, Omuz & Biceps', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '120s' },
           { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
@@ -1390,7 +1391,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Alt Vücut B — Bacak & Core', emoji: '⚡',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Leg Press', sets: 4, reps: '10-12', rest: '120s' },
           { name: 'Bulgarian Split Squat', sets: 3, reps: '10/bacak', rest: '90s' },
@@ -1416,7 +1417,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Push — Göğüs, Omuz & Triceps', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
@@ -1429,7 +1430,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Pull — Sırt & Biceps', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Deadlift', sets: 4, reps: '5-6', rest: '180s' },
           { name: 'Pull-Ups', sets: 4, reps: '8-10', rest: '120s' },
@@ -1442,7 +1443,7 @@ const workoutPhases = {
       },
       {
         day: 'Çarşamba', focus: 'Bacak — Quad & Hamstring', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Squat', sets: 4, reps: '6-8', rest: '150s' },
           { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
@@ -1458,7 +1459,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Üst Vücut — Göğüs, Sırt & Omuz', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'Incline Barbell Press', sets: 4, reps: '8-10', rest: '90s' },
           { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
@@ -1471,7 +1472,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'Alt Vücut — Bacak & Kalça', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Front Squat', sets: 4, reps: '8-10', rest: '120s' },
           { name: 'Hip Thrust', sets: 4, reps: '10-12', rest: '90s' },
@@ -1493,7 +1494,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Push A — Göğüs & Triceps', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Bench Press', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
@@ -1506,7 +1507,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Pull A — Sırt Genişlik & Biceps', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Weighted Pull-Up', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Barbell Row', sets: 4, reps: '8-10', rest: '90s' },
@@ -1519,7 +1520,7 @@ const workoutPhases = {
       },
       {
         day: 'Çarşamba', focus: 'Bacak A — Quad Ağırlıklı', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Squat', sets: 5, reps: '5-6', rest: '180s' },
           { name: 'Leg Press', sets: 4, reps: '10-12', rest: '90s' },
@@ -1531,7 +1532,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Push B — Omuz & Triceps', emoji: '🔥',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'OHP', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Incline Barbell Press', sets: 4, reps: '8-10', rest: '90s' },
@@ -1544,7 +1545,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Pull B — Sırt Kalınlık & Arka Omuz', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Deadlift', sets: 4, reps: '5-6', rest: '180s' },
           { name: 'T-Bar Row', sets: 4, reps: '8-10', rest: '90s' },
@@ -1557,7 +1558,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'Bacak B — Hamstring & Kalça', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
           { name: 'Hip Thrust', sets: 4, reps: '10-12', rest: '90s' },
@@ -1582,7 +1583,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Push A — Göğüs & Triceps (Güç)', emoji: '🏆',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Paused Bench Press (3s)', sets: 5, reps: '3-5', rest: '180s' },
           { name: 'Incline Barbell Press', sets: 4, reps: '6-8', rest: '120s' },
@@ -1595,7 +1596,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Pull A — Sırt & Biceps (Güç)', emoji: '🏆',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Deficit Deadlift', sets: 5, reps: '3-5', rest: '180s' },
           { name: 'Weighted Pull-Up', sets: 4, reps: '6-8', rest: '120s' },
@@ -1608,7 +1609,7 @@ const workoutPhases = {
       },
       {
         day: 'Çarşamba', focus: 'Bacak A — Güç & Quad', emoji: '🏆',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Back Squat (RPE 9)', sets: 5, reps: '3-5', rest: '180s' },
           { name: 'Romanian Deadlift', sets: 4, reps: '6-8', rest: '120s' },
@@ -1620,7 +1621,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Push B — Omuz & Triceps (Hipertrofi)', emoji: '🏆',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'OHP', sets: 4, reps: '6-8', rest: '120s' },
           { name: 'Incline Dumbbell Press', sets: 4, reps: '8-10', rest: '90s' },
@@ -1632,7 +1633,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Pull B — Sırt Detay & Arka Omuz (Hipertrofi)', emoji: '🏆',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Chest-Supported Row', sets: 4, reps: '8-10', rest: '90s' },
           { name: 'Lat Pulldown', sets: 4, reps: '10-12', rest: '75s' },
@@ -1644,7 +1645,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'Bacak B — Hamstring & Kalça (Hipertrofi)', emoji: '🏆',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Front Squat', sets: 4, reps: '8-10', rest: '120s' },
           { name: 'Romanian Deadlift', sets: 4, reps: '8-10', rest: '120s' },
@@ -1667,7 +1668,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Full Body HIIT', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Burpees', sets: 4, reps: '15', rest: '30s' },
           { name: 'Kettlebell Swing', sets: 4, reps: '20', rest: '30s' },
@@ -1682,7 +1683,7 @@ const workoutPhases = {
       },
       {
         day: 'Çarşamba', focus: 'Üst Vücut + Kardiyo', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Push-Up Variations', sets: 4, reps: '15', rest: '30s' },
           { name: 'Dumbbell Row', sets: 3, reps: '12', rest: '45s' },
@@ -1700,7 +1701,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Alt Vücut Güç', emoji: '⚡',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Goblet Squat', sets: 4, reps: '15', rest: '45s' },
           { name: 'Jump Lunges', sets: 3, reps: '12/bacak', rest: '30s' },
@@ -1711,7 +1712,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'Metabolik Conditioning', emoji: '🎯',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'EMOM Circuit (10 dk)', sets: 1, reps: '-', rest: '-' },
           { name: 'Thrusters', sets: 3, reps: '15', rest: '30s' },
@@ -1730,7 +1731,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Üst Vücut HIIT + Güç', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Dumbbell Bench Press', sets: 4, reps: '10-12', rest: '45s' },
           { name: 'Renegade Row', sets: 3, reps: '10/taraf', rest: '30s' },
@@ -1742,7 +1743,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Alt Vücut HIIT + Güç', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Barbell Squat', sets: 4, reps: '10', rest: '60s' },
           { name: 'Jump Squat', sets: 3, reps: '12', rest: '30s' },
@@ -1761,7 +1762,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Full Body Metabolik', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'Clean & Press', sets: 4, reps: '8', rest: '60s' },
           { name: 'Devil Press', sets: 3, reps: '10', rest: '45s' },
@@ -1772,7 +1773,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Push-Pull Kardiyo', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Bench Press (Tempo: 3-0-1)', sets: 3, reps: '12', rest: '45s' },
           { name: 'Barbell Row (Tempo: 3-0-1)', sets: 3, reps: '12', rest: '45s' },
@@ -1783,7 +1784,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'HIIT Kardiyo Finisher', emoji: '🎯',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Rowing Machine', sets: 4, reps: '500m', rest: '90s' },
           { name: 'Burpee Broad Jump', sets: 3, reps: '10', rest: '30s' },
@@ -1802,7 +1803,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Üst Vücut Circuit', emoji: '🔥',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Devre (3 tur) — Push-Up', sets: 3, reps: '15', rest: '0s' },
           { name: 'Devre — Dumbbell Row', sets: 3, reps: '12', rest: '0s' },
@@ -1814,7 +1815,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Alt Vücut Circuit', emoji: '🦵',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Devre (3 tur) — Squat', sets: 3, reps: '15', rest: '0s' },
           { name: 'Devre — Lunge', sets: 3, reps: '12/bacak', rest: '0s' },
@@ -1833,7 +1834,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Full Body Circuit', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'Devre (4 tur) — Thruster', sets: 4, reps: '10', rest: '0s' },
           { name: 'Devre — Pull-Up / Assisted', sets: 4, reps: '8', rest: '0s' },
@@ -1845,7 +1846,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Kardiyo + Core Circuit', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Devre (3 tur) — Burpee', sets: 3, reps: '10', rest: '0s' },
           { name: 'Devre — Russian Twist', sets: 3, reps: '20', rest: '0s' },
@@ -1857,7 +1858,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'AMRAP Challenge', emoji: '🎯',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'AMRAP 20dk — Wall Ball (9kg)', sets: 1, reps: '15/tur', rest: '-' },
           { name: 'AMRAP — Box Jump', sets: 1, reps: '10/tur', rest: '-' },
@@ -1877,7 +1878,7 @@ const workoutPhases = {
     [
       {
         day: 'Pazartesi', focus: 'Güç + Kardiyo — Üst', emoji: '🏆',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: 'Bench Press', sets: 4, reps: '8', rest: '60s' },
           { name: '→ ardından Assault Bike Sprint', sets: 4, reps: '30s', rest: '30s' },
@@ -1889,7 +1890,7 @@ const workoutPhases = {
       },
       {
         day: 'Salı', focus: 'Güç + Kardiyo — Alt', emoji: '🏆',
-        image: '/images/workouts/legs.png',
+        image: '/images/workout-art/legs.png',
         exercises: [
           { name: 'Back Squat', sets: 4, reps: '8', rest: '75s' },
           { name: '→ ardından Box Jump', sets: 4, reps: '8', rest: '30s' },
@@ -1909,7 +1910,7 @@ const workoutPhases = {
       },
       {
         day: 'Perşembe', focus: 'Metabolik Devre + Core', emoji: '⚡',
-        image: '/images/workouts/shoulders.png',
+        image: '/images/workout-art/shoulders.png',
         exercises: [
           { name: 'EMOM 16dk (4 tur) — Clean & Press x5', sets: 4, reps: '5', rest: '-' },
           { name: 'EMOM — Devil Press x5', sets: 4, reps: '5', rest: '-' },
@@ -1920,7 +1921,7 @@ const workoutPhases = {
       },
       {
         day: 'Cuma', focus: 'Full Body Hybrid', emoji: '💪',
-        image: '/images/workouts/back.png',
+        image: '/images/workout-art/back.png',
         exercises: [
           { name: 'Süperset: Front Squat + Chin-Up', sets: 4, reps: '8 + 8', rest: '75s' },
           { name: 'Süperset: DB Bench Press + Pendlay Row', sets: 4, reps: '10 + 10', rest: '60s' },
@@ -1931,7 +1932,7 @@ const workoutPhases = {
       },
       {
         day: 'Cumartesi', focus: 'Conditioning Testi', emoji: '🎯',
-        image: '/images/workouts/chest.png',
+        image: '/images/workout-art/chest.png',
         exercises: [
           { name: '"Filthy Fifty" WOD (modifiye):', sets: '-', reps: '-', rest: '-' },
           { name: 'Box Jump x30', sets: 1, reps: '30', rest: '-' },
@@ -3587,11 +3588,15 @@ export function localizePlan(plan, lang) {
   const dMap = dayNameMap[lang] || dayNameMap.en;
   const fMap = focusMap[lang] || focusMap.en;
   const restName = restExerciseMap[lang] || restExerciseMap.en;
+  const localizeQualityFields = (obj) => (obj
+    ? Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, localizeQualityText(value, lang)]))
+    : obj);
 
   const localizeDay = (day) => ({
     ...day,
     day: dMap[day.day] || day.day,
     focus: fMap[day.focus] || localizeHomeFocus(day.focus, lang),
+    quality: localizeQualityFields(day.quality),
     exercises: day.exercises?.map(ex => {
       const loc = localizeExerciseEntry(ex, lang);
       return { ...loc, name: loc.name === 'Tam Dinlenme' ? restName : loc.name };
@@ -3602,6 +3607,7 @@ export function localizePlan(plan, lang) {
   return {
     ...plan,
     workoutSplit: plan.workoutSplit?.map(localizeDay),
+    planQuality: localizeQualityFields(plan.planQuality),
     dailyNutrition: plan.dailyNutrition?.map(dn => ({
       ...dn,
       day: dMap[dn.day] || dn.day,
