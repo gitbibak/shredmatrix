@@ -11,6 +11,7 @@ describe('workout share image', () => {
       measureText: text => ({ width: text.length * 10 }),
       fillText: text => texts.push(text),
       createLinearGradient: () => ({ addColorStop: vi.fn() }),
+      createRadialGradient: () => ({ addColorStop: vi.fn() }),
     }, { get: (target, key) => target[key] || (() => {}) });
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx);
     let dimensions;
@@ -18,13 +19,15 @@ describe('workout share image', () => {
       dimensions = [this.width, this.height];
       callback(new Blob(['image'], { type: 'image/png' }));
     });
-    const blob = await renderShareCard({ variant: 'workout', format, headline: '16 workouts', stats: [
+    const blob = await renderShareCard({ variant: 'workout', format, headline: '16 workouts', progress: { value: 3, total: 4, label: 'This week' }, stats: [
       { label: 'Exercises', value: 7 }, { label: 'Sets', value: 24 },
       { label: 'Day streak', value: 1 }, { label: 'This week', value: 3 },
     ] });
     expect(blob.type).toBe('image/png');
     expect(dimensions).toEqual([1080, height]);
-    expect(texts).toContain('This week: 3');
+    // The weekly count lives in the progress ring, so no duplicate chip is drawn.
+    expect(texts).toContain('3/4');
+    expect(texts.some(text => text.includes('This week: 3'))).toBe(false);
     expect(texts.some(text => text.includes('Day streak'))).toBe(false);
   });
   it('returns failure for a missing image', async () => {

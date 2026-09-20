@@ -38,7 +38,7 @@ function fitText(ctx, text, maxWidth, startSize, weight = 'bold') {
  * @param {string} [card.accent]  hex color for highlights
  * @returns {Promise<Blob|null>}
  */
-export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '', subline = '', stats = [], footer = 'fullbalance.app', accent = '#ff6d00', variant, format = 'square', imageSource, dateLabel }) {
+export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '', subline = '', stats = [], footer = 'fullbalance.app', accent = '#ff6d00', variant, format = 'square', dateLabel, theme, progress }) {
   if (typeof document === 'undefined') return null;
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
@@ -47,7 +47,7 @@ export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '',
   if (!ctx) return null;
 
   if (variant === 'workout') {
-    await drawWorkoutArtwork(ctx, canvas, { eyebrow, headline, subline, stats, footer, format, imageSource, dateLabel });
+    await drawWorkoutArtwork(ctx, canvas, { eyebrow, headline, subline, stats, footer, format, dateLabel, theme, progress });
     return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   }
 
