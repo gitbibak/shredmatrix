@@ -69,6 +69,17 @@ assertSingleLocalizedH1(editorialHtml, 'editorial-policy');
 assert(editorialHtml.includes(`${BASE_URL}/editorial-policy`), 'editorial policy canonical is missing');
 assert(editorialHtml.includes('/kurucu-tolga-deveci'), 'editorial policy founder link is missing');
 
+const pricingRoutes = [['fiyatlandirma', 'tr', '0 TL'], ['en/pricing', 'en', '$0'], ['es/precios', 'es', '0 €']];
+for (const [route, lang, price] of pricingRoutes) {
+  const html = await readFile(join(distDir, route, 'index.html'), 'utf8');
+  assert(html.includes(`<html lang="${lang}">`), `${route} document language is missing`);
+  assert(html.includes(price), `${route} visible price is missing`);
+  assert(html.includes('"@type":"FAQPage"'), `${route} FAQ schema is missing`);
+  assert(html.includes('"isAccessibleForFree":true'), `${route} free flag is missing`);
+  assert(html.includes('"price":"0"'), `${route} zero-price offer is missing`);
+  assert(html.includes(`hreflang="tr" href="${BASE_URL}/fiyatlandirma"`), `${route} Turkish alternate is missing`);
+}
+
 const founderRoutes = [
   ['kurucu-tolga-deveci', 'tr', 'Tolga Deveci — Full Balance Kurucusu ve Geliştiricisi'],
   ['en/founder-tolga-deveci', 'en', 'Tolga Deveci — Founder and Developer of Full Balance'],

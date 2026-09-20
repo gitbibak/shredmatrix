@@ -47,11 +47,12 @@ const ReviewsPage = lazy(() => import('./components/ReviewsPage'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const EditorialPolicy = lazy(() => import('./components/EditorialPolicy'));
 const FounderPage = lazy(() => import('./components/FounderPage'));
+const PricingPage = lazy(() => import('./components/PricingPage'));
 
 const SEO_PAGE_SLUGS = TURKISH_SEO_SLUGS;
 
 function isPublicContentPath(pathname) {
-  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones'].includes(pathname)
+  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones', '/fiyatlandirma'].includes(pathname)
     || pathname.startsWith('/blog/')
     || pathname === '/en' || pathname.startsWith('/en/')
     || pathname === '/es' || pathname.startsWith('/es/')
@@ -759,6 +760,14 @@ function AppContent() {
               <Route key={path} path={path} element={
                 <motion.div key={path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                   <FounderPage />
+                </motion.div>
+              } />
+            ))}
+
+            {['/fiyatlandirma', '/en/pricing', '/es/precios'].map((path) => (
+              <Route key={path} path={path} element={
+                <motion.div key={path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
+                  <PricingPage />
                 </motion.div>
               } />
             ))}

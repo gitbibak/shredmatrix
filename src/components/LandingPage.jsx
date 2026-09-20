@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
+import { pricingAlternates, pricingPages } from '../data/pricingPages';
 import OptimizedImage from './OptimizedImage';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import ApprovedTestimonials from './ApprovedTestimonials';
@@ -172,6 +173,7 @@ export default function LandingPage({ onStart }) {
   const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
   const [shareCopied, setShareCopied] = useState(false);
   const c = copy[lang] || copy.tr;
+  const pricing = pricingPages.find((page) => page.lang === lang) || pricingPages[0];
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -395,8 +397,21 @@ export default function LandingPage({ onStart }) {
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.freeDesc}</p>
             <button onClick={() => startRegistration('free_section')} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {c.freeItems.map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border border-slate-800 bg-slate-900/45 px-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={17} className="text-emerald-400" /></span><span className="text-sm text-slate-300">{item}</span></div>)}
+          <div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {c.freeItems.map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border border-slate-800 bg-slate-900/45 px-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={17} className="text-emerald-400" /></span><span className="text-sm text-slate-300">{item}</span></div>)}
+            </div>
+            <div className="mt-5 overflow-x-auto border border-slate-800">
+              <table className="w-full min-w-[420px] text-left text-xs sm:text-sm">
+                <thead className="bg-slate-900 text-[11px] uppercase tracking-wider text-slate-400"><tr>{pricing.compareHead.map((head) => <th key={head} className="px-3 py-2 font-semibold">{head}</th>)}</tr></thead>
+                <tbody>
+                  {pricing.compareRows.slice(0, 7).map(([feature, ours, theirs]) => (
+                    <tr key={feature} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-300">{feature}</td><td className="px-3 py-2 font-semibold text-emerald-300">{ours}</td><td className="px-3 py-2 text-slate-500">{theirs}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Link to={pricing.path} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-emerald-300 hover:text-emerald-200">{pricing.compareTitle} →</Link>
           </div>
         </div>
       </section>
@@ -450,6 +465,7 @@ export default function LandingPage({ onStart }) {
               <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>
               <Link to="/contact" className="hover:text-white">{t('contact.link') || 'İletişim'}</Link>
               <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : lang === 'es' ? 'Política editorial' : 'Editorial policy'}</Link>
+              <Link to={pricingAlternates[lang] || pricingAlternates.tr} className="hover:text-white">{pricing.eyebrow}</Link>
               <Link to={lang === 'tr' ? '/kurucu-tolga-deveci' : lang === 'es' ? '/es/fundador-tolga-deveci' : '/en/founder-tolga-deveci'} className="hover:text-white">{c.founderLink}</Link>
             </div>
           </div>

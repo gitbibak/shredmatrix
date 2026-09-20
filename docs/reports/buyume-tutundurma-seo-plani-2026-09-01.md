@@ -124,3 +124,12 @@
 2. Google Ads hesabı + ödeme yöntemi, sonra CSV içe aktarımı.
 3. Google Play TWA (rehber hazır): mağaza yorumları en güçlü sosyal kanıt yüzeyi olur.
 4. Supabase erişimi: MCP için execute_sql izni veya `supabase link` için veritabanı şifresi; böylece kayıt kaynağı ve geri bildirim sayıları her oturumda raporlanır.
+
+## 12. Sıfır bütçe kararı ve "ücretsiz" konumlandırma (2026-09-20)
+
+Kurucu kararı: reklam bütçesi yok, ücretli hiçbir adım atılmaz. Google Ads kiti arşiv olarak kalır, kullanılmaz. Google Play geliştirici hesabı (25 $) da bu karara girer; TWA rehberi bekler.
+
+- Yeni fiyatlandırma sayfaları: `/fiyatlandirma`, `/en/pricing`, `/es/precios`. "Fiyat: 0 TL. Her zaman." başlığı, ücretli uygulamalarla 12 satırlık karşılaştırma tablosu, "Neden ücretsiz?" (bağımsız geliştirici, düşük altyapı maliyeti, veri satışı yok, büyüme davetle), "Neyi vaat etmiyoruz?" dürüstlük bölümü ve 6 soruluk SSS. Statik HTML + FAQPage ve Offer(price 0) şeması; "Full Balance ücretsiz mi?" sorusuna arama motorları ve yapay zekâ asistanları için tek, makine tarafından okunabilir cevap.
+- Açılış sayfasında "%100 ücretsiz" bölümüne 7 satırlık karşılaştırma tablosu ve fiyatlandırma bağlantısı; altbilgide "Fiyatlandırma" linki (3 dil).
+- Sitemap 91 URL; IndexNow bildirimi deploy sonrası gönderildi.
+- Tarayıcı panelinde görülen "soluk sayfa" bir hata değildir: gizli sekmede requestAnimationFrame çalışmadığı için giriş animasyonu bekler; görünür sekmede normal açılır.

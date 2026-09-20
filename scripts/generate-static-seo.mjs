@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
 import { reviewPages } from '../src/data/reviewPages.js';
+import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
@@ -297,4 +298,22 @@ for (const page of reviewPages) {
   const body = `<main class="static-seo"><a href="${page.lang === 'tr' ? '/' : '/' + page.lang}">Full Balance</a><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></main>`;
   await writeRoute(page.path, buildDocument({ title: page.title + ' | Full Balance', description: page.description, canonical, image: BASE_URL + '/og/full-balance-og-en.png', schema: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.title, url: canonical, inLanguage: page.lang }, body, lang: page.lang, alternates: Object.fromEntries(reviewPages.map((p) => [p.lang, p.path])) }));
 }
-console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + 2 + reviewPages.length} static SEO pages.`);
+
+for (const page of pricingPages) {
+  const canonical = `${BASE_URL}${page.path}`;
+  const table = `<table><thead><tr>${page.compareHead.map((head) => `<th>${escapeHtml(head)}</th>`).join('')}</tr></thead><tbody>${page.compareRows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  const faqs = page.faqs.map(([question, answer]) => `<section><h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p></section>`).join('');
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p><p><strong>${escapeHtml(page.priceLabel)}: ${escapeHtml(page.price)}</strong> ${escapeHtml(page.priceNote)}</p></header><article><section><h2>${escapeHtml(page.compareTitle)}</h2>${table}</section><section><h2>${escapeHtml(page.whyTitle)}</h2><ul>${page.why.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section><section><h2>${escapeHtml(page.honestyTitle)}</h2><p>${escapeHtml(page.honesty)}</p><a href="/privacy">${escapeHtml(page.privacy)}</a></section><section><h2>${escapeHtml(page.faqTitle)}</h2>${faqs}</section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a> · <a href="${escapeHtml(page.compareHref)}">${escapeHtml(page.compareLink)}</a></footer></main>`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', '@id': `${canonical}#page`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, about: { '@id': `${BASE_URL}/#app` } },
+      { '@type': 'FAQPage', '@id': `${canonical}#faq`, inLanguage: page.locale, mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: `${BASE_URL}/`, applicationCategory: 'HealthApplication', operatingSystem: 'Web, iOS, Android, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: page.lang === 'tr' ? 'TRY' : page.lang === 'es' ? 'EUR' : 'USD', availability: 'https://schema.org/InStock' }, publisher: { '@id': `${BASE_URL}/#organization` } },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.eyebrow, item: canonical }] },
+    ],
+  };
+  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang === 'es' ? 'en' : page.lang}.png`, schema, body, lang: page.lang, alternates: pricingAlternates }));
+}
+
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + pricingPages.length + 2 + reviewPages.length} static SEO pages.`);
