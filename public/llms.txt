@@ -1,93 +1,111 @@
 # Full Balance
 
-Full Balance is a completely free personal fitness, nutrition, wellness and progress tracking web application at fullbalance.app. It is built for beginners who want one clear plan for home or gym instead of switching between multiple apps.
+> Free personal fitness, nutrition and wellness app. Personalized workout and meal plans for home (with or without equipment) and gym, in Turkish, English and Spanish. No subscription, no credit card, no ads.
 
-Canonical URL: https://fullbalance.app/
-English entry: https://fullbalance.app/en/
-Spanish entry: https://fullbalance.app/es/
-Supported languages: English, Spanish, Turkish
-Pricing: Free. No subscription, no credit card requirement, no premium wall.
-Medical disclaimer: Full Balance is not a medical diagnosis or treatment tool. Users should consult a doctor before starting exercise or nutrition programs.
+## Key facts
+- Full Balance (fullbalance.app) is a free personal fitness, nutrition and wellness web app (PWA) built by independent developer Tolga Deveci.
+- Price: 0. No subscription, no trial, no credit card, no paywall, no in-app ads. Core features stay free.
+- Languages: Turkish, English, Spanish. Meal plans use each language's food culture (Turkish, US/UK, Spanish dishes) and local meal clocks.
+- Goals: muscle growth, fat loss, yoga, Pilates, reformer Pilates, meditation. Environments: gym, home with dumbbells/bands, home with no equipment.
+- Personalization: goal, level, days per week (3/4/5), up to two priority body regions, health conditions (back, knee, shoulder, heart), allergies and budget.
+- Nutrition: daily calories and macros, ingredient-level recipes with gram portions, allergy and vegan swaps, shopping list, photo calorie estimate (a range, not exact grams).
+- Tracking: workouts, weight, measurements, progress photos (private), water, sleep, streaks with rest-day awareness and streak freezes, weekly summaries, Excel export.
+- Installation: opens in the browser; "Add to Home Screen" installs it as an app that works offline. Not in app stores.
+- Not a medical tool: no diagnosis or treatment, no weight-loss guarantees. Medical clearance is recommended for heart or circulatory conditions.
+- Contact: info@fullbalance.app. Privacy: analytics only after cookie consent; health data is never sent to ad networks; users can export or delete their data.
 
-## What Full Balance Does
+## Pricing and reviews
+- [Full Balance Fiyatlandırma: 0 TL, Abonelik Yok, Kredi Kartı Yok](https://fullbalance.app/fiyatlandirma): Full Balance tamamen ücretsizdir: abonelik, deneme süresi, premium duvarı ve uygulama içi reklam yok. Antrenman, beslenme, fotoğrafla kalori ve takip araçlarının tamamı açık.
+- [Full Balance Pricing: $0, No Subscription, No Credit Card](https://fullbalance.app/en/pricing): Full Balance is completely free: no subscription, no trial, no paywall and no in-app ads. Workouts, nutrition, photo calorie estimates and every tracking tool are open.
+- [Precios de Full Balance: 0 €, sin suscripción, sin tarjeta](https://fullbalance.app/es/precios): Full Balance es totalmente gratis: sin suscripción, sin prueba, sin muro de pago y sin anuncios. Entrenamiento, nutrición, calorías por foto y todas las herramientas de seguimiento están abiertas.
+- [Kullanıcı yorumları](https://fullbalance.app/reviews): Yayın izni verilen Full Balance kullanıcı deneyimleri. Yorumlar kişisel deneyimleri yansıtır; sonuç garantisi değildir.
+- [User reviews](https://fullbalance.app/en/reviews): Full Balance user experiences published with permission. Reviews reflect individual experiences, not guaranteed results.
+- [Opiniones de usuarios](https://fullbalance.app/es/opiniones): Experiencias de Full Balance publicadas con permiso. Las reseñas reflejan experiencias individuales, no resultados garantizados.
 
-- Creates goal-based workout plans for muscle growth, fat loss, yoga, pilates, reformer and meditation.
-- Separates no-equipment home, basic home-equipment and gym plans so exercises match the user's actual setup.
-- Provides BMR, TDEE, BMI, daily calorie and macro tracking.
-- Includes a free AI photo calorie counter: a vision model recognises foods and portions, nutrition comes from the built-in food database, hidden oils and sauces are suggested for confirmation, and the result is shown as a calorie range. The photo is downsized on-device and never stored.
-- Tracks water, sleep, weight, body measurements and progress photos.
-- Exports progress data as Excel/report files.
-- Supports Strava activity integration and mobile reminders.
-- Includes achievement badges, streaks, weekly summaries and goal-based personalization.
-- Summarizes movement, strength, mobility, recovery and nutrition habits in a transparent longevity view without predicting biological age or lifespan.
+## English guides
+- [Free Personal Fitness and Wellness App | Full Balance](https://fullbalance.app/en): Get personalized workout and nutrition plans for muscle gain, fat loss, yoga, meditation, reformer and Pilates. Full Balance is completely free with no credit card.
+- [Free Personalized Workout Plan for Home or Gym | Full Balance](https://fullbalance.app/en/personal-workout-plan): Create a free workout plan for home or gym based on your goal, level and available days, with exercise order, sets, reps, rest and progression.
+- [Free Home Workout Plan Without Equipment | Full Balance](https://fullbalance.app/en/home-workout-no-equipment): Follow a free home workout plan without gym equipment, adapted to your level, weekly schedule and goal with clear sets, reps and progression.
+- [Free Personalized Home Dumbbell Workout Plan | Full Balance](https://fullbalance.app/en/home-dumbbell-workout-plan): Create a free personalized home dumbbell workout plan for your goal and level, with sets, reps, rest, progression and an allergy-aware nutrition plan.
+- [Free Home Muscle Building Workout Plan | Full Balance](https://fullbalance.app/en/home-muscle-building-workout): Build a free home muscle workout with bodyweight progressions, weekly volume, rest guidance and nutrition targets without gym-only exercises.
+- [Free Beginner Pilates Workout at Home | Full Balance](https://fullbalance.app/en/pilates-workout-at-home): Start a free beginner mat Pilates plan at home with controlled sessions for breathing, core stability, posture, mobility and gradual progression.
+- [Daily Calorie Calculator: BMR, Maintenance and Deficit | Full Balance](https://fullbalance.app/en/calorie-macro-calculator): Calculate your basal metabolic rate, maintenance calories and a target for fat loss or muscle gain from age, height, weight, sex and activity. Free, no signup, with macros.
+- [Resistance Band Workout Plan for Beginners: 4 Weeks at Home | Full Balance](https://fullbalance.app/en/resistance-band-workout-plan): A free full-body resistance band workout plan for home: exercise order, sets, reps, rest and weekly progression by level, plus which band strength to buy and whether bands build muscle.
+- [4-Week Home Workout Plan for Beginners: No Equipment, Printable | Full Balance](https://fullbalance.app/en/4-week-home-workout-plan): A free 4-week (30-day) home workout plan without equipment: sets, reps, rest and a week-by-week progression you can print or track in the app.
+- [Home Workout Plan for Women Beginners: Glutes, Core and Full Body | Full Balance](https://fullbalance.app/en/home-workout-plan-for-women): A free home workout plan for women: balanced weekly plan for glutes, legs, core and upper body, with or without dumbbells, and calories set for fat loss or toning.
+- [Beginner Workout Plan Over 40 at Home: Joint-Friendly Strength and Balance | Full Balance](https://fullbalance.app/en/beginner-workout-plan-over-40): A free beginner home workout plan for people over 40 and 50: joint-friendly strength, balance and mobility with longer rest and controlled progression, adapted to health notes.
+- [Free Photo Calorie Counter: AI Meal Estimate, No App Needed | Full Balance](https://fullbalance.app/en/photo-calorie-counter): Upload a meal photo and let AI recognise the foods and portions, then get calories and macros in a realistic range. Free, no signup, no subscription, photo never stored.
+- [Free Protein Calculator by Weight and Goal | Full Balance](https://fullbalance.app/en/protein-calculator): Calculate a daily protein range in grams from your body weight, activity and goal. Use kilograms or pounds and get a free result without signup.
+- [Free Imperial BMI Calculator (lb, ft & in) | Full Balance](https://fullbalance.app/en/bmi-calculator): Calculate adult BMI with pounds, feet and inches or metric units. Get a free instant result with no signup, subscription or credit card.
+- [Free Muscle Gain Workout and Nutrition Plan | Full Balance](https://fullbalance.app/en/muscle-gain-workout-plan): Build a free muscle gain plan for home or gym with level-based workouts, progressive overload, calorie and protein targets and progress tracking.
+- [Free Fat Loss Workout and Nutrition Plan | Full Balance](https://fullbalance.app/en/fat-loss-workout-plan): Create a sustainable fat loss plan with a calorie target, strength training, activity, protein and weekly trend tracking.
+- [Free Personal Nutrition Plan and Shopping List | Full Balance](https://fullbalance.app/en/free-personal-nutrition-plan): Get a free seven-day nutrition plan based on your goal, calorie target, budget, preferences, health information and declared allergies.
+- [Free Personal Yoga and Mobility App | Full Balance](https://fullbalance.app/en/free-yoga-app): Create a free yoga plan for flexibility, mobility, breathing and consistency, adapted to your experience and weekly schedule.
+- [Free Personal Pilates Workout Plan | Full Balance](https://fullbalance.app/en/free-pilates-workout-plan): Create a free Pilates plan for core strength, posture, balance and controlled progression based on your level.
+- [Free Reformer Pilates Workout Plan | Full Balance](https://fullbalance.app/en/free-reformer-pilates-plan): Create a free reformer Pilates plan for a studio or home reformer, adapted to your experience, available days and machine access.
+- [Free Personal Meditation and Breathing App | Full Balance](https://fullbalance.app/en/free-meditation-app): Build a free meditation routine for breathing, focus, sleep preparation and daily consistency with sessions matched to your experience.
 
-## Important Public Pages
+## Guías en español
+- [Aplicación Gratis de Fitness y Bienestar | Full Balance](https://fullbalance.app/es): Planes personalizados de entrenamiento y nutrición para ganar músculo, perder grasa, yoga, meditación, reformer y pilates. Gratis y sin tarjeta.
+- [Plan con Mancuernas Personalizado Gratis en Casa | Full Balance](https://fullbalance.app/es/plan-entrenamiento-personalizado): Crea una rutina de tonificación en casa con mancuernas, adaptada a tu nivel, objetivo y días. Plan gratis con series, repeticiones y progresión.
+- [Plan Gratis de Entrenamiento en Casa sin Material | Full Balance](https://fullbalance.app/es/entrenamiento-en-casa-sin-equipo): Sigue un plan gratis para entrenar en casa sin material, adaptado a tu nivel, semana y objetivo con series, repeticiones y progresión claras.
+- [Plan Gratis en Casa con Mancuernas | Full Balance](https://fullbalance.app/es/entrenamiento-en-casa-con-mancuernas): Crea gratis un plan personalizado para entrenar en casa con mancuernas según tu objetivo y nivel, con series, repeticiones, descanso, progresión y nutrición.
+- [Plan Gratis para Ganar Músculo en Casa | Full Balance](https://fullbalance.app/es/ejercicios-en-casa-ganar-musculo): Crea un plan gratis para ganar músculo en casa con progresiones de peso corporal, volumen semanal, descanso y objetivos de nutrición.
+- [Pilates Gratis en Casa para Principiantes | Full Balance](https://fullbalance.app/es/pilates-en-casa-principiantes): Empieza un plan gratis de pilates en esterilla con sesiones controladas para respiración, core, postura, movilidad y progresión gradual.
+- [Calculadora de Calorías Diarias: TMB, Mantenimiento y Déficit | Full Balance](https://fullbalance.app/es/calculadora-calorias-macros): Calcula tu tasa metabólica basal, tus calorías de mantenimiento y un objetivo para adelgazar o ganar músculo según edad, altura, peso, sexo y actividad. Gratis, sin registro y con macros.
+- [Rutina con Bandas Elásticas para Principiantes: 4 Semanas en Casa | Full Balance](https://fullbalance.app/es/rutina-con-bandas-elasticas): Rutina gratis de cuerpo completo con bandas elásticas en casa: orden de ejercicios, series, repeticiones, descanso y progresión semanal por nivel, qué banda comprar y si sirven para ganar músculo.
+- [Rutina de 4 Semanas en Casa para Principiantes: Sin Material, Imprimible | Full Balance](https://fullbalance.app/es/rutina-4-semanas-en-casa): Rutina gratis de 4 semanas (30 días) en casa sin material: series, repeticiones, descanso y progresión semana a semana que puedes imprimir o seguir en la app.
+- [Rutina en Casa para Mujeres Principiantes: Glúteos, Core y Cuerpo Completo | Full Balance](https://fullbalance.app/es/rutina-en-casa-mujeres): Rutina gratis en casa para mujeres: semana equilibrada de glúteos, piernas, core y tren superior, con o sin mancuernas, y calorías ajustadas para perder grasa o tonificar.
+- [Rutina en Casa para Mayores de 40 Principiantes: Fuerza y Equilibrio sin Dañar Articulaciones | Full Balance](https://fullbalance.app/es/rutina-en-casa-mayores-40): Rutina gratis para principiantes mayores de 40 y 50 en casa: fuerza, equilibrio y movilidad respetando las articulaciones, con más descanso y progresión controlada según tus notas de salud.
+- [Contar Calorías con Foto Gratis: Estimación con IA sin App | Full Balance](https://fullbalance.app/es/contar-calorias-con-foto): Sube la foto de tu comida y deja que la IA reconozca alimentos y porciones; recibe calorías y macros en un rango realista. Gratis, sin registro, sin suscripción y sin guardar la foto.
+- [Calculadora de Proteína por Peso y Objetivo | Full Balance](https://fullbalance.app/es/calculadora-proteina): Estima un rango práctico de proteína diaria según peso, actividad y objetivo. Calculadora métrica e imperial gratis y sin registro.
+- [Calculadora de IMC Gratis (Métrica e Imperial) | Full Balance](https://fullbalance.app/es/calculadora-imc): Calcula tu IMC gratis con kilos y centímetros o con libras, pies y pulgadas. Resultado inmediato para adultos, categoría orientativa y sin registro.
+- [Plan Gratis para Ganar Masa Muscular | Full Balance](https://fullbalance.app/es/plan-ganar-masa-muscular): Crea un plan gratis con entrenamiento según nivel, sobrecarga progresiva, calorías, proteína y seguimiento del progreso.
+- [Plan Gratis para Perder Grasa | Full Balance](https://fullbalance.app/es/plan-perder-grasa): Crea un plan sostenible con calorías objetivo, fuerza, actividad, proteína y seguimiento de tendencias semanales.
+- [Plan de Nutrición y Lista de Compra Gratis | Full Balance](https://fullbalance.app/es/plan-nutricion-personalizado-gratis): Obtén siete días de nutrición según objetivo, calorías, presupuesto, preferencias, salud y alergias declaradas.
+- [Aplicación Gratis de Yoga y Movilidad | Full Balance](https://fullbalance.app/es/aplicacion-yoga-gratis): Crea un plan gratis de yoga para flexibilidad, movilidad, respiración y constancia según experiencia y semana disponible.
+- [Plan Personal de Pilates Gratis | Full Balance](https://fullbalance.app/es/plan-pilates-gratis): Crea un plan gratis de pilates para core, postura, equilibrio y progresión controlada según tu nivel.
+- [Plan de Reformer Pilates Gratis | Full Balance](https://fullbalance.app/es/plan-reformer-pilates-gratis): Crea gratis un plan de reformer pilates para estudio o reformer en casa, adaptado a experiencia, días disponibles y acceso a máquina.
+- [Aplicación Gratis de Meditación y Respiración | Full Balance](https://fullbalance.app/es/aplicacion-meditacion-gratis): Crea una rutina gratis de meditación para respiración, enfoque, preparación del sueño y constancia según tu experiencia.
 
-- Home: https://fullbalance.app/
-- English Home: https://fullbalance.app/en/
-- Spanish Home: https://fullbalance.app/es/
-- Free Personalized Workout Plan: https://fullbalance.app/en/personal-workout-plan
-- Plan de Entrenamiento Personalizado: https://fullbalance.app/es/plan-entrenamiento-personalizado
-- Free Fitness App: https://fullbalance.app/ucretsiz-fitness-uygulamasi
-- Muscle Growth Program: https://fullbalance.app/kas-gelisimi-programi
-- Fat Loss Program: https://fullbalance.app/yag-yakimi-programi
-- Free Nutrition Program: https://fullbalance.app/ucretsiz-beslenme-programi
-- Allergy-aware Nutrition Program: https://fullbalance.app/alerjiye-gore-beslenme-programi
-- Protein Need Calculator: https://fullbalance.app/protein-ihtiyaci-hesaplama
-- BMI Calculator: https://fullbalance.app/bmi-hesaplama
-- Calorie and Macro Tracking: https://fullbalance.app/kalori-makro-takibi
-- Resistance Band Workout Plan (Turkish): https://fullbalance.app/direnc-bandi-antrenman-programi
-- Resistance Band Workout Plan (English): https://fullbalance.app/en/resistance-band-workout-plan
-- Rutina con Bandas Elásticas (Spanish): https://fullbalance.app/es/rutina-con-bandas-elasticas
-- 30-Day Home Workout Program (Turkish): https://fullbalance.app/30-gunluk-evde-spor-programi
-- 4-Week Home Workout Plan (English): https://fullbalance.app/en/4-week-home-workout-plan
-- Rutina de 4 Semanas en Casa (Spanish): https://fullbalance.app/es/rutina-4-semanas-en-casa
-- Home Workout Plan for Women (Turkish): https://fullbalance.app/kadinlar-icin-evde-spor-programi
-- Home Workout Plan for Women (English): https://fullbalance.app/en/home-workout-plan-for-women
-- Rutina en Casa para Mujeres (Spanish): https://fullbalance.app/es/rutina-en-casa-mujeres
-- Beginner Workout Plan Over 40 (Turkish): https://fullbalance.app/40-yas-ustu-evde-spor-programi
-- Beginner Workout Plan Over 40 (English): https://fullbalance.app/en/beginner-workout-plan-over-40
-- Rutina en Casa para Mayores de 40 (Spanish): https://fullbalance.app/es/rutina-en-casa-mayores-40
-- Pilates vs Yoga (Turkish): https://fullbalance.app/pilates-mi-yoga-mi
-- Sleep Meditation Routine (Turkish): https://fullbalance.app/uyku-meditasyonu
-- Photo Calorie Counter (Turkish): https://fullbalance.app/fotografla-kalori-hesaplama
-- Photo Calorie Counter (English): https://fullbalance.app/en/photo-calorie-counter
-- Contar Calorías con Foto (Spanish): https://fullbalance.app/es/contar-calorias-con-foto
-- Daily Calorie Calculator (Turkish): https://fullbalance.app/gunluk-kalori-ihtiyaci-hesaplama
-- BMR Calculator (Turkish): https://fullbalance.app/bazal-metabolizma-hesaplama
-- Daily Calorie Calculator (English): https://fullbalance.app/en/calorie-macro-calculator
-- Calculadora de Calorías Diarias (Spanish): https://fullbalance.app/es/calculadora-calorias-macros
-- Workout Planner: https://fullbalance.app/antrenman-programi
-- No-Equipment Home Workout: https://fullbalance.app/en/home-workout-no-equipment
-- Home Dumbbell Workout: https://fullbalance.app/en/home-dumbbell-workout-plan
-- Entrenamiento con Mancuernas: https://fullbalance.app/es/entrenamiento-en-casa-con-mancuernas
-- Progress Tracking: https://fullbalance.app/ilerleme-takibi
-- Water, Sleep and Weight Tracking: https://fullbalance.app/su-uyku-kilo-takibi
-- Yoga, Pilates and Reformer: https://fullbalance.app/yoga-pilates-reformer
-- Yoga App: https://fullbalance.app/yoga-uygulamasi
-- Pilates Program: https://fullbalance.app/pilates-programi
-- Reformer Pilates Program: https://fullbalance.app/reformer-pilates-programi
-- Meditation App: https://fullbalance.app/meditasyon-uygulamasi
-- Excel and Report Export: https://fullbalance.app/excel-rapor-disari-aktarma
-- Health and Longevity Guides: https://fullbalance.app/blog
-- What Is Longevity?: https://fullbalance.app/blog/longevity-nedir-saglikli-yasam-aliskanliklari
-- Strength Training and Healthy Ageing: https://fullbalance.app/blog/kuvvet-antrenmani-ve-saglikli-yaslanma
-- Sleep, Recovery and Longevity: https://fullbalance.app/blog/uyku-toparlanma-ve-longevity
-- Yoga, Pilates, Mobility and Longevity: https://fullbalance.app/blog/yoga-pilates-mobilite-longevity
-- Editorial Standards and Content Process: https://fullbalance.app/editorial-policy
-- Privacy Policy: https://fullbalance.app/privacy
-- Terms of Service: https://fullbalance.app/terms
-- Sitemap: https://fullbalance.app/sitemap.xml
-- Robots: https://fullbalance.app/robots.txt
+## Türkçe rehberler
+- [Ücretsiz Fitness Uygulaması | Full Balance](https://fullbalance.app/ucretsiz-fitness-uygulamasi): Full Balance; antrenman, beslenme, ilerleme, gelişim raporu, Excel dışa aktarma, su, uyku ve kilo takibini tek yerde sunan tamamen ücretsiz fitness uygulamasıdır.
+- [Fotoğrafla Yemek Kalori Hesaplama ve Makro Takibi | Full Balance](https://fullbalance.app/kalori-makro-takibi): Yemek fotoğrafını referans al, görünen besinleri ve porsiyonları doğrula; öğün kalorisi ile makroları ücretsiz ve gerçekçi bir aralıkta hesapla.
+- [Ekipmansız Evde Spor Programı | Ücretsiz Plan | Full Balance](https://fullbalance.app/evde-spor-programi): Seviye, hedef ve haftalık gün sayısına göre ekipmansız evde spor programı oluştur; set, tekrar, dinlenme ve kolay alternatifleri ücretsiz gör.
+- [Evde Dambıl Antrenman Programı | Ücretsiz Kişisel Plan](https://fullbalance.app/evde-dambil-antrenman-programi): Hedef ve seviyene göre evde dambıl veya direnç bandıyla uygulanabilen, salon makinesi içermeyen ücretsiz kişisel antrenman ve beslenme planı oluştur.
+- [Evde Kas Geliştirme Hareketleri | Ücretsiz | Full Balance](https://fullbalance.app/evde-kas-gelistirme-hareketleri): Evde kas geliştirme hareketlerini seviyene göre uygula. Ekipmansız ücretsiz programda set, tekrar, progresyon, dinlenme, protein ve kalori hedeflerini gör.
+- [Başlangıç Pilates Programı | Evde Ücretsiz Plan | Full Balance](https://fullbalance.app/baslangic-pilates-programi): Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.
+- [Kişisel Antrenman Programı | Full Balance](https://fullbalance.app/antrenman-programi): Kas gelişimi, yağ yakımı, yoga, pilates, reformer ve meditasyon için hedefe göre 24 program sunan ücretsiz antrenman planlayıcı.
+- [İlerleme Takibi ve Gelişim Analizi | Full Balance](https://fullbalance.app/ilerleme-takibi): Kilo, yağ oranı, vücut ölçüleri, fotoğraf, su, uyku ve antrenman verilerini takip eden ücretsiz gelişim takip uygulaması.
+- [Su, Uyku ve Kilo Takip Uygulaması | Full Balance](https://fullbalance.app/su-uyku-kilo-takibi): Günlük su hedefi, uyku süresi, kilo trendi ve vücut ölçülerini takip eden ücretsiz sağlık ve fitness takip uygulaması.
+- [Yoga, Pilates ve Reformer Programları | Full Balance](https://fullbalance.app/yoga-pilates-reformer): Yoga, pilates, reformer ve meditasyon hedefleri için esneklik, core, postür, nefes ve zihinsel denge odaklı ücretsiz planlar.
+- [Excel ve Fitness Raporu Dışa Aktarma | Full Balance](https://fullbalance.app/excel-rapor-disari-aktarma): Antrenman, kilo, ölçüm, su, uyku ve ilerleme verilerini Excel ve rapor formatında dışa aktaran ücretsiz fitness takip uygulaması.
+- [Kas Gelişimi Programı | Ücretsiz Full Balance](https://fullbalance.app/kas-gelisimi-programi): Kas gelişimi için hedefe göre antrenman, kalori fazlası, protein hedefi, progresif yüklenme ve ilerleme takibi sunan ücretsiz uygulama.
+- [Yağ Yakımı Programı | Ücretsiz Full Balance](https://fullbalance.app/yag-yakimi-programi): Yağ yakımı için kalori açığı, antrenman planı, su, uyku, kilo trendi ve haftalık ilerleme takibi sunan ücretsiz uygulama.
+- [Ücretsiz Yoga Uygulaması | Full Balance](https://fullbalance.app/yoga-uygulamasi): Yoga, mobilite, esneklik, nefes ve toparlanma odağıyla kişisel wellness planı sunan ücretsiz Full Balance uygulaması.
+- [Ücretsiz Pilates Uygulaması ve Programı | Full Balance](https://fullbalance.app/pilates-programi): Evde mat pilates için seviyene göre ücretsiz program oluştur; core, postür, kontrollü hareket, devamlılık ve gelişimini tek uygulamada takip et.
+- [Reformer Pilates Programı | Full Balance](https://fullbalance.app/reformer-pilates-programi): Reformer pilates hedefi için direnç, kontrollü progresyon, core, postür ve haftalık takip yapısı sunan ücretsiz uygulama.
+- [Ücretsiz Meditasyon Uygulaması | Full Balance](https://fullbalance.app/meditasyon-uygulamasi): Meditasyon, nefes, uyku, stres yönetimi ve günlük devamlılık takibini destekleyen ücretsiz wellness uygulaması.
+- [Fotoğrafla Kalori Hesaplama | Ücretsiz Yapay Zeka Öğün Tahmini | Full Balance](https://fullbalance.app/fotografla-kalori-hesaplama): Öğün fotoğrafını yükle; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makroları gerçekçi bir aralıkla hesaplasın. Ücretsiz, üyeliksiz, fotoğraf saklanmaz.
+- [Günlük Kalori İhtiyacı Hesaplama | BMR, Koruma ve Kalori Açığı | Full Balance](https://fullbalance.app/gunluk-kalori-ihtiyaci-hesaplama): Yaş, boy, kilo, cinsiyet ve aktiviteye göre günlük kalori ihtiyacını hesapla. Bazal metabolizma, koruma kalorisi ve kilo vermek ya da kas kazanmak için hedef kaloriyi ücretsiz gör.
+- [Bazal Metabolizma Hızı (BMR) Hesaplama | Ücretsiz | Full Balance](https://fullbalance.app/bazal-metabolizma-hesaplama): Bazal metabolizma hızını (BMR) yaş, boy, kilo ve cinsiyete göre Mifflin-St Jeor formülüyle hesapla; koruma kalorisi ve hedef kaloriyi ücretsiz gör.
+- [BMI Hesaplama ve Kilo Takibi | Full Balance](https://fullbalance.app/bmi-hesaplama): BMI, kilo, vücut ölçüsü, yağ oranı ve hedefe göre ilerleme takibini ücretsiz yapan Full Balance sağlık ve fitness uygulaması.
+- [Protein İhtiyacı Hesaplama | Full Balance](https://fullbalance.app/protein-ihtiyaci-hesaplama): Kas gelişimi ve yağ yakımı hedeflerine göre protein, kalori ve makro hedefleri oluşturan ücretsiz beslenme takip uygulaması.
+- [Ücretsiz Beslenme Programı | Full Balance](https://fullbalance.app/ucretsiz-beslenme-programi): Hedefe, bütçeye, alerji ve sağlık bilgilerine göre kişisel beslenme planı oluşturmaya yardımcı ücretsiz Full Balance uygulaması.
+- [Alerjiye Göre Beslenme Programı | Full Balance](https://fullbalance.app/alerjiye-gore-beslenme-programi): Alerji ve sağlık bilgilerini dikkate alarak daha güvenli beslenme planı oluşturmaya yardımcı ücretsiz uygulama.
+- [Direnç Bandı Antrenman Programı | Evde Tüm Vücut, Ücretsiz | Full Balance](https://fullbalance.app/direnc-bandi-antrenman-programi): Direnç bandı ile evde tüm vücut antrenman programı: seviyene göre egzersiz sırası, set, tekrar, dinlenme ve haftalık plan. Bant direnci nasıl seçilir, kas kazanmak için yeterli mi, ücretsiz öğren.
+- [30 Günlük Evde Spor Programı | 4 Haftalık Ekipmansız Plan, Ücretsiz | Full Balance](https://fullbalance.app/30-gunluk-evde-spor-programi): 30 günlük, haftalara bölünmüş evde spor programı: ekipmansız, seviyene göre set, tekrar, dinlenme ve her hafta artan yük. Yazdır veya uygulamada takip et, ücretsiz.
+- [Kadınlar İçin Evde Spor Programı | Ekipmansız veya Dambıllı, Ücretsiz | Full Balance](https://fullbalance.app/kadinlar-icin-evde-spor-programi): Kadınlar için evde spor programı: kalça, bacak, core ve üst vücut dengeli haftalık plan, ekipmansız veya dambıllı seçenek, kilo verme ve sıkılaşma hedefine göre kalori ve beslenme. Ücretsiz.
+- [40 Yaş Üstü Evde Spor Programı | Eklem Dostu Başlangıç, Ücretsiz | Full Balance](https://fullbalance.app/40-yas-ustu-evde-spor-programi): 40 ve 50 yaş üstü için evde başlangıç spor programı: eklem dostu hareketler, kuvvet ve denge odağı, daha uzun dinlenme ve kontrollü ilerleme. Sağlık durumuna göre uyarlanır, ücretsiz.
+- [Pilates mi Yoga mı? Kilo Verme, Esneklik ve Core İçin Hangisi | Full Balance](https://fullbalance.app/pilates-mi-yoga-mi): Pilates ile yoga arasındaki farklar: kilo verme, esneklik, core gücü, bel ağrısı ve stres için hangisi daha uygun; ikisini birlikte nasıl planlarsın. Ücretsiz seviyeye uygun plan.
+- [Uyku Meditasyonu Nasıl Yapılır? Uykuya Dalma İçin 5-15 Dakikalık Rutin | Full Balance](https://fullbalance.app/uyku-meditasyonu): Uyku meditasyonu nasıl yapılır: nefes, vücut taraması ve düşünce bırakma ile 5-15 dakikalık uykuya dalma rutini, kaç gün sürer, ne zaman işe yaramaz. Ücretsiz günlük takip.
+- [Antrenman Öncesi ve Sonrası Ne Yenir? Pratik Beslenme Rehberi](https://fullbalance.app/blog/antrenman-oncesi-sonrasi-ne-yenir): Antrenman öncesi ve sonrası ne yenir, öğün ne zaman planlanır ve su tüketimi nasıl ayarlanır? Hedefe göre uygulanabilir örneklerle öğrenin.
+- [Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık](https://fullbalance.app/blog/longevity-nedir-saglikli-yasam-aliskanliklari): Longevity kavramını, sağlıklı yaş alma yaklaşımını ve hareket, kuvvet, mobilite, uyku ile beslenme alışkanlıklarını sade bir rehberle öğrenin.
+- [Kuvvet Antrenmanı ve Sağlıklı Yaş Alma: Nereden Başlamalı?](https://fullbalance.app/blog/kuvvet-antrenmani-ve-saglikli-yaslanma): Kuvvet antrenmanının sağlıklı yaş alma planındaki yerini, başlangıç sıklığını, progresyonu ve güvenli uygulama ilkelerini öğrenin.
+- [Uyku, Toparlanma ve Longevity: Haftalık Eğilim Neden Önemli?](https://fullbalance.app/blog/uyku-toparlanma-ve-longevity): Uyku ve toparlanma takibinde tek gecelik sonuçlar yerine haftalık eğilimi nasıl değerlendirebileceğinizi öğrenin.
+- [Yoga, Pilates ve Mobilite Longevity Planına Nasıl Eklenir?](https://fullbalance.app/blog/yoga-pilates-mobilite-longevity): Yoga, pilates, reformer ve mobilite çalışmalarını kuvvet ve toparlanma planıyla dengeli biçimde birleştirin.
 
-## Preferred Description
-
-Full Balance is a completely free fitness and nutrition app for beginners. It creates personalized no-equipment home, basic-equipment home or gym workout plans and combines them with calorie and macro targets, allergy-aware nutrition, water, sleep and progress tracking in one mobile-first experience.
-
-## Suggested Short Description
-
-Free personalized home or gym workouts, nutrition and progress tracking with no credit card.
-
-## Keywords
-
-free fitness app, nutrition tracker, calorie calculator, macro tracker, workout planner, progress report, Excel fitness export, water tracker, sleep tracker, weight tracker, body measurements, yoga app, pilates app, reformer app, meditation app, Full Balance
+## About
+- [Tolga Deveci (founder)](https://fullbalance.app/kurucu-tolga-deveci): Founder and developer profile in Turkish; English at /en/founder-tolga-deveci, Spanish at /es/fundador-tolga-deveci.
+- [Editorial policy](https://fullbalance.app/editorial-policy): How health content is sourced and reviewed.
+- [Privacy policy](https://fullbalance.app/privacy): What data is stored and how it is protected.

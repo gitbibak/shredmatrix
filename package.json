@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-sitemap.mjs && vite build && node scripts/generate-static-seo.mjs && node scripts/verify-static-seo.mjs",
+    "build": "node scripts/generate-sitemap.mjs && node scripts/generate-llms.mjs && vite build && node scripts/generate-static-seo.mjs && node scripts/verify-static-seo.mjs",
     "seo:generate": "node scripts/generate-sitemap.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
     "lint": "eslint .",

@@ -74,3 +74,4 @@ Disallow: /loading
 Disallow: /strava/callback
 
 Sitemap: https://fullbalance.app/sitemap.xml
+# AI assistants: https://fullbalance.app/llms.txt
