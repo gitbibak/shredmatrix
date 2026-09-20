@@ -96,7 +96,7 @@ function setLocalWaterHistoryEntry(date, glasses, targetMet) {
   lsSet('shredmatrix_water_history', history);
 }
 
-function getUserId() {
+export function getUserId() {
   return isSupabaseReady() ? activeUserId : null;
 }
 
@@ -499,7 +499,9 @@ export async function submitTestimonial({ rating, body, resultSummary, language 
     consent_public: Boolean(consentPublic),
     status: 'pending',
   };
-  if (!Number.isInteger(Number(rating)) || Number(rating) < 1 || Number(rating) > 5 || payload.body.length < 30 || !payload.consent_public) throw new Error('Invalid testimonial');
+  // Public consent is optional: without it the entry is private product feedback
+  // that only the admin panel can read; it can never be published.
+  if (!Number.isInteger(Number(rating)) || Number(rating) < 1 || Number(rating) > 5 || payload.body.length < 30) throw new Error('Invalid testimonial');
   const { data, error } = await supabase.from('testimonials').insert(payload).select('*').single();
   if (error) throw error;
   return data;

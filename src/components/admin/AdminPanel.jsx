@@ -964,14 +964,14 @@ export default function AdminPanel({ user }) {
                 </div>
 
                 <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                  <div className="mb-5 flex items-start gap-3"><Star className="mt-0.5 text-amber-400" size={20} /><div><h2 className="font-outfit text-lg font-bold">Bekleyen kullanıcı deneyimleri</h2><p className="mt-1 text-xs text-slate-500">Yalnızca açık paylaşım izni bulunan anonim yorumlar gösterilir.</p></div></div>
+                  <div className="mb-5 flex items-start gap-3"><Star className="mt-0.5 text-amber-400" size={20} /><div><h2 className="font-outfit text-lg font-bold">Bekleyen kullanıcı deneyimleri</h2><p className="mt-1 text-xs text-slate-500">Yayın izni verilenler onaylanabilir; "Gizli" etiketli girişler yalnızca ekibe yazılmış geri bildirimdir ve yayınlanamaz.</p></div></div>
                   <div className="space-y-3">
                     {testimonials.map((story) => (
                       <article key={story.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-                        <div className="flex items-center justify-between"><span className="text-sm text-amber-400">{'★'.repeat(story.rating)}</span><span className="text-[9px] uppercase text-slate-600">{story.language}</span></div>
+                        <div className="flex items-center justify-between"><span className="text-sm text-amber-400">{'★'.repeat(story.rating)}</span><span className="flex items-center gap-2 text-[9px] uppercase text-slate-600">{!story.consent_public && <span className="rounded-full border border-slate-600 px-2 py-0.5 text-slate-300">Gizli geri bildirim</span>}{story.language}</span></div>
                         {story.result_summary && <p className="mt-3 text-xs font-bold text-cyan-300">{story.result_summary}</p>}
                         <p className="mt-2 text-xs leading-5 text-slate-300">{story.body}</p>
-                        <div className="mt-3 grid grid-cols-2 gap-2"><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'rejected')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">Reddet</button><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Anonim yayınla</button></div>
+                        <div className="mt-3 grid grid-cols-2 gap-2"><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'rejected')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">{story.consent_public ? 'Reddet' : 'Okundu, arşivle'}</button>{story.consent_public ? <button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Anonim yayınla</button> : <span className="grid min-h-9 place-items-center rounded-lg border border-slate-700 text-[10px] text-slate-500">Yayınlanamaz</span>}</div>
                       </article>
                     ))}
                     {testimonials.length === 0 && <p className="py-8 text-center text-sm text-slate-600">Bekleyen yorum yok.</p>}

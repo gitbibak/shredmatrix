@@ -105,3 +105,22 @@
 - **Antrenman kalite notları EN/ES.** Isınma, soğuma, ilerleme kuralı, gerileme seçeneği, güvenlik notu, faz adı ve haftalık hedef (167 dize) `qualityTextMap.js` ile çevrilir; test tüm hedef × faz × ortam kombinasyonlarında Türkçe kalıntı olmadığını doğrular.
 - **İnsan figürü olmayan görseller.** `scripts/generate-workout-art.mjs` 13 SVG tabanlı görsel üretir (göğüs, sırt, bacak, omuz, tüm vücut, kardiyo, core, kas, yağ yakımı, yoga, pilates, reformer, meditasyon). Antrenman kartları ve ev programları bunları kullanır; eski `images/workouts/*` stok fotoğrafları silindi. Landing sayfasındaki modül fotoğrafları (pazarlama) değişmedi.
 - `PLAN_VERSION = 21`: mevcut üyelerin planı açılışta yenilenir.
+
+## 11. Geri bildirim akışı ve reklam hazırlığı (2026-09-20)
+
+**Mevcut durum (doğrulanabilen):** Herkese açık onaylı yorum 4 (hepsi TR, 5★, sonuncusu 15 Eylül). EN/ES yorum yok. Veritabanı sayaçları bu oturumda okunamadı (Supabase MCP izni yok, CLI IPv6 hatası); son doğrulanmış kaynak dağılımı 7 Eylül raporu: ChatGPT 24, Google 4, direkt 4, Instagram 1 (haftalık 33 kayıt).
+
+**Geri bildirim akışında düzeltilenler**
+- Yayın izni artık isteğe bağlı. Önceden izin kutusu işaretlenmeden hiçbir şey gönderilemiyordu; yayınlanmak istemeyen kullanıcının geri bildirimi kayboluyordu. İzinsiz gönderim "gizli geri bildirim" olarak yalnızca admin panelinde görünür, onaylanamaz (sunucu tarafı kontrol zaten vardı).
+- Antrenman sonrası iki adımlı puan sorusu: 3, 10, 25, 50 ve 100. antrenmanda, davet kartının üstünde tek dokunuşla yıldız. 4-5 yıldız → yorum formu (izin seçimiyle); 1-3 yıldız → "Neyi geliştirelim?" gizli formu. Ayda en fazla bir kez, yorum yazdıktan sonra hiç. `review_prompt_view` ve `review_prompt_rated` olayları izlenir.
+- Panel bannerı (3 antrenman/check-in sonrası) ve Profil'deki form aynı anahtarla koordineli çalışır.
+
+**Reklam hazırlığı**
+- `marketing/google-ads-editor-import.csv`: TR (2 reklam grubu) ve ES (2 reklam grubu) arama kampanyaları, ifade eşlemeli anahtar kelimeler, negatifler, 15 başlıklı RSA'lar, UTM'li hedef sayfalar. Kampanyalar duraklatılmış gelir.
+- `marketing/google-ads-kurulum.md`: 10 adımlık kurulum ve durdurma eşiği.
+
+**Kurucunun yapması gerekenler (kod ile yapılamaz)**
+1. Google Search Console: mülk ekle, HTML etiketi doğrulamasını seç, `content` değerini paylaş; etiket index.html ve statik sayfalara eklenir. Ardından Sayfa dizine ekleme raporu ve 3 hedef sorgu.
+2. Google Ads hesabı + ödeme yöntemi, sonra CSV içe aktarımı.
+3. Google Play TWA (rehber hazır): mağaza yorumları en güçlü sosyal kanıt yüzeyi olur.
+4. Supabase erişimi: MCP için execute_sql izni veya `supabase link` için veritabanı şifresi; böylece kayıt kaynağı ve geri bildirim sayıları her oturumda raporlanır.

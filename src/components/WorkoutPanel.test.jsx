@@ -9,9 +9,12 @@ vi.mock('../lib/dataService', () => ({
   saveWorkoutFeedback: vi.fn(),
   saveWorkoutLog: vi.fn(),
   getReferralSummary: vi.fn().mockResolvedValue({ code: 'FBTEST22', invited: 0, activated: 0 }),
+  getUserId: () => 'user-1',
+  hasSubmittedTestimonial: vi.fn().mockResolvedValue(true),
+  submitTestimonial: vi.fn(),
 }));
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
-vi.mock('../i18n/LanguageContext', () => ({ useTranslation: () => ({ t: (key) => key }) }));
+vi.mock('../i18n/LanguageContext', () => ({ useTranslation: () => ({ t: (key) => key, lang: 'en' }) }));
 vi.mock('./ToastProvider', () => ({ useToast: () => ({ success: vi.fn(), error: vi.fn(), info: vi.fn() }) }));
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }));
 

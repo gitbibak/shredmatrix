@@ -8,6 +8,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
+const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
 import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
@@ -436,7 +437,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
 }
 
 export default function WorkoutPanel({ plan, onPlanUpdate }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [openIndex, setOpenIndex] = useState(() => {
     // Map JS getDay() (0=Sun) to plan array index (0=Mon)
     const idx = (new Date().getDay() + 6) % 7;
@@ -929,6 +930,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
               <div className="mx-auto mb-3 h-1 w-12 rounded-full bg-slate-700 sm:hidden" />
               <h2 id="workout-invite-title" className="sr-only">{t('referral.workoutTitle')}</h2>
               <Suspense fallback={null}>
+                <WorkoutRatingMoment lang={lang} workoutCount={inviteMoment.workoutCount} />
                 <InviteFriendsCard
                   surface="workout"
                   userName={plan?.userName}
