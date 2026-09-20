@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../i18n/LanguageContext';
-import { getWorkoutLogs, hasSubmittedTestimonial } from '../lib/dataService';
+import { getWorkoutLogs, getWellbeingCheckins, hasSubmittedTestimonial } from '../lib/dataService';
 import { dismissPushPrompt, subscribeToPush } from '../lib/pushService';
 import MilestoneStoryPrompt from './MilestoneStoryPrompt';
 import PushPermission from './PushPermission';
@@ -9,6 +9,8 @@ import PushPermission from './PushPermission';
 vi.mock('../lib/dataService', () => ({
   getWorkoutLogs: vi.fn(),
   hasSubmittedTestimonial: vi.fn(),
+  getWellbeingCheckins: vi.fn(),
+  submitTestimonial: vi.fn(),
 }));
 
 vi.mock('../lib/pushService', () => ({
@@ -32,6 +34,8 @@ describe('retention nudges', () => {
     vi.clearAllMocks();
     getWorkoutLogs.mockResolvedValue([]);
     hasSubmittedTestimonial.mockResolvedValue(false);
+    getWellbeingCheckins.mockResolvedValue([]);
+    HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
   });
 
   it('asks for reminder permission only after the user has received value', async () => {
@@ -54,13 +58,62 @@ describe('retention nudges', () => {
     expect(screen.queryByText(/Keep your plan moving tomorrow/i)).not.toBeInTheDocument();
   });
 
-  it('requests a review after three workouts and opens the profile', async () => {
+  it('requests a review after three sessions and opens the form directly', async () => {
     getWorkoutLogs.mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]);
-    const openProfile = vi.fn();
-    render(<MilestoneStoryPrompt lang="en" onOpenProfile={openProfile} />);
+    render(<MilestoneStoryPrompt lang="en" userId="a" />);
 
-    expect(await screen.findByText(/You completed 3 workouts/i)).toBeInTheDocument();
+    expect(await screen.findByText(/How is Full Balance working for you/i)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /Write a short review/i }));
-    expect(openProfile).toHaveBeenCalledOnce();
+    expect(screen.getByRole('dialog')).toHaveAttribute('open');
+    expect(screen.getByPlaceholderText('Your Full Balance experience')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  it('includes wellbeing users after three distinct check-in days', async () => {
+    getWellbeingCheckins.mockResolvedValue([{ date: '2026-09-16' }, { date: '2026-09-17' }, { date: '2026-09-18' }]);
+    render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    expect(await screen.findByRole('button', { name: 'Write a short review' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+    expect(JSON.parse(localStorage.getItem('fb_review_prompt:a')).dismissedAt).toBeGreaterThan(0);
+  });
+
+  it('respects never ask and isolates preferences between accounts', async () => {
+    getWorkoutLogs.mockResolvedValue([{}, {}, {}]);
+    const view = render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Do not ask again' }));
+    view.unmount();
+    expect(JSON.parse(localStorage.getItem('fb_review_prompt:a')).never).toBe(true);
+    const same = render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    expect(screen.queryByRole('button', { name: 'Write a short review' })).not.toBeInTheDocument();
+    same.unmount();
+    render(<MilestoneStoryPrompt lang="en" userId="b" />);
+    expect(await screen.findByRole('button', { name: 'Write a short review' })).toBeInTheDocument();
+  });
+
+  it('waits 30 days after dismissal, then allows a new invitation', async () => {
+    getWorkoutLogs.mockResolvedValue([{}, {}, {}]);
+    localStorage.setItem('fb_review_prompt:a', JSON.stringify({ dismissedAt: Date.now() - 29 * 86400000 }));
+    const recent = render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    expect(getWorkoutLogs).not.toHaveBeenCalled();
+    recent.unmount();
+    localStorage.setItem('fb_review_prompt:a', JSON.stringify({ dismissedAt: Date.now() - 31 * 86400000 }));
+    render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    expect(await screen.findByRole('button', { name: 'Write a short review' })).toBeInTheDocument();
+  });
+
+  it('does not prompt after a lookup failure', async () => {
+    hasSubmittedTestimonial.mockRejectedValue(new Error('offline'));
+    getWorkoutLogs.mockResolvedValue([{}, {}, {}]);
+    render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    await vi.waitFor(() => expect(hasSubmittedTestimonial).toHaveBeenCalled());
+    expect(screen.queryByRole('button', { name: 'Write a short review' })).not.toBeInTheDocument();
+  });
+
+  it('does not ask a new user or a user who has already submitted', async () => {
+    hasSubmittedTestimonial.mockResolvedValue(true);
+    getWorkoutLogs.mockResolvedValue([{}, {}, {}]);
+    render(<MilestoneStoryPrompt lang="en" userId="a" />);
+    await vi.waitFor(() => expect(hasSubmittedTestimonial).toHaveBeenCalled());
+    expect(screen.queryByRole('button', { name: 'Write a short review' })).not.toBeInTheDocument();
   });
 });

@@ -272,6 +272,8 @@ export default function LandingPage({ onStart }) {
         </div>
       </header>
 
+      <ApprovedTestimonials language={lang} />
+
       <section className="border-b border-white/10 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <SectionTitle eyebrow={c.homeEyebrow} title={c.homeTitle} desc={c.homeDesc} />
@@ -384,8 +386,6 @@ export default function LandingPage({ onStart }) {
           </div>
         </div>
       </section>
-
-      <ApprovedTestimonials language={lang} />
 
       <section className="py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">

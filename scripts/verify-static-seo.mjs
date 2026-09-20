@@ -2,6 +2,7 @@ import { access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
+import { reviewPages } from '../src/data/reviewPages.js';
 import { BASE_URL, publicPages } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { internationalSeoPages, getAlternatesForTurkishPath } from '../src/data/internationalSeoPages.js';
@@ -106,6 +107,12 @@ for (const page of internationalSeoPages) {
 }
 
 const sitemap = await readFile(join(rootDir, 'public', 'sitemap.xml'), 'utf8');
+for (const page of reviewPages) {
+  const html = await readFile(join(distDir, page.path.slice(1), 'index.html'), 'utf8');
+  assert(html.includes(`rel="canonical" href="${BASE_URL}${page.path}"`), 'Review canonical missing');
+  assertSingleLocalizedH1(html, page.path, page.lang);
+  assert(!html.includes('aggregateRating'), 'Reviews must not invent an aggregate rating');
+}
 for (const [path] of publicPages) {
   assert(sitemap.includes(`<loc>${BASE_URL}${path}</loc>`), `${path} is missing from sitemap.xml`);
 }

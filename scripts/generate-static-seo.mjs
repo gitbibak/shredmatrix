@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
+import { reviewPages } from '../src/data/reviewPages.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
@@ -291,4 +292,9 @@ for (const page of internationalSeoPages) {
   await writeRoute(page.path, buildDocument({ title: page.metaTitle, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-en.png`, schema, body, lang: page.lang, alternates: page.alternates }));
 }
 
-console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + 2} static SEO pages.`);
+for (const page of reviewPages) {
+  const canonical = BASE_URL + page.path;
+  const body = `<main class="static-seo"><a href="${page.lang === 'tr' ? '/' : '/' + page.lang}">Full Balance</a><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></main>`;
+  await writeRoute(page.path, buildDocument({ title: page.title + ' | Full Balance', description: page.description, canonical, image: BASE_URL + '/og/full-balance-og-en.png', schema: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.title, url: canonical, inLanguage: page.lang }, body, lang: page.lang, alternates: Object.fromEntries(reviewPages.map((p) => [p.lang, p.path])) }));
+}
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + 2 + reviewPages.length} static SEO pages.`);

@@ -1,4 +1,5 @@
 import { blogArticles } from '../src/data/blogArticles.js';
+import { reviewPages } from '../src/data/reviewPages.js';
 import { internationalSeoPages } from '../src/data/internationalSeoPages.js';
 import { turkishSeoPages } from '../src/data/turkishSeoPages.js';
 
@@ -16,6 +17,7 @@ const turkishPageLastmod = {
 export const BASE_URL = 'https://fullbalance.app';
 
 export const publicPages = [
+  ...reviewPages.map((page) => [page.path, '2026-09-20']),
   ['/', '2026-08-14'],
   ['/privacy', '2026-08-10'],
   ['/terms', '2026-08-04'],

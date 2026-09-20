@@ -43,6 +43,7 @@ const InternationalLandingPage = lazy(() => import('./components/InternationalLa
 const ContactPage = lazy(() => import('./components/ContactPage'));
 const SupportResolutionNotice = lazy(() => import('./components/SupportResolutionNotice'));
 const BlogIndex = lazy(() => import('./components/BlogIndex'));
+const ReviewsPage = lazy(() => import('./components/ReviewsPage'));
 const BlogArticle = lazy(() => import('./components/BlogArticle'));
 const EditorialPolicy = lazy(() => import('./components/EditorialPolicy'));
 const FounderPage = lazy(() => import('./components/FounderPage'));
@@ -50,7 +51,7 @@ const FounderPage = lazy(() => import('./components/FounderPage'));
 const SEO_PAGE_SLUGS = TURKISH_SEO_SLUGS;
 
 function isPublicContentPath(pathname) {
-  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy'].includes(pathname)
+  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones'].includes(pathname)
     || pathname.startsWith('/blog/')
     || pathname === '/en' || pathname.startsWith('/en/')
     || pathname === '/es' || pathname.startsWith('/es/')
@@ -673,6 +674,9 @@ function AppContent() {
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
+            <Route path="/reviews" element={<ReviewsPage language="tr" />} />
+            <Route path="/en/reviews" element={<ReviewsPage language="en" />} />
+            <Route path="/es/opiniones" element={<ReviewsPage language="es" />} />
             <Route path="/" element={
               <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                 <LandingPage onStart={() => navigate('/auth?mode=register')} />

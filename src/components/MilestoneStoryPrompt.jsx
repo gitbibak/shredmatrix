@@ -1,62 +1,59 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MessageSquareText, X } from 'lucide-react';
-import { getWorkoutLogs, hasSubmittedTestimonial } from '../lib/dataService';
-import { trackEvent } from '../lib/analytics';
+import { getWorkoutLogs, getWellbeingCheckins, hasSubmittedTestimonial } from '../lib/dataService';
+import UserStoryForm from './UserStoryForm';
 
 const COPY = {
-  tr: { title: '3 antrenmanı tamamladın', desc: 'Deneyimini paylaşman Full Balance’ı geliştirmemize ve yeni kullanıcılara güven vermemize yardımcı olur.', action: 'Kısa yorum yaz', close: 'Şimdi değil' },
-  en: { title: 'You completed 3 workouts', desc: 'Sharing your experience helps us improve Full Balance and gives new users trustworthy context.', action: 'Write a short review', close: 'Not now' },
-  es: { title: 'Completaste 3 entrenamientos', desc: 'Compartir tu experiencia nos ayuda a mejorar Full Balance y da confianza a nuevos usuarios.', action: 'Escribir una reseña', close: 'Ahora no' },
+  tr: { title: 'Full Balance deneyimin nasıl?', desc: 'İşine yarayanları ve geliştirmemiz gerekenleri paylaşır mısın?', action: 'Kısa yorum yaz', later: 'Şimdi değil', never: 'Tekrar sorma', close: 'Kapat' },
+  en: { title: 'How is Full Balance working for you?', desc: 'What helps you, and what could we improve?', action: 'Write a short review', later: 'Not now', never: 'Do not ask again', close: 'Close' },
+  es: { title: '¿Cómo te va con Full Balance?', desc: '¿Qué te ayuda y qué podemos mejorar?', action: 'Escribir una reseña', later: 'Ahora no', never: 'No volver a preguntar', close: 'Cerrar' },
 };
+const MONTH = 30 * 86400000;
 
-const DISMISS_KEY = 'fb_story_prompt_dismissed';
-const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-
-export default function MilestoneStoryPrompt({ lang = 'en', onOpenProfile }) {
+export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
   const c = COPY[lang] || COPY.en;
   const [visible, setVisible] = useState(false);
-
+  const dialog = useRef(null);
+  const submitted = useRef(false);
+  const key = 'fb_review_prompt:' + userId;
   useEffect(() => {
     let active = true;
+    if (!userId) return;
     const load = async () => {
-      const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
-      if (dismissedAt && Date.now() - dismissedAt < THIRTY_DAYS) return;
-      const [logs, submitted] = await Promise.all([getWorkoutLogs(), hasSubmittedTestimonial()]);
-      if (!active || submitted || logs.length < 3) return;
-      setVisible(true);
-      trackEvent('testimonial_prompt_view', { language: lang, workout_count: logs.length });
+      let preference;
+      try { preference = JSON.parse(localStorage.getItem(key) || 'null'); } catch { /* Storage is optional. */ }
+      if (preference?.never || preference?.submitted || Date.now() - (preference?.dismissedAt || 0) < MONTH) return;
+      const [logs, checkins, submitted] = await Promise.all([getWorkoutLogs(30), getWellbeingCheckins(30), hasSubmittedTestimonial()]);
+      const days = new Set(checkins.map((entry) => entry.date).filter(Boolean));
+      if (active && !submitted && (logs.length >= 3 || days.size >= 3)) setVisible(true);
     };
     load().catch(() => {});
     return () => { active = false; };
-  }, [lang]);
-
-  if (!visible) return null;
-
-  const dismiss = () => {
-    localStorage.setItem(DISMISS_KEY, String(Date.now()));
-    setVisible(false);
-    trackEvent('testimonial_prompt_dismiss', { language: lang });
+  }, [key, userId]);
+  const remember = (preference) => {
+    try { localStorage.setItem(key, JSON.stringify(preference)); } catch { /* Still dismiss in this session. */ }
   };
-
-  return (
-    <section className="relative flex items-start gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-300">
-        <MessageSquareText size={18} />
-      </span>
-      <div className="min-w-0 flex-1 pr-7">
+  const dismiss = (never = false) => {
+    remember({ dismissedAt: Date.now(), never });
+    setVisible(false);
+  };
+  if (!visible) return null;
+  return <section className="my-4 border-y border-emerald-500/20 py-4">
+    <div className="flex items-start gap-3">
+      <MessageSquareText size={20} className="mt-1 shrink-0 text-emerald-300" />
+      <div className="min-w-0 flex-1">
         <h2 className="font-outfit text-sm font-bold text-white">{c.title}</h2>
         <p className="mt-1 text-xs leading-5 text-slate-400">{c.desc}</p>
-        <button
-          type="button"
-          onClick={() => { trackEvent('testimonial_prompt_open', { language: lang }); onOpenProfile?.(); }}
-          className="mt-3 min-h-10 rounded-lg bg-emerald-600 px-4 text-xs font-bold text-white"
-        >
-          {c.action}
-        </button>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button type="button" onClick={() => dialog.current?.showModal()} className="min-h-11 rounded-lg bg-emerald-600 px-4 text-xs font-bold text-white">{c.action}</button>
+          <button type="button" onClick={() => dismiss()} className="min-h-11 px-3 text-xs text-slate-300">{c.later}</button>
+          <button type="button" onClick={() => dismiss(true)} className="min-h-11 px-3 text-xs text-slate-400">{c.never}</button>
+        </div>
       </div>
-      <button type="button" onClick={dismiss} aria-label={c.close} className="absolute right-3 top-3 p-2 text-slate-500">
-        <X size={16} />
-      </button>
-    </section>
-  );
+    </div>
+    <dialog ref={dialog} aria-label={c.title} onClose={() => { if (submitted.current) setVisible(false); else dismiss(); }} className="fixed inset-0 m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-lg border border-slate-700 bg-slate-950 p-4 text-white backdrop:bg-black/70">
+      <div className="mb-2 flex justify-end"><button type="button" aria-label={c.close} onClick={() => dialog.current?.close()} className="grid h-11 w-11 place-items-center rounded-lg border border-slate-700"><X size={20} /></button></div>
+      <UserStoryForm lang={lang} embedded onSubmitted={() => { submitted.current = true; remember({ submitted: true }); }} />
+    </dialog>
+  </section>;
 }

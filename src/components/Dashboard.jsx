@@ -350,6 +350,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                     <DailyChallenge />
                   </DisclosureSection>
                   <PushPermission daysSinceJoin={daysSinceJoin} />
+                  <MilestoneStoryPrompt key={user?.id} lang={lang} userId={user?.id} />
                   <InviteFriendsCard surface="today" compact userName={plan?.userName || user?.name} />
                 </motion.div>
               </motion.div>
@@ -501,7 +502,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 onPlanUpdate={onPlanUpdate}
               />
               <div className="mt-6 space-y-6">
-                <MilestoneStoryPrompt lang={lang} onOpenProfile={() => setActiveTab('profile')} />
                 <StravaConnectCard />
                 <DataExport />
               </div>

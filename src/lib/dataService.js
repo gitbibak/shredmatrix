@@ -499,13 +499,13 @@ export async function submitTestimonial({ rating, body, resultSummary, language 
     consent_public: Boolean(consentPublic),
     status: 'pending',
   };
-  if (payload.body.length < 30 || !payload.consent_public) throw new Error('Invalid testimonial');
+  if (!Number.isInteger(Number(rating)) || Number(rating) < 1 || Number(rating) > 5 || payload.body.length < 30 || !payload.consent_public) throw new Error('Invalid testimonial');
   const { data, error } = await supabase.from('testimonials').insert(payload).select('*').single();
   if (error) throw error;
   return data;
 }
 
-export async function getApprovedTestimonials(limit = 6, language) {
+export async function getApprovedTestimonials(limit = 6, language, offset = 0) {
   if (!isSupabaseReady()) return [];
   let query = supabase
     .from('testimonials')
@@ -515,8 +515,9 @@ export async function getApprovedTestimonials(limit = 6, language) {
   if (['tr', 'en', 'es'].includes(language)) query = query.eq('language', language);
   const { data, error } = await query
     .order('created_at', { ascending: false })
-    .limit(Math.max(1, Math.min(12, limit)));
-  if (error) return [];
+    .order('id', { ascending: false })
+    .range(Math.max(0, offset), Math.max(0, offset) + Math.max(1, Math.min(12, limit)) - 1);
+  if (error) throw error;
   return data || [];
 }
 
@@ -529,7 +530,7 @@ export async function hasSubmittedTestimonial() {
     .eq('user_id', userId)
     .limit(1)
     .maybeSingle();
-  if (error) return false;
+  if (error) throw error;
   return Boolean(data);
 }
 
