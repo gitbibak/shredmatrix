@@ -27,12 +27,14 @@ import {
 } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
 import { captureAcquisitionContext } from './lib/acquisition';
+import { takeCoachReturn } from './lib/coaching';
 
 // ── Lazy-loaded pages (P2-1: Code Splitting) ─────────────
 const LandingPage = lazy(() => import('./components/LandingPage'));
 const AuthScreen = lazy(() => import('./components/AuthScreen'));
 const Onboarding = lazy(() => import('./components/Onboarding'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
+const CoachPage = lazy(() => import('./components/CoachPage'));
 const OnboardingTour = lazy(() => import('./components/OnboardingTour'));
 const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./components/TermsOfService'));
@@ -52,6 +54,7 @@ const PricingPage = lazy(() => import('./components/PricingPage'));
 const SEO_PAGE_SLUGS = TURKISH_SEO_SLUGS;
 
 function isPublicContentPath(pathname) {
+  if (pathname === '/coach') return true;
   return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones', '/fiyatlandirma'].includes(pathname)
     || pathname.startsWith('/blog/')
     || pathname === '/en' || pathname.startsWith('/en/')
@@ -466,6 +469,13 @@ function AppContent() {
           setUser(userData);
           try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
           const savedPlan = await loadPlan(u.email);
+          const coachReturn = takeCoachReturn(currentPath);
+          if (coachReturn) {
+            if (savedPlan) await upgradePlanIfNeeded(savedPlan, u.email);
+            navigate(coachReturn, { replace: true });
+            setIsRestoring(false);
+            return;
+          }
           if (savedPlan) {
             await upgradePlanIfNeeded(savedPlan, u.email);
             if (!['/dashboard', '/admin'].includes(currentPath) && !isPublicContentPath(currentPath)) navigate('/dashboard', { replace: true });
@@ -603,6 +613,13 @@ function AppContent() {
     try { localStorage.setItem('shredmatrix_user', JSON.stringify(userData)); } catch (err) { console.warn('[App]', err?.message || err); }
     try {
       const savedPlan = await loadPlan(userData.email);
+      const coachReturn = location.pathname === '/coach' ? '/coach' + window.location.search : takeCoachReturn(location.pathname);
+      if (coachReturn) {
+        if (savedPlan) await upgradePlanIfNeeded(savedPlan, userData.email);
+        try { sessionStorage.removeItem('fb_coach_return'); } catch { /* Optional return hint. */ }
+        navigate(coachReturn, { replace: true });
+        return;
+      }
       if (savedPlan) {
         await upgradePlanIfNeeded(savedPlan, userData.email);
         if (location.pathname !== '/dashboard') navigate('/dashboard', { replace: true });
@@ -675,6 +692,7 @@ function AppContent() {
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
+            <Route path="/coach" element={<CoachPage user={user} onAuth={handleAuth} />} />
             <Route path="/reviews" element={<ReviewsPage language="tr" />} />
             <Route path="/en/reviews" element={<ReviewsPage language="en" />} />
             <Route path="/es/opiniones" element={<ReviewsPage language="es" />} />

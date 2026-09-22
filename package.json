@@ -17,6 +17,7 @@
     "images:optimize": "node scripts/optimize-images.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
     "@eslint/js": "^10.0.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -39,6 +40,7 @@
     "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.17.0",
+    "qrcode": "1.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.17.0",

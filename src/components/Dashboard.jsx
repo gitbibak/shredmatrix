@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
 import { preloadProfilePhoto, recordProductStep } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
+import { Link } from 'react-router-dom';
+import { coachText } from '../data/coachCopy';
 
 // ── Lazy-loaded Dashboard sub-components ──
 const NutritionPanel = lazy(() => import('./NutritionPanel'));
@@ -319,6 +321,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
       </motion.nav>
 
       {/* ── Main Content ─────────────────────────────── */}
+      <div className="border-b border-cyan-500/20 bg-cyan-500/5"><Link to="/coach" className="mx-auto flex min-h-12 max-w-7xl items-center justify-between gap-3 px-4 py-3 text-sm font-bold text-cyan-200 sm:px-6 lg:px-8"><span className="flex items-center gap-2"><User size={18} />{coachText(lang)('mine')} / {coachText(lang)('students')}</span><span aria-hidden="true">→</span></Link></div>
       <main className="mx-auto max-w-7xl overflow-x-clip px-4 py-6 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           {/* ─── Bugün Tab ─── */}

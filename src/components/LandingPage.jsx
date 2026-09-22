@@ -253,6 +253,7 @@ export default function LandingPage({ onStart }) {
           </div>
         </div>
       </nav>
+      <Link to="/coach" className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] z-40 flex min-h-10 items-center justify-center border-b border-cyan-500/25 bg-slate-950 px-4 py-2 text-sm font-bold text-cyan-300">{({ tr: 'Eğitmen / Öğrenci girişi', en: 'Coach / Client access', es: 'Acceso entrenador / alumno' })[lang]}</Link>
 
       <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
         <OptimizedImage src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} sizes="100vw" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" width="1536" height="1024" />
