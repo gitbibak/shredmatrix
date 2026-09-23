@@ -1,5 +1,4 @@
 import CoachFeatureSection from './CoachFeatureSection';
-import { coachMarketing } from '../data/coachMarketing';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -172,7 +171,7 @@ function SectionTitle({ eyebrow, title, desc }) {
 }
 
 export default function LandingPage({ onStart }) {
-  const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
+  const { t, lang } = useTranslation();
   const [shareCopied, setShareCopied] = useState(false);
   const c = copy[lang] || copy.tr;
   const pricing = pricingPages.find((page) => page.lang === lang) || pricingPages[0];
@@ -246,16 +245,10 @@ export default function LandingPage({ onStart }) {
             <span className="whitespace-nowrap font-outfit text-xs font-extrabold text-white sm:text-base">FULL <span className="text-cyan-400">BALANCE</span></span>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="flex items-center" aria-label="Language">
-              {SUPPORTED.map((code) => (
-                <button key={code} onClick={() => setLang(code)} className={`h-8 w-7 text-xs sm:w-8 sm:text-sm ${lang === code ? 'opacity-100' : 'opacity-40 hover:opacity-75'}`} title={code.toUpperCase()}>{langFlags[code]}</button>
-              ))}
-            </div>
             <button onClick={() => startRegistration('navigation')} className="min-h-10 bg-orange-500 px-3 font-outfit text-xs font-bold text-white hover:bg-orange-400 sm:px-4">{c.navCta}</button>
           </div>
         </div>
       </nav>
-<div className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] z-40 flex min-h-10 flex-wrap items-center justify-center gap-x-5 border-b border-cyan-500/25 bg-slate-950 px-3 py-1 text-xs font-bold sm:text-sm"><a href="#for-trainers" className="py-2 text-emerald-300">{coachMarketing[lang].nav}</a><Link to="/coach" className="py-2 text-cyan-300">{coachMarketing[lang].entry}</Link></div>
 
       <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
         <OptimizedImage src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} sizes="100vw" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" width="1536" height="1024" />

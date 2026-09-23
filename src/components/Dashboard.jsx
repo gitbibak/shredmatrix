@@ -92,7 +92,7 @@ function DisclosureSection({ title, description, icon: Icon, open, onToggle, chi
 
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
-  const { t, lang, setLang, langFlags, SUPPORTED } = useTranslation();
+  const { t, lang } = useTranslation();
   const [activeTab, setActiveTab] = useState('today');
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
@@ -171,13 +171,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
 
   return (
     <>
-    <div className="mobile-app-shell min-h-screen w-full overflow-x-clip bg-grid lg:pb-0">
+    <div className="mobile-app-shell min-h-screen w-full overflow-x-clip bg-grid pt-[calc(3.5rem+env(safe-area-inset-top))] lg:pb-0">
       {/* ── Top Nav ──────────────────────────────────── */}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/50 safe-area-top"
+      <nav
+        className="fixed inset-x-0 top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/50 safe-area-top"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           {/* Logo */}
@@ -318,10 +315,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
             </motion.button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* ── Main Content ─────────────────────────────── */}
-      <div className="border-b border-cyan-500/20 bg-cyan-500/5"><Link to="/coach" className="mx-auto flex min-h-12 max-w-7xl items-center justify-between gap-3 px-4 py-3 text-sm font-bold text-cyan-200 sm:px-6 lg:px-8"><span className="flex items-center gap-2"><User size={18} />{coachText(lang)('mine')} / {coachText(lang)('students')}</span><span aria-hidden="true">→</span></Link></div>
       <main className="mx-auto max-w-7xl overflow-x-clip px-4 py-6 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           {/* ─── Bugün Tab ─── */}
@@ -338,6 +334,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
+                  <Link to="/coach" className="flex min-h-12 items-center justify-between gap-3 border-b border-slate-800 py-3 text-sm font-semibold text-cyan-200"><span className="flex min-w-0 items-center gap-2"><User size={18} className="shrink-0" />{coachText(lang)("title")}</span><span aria-hidden="true">→</span></Link>
                   <BalanceScoreCard plan={plan} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />

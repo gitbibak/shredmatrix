@@ -27,10 +27,10 @@ export default function CoachFeatureSection({ lang = 'tr' }) {
     recordAcquisitionContent(placement);
     trackLandingCta(placement);
   };
-  return <section ref={section} id="for-trainers" aria-labelledby="coach-feature-title" className="scroll-mt-32 border-y border-white/10 bg-zinc-950 px-5 py-12 sm:px-6 sm:py-16">
-    <div className="mx-auto max-w-6xl">
+  return <section ref={section} id="for-trainers" aria-labelledby="coach-feature-title" className="scroll-mt-24 border-y border-white/10 bg-zinc-950 px-5 py-12 sm:px-6 sm:py-16">
+    <div className="mx-auto min-w-0 max-w-6xl [overflow-wrap:anywhere]">
       <p className="text-sm font-semibold text-emerald-400">{c.eyebrow}</p>
-      <h2 id="coach-feature-title" className="mt-3 max-w-3xl break-words font-outfit text-2xl font-bold leading-tight text-white sm:text-3xl">{c.title}</h2>
+      <h2 id="coach-feature-title" className="mt-3 max-w-3xl break-words font-outfit text-2xl font-bold leading-snug text-white">{c.title}</h2>
       <p className="mt-4 max-w-3xl text-base leading-7 text-slate-300">{c.intro}</p>
       <div className="mt-8 grid gap-7 border-y border-white/10 py-7 md:grid-cols-3">
         {c.items.map(([title, text], index) => {
@@ -42,8 +42,8 @@ export default function CoachFeatureSection({ lang = 'tr' }) {
           </article>;
         })}
       </div>
-      <div className="mt-7 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-        <div className="max-w-2xl">
+      <div className="mt-7 flex flex-col items-start justify-between gap-6 xl:flex-row xl:items-center">
+        <div className="min-w-0 max-w-2xl">
           <h3 className="text-sm font-semibold text-emerald-400">{c.offerTitle}</h3>
           <p className="mt-2 text-lg font-semibold leading-7 text-white">{c.offer}</p>
           <p className="mt-3 text-xs leading-6 text-slate-400">{c.note}</p>
