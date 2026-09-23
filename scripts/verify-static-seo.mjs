@@ -1,3 +1,4 @@
+import { coachMarketing } from '../src/data/coachMarketing.js';
 import { access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,6 +24,14 @@ function assertSingleLocalizedH1(html, route, lang = 'tr') {
   if (lang !== 'tr') {
     assert(!html.includes('Tamamen ücretsiz kişisel fitness'), `${route} contains the Turkish fallback copy`);
   }
+}
+
+for (const lang of ['tr', 'en', 'es']) {
+  const html = await readFile(join(distDir, lang === 'tr' ? '' : lang, 'index.html'), 'utf8');
+  assert(html.includes(coachMarketing[lang].title), lang + ' coach section missing');
+  assert(html.includes('id="for-trainers"'), lang + ' coach anchor missing');
+  assert(html.includes('href="/coach"'), lang + ' coach CTA missing');
+  assert(html.includes(coachMarketing[lang].note), lang + ' coach service boundary missing');
 }
 
 for (const article of blogArticles) {

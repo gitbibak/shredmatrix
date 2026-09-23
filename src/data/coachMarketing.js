@@ -1,0 +1,47 @@
+export const coachMarketing = {
+  tr: {
+    nav: 'PT ve spor salonları', entry: 'Eğitmen / öğrenci girişi',
+    eyebrow: 'Full Balance · Eğitmen desteği',
+    title: 'PT’ler için öğrenci ve antrenman takibi',
+    intro: 'Programı sen belirle. Öğrencinin kaydettiği setleri, tekrarları ve ağırlıkları aynı yerde takip et. Full Balance eğitmenin yerini almaz; eğitmen ile öğrenciyi buluşturur.',
+    items: [
+      ['Program senin kontrolünde', 'Öğrencine antrenman programı ata; antrenman kayıtlarını ve geri bildirimlerini takip et.'],
+      ['Davetle, karşılıklı onayla', 'Bağlantı veya QR ile davet et. Öğrenci paylaşımı onaylar, sen isteği kabul edersin. Kilo ve ölçüm paylaşımı isteğe bağlıdır.'],
+      ['Salondaki üyeliğe ek değer', '3 veya 6 aylık üyelik paketinin yanında dijital antrenman takibi sun. Turnike, aidat ve mevcut üyelik sistemini değiştirme.'],
+    ],
+    offerTitle: 'Salonunuz için örnek teklif',
+    offer: '“6 aylık üyeliğin yanında, eğitmeninle dijital antrenman takibi.”',
+    note: 'Full Balance kişisel kullanımı ücretsizdir. PT hizmetinin kapsamını ve ücretini salon veya eğitmen belirler. Uygulama üyelik satışı, ödeme ya da turnike yönetimi yapmaz.',
+    cta: 'Eğitmen alanını aç',
+  },
+  en: {
+    nav: 'For trainers & gyms', entry: 'Coach / client access',
+    eyebrow: 'Full Balance · Coach support',
+    title: 'Client and workout tracking for personal trainers',
+    intro: 'You set the program. Follow the sets, reps and weights your clients record, all in one place. Full Balance supports the coach-client relationship; it does not replace the trainer.',
+    items: [
+      ['Your program, your coaching', 'Assign workout programs and follow your clients’ workout records and feedback.'],
+      ['Invitations with consent', 'Invite with a link or QR. Your client agrees to sharing, then you accept the request. Weight and measurement sharing is optional.'],
+      ['Add value to gym memberships', 'Offer digital workout tracking alongside a 3- or 6-month membership. Keep your existing check-in, billing and membership system.'],
+    ],
+    offerTitle: 'An example offer for your gym',
+    offer: '“A 6-month membership with digital workout tracking alongside your coach.”',
+    note: 'Personal use of Full Balance is free. Your gym or trainer sets the scope and price of PT services. The app does not manage membership sales, payments or access control.',
+    cta: 'Open coach workspace',
+  },
+  es: {
+    nav: 'Para entrenadores y gimnasios', entry: 'Acceso entrenador / alumno',
+    eyebrow: 'Full Balance · Apoyo al entrenador',
+    title: 'Seguimiento de alumnos para entrenadores personales',
+    intro: 'Tú decides el programa. Consulta las series, repeticiones y pesos que registran tus alumnos en un solo lugar. Full Balance conecta al entrenador con sus alumnos; no lo sustituye.',
+    items: [
+      ['Tu programa, tu entrenamiento', 'Asigna rutinas y consulta los registros de entrenamiento y comentarios de tus alumnos.'],
+      ['Invitaciones con consentimiento', 'Invita con un enlace o QR. El alumno acepta compartir sus datos y tú aceptas la solicitud. Compartir peso y medidas es opcional.'],
+      ['Más valor para los socios', 'Ofrece seguimiento digital junto con una membresía de 3 o 6 meses. Conserva tu sistema de acceso, cobros y membresías.'],
+    ],
+    offerTitle: 'Una oferta de ejemplo para tu gimnasio',
+    offer: '“6 meses de membresía con seguimiento digital junto a tu entrenador.”',
+    note: 'El uso personal de Full Balance es gratis. El gimnasio o entrenador define el alcance y el precio del servicio de entrenamiento. La app no gestiona ventas de membresías, pagos ni controles de acceso.',
+    cta: 'Abrir espacio del entrenador',
+  },
+};

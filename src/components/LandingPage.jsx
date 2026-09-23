@@ -1,3 +1,5 @@
+import CoachFeatureSection from './CoachFeatureSection';
+import { coachMarketing } from '../data/coachMarketing';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -253,7 +255,7 @@ export default function LandingPage({ onStart }) {
           </div>
         </div>
       </nav>
-      <Link to="/coach" className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] z-40 flex min-h-10 items-center justify-center border-b border-cyan-500/25 bg-slate-950 px-4 py-2 text-sm font-bold text-cyan-300">{({ tr: 'Eğitmen / Öğrenci girişi', en: 'Coach / Client access', es: 'Acceso entrenador / alumno' })[lang]}</Link>
+<div className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] z-40 flex min-h-10 flex-wrap items-center justify-center gap-x-5 border-b border-cyan-500/25 bg-slate-950 px-3 py-1 text-xs font-bold sm:text-sm"><a href="#for-trainers" className="py-2 text-emerald-300">{coachMarketing[lang].nav}</a><Link to="/coach" className="py-2 text-cyan-300">{coachMarketing[lang].entry}</Link></div>
 
       <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
         <OptimizedImage src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} sizes="100vw" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" width="1536" height="1024" />
@@ -275,6 +277,7 @@ export default function LandingPage({ onStart }) {
         </div>
       </header>
 
+      <CoachFeatureSection lang={lang} />
       <ApprovedTestimonials language={lang} />
 
       <section className="border-b border-white/10 py-16 sm:py-20">
