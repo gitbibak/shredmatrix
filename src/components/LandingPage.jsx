@@ -1,3 +1,4 @@
+import PricingComparison from './PricingComparison';
 import CoachFeatureSection from './CoachFeatureSection';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -387,10 +388,10 @@ export default function LandingPage({ onStart }) {
       </section>
 
       <section className="py-16 sm:py-24">
-        <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div className="mx-auto grid min-w-0 max-w-6xl grid-cols-1 gap-12 px-5 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start [&>div]:min-w-0">
           <div>
             <Eyebrow>{lang === 'tr' ? '%100 ücretsiz' : lang === 'es' ? '100% gratis' : '100% free'}</Eyebrow>
-            <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.freeTitle}</h2>
+            <h2 className="max-w-full break-words font-outfit text-2xl font-extrabold leading-tight sm:text-4xl">{c.freeTitle}</h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.freeDesc}</p>
             <button onClick={() => startRegistration('free_section')} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
           </div>
@@ -398,16 +399,7 @@ export default function LandingPage({ onStart }) {
             <div className="grid gap-3 sm:grid-cols-2">
               {c.freeItems.map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border border-slate-800 bg-slate-900/45 px-4"><span className="flex h-8 w-8 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={17} className="text-emerald-400" /></span><span className="text-sm text-slate-300">{item}</span></div>)}
             </div>
-            <div className="mt-5 overflow-x-auto border border-slate-800">
-              <table className="w-full min-w-[420px] text-left text-xs sm:text-sm">
-                <thead className="bg-slate-900 text-[11px] uppercase tracking-wider text-slate-400"><tr>{pricing.compareHead.map((head) => <th key={head} className="px-3 py-2 font-semibold">{head}</th>)}</tr></thead>
-                <tbody>
-                  {pricing.compareRows.slice(0, 7).map(([feature, ours, theirs]) => (
-                    <tr key={feature} className="border-t border-slate-800"><td className="px-3 py-2 text-slate-300">{feature}</td><td className="px-3 py-2 font-semibold text-emerald-300">{ours}</td><td className="px-3 py-2 text-slate-500">{theirs}</td></tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <PricingComparison headings={pricing.compareHead} rows={pricing.compareRows.slice(0, 7)} />
             <Link to={pricing.path} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-emerald-300 hover:text-emerald-200">{pricing.compareTitle} →</Link>
           </div>
         </div>

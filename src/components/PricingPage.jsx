@@ -1,3 +1,4 @@
+import PricingComparison from './PricingComparison';
 import { useEffect } from 'react';
 import { ArrowLeft, BadgeCheck, Check, CircleDollarSign, HeartHandshake, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -83,20 +84,7 @@ export default function PricingPage() {
 
         <section className="mt-14">
           <h2 className="flex items-center gap-2 font-outfit text-2xl font-bold"><CircleDollarSign size={22} className="text-orange-400" />{c.compareTitle}</h2>
-          <div className="mt-5 overflow-x-auto border border-slate-800">
-            <table className="w-full min-w-[560px] text-left text-sm">
-              <thead className="bg-slate-900 text-xs uppercase tracking-wider text-slate-400"><tr>{c.compareHead.map((head) => <th key={head} className="px-4 py-3 font-semibold">{head}</th>)}</tr></thead>
-              <tbody>
-                {c.compareRows.map(([feature, ours, theirs]) => (
-                  <tr key={feature} className="border-t border-slate-800">
-                    <td className="px-4 py-3 text-slate-300">{feature}</td>
-                    <td className="px-4 py-3 font-semibold text-emerald-300">{ours}</td>
-                    <td className="px-4 py-3 text-slate-500">{theirs}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PricingComparison headings={c.compareHead} rows={c.compareRows} />
         </section>
 
         <section className="mt-14 grid gap-8 md:grid-cols-2">
