@@ -44,6 +44,17 @@ beforeEach(() => {
   coachApi.mockResolvedValue({ coach: null, links: [] });
 });
 describe("coach workspace", () => {
+  it("recognizes the coach own invitation without reporting it expired", async () => {
+    const code = "c".repeat(32);
+    window.history.replaceState({}, "", "/coach?invite=" + code);
+    coachApi.mockResolvedValue({coach:{name:"Student"},invite:{code,months:6},links:[]});
+    mount();
+    expect(await screen.findByText(/This is your client invitation/)).toBeVisible();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", {name:"Language"})).not.toBeInTheDocument();
+    expect(coachApi.mock.calls.some(([action])=>action==="preview" || action==="join")).toBe(false);
+    expect(screen.getByRole("tab",{name:"Coach (PT)"})).toHaveAttribute("aria-selected","true");
+  });
   it("opens an incoming invitation directly without enabling sharing", async () => {
     const code = "b".repeat(32);
     window.history.replaceState({}, "", "/coach?invite=" + code);

@@ -1,4 +1,5 @@
 const words = {
+  ownInvite: ["Bu senin öğrenci davetin. Öğrencin kendi hesabıyla açmalı.", "This is your client invitation. Your client needs to open it with their own account.", "Esta es tu invitación para alumnos. Tu alumno debe abrirla con su propia cuenta."],
   studentRole: ["Öğrenci", "Client", "Alumno"],
   coachRole: ["Eğitmen (PT)", "Coach (PT)", "Entrenador (PT)"],
   language: ["Dil", "Language", "Idioma"],

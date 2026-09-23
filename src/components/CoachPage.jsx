@@ -71,7 +71,7 @@ export default function CoachPage({ user, onAuth }) {
 }
 
 function Workspace({ user }) {
-  const { lang, setLang } = useTranslation();
+  const { lang } = useTranslation();
   const c = useMemo(() => coachText(lang), [lang]);
   const [workspace, setWorkspace] = useState(null);
   const [mode, setMode] = useState("mine");
@@ -105,6 +105,8 @@ function Workspace({ user }) {
     setInvite(data.invite || null);
     setVersion((n) => n + 1);
   }, []);
+  const workspaceLoaded = Boolean(workspace);
+  const ownInviteCode = invite?.code;
   const connections = workspace?.links || [];
   const selectedLink = connections.find((item) => item.id === selected);
   const linkId = selectedLink?.id;
@@ -168,11 +170,19 @@ function Workspace({ user }) {
   }, [linkId, active, version, c]);
   useEffect(() => {
     if (
+      !workspaceLoaded ||
       !incomingCode ||
       code !== incomingCode ||
       !/^[a-f0-9]{32}$/.test(incomingCode)
     )
       return;
+    if (incomingCode === ownInviteCode) {
+      setError("");
+      setPreview(null);
+      setNotice(c("ownInvite"));
+      setMode("students");
+      return;
+    }
     let live = true;
     coachApi("preview", { code: incomingCode })
       .then((data) => {
@@ -184,7 +194,7 @@ function Workspace({ user }) {
     return () => {
       live = false;
     };
-  }, [incomingCode, code, c]);
+  }, [incomingCode, code, c, workspaceLoaded, ownInviteCode]);
   useEffect(() => {
     const previous = document.title;
     document.title = c("title") + " | Full Balance";
@@ -222,6 +232,12 @@ function Workspace({ user }) {
         throw new Error("INVALID_INVITE");
       }
       setCode(token);
+      if (token === ownInviteCode) {
+        setPreview(null);
+        setNotice(c("ownInvite"));
+        setMode("students");
+        return;
+      }
       setPreview({
         ...(await coachApi("preview", { code: token })),
         code: token,
@@ -269,18 +285,6 @@ function Workspace({ user }) {
             <span className="hidden sm:inline">{c("backApp")}</span>
           </Link>
           <span className="font-outfit text-sm font-bold">Full Balance</span>
-          <select
-            aria-label={c("language")}
-            value={lang}
-            onChange={(e) => setLang(e.target.value)}
-            className="min-h-11 w-14 shrink-0 rounded-lg border border-slate-600 bg-slate-950 px-1 text-sm text-white"
-          >
-            {["tr", "en", "es"].map((value) => (
-              <option key={value} value={value}>
-                {value.toUpperCase()}
-              </option>
-            ))}
-          </select>
           <button
             title={c("retry")}
             aria-label={c("retry")}
