@@ -1,4 +1,54 @@
 const words = {
+  studentRole: ["Öğrenci", "Client", "Alumno"],
+  coachRole: ["Eğitmen (PT)", "Coach (PT)", "Entrenador (PT)"],
+  language: ["Dil", "Language", "Idioma"],
+  waitingInvite: [
+    "Eğitmeninden davet bekleniyor",
+    "Waiting for your coach’s invitation",
+    "Esperando la invitación de tu entrenador",
+  ],
+  enterInvite: [
+    "Davet bağlantısını gir",
+    "Enter invite link",
+    "Introducir enlace de invitación",
+  ],
+  noStudents: [
+    "Henüz öğrencin yok",
+    "No clients yet",
+    "Todavía no tienes alumnos",
+  ],
+  sendInvite: ["Daveti gönder", "Send invitation", "Enviar invitación"],
+  prepareInvite: [
+    "Daveti hazırla",
+    "Prepare invitation",
+    "Preparar invitación",
+  ],
+  showQr: ["QR göster", "Show QR", "Mostrar QR"],
+  gymFlyer: [
+    "Salon afişini indir",
+    "Download gym poster",
+    "Descargar cartel del gimnasio",
+  ],
+  inviteSettings: [
+    "Davet ayarları",
+    "Invitation settings",
+    "Ajustes de invitación",
+  ],
+  changePeriod: [
+    "Takip süresini değiştir",
+    "Change coaching period",
+    "Cambiar duración",
+  ],
+  replaceInvite: [
+    "Takip süresini değiştirmek eski davet bağlantısını ve QR’ı kapatır. Bağlı öğrenciler etkilenmez. Devam edilsin mi?",
+    "Changing the period replaces the old invite link and QR. Connected clients are unaffected. Continue?",
+    "Cambiar la duración sustituye el enlace y QR anteriores. Los alumnos conectados no se ven afectados. ¿Continuar?",
+  ],
+  coachInvitation: [
+    "Eğitmen daveti",
+    "Coach invitation",
+    "Invitación del entrenador",
+  ],
   createInvite: ["Yeni davet oluştur", "Create invite", "Crear invitación"],
   title: ["Eğitmen takibi", "Coach workspace", "Seguimiento con entrenador"],
   mine: ["Eğitmenim", "My coach", "Mi entrenador"],

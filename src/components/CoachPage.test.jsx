@@ -9,7 +9,7 @@ vi.mock("../lib/coaching", () => ({
   coachLink: (code) => "https://fullbalance.app/coach?invite=" + code,
 }));
 vi.mock("../i18n/LanguageContext", () => ({
-  useTranslation: () => ({ lang: "en" }),
+  useTranslation: () => ({ lang: "en", setLang: vi.fn() }),
 }));
 vi.mock("./AuthScreen", () => ({ default: () => <p>Sign in</p> }));
 vi.mock("qrcode", () => ({
@@ -44,6 +44,32 @@ beforeEach(() => {
   coachApi.mockResolvedValue({ coach: null, links: [] });
 });
 describe("coach workspace", () => {
+  it("opens an incoming invitation directly without enabling sharing", async () => {
+    const code = "b".repeat(32);
+    window.history.replaceState({}, "", "/coach?invite=" + code);
+    coachApi.mockImplementation(async (action) =>
+      action === "preview"
+        ? { name: "Incoming coach", months: 3 }
+        : { coach: null, links: [] },
+    );
+    mount();
+    expect(await screen.findByText("Incoming coach")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "View coach" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Request connection" }),
+    ).toBeDisabled();
+    fireEvent.click(screen.getAllByRole("checkbox")[0]);
+    fireEvent.click(screen.getByRole("button", { name: "Request connection" }));
+    await waitFor(() =>
+      expect(coachApi).toHaveBeenCalledWith("join", {
+        code,
+        consent: true,
+        share_metrics: false,
+      }),
+    );
+  });
   it("preserves the invite through sign-in and does not fetch private data anonymously", () => {
     window.history.replaceState({}, "", "/coach?invite=" + "a".repeat(32));
     mount(null);
@@ -60,6 +86,9 @@ describe("coach workspace", () => {
         : { coach: null, links: [] },
     );
     mount();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Enter invite link" }),
+    );
     fireEvent.change(await screen.findByLabelText("Invite code or link"), {
       target: { value: "a".repeat(32) },
     });
@@ -140,7 +169,7 @@ describe("coach workspace", () => {
   });
   it("does not create a PT account without the explicit enable action", async () => {
     mount();
-    fireEvent.click(screen.getByRole("tab", { name: "My clients" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Coach (PT)" }));
     fireEvent.click(
       await screen.findByRole("button", { name: "Enable coach account" }),
     );

@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import QRCode from "qrcode";
+import CoachInviteDialog from "./CoachInviteDialog";
 import {
   ArrowLeft,
   Users,
   UserRound,
   Plus,
-  Copy,
-  Download,
   RefreshCw,
   ChevronRight,
   Check,
@@ -16,8 +14,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "../i18n/LanguageContext";
 import { coachText } from "../data/coachCopy";
-import { coachApi, coachLink } from "../lib/coaching";
-import { downloadCoachFlyer } from "../lib/coachFlyer";
+import { coachApi } from "../lib/coaching";
 import AuthScreen from "./AuthScreen";
 import { ProgramEditor, SessionForm, button, field } from "./CoachProgram";
 
@@ -74,7 +71,7 @@ export default function CoachPage({ user, onAuth }) {
 }
 
 function Workspace({ user }) {
-  const { lang } = useTranslation();
+  const { lang, setLang } = useTranslation();
   const c = useMemo(() => coachText(lang), [lang]);
   const [workspace, setWorkspace] = useState(null);
   const [mode, setMode] = useState("mine");
@@ -90,13 +87,15 @@ function Workspace({ user }) {
   const [code, setCode] = useState(
     () => new URLSearchParams(window.location.search).get("invite") || "",
   );
+  const [incomingCode] = useState(
+    () => new URLSearchParams(window.location.search).get("invite") || "",
+  );
+  const [manualInvite, setManualInvite] = useState(Boolean(code));
   const [preview, setPreview] = useState(null);
   const [consent, setConsent] = useState(false);
   const [metrics, setMetrics] = useState(false);
   const [name, setName] = useState(user.name || "");
-  const [months, setMonths] = useState(6);
   const [invite, setInvite] = useState(null);
-  const [qr, setQr] = useState("");
   const [search, setSearch] = useState("");
   const [showInvite, setShowInvite] = useState(false);
   const [version, setVersion] = useState(0);
@@ -106,7 +105,6 @@ function Workspace({ user }) {
     setInvite(data.invite || null);
     setVersion((n) => n + 1);
   }, []);
-  const inviteCode = invite?.code;
   const connections = workspace?.links || [];
   const selectedLink = connections.find((item) => item.id === selected);
   const linkId = selectedLink?.id;
@@ -169,24 +167,24 @@ function Workspace({ user }) {
     };
   }, [linkId, active, version, c]);
   useEffect(() => {
+    if (
+      !incomingCode ||
+      code !== incomingCode ||
+      !/^[a-f0-9]{32}$/.test(incomingCode)
+    )
+      return;
     let live = true;
-    setQr("");
-    if (inviteCode)
-      QRCode.toDataURL(coachLink(inviteCode), {
-        width: 600,
-        margin: 3,
-        errorCorrectionLevel: "M",
+    coachApi("preview", { code: incomingCode })
+      .then((data) => {
+        if (live) setPreview({ ...data, code: incomingCode });
       })
-        .then((value) => {
-          if (live) setQr(value);
-        })
-        .catch(() => {
-          if (live) setError(c("error"));
-        });
+      .catch((err) => {
+        if (live) setError(errorText(err, c));
+      });
     return () => {
       live = false;
     };
-  }, [inviteCode, c]);
+  }, [incomingCode, code, c]);
   useEffect(() => {
     const previous = document.title;
     document.title = c("title") + " | Full Balance";
@@ -224,7 +222,10 @@ function Workspace({ user }) {
         throw new Error("INVALID_INVITE");
       }
       setCode(token);
-      setPreview(await coachApi("preview", { code: token }));
+      setPreview({
+        ...(await coachApi("preview", { code: token })),
+        code: token,
+      });
       setConsent(false);
       setMetrics(false);
     }, "");
@@ -255,9 +256,9 @@ function Workspace({ user }) {
     );
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="border-b border-slate-700">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
+    <main className="coach-shell min-h-screen bg-slate-950 text-slate-100">
+      <header className="coach-header border-b border-slate-700">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-4">
           <Link
             to="/dashboard"
             title={c("backApp")}
@@ -267,7 +268,19 @@ function Workspace({ user }) {
             <ArrowLeft size={16} />
             <span className="hidden sm:inline">{c("backApp")}</span>
           </Link>
-          <span className="font-outfit text-lg font-bold">Full Balance</span>
+          <span className="font-outfit text-sm font-bold">Full Balance</span>
+          <select
+            aria-label={c("language")}
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            className="min-h-11 w-14 shrink-0 rounded-lg border border-slate-600 bg-slate-950 px-1 text-sm text-white"
+          >
+            {["tr", "en", "es"].map((value) => (
+              <option key={value} value={value}>
+                {value.toUpperCase()}
+              </option>
+            ))}
+          </select>
           <button
             title={c("retry")}
             aria-label={c("retry")}
@@ -280,7 +293,17 @@ function Workspace({ user }) {
         </div>
       </header>
       <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-        <h1 className="mb-5 font-outfit text-2xl font-bold">{c("title")}</h1>
+        <h1 className="mb-5 font-outfit text-2xl font-bold">{c(mode)}</h1>
+        {showInvite && workspace?.coach && (
+          <CoachInviteDialog
+            invite={invite}
+            name={workspace.coach.name}
+            lang={lang}
+            c={c}
+            onCreated={reload}
+            onClose={() => setShowInvite(false)}
+          />
+        )}
         <div
           className="mb-5 flex border-b border-slate-700"
           role="tablist"
@@ -305,7 +328,7 @@ function Workspace({ user }) {
               }}
             >
               {value === "mine" ? <UserRound size={18} /> : <Users size={18} />}
-              {c(value)}
+              {c(value === "mine" ? "studentRole" : "coachRole")}
             </button>
           ))}
         </div>
@@ -352,165 +375,59 @@ function Workspace({ user }) {
               </form>
             )}
             {mode === "students" && workspace.coach && (
-              <section className="mb-6 border-b border-slate-700 pb-5">
+              <section className="mb-5">
                 <button
-                  className={button}
-                  aria-expanded={showInvite}
-                  onClick={() => setShowInvite((value) => !value)}
+                  className={button + " bg-emerald-700"}
+                  aria-haspopup="dialog"
+                  onClick={() => setShowInvite(true)}
                 >
                   <Plus size={18} />
                   {c("invite")}
                 </button>
-                {showInvite && (
-                  <div className="mt-4">
-                    <form
-                      className="flex flex-wrap items-end gap-3"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        run(
-                          async () =>
-                            setInvite(await coachApi("invite", { months })),
-                          "",
-                        );
-                      }}
-                    >
-                      <label className="text-sm">
-                        {c("period")}
-                        <select
-                          className={field + " mt-2"}
-                          value={months}
-                          onChange={(e) => setMonths(Number(e.target.value))}
-                        >
-                          {[3, 6, 0].map((value) => (
-                            <option key={value} value={value}>
-                              {term(value)}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <button
-                        className={button + " bg-emerald-700"}
-                        disabled={busy}
-                      >
-                        <Plus size={18} />
-                        {c("createInvite")}
-                      </button>
-                    </form>
-                    <p className="mt-3 max-w-xl text-xs leading-5 text-slate-400">
-                      {c("inviteNote")}
-                    </p>
-                    {invite && (
-                      <div className="mt-5 grid items-start gap-5 sm:grid-cols-[180px_minmax(0,1fr)]">
-                        {qr && (
-                          <img
-                            src={qr}
-                            width={180}
-                            height={180}
-                            alt={c("print")}
-                            className="h-[180px] w-[180px] rounded-lg"
-                          />
-                        )}
-                        <div className="min-w-0 space-y-3">
-                          <p className="font-bold">{workspace.coach.name}</p>
-                          <p className="text-sm">
-                            {term(invite.months)} · {c("inviteExpiry")}:{" "}
-                            {date(invite.expires_at)}
-                          </p>
-                          <input
-                            aria-label={c("code")}
-                            readOnly
-                            value={coachLink(invite.code)}
-                            className={field}
-                            onFocus={(e) => e.target.select()}
-                          />
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              className={button}
-                              disabled={busy}
-                              onClick={() =>
-                                run(
-                                  () =>
-                                    navigator.clipboard.writeText(
-                                      coachLink(invite.code),
-                                    ),
-                                  "copied",
-                                )
-                              }
-                            >
-                              <Copy size={16} />
-                              {c("copy")}
-                            </button>
-                            {qr && (
-                              <a
-                                className={button}
-                                download="full-balance-coach-qr.png"
-                                href={qr}
-                              >
-                                <Download size={16} />
-                                {c("download")}
-                              </a>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-300">{c("promo")}</p>
-                          <p className="max-w-xl text-xs leading-5 text-slate-400">
-                            {c("printNote")}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {invite && qr && (
-                      <button
-                        className={button + " mt-4"}
-                        disabled={busy}
-                        onClick={() =>
-                          run(
-                            () =>
-                              downloadCoachFlyer({
-                                qr,
-                                name: workspace.coach.name,
-                                period: term(invite.months),
-                                expires: date(invite.expires_at),
-                                c,
-                              }),
-                            "",
-                          )
-                        }
-                      >
-                        <Download size={16} />
-                        {c("print")}
-                      </button>
-                    )}
-                  </div>
-                )}
               </section>
             )}
             {mode === "mine" && !filtered.length && (
               <section className="mb-6 max-w-xl space-y-4">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    inspect();
-                  }}
-                  className="space-y-3"
-                >
-                  <label className="block text-sm">
-                    {c("code")}
-                    <input
-                      className={field + " mt-2"}
-                      required
-                      maxLength={300}
-                      value={code}
-                      onChange={(e) => {
-                        setCode(e.target.value);
-                        setPreview(null);
-                        setConsent(false);
-                      }}
-                    />
-                  </label>
-                  <button className={button} disabled={busy}>
-                    {c("preview")}
-                  </button>
-                </form>
+                {!manualInvite && !preview && (
+                  <>
+                    <p className="py-3 text-sm text-slate-300">
+                      {c("waitingInvite")}
+                    </p>
+                    <button
+                      className={button}
+                      onClick={() => setManualInvite(true)}
+                    >
+                      {c("enterInvite")}
+                    </button>
+                  </>
+                )}
+                {manualInvite && !preview && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      inspect();
+                    }}
+                    className="space-y-3"
+                  >
+                    <label className="block text-sm">
+                      {c("code")}
+                      <input
+                        className={field + " mt-2"}
+                        required
+                        maxLength={300}
+                        value={code}
+                        onChange={(e) => {
+                          setCode(e.target.value);
+                          setPreview(null);
+                          setConsent(false);
+                        }}
+                      />
+                    </label>
+                    <button className={button} disabled={busy}>
+                      {c("preview")}
+                    </button>
+                  </form>
+                )}
                 {preview && (
                   <div className="space-y-4 border-y border-slate-700 py-4">
                     <h2 className="text-xl font-bold">{preview.name}</h2>
@@ -548,7 +465,7 @@ function Workspace({ user }) {
                       onClick={() =>
                         run(async () => {
                           await coachApi("join", {
-                            code,
+                            code: preview.code,
                             consent,
                             share_metrics: metrics,
                           });
@@ -564,15 +481,17 @@ function Workspace({ user }) {
                 )}
               </section>
             )}
-            {mode === "students" && workspace.coach && (
-              <input
-                aria-label={c("search")}
-                placeholder={c("search")}
-                className={field + " mb-4 max-w-md"}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            )}
+            {mode === "students" &&
+              workspace.coach &&
+              connections.some((item) => item.coach_id === user.id) && (
+                <input
+                  aria-label={c("search")}
+                  placeholder={c("search")}
+                  className={field + " mb-4 max-w-md"}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              )}
             <div className="divide-y divide-slate-700">
               {filtered.map((item) => (
                 <button
@@ -600,8 +519,8 @@ function Workspace({ user }) {
                 </button>
               ))}
             </div>
-            {!filtered.length && (mode === "mine" || workspace.coach) && (
-              <p className="py-5 text-sm text-slate-400">{c("empty")}</p>
+            {!filtered.length && mode === "students" && workspace.coach && (
+              <p className="py-5 text-sm text-slate-400">{c("noStudents")}</p>
             )}
           </>
         )}
@@ -824,7 +743,12 @@ function Workspace({ user }) {
                                       className={
                                         button + " mt-3 bg-emerald-700"
                                       }
-                                      onClick={() => { setSessionAssignment(details.assignment); setSessionDay(i); }}
+                                      onClick={() => {
+                                        setSessionAssignment(
+                                          details.assignment,
+                                        );
+                                        setSessionDay(i);
+                                      }}
                                     >
                                       {c("start")}
                                     </button>

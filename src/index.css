@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.coach-shell { --coach-safe-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.coach-header { position: sticky; top: 0; z-index: 40; padding-top: var(--coach-safe-top); background: #020617; }
+.coach-invite-dialog { max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem); }
+
 /* ── Design Tokens ────────────────────────────────────── */
 @theme {
   --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;

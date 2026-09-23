@@ -28,3 +28,12 @@ The security advisor's informational `rls_enabled_no_policy` entries on these pr
 - Full suite: 381 passed; one pre-existing `src/llms.test.js` expectation fails against the unchanged `public/llms.txt` (also present in HEAD). This is not a coach regression and was not changed in this work.
 
 Before a wider gym rollout, validate the coaching offer and privacy obligations with the pilot gym. Do not describe free app access as a normally paid benefit, promise unlimited PT service, or imply turnstile attendance from workout records.
+
+## Simplified Invitation Flow
+
+- Explicit client / coach role tabs and an in-page TR/EN/ES language selector.
+- Invitations open in a compact modal. Existing links are reused; changing the period requires confirmation before replacing a printed QR.
+- Native sharing is primary, with clipboard/manual-copy fallback. QR and gym poster downloads are on a separate view.
+- Incoming links open the coach preview directly. Sharing remains unchecked and the join request uses the previewed invitation token.
+- Sticky header reserves the iPhone safe area. Browser checks at 320/390/1280 pixels in all three languages found no horizontal overflow or page errors; safe-area spacing was simulated, not tested on physical iOS.
+- Six additional invitation tests cover all three languages, explicit creation, replacement confirmation and share cancellation. A workspace regression test covers direct invitation acceptance.
