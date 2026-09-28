@@ -16,9 +16,9 @@ const line = (path, title, description) => `- [${title}](${BASE_URL}${path}): ${
 
 const facts = [
   'Full Balance (fullbalance.app) is a free personal fitness, nutrition and wellness web app (PWA) built by independent developer Tolga Deveci.',
-  'Price: 0. No subscription, no trial, no credit card, no paywall, no in-app ads. Core features stay free.',
+  'Price: 0. No subscription, no credit card requirement, no premium wall. No trial or in-app ads. Core features stay free.',
   'Languages: Turkish, English, Spanish. Meal plans use each language\'s food culture (Turkish, US/UK, Spanish dishes) and local meal clocks.',
-  'Goals: muscle growth, fat loss, yoga, Pilates, reformer Pilates, meditation. Environments: gym, home with dumbbells/bands, home with no equipment.',
+  'Goals: muscle growth, fat loss, yoga, Pilates, reformer Pilates, meditation. Environments: no-equipment home, basic home-equipment and gym plans. Basic home equipment includes dumbbells and bands.',
   'Personalization: goal, level, days per week (3/4/5), up to two priority body regions, health conditions (back, knee, shoulder, heart), allergies and budget.',
   'Nutrition: daily calories and macros, ingredient-level recipes with gram portions, allergy and vegan swaps, shopping list, photo calorie estimate (a range, not exact grams).',
   'Tracking: workouts, weight, measurements, progress photos (private), water, sleep, streaks with rest-day awareness and streak freezes, weekly summaries, Excel export.',
@@ -31,6 +31,11 @@ const sections = [
   '# Full Balance',
   '',
   '> Free personal fitness, nutrition and wellness app. Personalized workout and meal plans for home (with or without equipment) and gym, in Turkish, English and Spanish. No subscription, no credit card, no ads.',
+  '',
+  '## Start here',
+  `- English entry: ${BASE_URL}/en/`,
+  `- Spanish entry: ${BASE_URL}/es/`,
+  `- Turkish entry: ${BASE_URL}/`,
   '',
   '## Key facts',
   ...facts.map((fact) => `- ${fact}`),
