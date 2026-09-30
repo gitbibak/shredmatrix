@@ -142,6 +142,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/analyze-meal') return analyzeMeal(request, env);
+    // Search Console ownership file must answer at its exact .html path; the
+    // asset layer would otherwise redirect it to the extensionless URL.
+    if (url.pathname === '/google43d75fde738355cf.html') {
+      return new Response('google-site-verification: google43d75fde738355cf.html', { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    }
     return env.ASSETS.fetch(request);
   },
 };
