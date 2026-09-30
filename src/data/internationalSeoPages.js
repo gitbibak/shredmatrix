@@ -69,7 +69,7 @@ const pageDefinitions = {
     paths: { tr: '/antrenman-programi', en: '/en/personal-workout-plan', es: '/es/plan-entrenamiento-personalizado' },
     category: 'workout',
     en: {
-      title: 'Free Personalized Workout Plan', accent: 'Home or Gym', metaTitle: 'Free Personalized Workout Plan for Home or Gym | Full Balance',
+      title: 'Free Personalized Workout Plan', accent: 'Home or Gym', metaTitle: 'Free Workout Plans for Home or Gym, Personalized to You | Full Balance',
       description: 'Create a free workout plan for home or gym based on your goal, level and available days, with exercise order, sets, reps, rest and progression.',
       hero: 'Choose home or gym, your goal, experience and weekly schedule. Get a clear plan you can follow and track from your phone without a subscription.',
       sections: [['Choose home or gym', 'Home plans use bodyweight movements without gym machines; gym plans use the appropriate training environment.'], ['Every session is clear', 'See exercise order, sets, rep ranges, rest time and practical form guidance before you start.'], ['Four structured phases', 'Difficulty and training demand progress by level instead of changing randomly every week.']],
