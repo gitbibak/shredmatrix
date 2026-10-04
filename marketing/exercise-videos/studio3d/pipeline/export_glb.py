@@ -5,7 +5,7 @@
 # surface: no cloth/body interpenetration, no sagging gussets, identical deformation everywhere.
 #   COLOR_0.rgb = albedo (linear), COLOR_0.a = fabric (1) / skin (0)
 #
-# ~/Applications/Blender.app/Contents/MacOS/Blender -b ../assets/humans/female.blend --python pipeline/export_glb.py
+# ~/Applications/Blender.app/Contents/MacOS/Blender -b source/female.blend --python pipeline/export_glb.py
 import bpy, json, os, numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', 'assets')

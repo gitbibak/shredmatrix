@@ -81,3 +81,6 @@ Waves: agent brief = docs/AGENT_BRIEF.md.
 - 2026-10-03 22:16: ALL 250 exercises approved and rendered in TR (out/tr/, 2.4 GB). Manifest status = rendered.
   Next: user review of TR → EN + ES renders: `node render.mjs all --lang en,es --fps 60 --jobs 3 --skip-existing` (~9-10 h; 30 fps ≈ 5 h).
   Engine to-do (non-blocking, from agent reports): wrist extension for gripping hands (true front rack), lateral neck bend, smarter mistake-transition timing (rest→mistake path), card:false keys inside the previous card, boolean keys blending, qa slide check (dev/slide.mjs) into qa.mjs.
+- 2026-10-04: user review round fixed 23 videos (engine: grip orientation, flat palms, bar grip point, lying hair clamp; files: sliding, interpenetration, eight_angle_pose prep version). TR delivery (720p60, 772 MB) uploaded to R2 v1/tr; app switched to in-app videos for TR and deployed (worker version 1c0c5a3a). Old experiments removed from marketing/exercise-videos.
+  NOTE: TR masters other than the 23 fixed ones were rendered with the earlier engine; EN/ES renders will use the current engine.
+  Next (user approval): EN + ES renders → encode → upload v1/en, v1/es → enable in EXERCISE_VIDEO_LANGS.
