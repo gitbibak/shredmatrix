@@ -25,8 +25,25 @@ describe('ExerciseVideoModal', () => {
     expect(el.getAttribute('src')).toBe(video.src);
     expect(el.getAttribute('poster')).toBe(video.poster);
     expect(el.hasAttribute('playsinline')).toBe(true);
+    expect(el.hasAttribute('controls')).toBe(false);
+    expect(el.hasAttribute('loop')).toBe(true);
+    expect(screen.getByRole('slider', { name: 'Video konumu' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Videoyu kapat' }));
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
+  it('toggles play and pause on tap and shows a play button while paused', () => {
+    const { container } = renderModal({ video, onClose: () => {} });
+    const el = container.querySelector('video');
+    const play = vi.spyOn(el, 'play').mockImplementation(() => Promise.resolve());
+    const pause = vi.spyOn(el, 'pause').mockImplementation(() => {});
+    Object.defineProperty(el, 'paused', { configurable: true, value: false });
+    fireEvent.click(el);
+    expect(pause).toHaveBeenCalled();
+    fireEvent.pause(el);
+    Object.defineProperty(el, 'paused', { configurable: true, value: true });
+    fireEvent.click(screen.getByRole('button', { name: 'Oynat' }));
+    expect(play).toHaveBeenCalled();
   });
 });

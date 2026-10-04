@@ -1104,6 +1104,9 @@ export const translations = {
     video: {
       watch: 'Videoyu İzle',
       close: 'Videoyu kapat',
+      play: 'Oynat',
+      pause: 'Duraklat',
+      seek: 'Video konumu',
       unsupported: 'Tarayıcın bu videoyu oynatamıyor.',
     },
 
@@ -2308,7 +2311,7 @@ export const translations = {
       days7: '7 Days', days30: '30 Days', all: 'All',
       min: 'Min', max: 'Max', avg: 'Avg',
     },
-    video: { watch: 'Watch Video', close: 'Close video', unsupported: 'Your browser cannot play this video.' },
+    video: { watch: 'Watch Video', close: 'Close video', play: 'Play', pause: 'Pause', seek: 'Video position', unsupported: 'Your browser cannot play this video.' },
     // ── Exercise Demo ──
     exerciseDemo: {
       title: 'How To Do It',
@@ -3498,7 +3501,7 @@ export const translations = {
       days7: '7 Días', days30: '30 Días', all: 'Todo',
       min: 'Mín', max: 'Máx', avg: 'Prom',
     },
-    video: { watch: 'Ver Video', close: 'Cerrar video', unsupported: 'Tu navegador no puede reproducir este video.' },
+    video: { watch: 'Ver Video', close: 'Cerrar video', play: 'Reproducir', pause: 'Pausar', seek: 'Posición del video', unsupported: 'Tu navegador no puede reproducir este video.' },
     // ── Exercise Demo ──
     exerciseDemo: {
       title: 'Cómo Hacerlo',
