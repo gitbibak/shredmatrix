@@ -22,7 +22,7 @@ Mevcut 4 seviye (Temel/Orta/İleri/Usta) yapısal olarak sağlam (PPL / Upper-Lo
 | **B. Yeni şablonlar** | 4 seviye yeniden yazılır: Orta'dan itibaren ayrı **kuvvet günleri**, İleri/Usta'da **blok periyodizasyon**, makine-ağırlıklı hipertrofi günleri, Usta'da pro teknikler (FST-7 benzeri finisher, top set/back-off, test haftası) | Kuvvet ve makine oranı 2-3 katına çıkar, Usta gerçekten "usta" olur |
 | **C. Yük takibi (opsiyonel, 2. aşama)** | Set bazında ağırlık girişi + tahmini 1RM (Epley) + %1RM reçetesi | Pro için asıl fark bu; şema zaten hazır, UI yok |
 
-**Kritik bağımlılık:** Önereceğim makine hareketlerinin **çoğunun 3D videosu yok** (Bölüm 6'daki matris). Video olmayan hareket üretime girmemeli → ya Ahmet'in `studio3d` hattında video üretilir ya da videosu olan muadile alias'lanır.
+**Video politikası (karar, 2026-10-04):** Önerilen makine hareketlerinin çoğunun henüz 3D videosu yok (Bölüm 6 matrisi). **Bu bir ön koşul değildir:** salon hareketlerini çeşitlendirmek öncelik olduğu için hareketler **video beklenmeden** programlara eklenir; videosu olmayan hareket uygulamada video düğmesi olmadan, hatasız gösterilir. Ahmet eksik videoları hareketler eklendikten **sonra** `studio3d` hattında üretir ve `exerciseVideoMap`'e bağlar. Eksik-video listesi otomatik üretilir (Bölüm 12, görev 1.12). Mevcut kod bunu zaten destekliyor: `getExerciseVideo()` video yoksa `null` döner, `WorkoutPanel` oynatıcıyı `{video && …}` ile gizler — ek UI işi gerekmez.
 
 ---
 
@@ -233,7 +233,7 @@ Pro için asıl farkı yaratan katman; ama şablon değişikliğinden bağımsı
 
 ## 6. Egzersiz envanteri ve **video kapsama matrisi** (kritik bağımlılık)
 
-`src/data/exerciseVideoMap.js` (652 anahtar) ve `marketing/exercise-videos/studio3d/exercises` (251 tanım) taranarak çıkarıldı. Kural: **videosu olmayan hareket üretime girmez.** Üç yol: (a) video üret (Ahmet, studio3d), (b) videosu olan muadile **alias** (geçici), (c) şablondan çıkar.
+`src/data/exerciseVideoMap.js` (652 anahtar) ve `marketing/exercise-videos/studio3d/exercises` (251 tanım) taranarak çıkarıldı. **Kural (güncellendi):** videosu olmayan hareket de programa **eklenir**; video, hareketin varlığının değil sunumunun parçasıdır. Eksik videolar Ahmet tarafından sonradan üretilir. "Geçici alias" sütunu artık zorunlu değil — yalnızca form ipucu/video gelene kadar kullanıcıya gösterilebilecek **isteğe bağlı** muadildir (Hack ↔ Smith gibi salon-ekipman alias'ları ise kalıcıdır, Bölüm 10 karar 3).
 
 ### 6.1 Hemen kullanılabilir (video ✓)
 Hack Squat · Leg Press (tek bacak dahil) · Leg Extension · Lying Leg Curl (machine) · Machine Chest Press · Pec Deck · Reverse Pec Deck · Lat Pulldown · Chest-Supported Row · T-Bar Row · Seal Row · Meadows Row · Pendlay Row · Seated Calf Raise · Back Extension · Paused Bench Press · Tempo varyantları · Close Grip Bench · Face Pull · Rope Pushdown · Overhead Cable Ext · Cable Curl · Bayesian Cable Curl · Landmine Press · Farmer Walk · Sled · Deficit Deadlift · Romanian Deadlift · Front Squat · Weighted Dips/Pull-Up · OHP.
@@ -257,7 +257,7 @@ Hack Squat · Leg Press (tek bacak dahil) · Leg Extension · Lying Leg Curl (ma
 | 3 | Trap Bar Deadlift, Safety Bar Squat, Belt Squat, Reverse Hyper | niş ekipman | konvansiyonel muadil |
 | 3 | Push Press, Upright Row, Shrug, Good Morning, Sumo Deadlift | kullanım sınırlı | — |
 
-**Karar noktası:** Öncelik-1 (5 hareket) videosu üretilmeden Orta/İleri şablonları alias ile çıkabilir; **Usta için en az öncelik-1 + 2 tamamlanmalı**, yoksa "pro" hissi yine zayıf kalır.
+**Öncelik sırasının anlamı (güncellendi):** Hareketlerin hepsi şablonlara aynı anda eklenir; öncelik yalnızca Ahmet'in **video üretim sırasını** belirler (1 → 2 → 3). Hiçbir seviye video tamamlanmasını beklemez.
 
 ### 6.3 Her yeni hareket için zorunlu kayıtlar
 1. `EXERCISE_MUSCLE_MAP` (yoksa `validateAndFixExercises` tek-kas günlerinde **eler** — Haziran'daki hata)
@@ -308,14 +308,14 @@ Denetim dokümanının "quality validator" maddesi bu planla somutlanır. Üreti
 | 0 | Bu planın onayı + Bölüm 10 soruları | Ahmet onayı |
 | 1 | Dal: `feat/strength-machine-pro`. Katman A (slot + dalga + render) **şablon değişmeden** | Mevcut şablonlar `slot`suz çalışır; `waveTable.test` yeşil; eski planlar bozulmaz |
 | 2 | Katman B şablonları + kayıtlar (Bölüm 6.3) + i18n | Bölüm 7 validator testleri yeşil; 3 dil sızıntı 0; `npm test` tam yeşil |
-| 3 | Video: öncelik-1 (5 hareket) studio3d üretimi — **Ahmet** | Alias ihtiyacı Orta/İleri'de 0 |
+| 3 | Eksik-video listesi üretilir; video üretimi **paralel ve sonradan** (Ahmet, studio3d) — canlıya almayı bloklamaz | Liste `docs/` veya test çıktısında; videosu olmayan hareket hatasız render |
 | 4 | Cihaz QA: 320/390/1280, TR/EN/ES, 3/4/5 gün seçimi, odak bölge, sağlık filtreleri | Ekran görüntüsü seti `output/` |
 | 5 | `PLAN_VERSION 22` + PR + review | Ahmet review |
 | 6 | Canlı: mevcut kullanıcı planları giriş anında yenilenir (`upgradePlanIfNeeded`). İlk 2 hafta izleme: `perceivedExertion` dağılımı, `painReported` oranı, antrenman tamamlama | 3 = "çok zor" oranı artmıyor; ağrı raporu artmıyor |
 | 7 | Geri alma planı: `PLAN_VERSION 23` ile eski şablona dönüş (tek commit) | — |
 | 8 | Katman C2 (yük takibi) ayrı PR | — |
 
-**Canlıya alma ön koşulu:** Adım 2 + 3 (öncelik-1 video) + 4 tamam olmadan `PLAN_VERSION` artırılmaz.
+**Canlıya alma ön koşulu:** Adım 2 + 4 tamam olmadan `PLAN_VERSION` artırılmaz. **Video (adım 3) ön koşul değildir**; eksik videolar canlıdayken tamamlanır.
 
 ---
 
@@ -417,12 +417,12 @@ Sıra kullanıcı etkisine göre: önce kas (şikayet), sonra yağ yakımı (en 
 | 1.4 | `buildThreeDayStrengthWeek` faz-duyarlı + `strength_primary` ilk hareket | `planGenerator.js` | 3 gün planında her seansta 1 kuvvet slotu |
 | 1.5 | 4 seviye şablonu Bölüm 4'e göre; `getFocusMuscleCategory`'ye "kuvvet üst/alt", "push (makine)" anahtar kelimeleri **tekil-kas kontrollerinden önce** | `planGenerator.js` | Bölüm 7 validator testleri: faz ≥1'de ≥2 kuvvet günü, SBD ≥1 ağır + ≥1 varyant, ardışık omurga yükü yok, kas başına set K5 aralığında (odak sonrası dahil) |
 | 1.6 | Yeni hareketler için `EXERCISE_MUSCLE_MAP`, `FOCUS_ALLOWED_MUSCLES`, `HEALTH_EXERCISE_FILTERS` (Bölüm 6.3 #1, #2, #5) | `planGenerator.js` | `validateAndFixExercises` hiçbir şablon egzersizini elemez (test: üretilen = şablon) |
-| 1.7 | Alias tablosu: videosu olmayan hareket → videolu muadil (Bölüm 6.2); **Hack ↔ Smith** çift yönlü | `exerciseVideoMap.js`, yeni `exerciseAliases.js` | `exerciseVideos.test.js`: her gym şablon egzersizi video **veya** alias'a sahip |
+| 1.7 | Salon-ekipman alias'ları (**Hack ↔ Smith** çift yönlü; isteğe bağlı diğerleri) | yeni `exerciseAliases.js` | Alias zinciri hiçbir hareketi elemez; videosu olmayan hareket **video düğmesi olmadan hatasız** render edilir (`WorkoutPanel.test.jsx`) |
 | 1.8 | `exerciseDatabase.js` form ipuçları (yeni hareketler), `focusMap` EN/ES, `localizeExerciseEntry` token'ları (Top set, Back-off, AMRAP, FST-7, RIR, %) | `exerciseDatabase.js`, `planGenerator.js` | 3 dil Türkçe sızıntı testi 0 (Haziran kontrolü kalıcı test olur) |
 | 1.9 | `WorkoutPanel`: "Hafta n/8 · Blok" rozeti, slot etiketi, haftalık reçete render; log'a `weekInPhase` + `prescribed` | `WorkoutPanel.jsx` | `WorkoutPanel.test.jsx`: W1 ve W7 farklı set/tekrar gösterir; log kaydında alanlar var |
 | 1.10 | `workoutAdaptation` → dalga etkisi (reduce/hold/progress, Bölüm 3.4) | `workoutAdaptation.js` | `workoutAdaptation.test.js` üç aksiyon |
 | 1.11 | `QUALITY_PROFILES.muscle` metinleri: double progression + dalga; C1 RIR reçeteleri; Usta W8 test haftası metni | `planGenerator.js` | Metinler 3 dilde |
-| 1.12 | Öncelik-1 video üretimi (Smith squat/incline, hip abd, hip add, seated leg curl, cable lateral raise) | `marketing/exercise-videos/studio3d/exercises` | Orta/İleri şablonunda alias ihtiyacı 0; Usta'da ≤3 |
+| 1.12 | **Eksik-video listesi** üreten script/test: tüm gym şablonlarındaki hareketlerden `exerciseVideoMap`'te olmayanları öncelik sırasıyla (Bölüm 6.2) `docs/reports/eksik-videolar-<tarih>.md`'ye yazar. Video üretimi bu listeden, **canlıya alma sonrası ve paralel** (Ahmet) | yeni `scripts/list-missing-videos.mjs`, `marketing/exercise-videos/studio3d/exercises` | Liste üretiliyor ve her video eklendiğinde kısalıyor; canlıya alma bu göreve bağlı **değil** |
 | 1.13 | Cihaz QA 320/390/1280 × TR/EN/ES × 3/4/5 gün × odak bölge × sağlık filtreleri; `PLAN_VERSION 22` | `planVersion.js`, `output/` | `npm test` yeşil; ekran görüntüsü seti |
 
 ### PR-2 — Yağ yakımı yeniden yazımı (`PLAN_VERSION 23`)
