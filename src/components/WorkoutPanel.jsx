@@ -8,6 +8,8 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
+import ExerciseVideoModal from './ExerciseVideoModal';
+import { getExerciseVideo, hasExerciseVideos } from '../data/exerciseVideos';
 const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
@@ -78,7 +80,8 @@ function resolveGoalKey(goal) {
   return 'muscle';
 }
 
-function ExerciseRow({ exercise, index, t, onShowDemo }) {
+function ExerciseRow({ exercise, index, t, onShowDemo, onShowVideo }) {
+  const { lang } = useTranslation();
   const [showTip, setShowTip] = useState(false);
   const databaseInfo = getExerciseInfo(exercise.name);
   const hasStructuredMetadata = Object.hasOwn(exercise, 'equipment');
@@ -88,6 +91,9 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
   const muscles = exercise.muscles || info?.muscles;
   const difficulty = exercise.difficulty || info?.difficulty;
   const diff = difficulty ? getDifficultyLabel(difficulty) : null;
+  // Own technique video when it exists for this language; languages without videos yet keep the YouTube search link.
+  const video = getExerciseVideo(exercise.name, lang);
+  const showYouTube = !video && !hasExerciseVideos(lang);
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' form technique')}`;
   return (
     <motion.div
@@ -172,17 +178,30 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
               <Info size={11} />
             </button>
           )}
-          <a
-            href={videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={t('video.watch')}
-            aria-label="Video izle"
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Play size={9} fill="currentColor" />
-          </a>
+          {video && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onShowVideo?.({ video, title: exercise.name }); }}
+              title={t('video.watch')}
+              aria-label={`${t('video.watch')}: ${exercise.name}`}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-400 hover:bg-orange-500/25 hover:scale-110 transition-all cursor-pointer"
+            >
+              <Play size={11} fill="currentColor" />
+            </button>
+          )}
+          {showYouTube && (
+            <a
+              href={videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={t('video.watch')}
+              aria-label={t('video.watch')}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:scale-110 transition-all"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Play size={9} fill="currentColor" />
+            </a>
+          )}
         </div>
       </div>
 
@@ -211,7 +230,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo }) {
   );
 }
 
-function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
+function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, onShowVideo, goalKey }) {
   const rest = isRestDay(day);
   const exerciseCount = day.exercises?.length ?? 0;
   const dayImage = getWorkoutDayImage(goalKey, day.image, day.focus);
@@ -363,6 +382,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
                     index={i}
                     t={t}
                     onShowDemo={onShowDemo}
+                    onShowVideo={onShowVideo}
                   />
                 ))}
 
@@ -388,6 +408,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, goalKey }) {
                         index={i}
                         t={t}
                         onShowDemo={onShowDemo}
+                        onShowVideo={onShowVideo}
                       />
                     ))}
                   </div>
@@ -454,6 +475,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
   const [feedbackError, setFeedbackError] = useState('');
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [demoExercise, setDemoExercise] = useState(null);
+  const [videoExercise, setVideoExercise] = useState(null);
   const toast = useToast();
 
   // Load completed workouts from dataService
@@ -712,6 +734,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
                 onToggle={handleToggle}
                 t={t}
                 onShowDemo={setDemoExercise}
+                onShowVideo={(v) => { setVideoExercise(v); trackEvent('exercise_video_play', { exerciseId: v.video.id, language: lang }); }}
                 goalKey={goalKey}
               />
               {/* Complete workout button — only for training days when card is open */}
@@ -962,6 +985,13 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* 🎬 Exercise technique video */}
+      <ExerciseVideoModal
+        video={videoExercise?.video}
+        title={videoExercise?.title}
+        onClose={() => setVideoExercise(null)}
+      />
 
       {/* 🎓 Exercise Demo Modal */}
       <AnimatePresence>

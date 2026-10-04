@@ -1103,6 +1103,8 @@ export const translations = {
     // ── Video ──
     video: {
       watch: 'Videoyu İzle',
+      close: 'Videoyu kapat',
+      unsupported: 'Tarayıcın bu videoyu oynatamıyor.',
     },
 
     // ── Exercise Demo ──
@@ -2306,7 +2308,7 @@ export const translations = {
       days7: '7 Days', days30: '30 Days', all: 'All',
       min: 'Min', max: 'Max', avg: 'Avg',
     },
-    video: { watch: 'Watch Video' },
+    video: { watch: 'Watch Video', close: 'Close video', unsupported: 'Your browser cannot play this video.' },
     // ── Exercise Demo ──
     exerciseDemo: {
       title: 'How To Do It',
@@ -3496,7 +3498,7 @@ export const translations = {
       days7: '7 Días', days30: '30 Días', all: 'Todo',
       min: 'Mín', max: 'Máx', avg: 'Prom',
     },
-    video: { watch: 'Ver Video' },
+    video: { watch: 'Ver Video', close: 'Cerrar video', unsupported: 'Tu navegador no puede reproducir este video.' },
     // ── Exercise Demo ──
     exerciseDemo: {
       title: 'Cómo Hacerlo',
