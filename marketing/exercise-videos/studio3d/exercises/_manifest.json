@@ -1,0 +1,6636 @@
+{
+ "generated_from": "research/specs",
+ "count": 250,
+ "status_values": [
+  "todo",
+  "authored",
+  "qa_passed",
+  "approved",
+  "rendered"
+ ],
+ "exercises": [
+  {
+   "id": "chest_lift",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Göğüs Kaldırma (Chest Lift)",
+    "en": "Chest Lift",
+    "es": "Elevación de pecho (chest lift)"
+   },
+   "app_names": [
+    "Chest Lift"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "neutral_pelvis_breathing",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Nötr Pelvis ile Nefes",
+    "en": "Neutral Pelvis Breathing",
+    "es": "Respiración con pelvis neutra"
+   },
+   "app_names": [
+    "Neutral Pelvis Breathing"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "knee_fold",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Diz Katlama (Knee Fold)",
+    "en": "Knee Fold",
+    "es": "Pliegue de rodilla (knee fold)"
+   },
+   "app_names": [
+    "Knee Fold"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "toe_tap_prep",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Parmak Ucu Dokunuşu Hazırlığı (Toe Tap Prep)",
+    "en": "Toe Tap Prep",
+    "es": "Preparación de toque de puntas (toe tap prep)"
+   },
+   "app_names": [
+    "Toe Tap Prep"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Tek Bacak Esnetme (Single Leg Stretch)",
+    "en": "Single Leg Stretch",
+    "es": "Estiramiento de una pierna (single leg stretch)"
+   },
+   "app_names": [
+    "Single Leg Stretch",
+    "Single Leg Stretch Prep"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "double_leg_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Çift Bacak Esnetme (Double Leg Stretch)",
+    "en": "Double Leg Stretch",
+    "es": "Estiramiento de ambas piernas (double leg stretch)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_straight_leg_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Tek Düz Bacak Esnetme (Single Straight Leg Stretch)",
+    "en": "Single Straight Leg Stretch (Scissors)",
+    "es": "Estiramiento de una pierna recta (single straight leg stretch)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "double_straight_leg_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Çift Düz Bacak İndirme (Double Straight Leg Stretch)",
+    "en": "Double Straight Leg Stretch (Lower Lift)",
+    "es": "Estiramiento de ambas piernas rectas (double straight leg stretch)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "criss_cross",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Çapraz Bükülme (Criss-Cross)",
+    "en": "Criss-Cross",
+    "es": "Criss-cross (rotación cruzada)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "the_hundred",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yüz Vuruşu (The Hundred)",
+    "en": "The Hundred",
+    "es": "Los cien (The Hundred)"
+   },
+   "app_names": [
+    "The Hundred"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "roll_up",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yuvarlanarak Kalkış (Roll Up)",
+    "en": "Roll Up",
+    "es": "Rodar hacia arriba (roll up)"
+   },
+   "app_names": [
+    "Resistance Band Roll Up"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "resistance_band"
+   ],
+   "props": [
+    "band"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rollover",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Geriye Yuvarlanma (Rollover)",
+    "en": "Rollover",
+    "es": "Rollover (voltereta atrás)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_circle",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Tek Bacak Dairesi (Single Leg Circle)",
+    "en": "Single Leg Circle",
+    "es": "Círculo de una pierna (single leg circle)"
+   },
+   "app_names": [
+    "Single Leg Circle"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rolling_like_a_ball",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Top Gibi Yuvarlanma (Rolling Like a Ball)",
+    "en": "Rolling Like a Ball",
+    "es": "Rodar como una pelota (rolling like a ball)"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "spine_stretch_forward",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "İleri Omurga Esnetme (Spine Stretch Forward)",
+    "en": "Spine Stretch Forward",
+    "es": "Estiramiento de columna hacia delante (spine stretch forward)"
+   },
+   "app_names": [
+    "Spine Stretch Forward"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rocker_with_open_legs",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Açık Bacak Sallanma (Open Leg Rocker)",
+    "en": "Open Leg Rocker (Rocker with Open Legs)",
+    "es": "Balancín con piernas abiertas (open leg rocker)"
+   },
+   "app_names": [
+    "Rocker with Open Legs"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "saw",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Testere (Saw)",
+    "en": "Saw",
+    "es": "La sierra (saw)"
+   },
+   "app_names": [
+    "Saw"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "corkscrew",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Tirbuşon (Corkscrew)",
+    "en": "Corkscrew",
+    "es": "Sacacorchos (corkscrew)"
+   },
+   "app_names": [
+    "Corkscrew"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "scissors",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Makas (Scissors, Omuz Üstü Pozisyonu)",
+    "en": "Scissors (Shoulder Stand Position)",
+    "es": "Tijeras (scissors en posición de hombros)"
+   },
+   "app_names": [
+    "Scissors (Üst Pozisyon)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bicycle",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Bisiklet (Bicycle, Omuz Üstü Pozisyonu)",
+    "en": "Bicycle (Shoulder Stand Position)",
+    "es": "Bicicleta (bicycle en posición de hombros)"
+   },
+   "app_names": [
+    "Bicycle (Üst Pozisyon)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jackknife",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Çakı (Jackknife)",
+    "en": "Jackknife",
+    "es": "Navaja (jackknife)"
+   },
+   "app_names": [
+    "Jackknife"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "shoulder_bridge",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Omuz Köprüsü (Shoulder Bridge)",
+    "en": "Shoulder Bridge",
+    "es": "Puente de hombros (shoulder bridge)"
+   },
+   "app_names": [
+    "Shoulder Bridge"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pelvic_curl",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Pelvik Kıvrılma (Pelvic Curl)",
+    "en": "Pelvic Curl (Articulating Bridge)",
+    "es": "Curl pélvico (puente articulado)"
+   },
+   "app_names": [
+    "Pelvic Curl",
+    "Bridge Variations"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "ball_between_knees_bridge",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Dizler Arasında Topla Köprü",
+    "en": "Ball Between Knees Bridge",
+    "es": "Puente con pelota entre rodillas"
+   },
+   "app_names": [
+    "Ball Between Knees Bridge"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "small_ball"
+   ],
+   "props": [
+    "ball"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_kick_front_back",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Tekme Ön-Arka (Side Kick Front-Back)",
+    "en": "Side Kick Front-Back",
+    "es": "Patada lateral adelante-atrás"
+   },
+   "app_names": [
+    "Side Kick Front-Back"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_kick_up_down",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Tekme Yukarı-Aşağı (Side Kick Up-Down)",
+    "en": "Side Kick Up-Down",
+    "es": "Patada lateral arriba-abajo"
+   },
+   "app_names": [
+    "Side Kick Up-Down"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_kick_circles",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Tekme Daireler (Side Kick Circles)",
+    "en": "Side Kick Circles",
+    "es": "Patada lateral con círculos"
+   },
+   "app_names": [
+    "Side Kick Circles"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hot_potato",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Sıcak Patates (Hot Potato)",
+    "en": "Hot Potato (Side Kick)",
+    "es": "Patata caliente (hot potato)"
+   },
+   "app_names": [
+    "Hot Potato"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_leg_lift",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Yatış Bacak Kaldırma Serisi (Side Leg Lift)",
+    "en": "Side-Lying Leg Lift Series",
+    "es": "Serie de elevaciones de pierna lateral"
+   },
+   "app_names": [
+    "Side Leg Lift Series"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "clam_shell",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "İstiridye (Clam Shell)",
+    "en": "Clam Shell",
+    "es": "Concha (clam shell)"
+   },
+   "app_names": [
+    "Clam Shell"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "inner_thigh_lift",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "İç Bacak Kaldırma (Inner Thigh Lift)",
+    "en": "Inner Thigh Lift",
+    "es": "Elevación de aductores (inner thigh lift)"
+   },
+   "app_names": [
+    "Inner Thigh Lift"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "magic_circle_inner_thigh",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Magic Circle ile İç Bacak (Inner Thigh Press)",
+    "en": "Magic Circle Inner Thigh Press",
+    "es": "Presión de aductores con magic circle"
+   },
+   "app_names": [
+    "Magic Circle — Inner Thigh",
+    "Inner Thigh Presses"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "magic_circle"
+   ],
+   "props": [
+    "ring"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "magic_circle_chest_press",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Magic Circle ile Göğüs Presi",
+    "en": "Magic Circle Chest Press",
+    "es": "Press de pecho con magic circle"
+   },
+   "app_names": [
+    "Magic Circle — Chest Press"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "magic_circle"
+   ],
+   "props": [
+    "ring"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_bend",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Bükülme (Side Bend)",
+    "en": "Side Bend",
+    "es": "Flexión lateral (side bend)"
+   },
+   "app_names": [
+    "Side Bend"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_plank_pilates",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Pilates Yan Plank",
+    "en": "Side Plank (Pilates)",
+    "es": "Plancha lateral (Pilates)"
+   },
+   "app_names": [
+    "Side Plank Pilates"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "star",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yıldız (Star)",
+    "en": "Star",
+    "es": "Estrella (star)"
+   },
+   "app_names": [
+    "Star"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "twist",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yan Plank Dönüşü (Twist)",
+    "en": "Twist (Classical Mat)",
+    "es": "Giro (twist, mat clásico)"
+   },
+   "app_names": [
+    "Twist"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "snake_twist",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yılan ve Dönüş (Snake and Twist)",
+    "en": "Snake and Twist",
+    "es": "Serpiente y giro (snake and twist)"
+   },
+   "app_names": [
+    "Snake/Twist"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "mermaid_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Deniz Kızı Esnetmesi (Mermaid Stretch)",
+    "en": "Mermaid Stretch",
+    "es": "Estiramiento de sirena (mermaid)"
+   },
+   "app_names": [
+    "Mermaid Stretch"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "swan_prep",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Kuğu Hazırlığı (Swan Prep)",
+    "en": "Swan Prep",
+    "es": "Preparación del cisne (swan prep)"
+   },
+   "app_names": [
+    "Swan Dive Prep"
+   ],
+   "category": "pilates_mat",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "swan_dive",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Kuğu Dalışı (Swan Dive)",
+    "en": "Swan Dive (Full)",
+    "es": "Salto del cisne (swan dive)"
+   },
+   "app_names": [
+    "Swan Dive (Full)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "swimming",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Yüzme (Swimming)",
+    "en": "Swimming",
+    "es": "Natación (swimming)"
+   },
+   "app_names": [
+    "Swimming",
+    "Swimming (İleri)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rocking",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Sallanma (Rocking)",
+    "en": "Rocking (Prone Bow)",
+    "es": "Balanceo (rocking)"
+   },
+   "app_names": [
+    "Rocking"
+   ],
+   "category": "pilates_mat",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "back_extension",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Sırt Kaldırma (Back Extension)",
+    "en": "Back Extension (Prone)",
+    "es": "Extensión de espalda (back extension)"
+   },
+   "app_names": [
+    "Back Extension"
+   ],
+   "category": "pilates_mat",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seal",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Fok (Seal)",
+    "en": "Seal",
+    "es": "Foca (seal)"
+   },
+   "app_names": [
+    "Seal"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "spine_twist",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Omurga Döndürme (Spine Twist)",
+    "en": "Spine Twist (Seated)",
+    "es": "Giro de columna (spine twist sentado)"
+   },
+   "app_names": [
+    "Spine Twist"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hip_circles",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Kalça Daireleri (Hip Circles)",
+    "en": "Hip Circles (Hip Twist with Stretched Arms)",
+    "es": "Círculos de cadera (hip circles)"
+   },
+   "app_names": [
+    "Hip Circles"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "teaser",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Teaser (V-Oturuş)",
+    "en": "Teaser",
+    "es": "Teaser (V-sit)"
+   },
+   "app_names": [
+    "Teaser (Full)",
+    "Teaser 1-2-3"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "supine_spine_twist",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Sırtüstü Omurga Döndürme (Supine Spine Twist)",
+    "en": "Supine Spine Twist (Knee Sway)",
+    "es": "Giro de columna supino"
+   },
+   "app_names": [
+    "Twist (Spine Twist Supine)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "thread_the_needle",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "İğneye İp Geçirme (Thread the Needle)",
+    "en": "Thread the Needle",
+    "es": "Enhebrar la aguja (thread the needle)"
+   },
+   "app_names": [
+    "Thread the Needle"
+   ],
+   "category": "pilates_mat",
+   "orientation": "quadruped",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "plank_to_pike",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Plank'tan Pike'a Geçiş (Plank to Pike)",
+    "en": "Plank to Pike",
+    "es": "De plancha a pike"
+   },
+   "app_names": [],
+   "category": "pilates_mat",
+   "orientation": "quadruped",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pilates_push_up",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Pilates Şınav (Pilates Push-Up)",
+    "en": "Pilates Push-Up",
+    "es": "Flexión de brazos Pilates"
+   },
+   "app_names": [
+    "Push-Up (Pilates)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "standing_roll_down",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Duvarda/Ayakta Roll Down",
+    "en": "Roll Down (Standing / Wall)",
+    "es": "Roll down de pie / en la pared"
+   },
+   "app_names": [
+    "Roll Down (Standing)",
+    "Wall Roll Down"
+   ],
+   "category": "pilates_mat",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wall"
+   ],
+   "props": [
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "arm_circles",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Kol Daireleri (Hafif Ağırlıkla)",
+    "en": "Arm Circles (Light Weights)",
+    "es": "Círculos de brazos (pesas ligeras)"
+   },
+   "app_names": [
+    "Arm Circles (Hafif Ağırlık)"
+   ],
+   "category": "pilates_mat",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "light_dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "figure_4_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Figür 4 Esnetme (Figure 4 Stretch)",
+    "en": "Figure 4 Stretch (Supine Piriformis)",
+    "es": "Estiramiento figura 4"
+   },
+   "app_names": [
+    "Figure 4 Stretch"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "thoracic_rotation",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Torakal Omurga Rotasyonu (Open Book)",
+    "en": "Thoracic Spine Rotation (Open Book)",
+    "es": "Rotación de columna torácica (open book)"
+   },
+   "app_names": [
+    "Thoracic Spine Rotation"
+   ],
+   "category": "pilates_mat",
+   "orientation": "side_lying",
+   "view": "front_3q",
+   "alt_view": "top",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "neck_shoulder_release",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Boyun ve Omuz Gevşetme",
+    "en": "Neck and Shoulder Release",
+    "es": "Liberación de cuello y hombros"
+   },
+   "app_names": [
+    "Neck & Shoulder Release"
+   ],
+   "category": "pilates_mat",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hip_flexor_stretch",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Kalça Fleksörü Esnetme (Hip Flexor Stretch)",
+    "en": "Hip Flexor Stretch (Half-Kneeling)",
+    "es": "Estiramiento de flexores de cadera"
+   },
+   "app_names": [
+    "Hip Flexor Stretch"
+   ],
+   "category": "pilates_mat",
+   "orientation": "half_kneeling",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "foam_roller_upper_back",
+   "batch": "pilates_mat",
+   "names": {
+    "tr": "Foam Roller ile Sırt (Upper Back Roll)",
+    "en": "Foam Roller Upper Back Roll",
+    "es": "Rodillo de espuma espalda alta"
+   },
+   "app_names": [
+    "Foam Roller Sırt"
+   ],
+   "category": "pilates_mat",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "foam_roller"
+   ],
+   "props": [
+    "foamRoller"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "footwork",
+   "batch": "reformer",
+   "names": {
+    "tr": "Footwork (Paralel / V Pozisyon)",
+    "en": "Footwork (Parallel / V Position)",
+    "es": "Footwork (paralelo / posición en V)"
+   },
+   "app_names": [
+    "Footwork (Paralel, hafif yay)",
+    "Footwork (Paralel)",
+    "Footwork (V Pozisyon)"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_footwork",
+   "batch": "reformer",
+   "names": {
+    "tr": "Tek Bacak Footwork",
+    "en": "Single Leg Footwork",
+    "es": "Footwork a una pierna"
+   },
+   "app_names": [
+    "Single Leg Footwork",
+    "Leg Press (Single Leg)"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "footwork_running",
+   "batch": "reformer",
+   "names": {
+    "tr": "Reformerda Koşu (Running)",
+    "en": "Running (Footwork)",
+    "es": "Correr (Running) en reformer"
+   },
+   "app_names": [
+    "Running on Reformer"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "leg_circles_straps",
+   "batch": "reformer",
+   "names": {
+    "tr": "Bacak Daireleri (Kayışlı)",
+    "en": "Leg Circles (in Straps)",
+    "es": "Círculos de pierna (con correas)"
+   },
+   "app_names": [
+    "Leg Circles (Ağır Yay)",
+    "Leg Circles (Kayışlı)"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "straps",
+    "pulley risers"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "frog",
+   "batch": "reformer",
+   "names": {
+    "tr": "Frog (Kurbağa)",
+    "en": "Frog (Supine Hip Work)",
+    "es": "Rana (Frog)"
+   },
+   "app_names": [
+    "Frog"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "reformer",
+    "straps",
+    "pulley risers"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "backstroke",
+   "batch": "reformer",
+   "names": {
+    "tr": "Backstroke (Uzun Kutuda)",
+    "en": "Backstroke (Long Box)",
+    "es": "Backstroke (caja larga)"
+   },
+   "app_names": [
+    "Backstroke"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "straps",
+    "long box",
+    "pulley risers"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "coordination",
+   "batch": "reformer",
+   "names": {
+    "tr": "Coordination (Koordinasyon)",
+    "en": "Coordination",
+    "es": "Coordinación"
+   },
+   "app_names": [
+    "Coordination"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rowing_series",
+   "batch": "reformer",
+   "names": {
+    "tr": "Rowing Serisi (Rowing 1 - Sternuma)",
+    "en": "Rowing Series (Rowing 1, Into the Sternum)",
+    "es": "Serie de remo (Rowing 1, hacia el esternón)"
+   },
+   "app_names": [
+    "Rowing Series"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rowing_shaving",
+   "batch": "reformer",
+   "names": {
+    "tr": "Rowing - Tıraş (Shave)",
+    "en": "Rowing 5 - Shave",
+    "es": "Remo - Afeitado (Shave)"
+   },
+   "app_names": [
+    "Rowing — Shaving"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rowing_hug_a_tree",
+   "batch": "reformer",
+   "names": {
+    "tr": "Rowing - Ağaç Sarma (Hug a Tree)",
+    "en": "Rowing 6 - Hug a Tree",
+    "es": "Remo - Abrazar un árbol (Hug a Tree)"
+   },
+   "app_names": [
+    "Rowing — Hug a Tree"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "front_3q",
+   "alt_view": "top",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "chest_expansion",
+   "batch": "reformer",
+   "names": {
+    "tr": "Chest Expansion (Göğüs Genişletme)",
+    "en": "Chest Expansion",
+    "es": "Expansión de pecho"
+   },
+   "app_names": [
+    "Chest Expansion"
+   ],
+   "category": "reformer",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reverse_chest_expansion",
+   "batch": "reformer",
+   "names": {
+    "tr": "Ters Chest Expansion",
+    "en": "Reverse Chest Expansion",
+    "es": "Expansión de pecho inversa"
+   },
+   "app_names": [
+    "Reverse Chest Expansion"
+   ],
+   "category": "reformer",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "short_box_round_back",
+   "batch": "reformer",
+   "names": {
+    "tr": "Short Box - Yuvarlak Sırt",
+    "en": "Short Box - Round Back",
+    "es": "Caja corta - Espalda redonda"
+   },
+   "app_names": [
+    "Short Box — Round Back"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "props": [
+    "reformer",
+    "pole"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "short_box_flat_back",
+   "batch": "reformer",
+   "names": {
+    "tr": "Short Box - Düz Sırt",
+    "en": "Short Box - Flat Back",
+    "es": "Caja corta - Espalda plana"
+   },
+   "app_names": [
+    "Short Box — Flat Back"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "props": [
+    "reformer",
+    "pole"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "short_box_side_reach",
+   "batch": "reformer",
+   "names": {
+    "tr": "Short Box - Yana Uzanma",
+    "en": "Short Box - Side Reach",
+    "es": "Caja corta - Alcance lateral"
+   },
+   "app_names": [
+    "Short Box — Side Reach"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "props": [
+    "reformer",
+    "pole"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "short_box_twist",
+   "batch": "reformer",
+   "names": {
+    "tr": "Short Box - Twist",
+    "en": "Short Box - Twist",
+    "es": "Caja corta - Giro"
+   },
+   "app_names": [
+    "Short Box — Twist"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "props": [
+    "reformer",
+    "pole"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "long_box_pulling_straps",
+   "batch": "reformer",
+   "names": {
+    "tr": "Uzun Kutuda Pulling Straps",
+    "en": "Long Box Pulling Straps",
+    "es": "Caja larga - Pulling Straps"
+   },
+   "app_names": [
+    "Long Box Pulling Straps",
+    "Long Box — Pulling Straps",
+    "Arms Pulling Straps"
+   ],
+   "category": "reformer",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "long box",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "long_box_t_shape",
+   "batch": "reformer",
+   "names": {
+    "tr": "Pulling Straps II (T Şekli)",
+    "en": "Pulling Straps II (T Shape)",
+    "es": "Pulling Straps II (forma de T)"
+   },
+   "app_names": [
+    "Pulling Straps II",
+    "Arms T-Shape"
+   ],
+   "category": "reformer",
+   "orientation": "prone",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "reformer",
+    "long box",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_basic",
+   "batch": "reformer",
+   "names": {
+    "tr": "Temel Jumps (Paralel / First Position)",
+    "en": "Basic Jumps (Parallel / First Position)",
+    "es": "Saltos básicos (paralelo / primera posición)"
+   },
+   "app_names": [
+    "Basic Jumps (Paralel)",
+    "Jumps (First Position)",
+    "Plyometric Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_alternating",
+   "batch": "reformer",
+   "names": {
+    "tr": "Alternating Jumps",
+    "en": "Alternating Jumps",
+    "es": "Saltos alternados"
+   },
+   "app_names": [
+    "Alternating Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_scissors",
+   "batch": "reformer",
+   "names": {
+    "tr": "Scissors Jumps",
+    "en": "Scissors Jumps",
+    "es": "Saltos tijera"
+   },
+   "app_names": [
+    "Scissors Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_single_leg",
+   "batch": "reformer",
+   "names": {
+    "tr": "Tek Bacak Jumps / Plyo",
+    "en": "Single Leg Jumps / Plyos",
+    "es": "Saltos a una pierna / pliometría"
+   },
+   "app_names": [
+    "Single Leg Jumps",
+    "Single Leg Plyos"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_tuck",
+   "batch": "reformer",
+   "names": {
+    "tr": "Tuck Jumps",
+    "en": "Tuck Jumps",
+    "es": "Saltos con rodillas al pecho (tuck)"
+   },
+   "app_names": [
+    "Tuck Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_split",
+   "batch": "reformer",
+   "names": {
+    "tr": "Split Jumps",
+    "en": "Split Jumps",
+    "es": "Saltos en abertura (split)"
+   },
+   "app_names": [
+    "Split Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jumps_lateral",
+   "batch": "reformer",
+   "names": {
+    "tr": "Lateral Jumps (Yan Yatış)",
+    "en": "Lateral Jumps (Side-lying)",
+    "es": "Saltos laterales (de lado)"
+   },
+   "app_names": [
+    "Lateral Jumps"
+   ],
+   "category": "reformer",
+   "orientation": "side_lying",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "long_stretch",
+   "batch": "reformer",
+   "names": {
+    "tr": "Long Stretch",
+    "en": "Long Stretch",
+    "es": "Long Stretch (plancha larga)"
+   },
+   "app_names": [
+    "Long Stretch"
+   ],
+   "category": "reformer",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "up_stretch",
+   "batch": "reformer",
+   "names": {
+    "tr": "Up Stretch",
+    "en": "Up Stretch",
+    "es": "Up Stretch (estiramiento hacia arriba)"
+   },
+   "app_names": [
+    "Up Stretch"
+   ],
+   "category": "reformer",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "elephant",
+   "batch": "reformer",
+   "names": {
+    "tr": "Elephant (Fil)",
+    "en": "Elephant",
+    "es": "Elefante"
+   },
+   "app_names": [
+    "Elephant"
+   ],
+   "category": "reformer",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "arabesque",
+   "batch": "reformer",
+   "names": {
+    "tr": "Arabesque",
+    "en": "Arabesque (one-leg Elephant)",
+    "es": "Arabesque"
+   },
+   "app_names": [
+    "Arabesque"
+   ],
+   "category": "reformer",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "balance_control_front",
+   "batch": "reformer",
+   "names": {
+    "tr": "Balance Control Front",
+    "en": "Balance Control Front",
+    "es": "Control de equilibrio frontal"
+   },
+   "app_names": [
+    "Balance Control Front"
+   ],
+   "category": "reformer",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_splits",
+   "batch": "reformer",
+   "names": {
+    "tr": "Side Splits",
+    "en": "Side Splits (Standing)",
+    "es": "Aperturas laterales (Side Splits)"
+   },
+   "app_names": [
+    "Side Splits",
+    "Side Split Control"
+   ],
+   "category": "reformer",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "reformer",
+    "standing platform"
+   ],
+   "props": [
+    "reformer",
+    "step"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "front_splits",
+   "batch": "reformer",
+   "names": {
+    "tr": "Front Splits",
+    "en": "Front Splits",
+    "es": "Front Splits (split frontal)"
+   },
+   "app_names": [
+    "Front Splits"
+   ],
+   "category": "reformer",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "semi_circle_prep",
+   "batch": "reformer",
+   "names": {
+    "tr": "Semi Circle Prep",
+    "en": "Semi Circle Prep",
+    "es": "Preparación del semicírculo"
+   },
+   "app_names": [
+    "Semi Circle Prep"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "scooter",
+   "batch": "reformer",
+   "names": {
+    "tr": "Scooter",
+    "en": "Scooter",
+    "es": "Scooter"
+   },
+   "app_names": [
+    "Scooter"
+   ],
+   "category": "reformer",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "standing_lunge",
+   "batch": "reformer",
+   "names": {
+    "tr": "Standing Lunge / Eve's Lunge",
+    "en": "Standing Lunge / Eve's Lunge",
+    "es": "Zancada de pie / Eve's Lunge"
+   },
+   "app_names": [
+    "Standing Lunge",
+    "Eve's Lunge"
+   ],
+   "category": "reformer",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "mermaid",
+   "batch": "reformer",
+   "names": {
+    "tr": "Mermaid (Denizkızı)",
+    "en": "Mermaid",
+    "es": "Sirena"
+   },
+   "app_names": [
+    "Mermaid (İleri)",
+    "Mermaid (Reformer)"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pelvic_curl_reformer",
+   "batch": "reformer",
+   "names": {
+    "tr": "Reformerda Pelvic Curl",
+    "en": "Pelvic Curl on Reformer",
+    "es": "Enrollamiento pélvico en reformer"
+   },
+   "app_names": [
+    "Pelvic Curl on Reformer"
+   ],
+   "category": "reformer",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "knee_stretch",
+   "batch": "reformer",
+   "names": {
+    "tr": "Knee Stretch Serisi",
+    "en": "Knee Stretch Series",
+    "es": "Serie de estiramiento de rodillas"
+   },
+   "app_names": [
+    "Knee Stretch Series"
+   ],
+   "category": "reformer",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hamstring_stretch",
+   "batch": "reformer",
+   "names": {
+    "tr": "Hamstring Stretch",
+    "en": "Hamstring Stretch",
+    "es": "Estiramiento de isquiotibiales"
+   },
+   "app_names": [
+    "Hamstring Stretch"
+   ],
+   "category": "reformer",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bicep_curls_reformer",
+   "batch": "reformer",
+   "names": {
+    "tr": "Biceps Curl (Reformer)",
+    "en": "Biceps Curls (Reformer)",
+    "es": "Curl de bíceps (reformer)"
+   },
+   "app_names": [
+    "Bicep Curls (Reformer)"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "stomach_massage_round",
+   "batch": "reformer",
+   "names": {
+    "tr": "Stomach Massage - Round",
+    "en": "Stomach Massage - Round",
+    "es": "Masaje abdominal - Redonda"
+   },
+   "app_names": [
+    "Stomach Massage — Round"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "stomach_massage_hands_back",
+   "batch": "reformer",
+   "names": {
+    "tr": "Stomach Massage - Hands Back",
+    "en": "Stomach Massage - Hands Back",
+    "es": "Masaje abdominal - Manos atrás"
+   },
+   "app_names": [
+    "Stomach Massage — Hands Back"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "stomach_massage_reach",
+   "batch": "reformer",
+   "names": {
+    "tr": "Stomach Massage - Reach",
+    "en": "Stomach Massage - Reach",
+    "es": "Masaje abdominal - Alcance"
+   },
+   "app_names": [
+    "Stomach Massage — Reach"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "props": [
+    "reformer"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pike_on_chair",
+   "batch": "reformer",
+   "names": {
+    "tr": "Chair'de Pike",
+    "en": "Pike on Chair",
+    "es": "Pike en la silla"
+   },
+   "app_names": [
+    "Pike on Chair"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wunda chair"
+   ],
+   "props": [
+    "wundaChair"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "teaser_on_chair",
+   "batch": "reformer",
+   "names": {
+    "tr": "Chair'de Teaser",
+    "en": "Teaser on Chair",
+    "es": "Teaser en la silla"
+   },
+   "app_names": [
+    "Teaser on Chair"
+   ],
+   "category": "reformer",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wunda chair"
+   ],
+   "props": [
+    "wundaChair"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "going_up_front",
+   "batch": "reformer",
+   "names": {
+    "tr": "Going Up Front",
+    "en": "Going Up Front",
+    "es": "Subir de frente"
+   },
+   "app_names": [
+    "Going Up Front"
+   ],
+   "category": "reformer",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wunda chair"
+   ],
+   "props": [
+    "wundaChair"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "swan_on_chair",
+   "batch": "reformer",
+   "names": {
+    "tr": "Chair'de Swan",
+    "en": "Swan on Chair",
+    "es": "Cisne en la silla"
+   },
+   "app_names": [
+    "Swan on Chair"
+   ],
+   "category": "reformer",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wunda chair"
+   ],
+   "props": [
+    "wundaChair"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "back_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Back Squat (Arka Squat)",
+    "en": "Barbell Back Squat",
+    "es": "Sentadilla trasera con barra"
+   },
+   "app_names": [
+    "Back Squat",
+    "Back Squat (RPE 9)"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "barbell",
+    "squat rack"
+   ],
+   "props": [
+    "barbell",
+    "rack"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bodyweight_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Vücut Ağırlığı Squat",
+    "en": "Bodyweight Squat",
+    "es": "Sentadilla con peso corporal"
+   },
+   "app_names": [
+    "Squat",
+    "Kontrollü Vücut Ağırlığı Squat",
+    "Tempo Squat (3 sn iniş)"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "front_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Front Squat (Ön Squat)",
+    "en": "Barbell Front Squat",
+    "es": "Sentadilla frontal"
+   },
+   "app_names": [
+    "Front Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "squat rack"
+   ],
+   "props": [
+    "barbell",
+    "rack"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "goblet_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Goblet Squat",
+    "en": "Goblet Squat",
+    "es": "Sentadilla goblet"
+   },
+   "app_names": [
+    "Goblet Squat",
+    "Goblet Squat / Chair Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "dumbbell or kettlebell"
+   ],
+   "props": [
+    "kettlebell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hack_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Hack Squat (Makine)",
+    "en": "Machine Hack Squat",
+    "es": "Sentadilla hack en máquina"
+   },
+   "app_names": [
+    "Hack Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "hack squat machine"
+   ],
+   "props": [
+    "hackSquat"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "leg_press",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Leg Press",
+    "en": "Seated Leg Press (45 degree)",
+    "es": "Prensa de piernas"
+   },
+   "app_names": [
+    "Leg Press",
+    "Leg Press (hafif)"
+   ],
+   "category": "strength_legs",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "leg press machine"
+   ],
+   "props": [
+    "legPress"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bulgarian_split_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Bulgar Split Squat",
+    "en": "Bulgarian Split Squat",
+    "es": "Sentadilla búlgara"
+   },
+   "app_names": [
+    "Bulgarian Split Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bench",
+    "dumbbells (optional)"
+   ],
+   "props": [
+    "bench",
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "split_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Split Squat (Ayrık Squat)",
+    "en": "Split Squat",
+    "es": "Sentadilla dividida (split squat)"
+   },
+   "app_names": [
+    "Split Squat",
+    "Dumbbell Split Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "dumbbells (optional)"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reverse_lunge",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Geri Lunge",
+    "en": "Reverse Lunge",
+    "es": "Zancada hacia atrás"
+   },
+   "app_names": [
+    "Reverse Lunge",
+    "Geri Lunge",
+    "Dumbbell Reverse Lunge",
+    "Destekli Geri Lunge"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "dumbbells (optional)",
+    "wall/chair for supported version"
+   ],
+   "props": [
+    "dumbbell",
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "step_up",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Step-Up (Basamağa Çıkış)",
+    "en": "Step-Up",
+    "es": "Subida al cajón (step-up)"
+   },
+   "app_names": [
+    "Dumbbell Step-Up",
+    "Step-Up (low box)",
+    "Step-Ups"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "box/bench (low 25-30 cm to knee height ~40 cm)",
+    "dumbbells (optional)"
+   ],
+   "props": [
+    "bench",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "assisted_single_leg_squat",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Destekli Tek Bacak Squat",
+    "en": "Assisted Single-Leg Squat",
+    "es": "Sentadilla a una pierna asistida"
+   },
+   "app_names": [
+    "Destekli Tek Bacak Squat"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "stable surface (doorframe/pole/TRX/wall) or box"
+   ],
+   "props": [
+    "step"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "conventional_deadlift",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Deadlift (Yerden Çekiş)",
+    "en": "Conventional Barbell Deadlift",
+    "es": "Peso muerto convencional"
+   },
+   "app_names": [
+    "Deadlift",
+    "Deadlift (Orta Ağırlık)",
+    "Deficit Deadlift"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "barbell",
+    "weight plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "romanian_deadlift",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Romanian Deadlift (RDL)",
+    "en": "Romanian Deadlift",
+    "es": "Peso muerto rumano"
+   },
+   "app_names": [
+    "Romanian Deadlift",
+    "Dumbbell Romanian Deadlift"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "barbell or dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_hip_hinge",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Tek Bacak Hip Hinge",
+    "en": "Single-Leg Hip Hinge (Single-Leg RDL)",
+    "es": "Bisagra de cadera a una pierna"
+   },
+   "app_names": [
+    "Tek Bacak Hip Hinge"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "glute_bridge",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Glute Bridge (Kalça Köprüsü)",
+    "en": "Glute Bridge",
+    "es": "Puente de glúteos"
+   },
+   "app_names": [
+    "Glute Bridge",
+    "Dumbbell Glute Bridge"
+   ],
+   "category": "strength_legs",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "dumbbell (optional)"
+   ],
+   "props": [
+    "mat",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_glute_bridge",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Tek Bacak Glute Bridge",
+    "en": "Single-Leg Glute Bridge",
+    "es": "Puente de glúteos a una pierna"
+   },
+   "app_names": [
+    "Tek Bacak Glute Bridge"
+   ],
+   "category": "strength_legs",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "glute_bridge_march",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Glute Bridge March (Köprüde Yürüyüş)",
+    "en": "Glute Bridge March",
+    "es": "Marcha en puente de glúteos"
+   },
+   "app_names": [
+    "Glute Bridge March"
+   ],
+   "category": "strength_legs",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hip_thrust",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Hip Thrust",
+    "en": "Hip Thrust",
+    "es": "Empuje de cadera (hip thrust)"
+   },
+   "app_names": [
+    "Hip Thrust"
+   ],
+   "category": "strength_legs",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bench",
+    "barbell + pad (optional)",
+    "dumbbell (optional)"
+   ],
+   "props": [
+    "bench",
+    "barbell",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "kettlebell_swing",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Kettlebell Swing",
+    "en": "Two-Hand Kettlebell Swing",
+    "es": "Swing con pesa rusa (kettlebell)"
+   },
+   "app_names": [
+    "Kettlebell Swing"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "kettlebell"
+   ],
+   "props": [
+    "kettlebell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "farmer_walk",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Farmer Walk (Çiftçi Yürüyüşü)",
+    "en": "Farmer's Walk",
+    "es": "Paseo del granjero"
+   },
+   "app_names": [
+    "Farmer Walk"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "two heavy dumbbells or kettlebells"
+   ],
+   "props": [
+    "kettlebell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "suitcase_march",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Suitcase March (Valiz Yürüyüşü)",
+    "en": "Suitcase March",
+    "es": "Marcha con maleta (suitcase march)"
+   },
+   "app_names": [
+    "Suitcase March"
+   ],
+   "category": "core",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbell"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "sled_push",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Sled Push (Kızak İtme)",
+    "en": "Sled Push",
+    "es": "Empuje de trineo"
+   },
+   "app_names": [
+    "Sled Push"
+   ],
+   "category": "conditioning",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "push sled with weight plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "lying_leg_curl",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Lying Leg Curl (Yatarak Leg Curl)",
+    "en": "Lying Leg Curl (machine)",
+    "es": "Curl femoral tumbado"
+   },
+   "app_names": [
+    "Leg Curl",
+    "Lying Leg Curl"
+   ],
+   "category": "strength_legs",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "lying leg curl machine"
+   ],
+   "props": [
+    "legCurl"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "band_hamstring_curl",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Direnç Bandı Hamstring Curl",
+    "en": "Resistance Band Hamstring Curl (prone)",
+    "es": "Curl femoral con banda elástica"
+   },
+   "app_names": [
+    "Resistance Band Hamstring Curl"
+   ],
+   "category": "strength_legs",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "resistance band"
+   ],
+   "props": [
+    "band"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "leg_extension",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Leg Extension (Diz Ekstansiyonu)",
+    "en": "Machine Leg Extension",
+    "es": "Extensión de piernas en máquina"
+   },
+   "app_names": [
+    "Leg Extension"
+   ],
+   "category": "strength_legs",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "leg extension machine"
+   ],
+   "props": [
+    "legExtension"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "standing_calf_raise",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Ayakta Calf Raise (Baldır)",
+    "en": "Standing Calf Raise",
+    "es": "Elevación de talones de pie"
+   },
+   "app_names": [
+    "Calf Raise",
+    "Standing Calf Raise"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "step/platform (optional)",
+    "dumbbells or machine (optional)"
+   ],
+   "props": [
+    "step",
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "single_leg_calf_raise",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Tek Bacak Calf Raise",
+    "en": "Single-Leg Standing Calf Raise",
+    "es": "Elevación de talones a una pierna"
+   },
+   "app_names": [
+    "Standing Single Leg Calf Raise",
+    "Tek Bacak Calf Raise"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "step (optional)",
+    "wall/rail for balance"
+   ],
+   "props": [
+    "step",
+    "wall"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seated_calf_raise",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Oturarak Calf Raise",
+    "en": "Seated Calf Raise (machine)",
+    "es": "Elevación de talones sentado"
+   },
+   "app_names": [
+    "Seated Calf Raise"
+   ],
+   "category": "strength_legs",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "seated calf raise machine"
+   ],
+   "props": [
+    "seatedCalf"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bent_knee_calf_raise",
+   "batch": "strength_legs_hinge",
+   "names": {
+    "tr": "Dizler Bükülü Calf Raise",
+    "en": "Bent-Knee Calf Raise (standing)",
+    "es": "Elevación de talones con rodillas flexionadas"
+   },
+   "app_names": [
+    "Bent-Knee Calf Raise"
+   ],
+   "category": "strength_legs",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wall/rail for balance"
+   ],
+   "props": [
+    "wall"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "barbell_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Barbell Curl",
+    "en": "Barbell Curl",
+    "es": "Curl con barra"
+   },
+   "app_names": [
+    "Barbell Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "barbell (straight or EZ)"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Dambıl Biceps Curl",
+    "en": "Dumbbell Biceps Curl",
+    "es": "Curl de bíceps con mancuernas"
+   },
+   "app_names": [
+    "Bicep Curl",
+    "Dumbbell Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hammer_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Hammer Curl",
+    "en": "Hammer Curl",
+    "es": "Curl martillo"
+   },
+   "app_names": [
+    "Hammer Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "incline_dumbbell_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Incline Dambıl Curl",
+    "en": "Incline Dumbbell Curl",
+    "es": "Curl inclinado con mancuernas"
+   },
+   "app_names": [
+    "Incline Dumbbell Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "adjustable bench (45-60 deg incline)",
+    "dumbbells"
+   ],
+   "props": [
+    "bench",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "preacher_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Preacher Curl",
+    "en": "Preacher Curl",
+    "es": "Curl predicador"
+   },
+   "app_names": [
+    "Preacher Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "preacher bench",
+    "EZ-bar or dumbbells"
+   ],
+   "props": [
+    "bench",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "spider_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Spider Curl",
+    "en": "Spider Curl",
+    "es": "Curl araña"
+   },
+   "app_names": [
+    "Spider Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "incline bench (~45 deg) or preacher pad",
+    "dumbbells or EZ bar"
+   ],
+   "props": [
+    "inclineBench",
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "cable_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Kablo Curl",
+    "en": "Cable Curl",
+    "es": "Curl en polea"
+   },
+   "app_names": [
+    "Cable Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "cable machine (low pulley)",
+    "straight or EZ bar attachment"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bayesian_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Bayesian Curl",
+    "en": "Bayesian Cable Curl",
+    "es": "Curl bayesiano en polea"
+   },
+   "app_names": [
+    "Bayesian Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "cable machine (low pulley)",
+    "single D-handle"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "self_resisted_curl",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Kendi Kendine Dirençli Biceps Curl",
+    "en": "Self-Resisted Biceps Curl",
+    "es": "Curl de bíceps con auto-resistencia"
+   },
+   "app_names": [
+    "Self-Resisted Biceps Curl"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "none (bodyweight)"
+   ],
+   "props": [],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "barbell_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Barbell Row (Bent-Over Row)",
+    "en": "Bent-Over Barbell Row",
+    "es": "Remo con barra"
+   },
+   "app_names": [
+    "Barbell Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pendlay_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Pendlay Row",
+    "en": "Pendlay Row",
+    "es": "Remo Pendlay"
+   },
+   "app_names": [
+    "Pendlay Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "plates (bumper)"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Tek Kol Dumbbell Row",
+    "en": "Single-Arm Dumbbell Row",
+    "es": "Remo a una mano con mancuerna"
+   },
+   "app_names": [
+    "Dumbbell Row",
+    "Tek Kol Dumbbell Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "dumbbell",
+    "flat bench"
+   ],
+   "props": [
+    "dumbbell",
+    "bench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "chest_supported_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Göğüs Destekli Row",
+    "en": "Chest-Supported Row",
+    "es": "Remo con apoyo en el pecho"
+   },
+   "app_names": [
+    "Chest-Supported Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "incline bench (30-45 deg) or chest-supported machine",
+    "dumbbells or T-bar handles"
+   ],
+   "props": [
+    "inclineBench",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "meadows_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Meadows Row",
+    "en": "Meadows Row (Landmine)",
+    "es": "Remo Meadows"
+   },
+   "app_names": [
+    "Meadows Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "landmine or barbell anchored in a corner",
+    "plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seal_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Seal Row",
+    "en": "Seal Row",
+    "es": "Remo foca (Seal Row)"
+   },
+   "app_names": [
+    "Seal Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "raised flat bench (~30 cm clearance)",
+    "barbell or dumbbells"
+   ],
+   "props": [
+    "bench",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "t_bar_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "T-Bar Row",
+    "en": "T-Bar Row",
+    "es": "Remo en barra T"
+   },
+   "app_names": [
+    "T-Bar Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "T-bar (landmine) with V-handle",
+    "plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seated_cable_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Oturarak Kablo Row",
+    "en": "Seated Cable Row",
+    "es": "Remo sentado en polea"
+   },
+   "app_names": [
+    "Seated Cable Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "seated row cable station",
+    "V-handle or straight bar"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "band_row",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Direnç Bandı Row",
+    "en": "Resistance Band Row",
+    "es": "Remo con banda de resistencia"
+   },
+   "app_names": [
+    "Resistance Band Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "resistance band"
+   ],
+   "props": [
+    "band"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "lat_pulldown",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Lat Pulldown",
+    "en": "Lat Pulldown",
+    "es": "Jalón al pecho"
+   },
+   "app_names": [
+    "Lat Pulldown"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "lat pulldown machine",
+    "wide bar"
+   ],
+   "props": [
+    "latPulldown"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pull_up",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Barfiks (Pull-Up)",
+    "en": "Pull-Up",
+    "es": "Dominadas"
+   },
+   "app_names": [
+    "Pull-Ups",
+    "Weighted Pull-Up"
+   ],
+   "category": "strength_pull",
+   "orientation": "hanging",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "pull-up bar",
+    "optional weight belt or dumbbell"
+   ],
+   "props": [
+    "pullupBar",
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "straight_arm_pulldown",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Düz Kol Pulldown",
+    "en": "Straight-Arm Pulldown",
+    "es": "Jalón con brazos rectos"
+   },
+   "app_names": [
+    "Straight Arm Pulldown"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "cable machine (high pulley)",
+    "straight bar or rope"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "face_pull",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Face Pull",
+    "en": "Face Pull",
+    "es": "Face pull (jalón a la cara)"
+   },
+   "app_names": [
+    "Face Pull"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "cable machine (high pulley)",
+    "rope attachment"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "lateral_raise",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Lateral Raise (Yana Açış)",
+    "en": "Dumbbell Lateral Raise",
+    "es": "Elevaciones laterales"
+   },
+   "app_names": [
+    "Dumbbell Lateral Raise",
+    "Lateral Raise",
+    "Lateral Raise (21s Method)"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reverse_fly",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Bent-Over Reverse Fly (Arka Omuz)",
+    "en": "Bent-Over Dumbbell Reverse Fly",
+    "es": "Vuelos posteriores inclinados"
+   },
+   "app_names": [
+    "Dumbbell Reverse Fly",
+    "Rear Delt Fly"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reverse_pec_deck",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Reverse Pec Deck",
+    "en": "Reverse Pec Deck (Machine Rear Delt Fly)",
+    "es": "Contractora inversa (peck deck inverso)"
+   },
+   "app_names": [
+    "Reverse Pec Deck"
+   ],
+   "category": "strength_pull",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "pec deck / rear delt machine"
+   ],
+   "props": [
+    "pecDeck"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "band_pull_apart",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Direnç Bandı Pull-Apart",
+    "en": "Resistance Band Pull-Apart",
+    "es": "Apertura con banda de resistencia"
+   },
+   "app_names": [
+    "Resistance Band Pull-Apart"
+   ],
+   "category": "strength_pull",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "resistance band"
+   ],
+   "props": [
+    "band"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "prone_ytw",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Prone Y-T-W",
+    "en": "Prone Y-T-W Raises",
+    "es": "Elevaciones Y-T-W en prono"
+   },
+   "app_names": [
+    "Prone Y-T-W"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "none (mat)",
+    "optional light dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reverse_snow_angel",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Reverse Snow Angel",
+    "en": "Reverse Snow Angel",
+    "es": "Ángel de nieve invertido"
+   },
+   "app_names": [
+    "Reverse Snow Angel"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "none (mat)"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "prone_lat_pull",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Yüzüstü Lat Çekiş",
+    "en": "Prone Floor Lat Pull (Prone Lat Pulldown)",
+    "es": "Jalón dorsal en prono (suelo)"
+   },
+   "app_names": [
+    "Yüzüstü Lat Çekiş"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "top",
+   "equipment": [
+    "none (mat); optional towel or light resistance"
+   ],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "prone_w_isometric",
+   "batch": "strength_pull",
+   "names": {
+    "tr": "Yüzüstü W İzometrik",
+    "en": "Prone W Isometric Hold",
+    "es": "Mantenimiento isométrico en W (prono)"
+   },
+   "app_names": [
+    "Yüzüstü W İzometrik"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "none (mat)"
+   ],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "push_up",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Şınav",
+    "en": "Push-Up",
+    "es": "Flexión de brazos (push-up)"
+   },
+   "app_names": [
+    "Push-Up",
+    "Şınav",
+    "Standart Şınav",
+    "Tempo Şınav (3 sn iniş)",
+    "Diz Üstü veya Standart Şınav",
+    "Push-Up + Plyo Push-Up Combo"
+   ],
+   "category": "strength_push",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bodyweight"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "knee_push_up",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Diz Üstü Şınav",
+    "en": "Knee Push-Up",
+    "es": "Flexión de brazos con rodillas"
+   },
+   "app_names": [
+    "Dar Tutuş Diz Üstü Şınav"
+   ],
+   "category": "strength_push",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bodyweight"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "incline_push_up",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Eğimli Şınav",
+    "en": "Incline Push-Up",
+    "es": "Flexión inclinada"
+   },
+   "app_names": [
+    "Incline Push-Up",
+    "Eğimli Şınav"
+   ],
+   "category": "strength_push",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bench/box/bar"
+   ],
+   "props": [
+    "bench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pike_push_up",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Pike Şınav",
+    "en": "Pike Push-Up",
+    "es": "Flexión pike (pike push-up)"
+   },
+   "app_names": [
+    "Pike Şınav",
+    "Ayakları Yükseltilmiş Pike Şınav"
+   ],
+   "category": "strength_push",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "bodyweight",
+    "optional bench/box"
+   ],
+   "props": [
+    "bench"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "plank_to_push_up",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Plank'ten Şınava (Up-Down Plank)",
+    "en": "Plank to Push-Up (Up-Down Plank)",
+    "es": "Plancha a flexión (up-down plank)"
+   },
+   "app_names": [
+    "Plank to Push-Up"
+   ],
+   "category": "core",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "bodyweight"
+   ],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "barbell_bench_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Bench Press",
+    "en": "Barbell Bench Press",
+    "es": "Press de banca con barra"
+   },
+   "app_names": [
+    "Bench Press",
+    "Paused Bench Press (3s)",
+    "Close Grip Bench Press"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "flat bench",
+    "rack"
+   ],
+   "props": [
+    "barbell",
+    "bench",
+    "rack"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_bench_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Dumbbell Bench Press",
+    "en": "Dumbbell Bench Press",
+    "es": "Press de banca con mancuernas"
+   },
+   "app_names": [
+    "Dumbbell Bench Press"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells",
+    "flat bench"
+   ],
+   "props": [
+    "dumbbell",
+    "bench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "incline_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Incline Press",
+    "en": "Incline Bench Press",
+    "es": "Press inclinado"
+   },
+   "app_names": [
+    "Incline Barbell Press",
+    "Incline Dumbbell Press"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell or dumbbells",
+    "incline bench 30 deg"
+   ],
+   "props": [
+    "dumbbell",
+    "inclineBench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_floor_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Dumbbell Floor Press",
+    "en": "Dumbbell Floor Press",
+    "es": "Press de suelo con mancuernas"
+   },
+   "app_names": [
+    "Dumbbell Floor Press",
+    "Dumbbell Floor Press (nötr tutuş)",
+    "Dar Tutuş Dumbbell Floor Press"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells",
+    "floor"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "machine_chest_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Makine Göğüs Press",
+    "en": "Machine Chest Press",
+    "es": "Press de pecho en máquina"
+   },
+   "app_names": [
+    "Machine Chest Press"
+   ],
+   "category": "strength_push",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "chest press machine (seated lever)"
+   ],
+   "props": [
+    "chestPress"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "cable_fly",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Kablo Fly / Crossover",
+    "en": "Cable Fly (Crossover)",
+    "es": "Aperturas con cable / cruce de poleas"
+   },
+   "app_names": [
+    "Cable Crossover",
+    "Cable Crossover (Dropset)",
+    "Cable Flyes"
+   ],
+   "category": "strength_push",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "cable crossover (dual pulleys)",
+    "D-handles"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "barbell_overhead_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Overhead Press (OHP)",
+    "en": "Barbell Overhead Press",
+    "es": "Press militar con barra"
+   },
+   "app_names": [
+    "OHP"
+   ],
+   "category": "strength_push",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "barbell",
+    "rack"
+   ],
+   "props": [
+    "barbell",
+    "rack"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_shoulder_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Dumbbell Omuz Press",
+    "en": "Dumbbell Shoulder Press",
+    "es": "Press de hombros con mancuernas"
+   },
+   "app_names": [
+    "Dumbbell Shoulder Press",
+    "Shoulder Press"
+   ],
+   "category": "strength_push",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells",
+    "bench with back support (optional)"
+   ],
+   "props": [
+    "dumbbell",
+    "bench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "arnold_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Arnold Press",
+    "en": "Arnold Press",
+    "es": "Press Arnold"
+   },
+   "app_names": [
+    "Arnold Press"
+   ],
+   "category": "strength_push",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "dumbbells",
+    "seat with back support"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": "uses Object.prototype palm hack; replace when engine supports continuous palm twist"
+  },
+  {
+   "id": "landmine_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Landmine Press",
+    "en": "Landmine Press",
+    "es": "Press landmine"
+   },
+   "app_names": [
+    "Landmine Press"
+   ],
+   "category": "strength_push",
+   "orientation": "half_kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "landmine anchor / corner",
+    "plates (optional)"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dumbbell_overhead_triceps_extension",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Dumbbell Overhead Triceps Extension",
+    "en": "Dumbbell Overhead Triceps Extension",
+    "es": "Extensión de tríceps sobre la cabeza con mancuerna"
+   },
+   "app_names": [
+    "Dumbbell Overhead Triceps Extension",
+    "Overhead Triceps Extension"
+   ],
+   "category": "strength_push",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "dumbbell"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "overhead_cable_triceps_extension",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Overhead Kablo Triceps Extension",
+    "en": "Overhead Cable Triceps Extension",
+    "es": "Extensión de tríceps sobre la cabeza con polea"
+   },
+   "app_names": [
+    "Overhead Cable Extension"
+   ],
+   "category": "strength_push",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "cable stack (low or mid pulley)",
+    "rope attachment"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "triceps_pushdown",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Triceps Pushdown",
+    "en": "Triceps Pushdown",
+    "es": "Extensión de tríceps en polea (pushdown)"
+   },
+   "app_names": [
+    "Triceps Pushdown",
+    "Rope Pushdown"
+   ],
+   "category": "strength_push",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "cable stack (high pulley)",
+    "straight bar or rope"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "skull_crusher",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Skull Crusher",
+    "en": "Skull Crusher (Lying Triceps Extension)",
+    "es": "Rompecráneos (extensión de tríceps tumbado)"
+   },
+   "app_names": [
+    "Skull Crushers"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "EZ-bar or dumbbells",
+    "flat bench"
+   ],
+   "props": [
+    "dumbbell",
+    "bench"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "jm_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "JM Press",
+    "en": "JM Press",
+    "es": "JM Press"
+   },
+   "app_names": [
+    "JM Press"
+   ],
+   "category": "strength_push",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell",
+    "flat bench",
+    "rack"
+   ],
+   "props": [
+    "barbell",
+    "bench",
+    "rack"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bench_dip",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Bench Dip (Triceps Dip)",
+    "en": "Bench Dip (Triceps Dip)",
+    "es": "Fondos en banco (tríceps)"
+   },
+   "app_names": [
+    "Triceps Dip"
+   ],
+   "category": "strength_push",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "bench or chair"
+   ],
+   "props": [
+    "bench"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "parallel_bar_dip",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Paralel Bar Dips (Ağırlıklı)",
+    "en": "Parallel Bar Dip (Weighted)",
+    "es": "Fondos en paralelas (con lastre)"
+   },
+   "app_names": [
+    "Weighted Dips"
+   ],
+   "category": "strength_push",
+   "orientation": "hanging",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "parallel bars",
+    "dip belt with plate"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_plank",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Yan Plank",
+    "en": "Side Plank",
+    "es": "Plancha lateral"
+   },
+   "app_names": [
+    "Side Plank"
+   ],
+   "category": "core",
+   "orientation": "side_lying",
+   "view": "front",
+   "alt_view": "top",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bird_dog",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Bird Dog",
+    "en": "Bird Dog",
+    "es": "Perro de caza (bird dog)"
+   },
+   "app_names": [
+    "Bird Dog"
+   ],
+   "category": "core",
+   "orientation": "quadruped",
+   "view": "side",
+   "alt_view": "back_3q",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dead_bug",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Dead Bug",
+    "en": "Dead Bug",
+    "es": "Bicho muerto (dead bug)"
+   },
+   "app_names": [
+    "Dead Bug"
+   ],
+   "category": "core",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pallof_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Pallof Press",
+    "en": "Pallof Press",
+    "es": "Press Pallof"
+   },
+   "app_names": [
+    "Pallof Press"
+   ],
+   "category": "core",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "cable machine or band",
+    "D-handle"
+   ],
+   "props": [
+    "cable"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hanging_leg_raise",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Asılı Bacak Kaldırma",
+    "en": "Hanging Leg Raise",
+    "es": "Elevación de piernas colgado"
+   },
+   "app_names": [
+    "Hanging Leg Raise"
+   ],
+   "category": "core",
+   "orientation": "hanging",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "pull-up bar"
+   ],
+   "props": [
+    "pullupBar"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "toes_to_bar",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Toes to Bar",
+    "en": "Toes to Bar",
+    "es": "Dedos a la barra (toes to bar)"
+   },
+   "app_names": [
+    "Toes to Bar x10"
+   ],
+   "category": "core",
+   "orientation": "hanging",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "pull-up bar"
+   ],
+   "props": [
+    "pullupBar"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "hamstring_walkout",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Hamstring Walkout",
+    "en": "Hamstring Walkout (Bridge Walkout)",
+    "es": "Caminata de isquios (walkout)"
+   },
+   "app_names": [
+    "Hamstring Walkout"
+   ],
+   "category": "core",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "burpee",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Burpee",
+    "en": "Burpee",
+    "es": "Burpee"
+   },
+   "app_names": [
+    "Burpee x8"
+   ],
+   "category": "conditioning",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bodyweight"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "battle_ropes",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Battle Ropes (Tabata)",
+    "en": "Battle Ropes (Alternating Waves)",
+    "es": "Cuerdas de batalla (Tabata)"
+   },
+   "app_names": [
+    "Battle Ropes (Tabata)"
+   ],
+   "category": "conditioning",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "battle ropes 9-15 m, 38-50 mm, anchor"
+   ],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "assault_bike_sprint",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Assault Bike Sprint",
+    "en": "Assault Bike (Air Bike) Sprint",
+    "es": "Sprint en bicicleta Assault (air bike)"
+   },
+   "app_names": [
+    "Assault Bike Sprint"
+   ],
+   "category": "conditioning",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "air bike (fan bike, moving handles)"
+   ],
+   "props": [],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "rowing_sprint",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Kürek Sprint (Rowing)",
+    "en": "Rowing Machine Sprint",
+    "es": "Sprint en remo (ergómetro)"
+   },
+   "app_names": [
+    "Rowing Sprint"
+   ],
+   "category": "conditioning",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "Concept2 rowing ergometer (flywheel, monorail slide ~1.2 m)"
+   ],
+   "props": [],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "devil_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Devil Press",
+    "en": "Devil Press",
+    "es": "Devil press"
+   },
+   "app_names": [
+    "Devil Press x5"
+   ],
+   "category": "conditioning",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "2 dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "clean_and_press",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Clean & Press",
+    "en": "Barbell Clean and Press",
+    "es": "Cargada y press"
+   },
+   "app_names": [
+    "Clean & Press x5"
+   ],
+   "category": "conditioning",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "barbell with plates"
+   ],
+   "props": [
+    "barbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "renegade_row",
+   "batch": "strength_push_core_conditioning",
+   "names": {
+    "tr": "Renegade Row",
+    "en": "Renegade Row",
+    "es": "Remo renegado"
+   },
+   "app_names": [
+    "Renegade Row"
+   ],
+   "category": "strength_pull",
+   "orientation": "prone",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "2 hex dumbbells"
+   ],
+   "props": [
+    "dumbbell"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dolphin_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yunus Pozu (Ardha Pincha Mayurasana)",
+    "en": "Dolphin Pose (Ardha Pincha Mayurasana)",
+    "es": "Postura del delfín"
+   },
+   "app_names": [
+    "Dolphin Pose",
+    "Dolphin Pose Prep"
+   ],
+   "category": "yoga",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "wall_shoulder_opener",
+   "batch": "yoga",
+   "names": {
+    "tr": "Duvar Omuz Açıcı (Duvarda Yarım Öne Katlanma)",
+    "en": "Wall Shoulder Opener (Wall Hang / Half Forward Fold)",
+    "es": "Apertura de hombros en la pared"
+   },
+   "app_names": [
+    "Wall Shoulder Opener"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "wall"
+   ],
+   "props": [
+    "wall"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "supported_bridge",
+   "batch": "yoga",
+   "names": {
+    "tr": "Destekli Köprü Pozu (Setu Bandha, blok ile)",
+    "en": "Supported Bridge Pose (Setu Bandha Sarvangasana with block)",
+    "es": "Puente apoyado"
+   },
+   "app_names": [
+    "Supported Bridge"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "yoga block"
+   ],
+   "props": [
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "legs_up_the_wall",
+   "batch": "yoga",
+   "names": {
+    "tr": "Bacaklar Duvarda (Viparita Karani)",
+    "en": "Legs Up the Wall (Viparita Karani)",
+    "es": "Piernas en la pared"
+   },
+   "app_names": [
+    "Legs Up The Wall"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "wall",
+    "bolster (optional)"
+   ],
+   "props": [
+    "wall",
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "crow_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Karga Pozu (Bakasana)",
+    "en": "Crow Pose (Bakasana)",
+    "es": "Postura del cuervo"
+   },
+   "app_names": [
+    "Crow Pose (Bakasana)",
+    "Crow Pose Prep"
+   ],
+   "category": "yoga",
+   "orientation": "quadruped",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "block (optional)"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "side_crow",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yan Karga Pozu (Parsva Bakasana)",
+    "en": "Side Crow (Parsva Bakasana)",
+    "es": "Cuervo lateral"
+   },
+   "app_names": [
+    "Side Crow",
+    "Side Crow Prep"
+   ],
+   "category": "yoga",
+   "orientation": "quadruped",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "block (optional)"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "firefly_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Ateşböceği Pozu (Tittibhasana)",
+    "en": "Firefly Pose (Tittibhasana)",
+    "es": "Postura de la luciérnaga"
+   },
+   "app_names": [
+    "Firefly (Tittibhasana)",
+    "Firefly Pose Prep"
+   ],
+   "category": "yoga",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "block (optional)"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "eight_angle_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Sekiz Açı Pozu (Astavakrasana)",
+    "en": "Eight-Angle Pose (Astavakrasana)",
+    "es": "Postura de los ocho ángulos"
+   },
+   "app_names": [
+    "Astavakrasana (Eight Angle)",
+    "Eight Angle Pose Prep"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "blocks (optional)"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_dragon",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Yoga Ejderha Pozu (Low Dragon)",
+    "en": "Yin Dragon Pose (Low Lunge)",
+    "es": "Dragón yin"
+   },
+   "app_names": [
+    "Yin Yoga — Dragon Pose"
+   ],
+   "category": "yoga",
+   "orientation": "half_kneeling",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "bolster/blocks (optional)"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_butterfly",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Yoga Kelebek Pozu (Baddha Konasana)",
+    "en": "Yin Butterfly (Seated Bound Angle fold)",
+    "es": "Mariposa yin"
+   },
+   "app_names": [
+    "Yin Yoga — Butterfly"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "bolster/blanket (optional)"
+   ],
+   "props": [
+    "bolster"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_seal",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Yoga Fok Pozu (Seal)",
+    "en": "Yin Seal Pose",
+    "es": "Foca yin"
+   },
+   "app_names": [
+    "Yin Yoga — Seal"
+   ],
+   "category": "yoga",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "bolster (optional)"
+   ],
+   "props": [
+    "mat",
+    "bolster"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_twisted_root",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Yoga Bükülmüş Kök (Twisted Root)",
+    "en": "Yin Twisted Root (Supine Twist, legs wrapped)",
+    "es": "Raíz retorcida yin"
+   },
+   "app_names": [
+    "Yin Yoga — Twisted Root"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "top",
+   "equipment": [
+    "bolster/blanket (optional)"
+   ],
+   "props": [
+    "bolster"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "wheel_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Çember Pozu / Tekerlek (Urdhva Dhanurasana)",
+    "en": "Wheel Pose (Upward Bow, Urdhva Dhanurasana)",
+    "es": "Postura de la rueda"
+   },
+   "app_names": [
+    "Wheel Pose (Urdhva Dhanurasana)"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "wall (optional for hand positioning)"
+   ],
+   "props": [
+    "mat",
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "king_pigeon",
+   "batch": "yoga",
+   "names": {
+    "tr": "Kral Güvercin Pozu (Eka Pada Rajakapotasana)",
+    "en": "King Pigeon Pose (Eka Pada Rajakapotasana)",
+    "es": "Postura de la paloma real"
+   },
+   "app_names": [
+    "King Pigeon (Eka Pada)"
+   ],
+   "category": "yoga",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "strap/bolster"
+   ],
+   "props": [
+    "mat",
+    "bolster"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "camel_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Deve Pozu (Ustrasana)",
+    "en": "Camel Pose (Ustrasana)",
+    "es": "Postura del camello"
+   },
+   "app_names": [
+    "Camel Pose (Ustrasana)"
+   ],
+   "category": "yoga",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "blanket",
+    "blocks (optional)"
+   ],
+   "props": [
+    "mat",
+    "blanket",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "bow_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yay Pozu (Dhanurasana)",
+    "en": "Bow Pose (Dhanurasana)",
+    "es": "Postura del arco"
+   },
+   "app_names": [
+    "Bow Pose (Dhanurasana)"
+   ],
+   "category": "yoga",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "blanket"
+   ],
+   "props": [
+    "mat",
+    "blanket"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_saddle",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Eyer Pozu (Saddle, Supta Virasana)",
+    "en": "Yin Saddle Pose (Supta Virasana)",
+    "es": "Silla de montar yin"
+   },
+   "app_names": [
+    "Yin — Saddle"
+   ],
+   "category": "yoga",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "bolster",
+    "blanket"
+   ],
+   "props": [
+    "bolster",
+    "blanket"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seated_forward_fold",
+   "batch": "yoga",
+   "names": {
+    "tr": "Oturarak Öne Katlanma (Paschimottanasana)",
+    "en": "Seated Forward Fold (Paschimottanasana)",
+    "es": "Flexión sentada hacia adelante"
+   },
+   "app_names": [
+    "Seated Forward Fold",
+    "Yin — Caterpillar"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "blanket",
+    "strap",
+    "bolster (optional)"
+   ],
+   "props": [
+    "blanket",
+    "strap",
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "yin_sphinx",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yin Sfenks Pozu",
+    "en": "Yin Sphinx Pose",
+    "es": "Esfinge yin"
+   },
+   "app_names": [
+    "Yin — Sphinx"
+   ],
+   "category": "yoga",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "bolster (optional)"
+   ],
+   "props": [
+    "mat",
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "surya_namaskar_a",
+   "batch": "yoga",
+   "names": {
+    "tr": "Surya Namaskar A (Güneşe Selam A)",
+    "en": "Surya Namaskar A (Sun Salutation A)",
+    "es": "Saludo al sol A"
+   },
+   "app_names": [
+    "Surya Namaskar A"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "warrior_1",
+   "batch": "yoga",
+   "names": {
+    "tr": "Savaşçı I (Virabhadrasana I)",
+    "en": "Warrior I (Virabhadrasana I)",
+    "es": "Guerrero I"
+   },
+   "app_names": [
+    "Warrior I (Virabhadrasana I)"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "warrior_2",
+   "batch": "yoga",
+   "names": {
+    "tr": "Savaşçı II (Virabhadrasana II)",
+    "en": "Warrior II (Virabhadrasana II)",
+    "es": "Guerrero II"
+   },
+   "app_names": [
+    "Warrior II"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "tree_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Ağaç Pozu (Vrksasana)",
+    "en": "Tree Pose (Vrksasana)",
+    "es": "Postura del árbol"
+   },
+   "app_names": [
+    "Tree Pose (Vrksasana)"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "wall (optional)"
+   ],
+   "props": [
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "downward_dog",
+   "batch": "yoga",
+   "names": {
+    "tr": "Aşağı Bakan Köpek (Adho Mukha Svanasana)",
+    "en": "Downward-Facing Dog (Adho Mukha Svanasana)",
+    "es": "Perro boca abajo"
+   },
+   "app_names": [
+    "Downward Dog"
+   ],
+   "category": "yoga",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "savasana",
+   "batch": "yoga",
+   "names": {
+    "tr": "Şavasana (Cesedin Pozu)",
+    "en": "Savasana (Corpse Pose)",
+    "es": "Savasana (postura del cadáver)"
+   },
+   "app_names": [
+    "Savasana",
+    "Yoga Nidra"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "bolster/blanket (optional)"
+   ],
+   "props": [
+    "mat",
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "cat_cow",
+   "batch": "yoga",
+   "names": {
+    "tr": "Kedi-İnek Esnemesi (Marjaryasana-Bitilasana)",
+    "en": "Cat-Cow Stretch (Marjaryasana-Bitilasana)",
+    "es": "Gato-vaca"
+   },
+   "app_names": [
+    "Cat-Cow Stretch"
+   ],
+   "category": "yoga",
+   "orientation": "quadruped",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "pigeon_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Güvercin Pozu (Eka Pada Rajakapotasana)",
+    "en": "Pigeon Pose (Eka Pada Rajakapotasana, hip-opener)",
+    "es": "Postura de la paloma"
+   },
+   "app_names": [
+    "Pigeon Pose"
+   ],
+   "category": "yoga",
+   "orientation": "half_kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "blanket/block"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "supine_twist",
+   "batch": "yoga",
+   "names": {
+    "tr": "Sırtüstü Spinal Büküm (Supta Matsyendrasana)",
+    "en": "Supine Spinal Twist (Supta Matsyendrasana)",
+    "es": "Torsión supina"
+   },
+   "app_names": [
+    "Supine Twist"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "front_3q",
+   "alt_view": "top",
+   "equipment": [
+    "bolster/blanket (optional)"
+   ],
+   "props": [
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "happy_baby",
+   "batch": "yoga",
+   "names": {
+    "tr": "Mutlu Bebek Pozu (Ananda Balasana)",
+    "en": "Happy Baby Pose (Ananda Balasana)",
+    "es": "Postura del bebé feliz"
+   },
+   "app_names": [
+    "Happy Baby"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "strap (optional)"
+   ],
+   "props": [
+    "mat",
+    "strap"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "child_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Çocuk Pozu (Balasana)",
+    "en": "Child's Pose (Balasana)",
+    "es": "Postura del niño"
+   },
+   "app_names": [
+    "Child Pose (Balasana)"
+   ],
+   "category": "yoga",
+   "orientation": "kneeling",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "bolster/blanket (optional)"
+   ],
+   "props": [
+    "mat",
+    "bolster"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "reclining_butterfly",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yatan Kelebek (Supta Baddha Konasana)",
+    "en": "Reclining Bound Angle Pose (Supta Baddha Konasana)",
+    "es": "Mariposa reclinada"
+   },
+   "app_names": [
+    "Reclining Butterfly"
+   ],
+   "category": "yoga",
+   "orientation": "supine",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "bolster",
+    "blocks",
+    "blanket"
+   ],
+   "props": [
+    "bolster",
+    "block",
+    "blanket"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "sun_salutation_c",
+   "batch": "yoga",
+   "names": {
+    "tr": "Güneşe Selam C (Surya Namaskar C)",
+    "en": "Sun Salutation C (Surya Namaskar C)",
+    "es": "Saludo al sol C"
+   },
+   "app_names": [
+    "Sun Salutation C"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "low",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "extended_side_angle",
+   "batch": "yoga",
+   "names": {
+    "tr": "Uzatılmış Yan Açı (Utthita Parsvakonasana)",
+    "en": "Extended Side Angle (Utthita Parsvakonasana)",
+    "es": "Ángulo lateral extendido"
+   },
+   "app_names": [
+    "Extended Side Angle"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "block"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "revolved_triangle",
+   "batch": "yoga",
+   "names": {
+    "tr": "Dönen Üçgen (Parivrtta Trikonasana)",
+    "en": "Revolved Triangle (Parivrtta Trikonasana)",
+    "es": "Triángulo con giro"
+   },
+   "app_names": [
+    "Revolved Triangle"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "top",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "block"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "dancer_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Dansçı Pozu (Natarajasana)",
+    "en": "Dancer's Pose (Natarajasana)",
+    "es": "Postura del bailarín"
+   },
+   "app_names": [
+    "Dancer Pose (Natarajasana)"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wall",
+    "strap (optional)"
+   ],
+   "props": [
+    "wall",
+    "strap"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "eagle_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Kartal Pozu (Garudasana)",
+    "en": "Eagle Pose (Garudasana)",
+    "es": "Postura del águila"
+   },
+   "app_names": [
+    "Eagle Pose"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "wall (optional)"
+   ],
+   "props": [
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "flying_crow",
+   "batch": "yoga",
+   "names": {
+    "tr": "Uçan Karga / Uçan Güvercin (Eka Pada Galavasana)",
+    "en": "Flying Crow / Flying Pigeon (Eka Pada Galavasana)",
+    "es": "Cuervo volador / paloma voladora"
+   },
+   "app_names": [
+    "Flying Crow"
+   ],
+   "category": "yoga",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front_3q",
+   "equipment": [
+    "mat",
+    "block",
+    "strap"
+   ],
+   "props": [
+    "mat",
+    "block",
+    "strap"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "chair_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Sandalye Pozu (Utkatasana)",
+    "en": "Chair Pose (Utkatasana)",
+    "es": "Postura de la silla"
+   },
+   "app_names": [
+    "Chair Pose (Utkatasana)"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wall (optional)",
+    "block (optional)"
+   ],
+   "props": [
+    "wall",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "chaturanga",
+   "batch": "yoga",
+   "names": {
+    "tr": "Chaturanga (Chaturanga Dandasana)",
+    "en": "Chaturanga Dandasana (Four-Limbed Staff Pose)",
+    "es": "Chaturanga Dandasana"
+   },
+   "app_names": [
+    "Chaturanga"
+   ],
+   "category": "yoga",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "boat_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Tekne Pozu (Navasana)",
+    "en": "Boat Pose (Navasana)",
+    "es": "Postura del barco"
+   },
+   "app_names": [
+    "Boat Pose (Navasana)"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat",
+    "strap (optional)"
+   ],
+   "props": [
+    "mat",
+    "strap"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "surya_bhedana",
+   "batch": "yoga",
+   "names": {
+    "tr": "Surya Bhedana (Sağ Burun Deliği ile Nefes)",
+    "en": "Surya Bhedana (Right-Nostril Breathing / Sun-Piercing Breath)",
+    "es": "Surya Bhedana (respiración por fosa derecha)"
+   },
+   "app_names": [
+    "Surya Bhedana"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "blanket/cushion"
+   ],
+   "props": [
+    "blanket"
+   ],
+   "confidence": "medium",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "nadi_shodhana",
+   "batch": "yoga",
+   "names": {
+    "tr": "Nadi Shodhana (Alternatif Burun Nefesi)",
+    "en": "Nadi Shodhana (Alternate Nostril Breathing)",
+    "es": "Nadi Shodhana (respiración alterna)"
+   },
+   "app_names": [
+    "Nadi Shodhana"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "blanket/cushion"
+   ],
+   "props": [
+    "blanket"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "seated_meditation",
+   "batch": "yoga",
+   "names": {
+    "tr": "Oturarak Meditasyon (Sukhasana)",
+    "en": "Seated Meditation (Sukhasana)",
+    "es": "Meditación sentada"
+   },
+   "app_names": [
+    "Seated Meditation",
+    "Meditasyon Oturumu"
+   ],
+   "category": "yoga",
+   "orientation": "seated",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "cushion",
+    "blanket"
+   ],
+   "props": [
+    "blanket"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "plank_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Plank Pozu (Phalakasana)",
+    "en": "Plank Pose (Phalakasana)",
+    "es": "Postura de la plancha"
+   },
+   "app_names": [
+    "Plank Pose"
+   ],
+   "category": "yoga",
+   "orientation": "prone",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "surya_namaskar_b",
+   "batch": "yoga",
+   "names": {
+    "tr": "Surya Namaskar B (Güneşe Selam B)",
+    "en": "Surya Namaskar B (Sun Salutation B)",
+    "es": "Saludo al sol B"
+   },
+   "app_names": [
+    "Surya Namaskar B"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "mat"
+   ],
+   "props": [
+    "mat"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "warrior_3",
+   "batch": "yoga",
+   "names": {
+    "tr": "Savaşçı III (Virabhadrasana III)",
+    "en": "Warrior III (Virabhadrasana III)",
+    "es": "Guerrero III"
+   },
+   "app_names": [
+    "Warrior III"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "wall",
+    "blocks (optional)"
+   ],
+   "props": [
+    "wall",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "half_moon",
+   "batch": "yoga",
+   "names": {
+    "tr": "Yarım Ay Pozu (Ardha Chandrasana)",
+    "en": "Half Moon Pose (Ardha Chandrasana)",
+    "es": "Media luna"
+   },
+   "app_names": [
+    "Half Moon"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "block",
+    "wall (optional)"
+   ],
+   "props": [
+    "block",
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "triangle_pose",
+   "batch": "yoga",
+   "names": {
+    "tr": "Üçgen Pozu (Trikonasana)",
+    "en": "Triangle Pose (Trikonasana)",
+    "es": "Postura del triángulo"
+   },
+   "app_names": [
+    "Triangle Pose"
+   ],
+   "category": "yoga",
+   "orientation": "standing",
+   "view": "front",
+   "alt_view": "side",
+   "equipment": [
+    "mat",
+    "block"
+   ],
+   "props": [
+    "mat",
+    "block"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  },
+  {
+   "id": "standing_split",
+   "batch": "yoga",
+   "names": {
+    "tr": "Ayakta Split (Urdhva Prasarita Eka Padasana)",
+    "en": "Standing Split (Urdhva Prasarita Eka Padasana)",
+    "es": "Spagat de pie"
+   },
+   "app_names": [
+    "Standing Split"
+   ],
+   "category": "yoga",
+   "orientation": "inverted",
+   "view": "side",
+   "alt_view": "front",
+   "equipment": [
+    "blocks",
+    "wall (optional)"
+   ],
+   "props": [
+    "block",
+    "wall"
+   ],
+   "confidence": "high",
+   "status": "rendered",
+   "notes": ""
+  }
+ ],
+ "non_demo": [
+  {
+   "app_name": "Hundred → Roll Up → Rollover",
+   "reason": "Combination of three classical exercises performed back to back; animate the components separately.",
+   "components": [
+    "the_hundred",
+    "roll_up",
+    "rollover"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Leg Circle → Rolling → Series of 5",
+   "reason": "Combination flow of Single Leg Circle, Rolling Like a Ball and the Series of Five abdominal series.",
+   "components": [
+    "single_leg_circle",
+    "rolling_like_a_ball",
+    "single_leg_stretch",
+    "double_leg_stretch",
+    "single_straight_leg_stretch",
+    "double_straight_leg_stretch",
+    "criss_cross"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Spine Stretch → Open Leg Rocker",
+   "reason": "Two-exercise transition sequence from Spine Stretch Forward into Open Leg Rocker.",
+   "components": [
+    "spine_stretch_forward",
+    "rocker_with_open_legs"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Corkscrew → Saw → Swan Dive",
+   "reason": "Three-exercise sequence; each has its own spec.",
+   "components": [
+    "corkscrew",
+    "saw",
+    "swan_dive"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Push-Up → Pike → Teaser Geçiş",
+   "reason": "Transition flow combining push-up, plank-to-pike and teaser.",
+   "components": [
+    "pilates_push_up",
+    "plank_to_pike",
+    "teaser"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Constructive Rest",
+   "reason": "Passive resting position (supine, knees bent, feet flat) with no movement to animate; if needed, can be rendered as the static start pose of chest_lift / neutral_pelvis_breathing.",
+   "components": [
+    "neutral_pelvis_breathing"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Full Body Stretch Serisi",
+   "reason": "Unspecified multi-move stretch routine, not a single movement.",
+   "components": [
+    "figure_4_stretch",
+    "hip_flexor_stretch",
+    "mermaid_stretch",
+    "spine_stretch_forward",
+    "neck_shoulder_release"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Joseph Pilates Orijinal 34 Hareket",
+   "reason": "Full classical 34-exercise repertoire (a class, not a movement).",
+   "components": [
+    "the_hundred",
+    "roll_up",
+    "rollover",
+    "single_leg_circle",
+    "rolling_like_a_ball",
+    "single_leg_stretch",
+    "double_leg_stretch",
+    "spine_stretch_forward",
+    "rocker_with_open_legs",
+    "corkscrew",
+    "saw",
+    "swan_dive",
+    "scissors",
+    "bicycle",
+    "shoulder_bridge",
+    "spine_twist",
+    "jackknife",
+    "side_kick_front_back",
+    "teaser",
+    "hip_circles",
+    "swimming",
+    "side_bend",
+    "seal",
+    "rocking",
+    "pilates_push_up"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Magic Circle Full Body Serisi",
+   "reason": "Routine/series of Magic Circle exercises, not one movement.",
+   "components": [
+    "magic_circle_inner_thigh",
+    "magic_circle_chest_press"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Resistance Band Complex",
+   "reason": "Unspecified multi-exercise resistance band routine.",
+   "components": [
+    "roll_up"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Foam Roller Challenge",
+   "reason": "A challenge/routine of several foam roller exercises, not one movement.",
+   "components": [
+    "foam_roller_upper_back"
+   ],
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Mat Koreografi (Müzikli)",
+   "reason": "Choreographed music class/routine.",
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Serbest Hareket Çalışması",
+   "reason": "Free-form movement session, no defined movement.",
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Pilates + Yoga Fusion",
+   "reason": "Class/fusion flow, not a single movement.",
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Body Awareness Meditasyon",
+   "reason": "Meditation/body-scan; no movement to animate.",
+   "batch": "pilates_mat"
+  },
+  {
+   "app_name": "Advanced Footwork Flow",
+   "reason": "Flow of several footwork positions (toes, arches, heels, V, single leg, running)",
+   "components": [
+    "footwork",
+    "single_leg_footwork",
+    "footwork_running"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Long Stretch Series",
+   "reason": "Sequence of plank-based stretches",
+   "components": [
+    "elephant",
+    "long_stretch",
+    "up_stretch"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Stretch Serisi",
+   "reason": "Series of stretch movements, not a single movement",
+   "components": [
+    "elephant",
+    "long_stretch",
+    "up_stretch",
+    "hamstring_stretch"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Leg Spring Series",
+   "reason": "Series of supine strap exercises",
+   "components": [
+    "frog",
+    "leg_circles_straps"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Arm Spring Series",
+   "reason": "Series of arm exercises with straps",
+   "components": [
+    "bicep_curls_reformer",
+    "long_box_t_shape",
+    "chest_expansion"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Stomach Massage Series",
+   "reason": "Series of three variations (Round, Hands Back, Reach)",
+   "components": [
+    "stomach_massage_round",
+    "stomach_massage_hands_back",
+    "stomach_massage_reach"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Hip Stretch Series",
+   "reason": "Series of hip-opening strap/standing movements",
+   "components": [
+    "frog",
+    "leg_circles_straps",
+    "side_splits",
+    "front_splits"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Full Classical Repertoire",
+   "reason": "Full classical class",
+   "components": [
+    "footwork",
+    "frog",
+    "leg_circles_straps",
+    "rowing_series",
+    "long_stretch",
+    "elephant",
+    "short_box_round_back"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Full Reformer Flow (45 dk)",
+   "reason": "Full class flow",
+   "components": [
+    "footwork",
+    "single_leg_footwork",
+    "rowing_series",
+    "long_stretch",
+    "elephant",
+    "knee_stretch",
+    "pelvic_curl_reformer"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Reformer + Mat Fusion",
+   "reason": "Class mixing reformer and mat exercises",
+   "components": [
+    "footwork",
+    "pelvic_curl_reformer",
+    "knee_stretch"
+   ],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "Nefes & Meditasyon",
+   "reason": "Breathing/meditation, not a reformer movement",
+   "components": [],
+   "batch": "reformer"
+  },
+  {
+   "app_name": "100 Push-Up Challenge (min sürede)",
+   "reason": "Rep/time challenge, not a distinct movement; demo is push_up",
+   "components": [
+    "push_up"
+   ],
+   "batch": "strength_push_core_conditioning"
+  },
+  {
+   "app_name": "Push-Up Variations",
+   "reason": "Generic list of many push-up variants, not one movement",
+   "components": [
+    "push_up",
+    "knee_push_up",
+    "incline_push_up",
+    "pike_push_up"
+   ],
+   "batch": "strength_push_core_conditioning"
+  },
+  {
+   "app_name": "Kişisel Vinyasa Akışı",
+   "reason": "Personal free-form flow, not a fixed movement",
+   "components": [
+    "surya_namaskar_a",
+    "warrior_1",
+    "warrior_2",
+    "chaturanga",
+    "downward_dog",
+    "child_pose"
+   ],
+   "batch": "yoga"
+  },
+  {
+   "app_name": "Yin Yoga Derin Seri",
+   "reason": "Multi-pose yin sequence, not a single movement",
+   "components": [
+    "yin_dragon",
+    "yin_butterfly",
+    "yin_seal",
+    "yin_saddle",
+    "seated_forward_fold",
+    "yin_sphinx",
+    "yin_twisted_root",
+    "child_pose"
+   ],
+   "batch": "yoga"
+  },
+  {
+   "app_name": "Ashtanga Primary Series (Kısa)",
+   "reason": "Long fixed sequence of many poses; build from components",
+   "components": [
+    "surya_namaskar_a",
+    "surya_namaskar_b",
+    "triangle_pose",
+    "extended_side_angle",
+    "revolved_triangle",
+    "warrior_1",
+    "warrior_2",
+    "seated_forward_fold",
+    "boat_pose",
+    "chaturanga",
+    "downward_dog",
+    "savasana"
+   ],
+   "batch": "yoga"
+  },
+  {
+   "app_name": "Serbest Vinyasa Flow",
+   "reason": "Free-form flow, no fixed choreography",
+   "components": [
+    "surya_namaskar_a",
+    "surya_namaskar_b",
+    "warrior_1",
+    "warrior_2",
+    "warrior_3",
+    "chair_pose",
+    "downward_dog",
+    "plank_pose",
+    "chaturanga"
+   ],
+   "batch": "yoga"
+  }
+ ]
+}

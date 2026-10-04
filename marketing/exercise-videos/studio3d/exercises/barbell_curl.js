@@ -1,0 +1,57 @@
+/* Barbell curl (strength_pull). Arms are pure FK: the upper arm angle (`sh`) barely changes, only the elbow bends,
+ * so the elbows stay beside the ribs. Bar = barbell prop between the hands, supinated grip.
+ * Spec top shoulder_flexion 25 (elbows drift 10-15 cm); kept at ~20 so the "elbows pinned" lesson reads clearly.
+ * Bottom: sh 9 / el 8 puts the bar on the front of the upper thighs instead of inside them (spec 0 / 5). */
+window.EXERCISE = {
+  id: 'barbell_curl',
+  name: { tr: 'Barbell Curl', en: 'Barbell Curl', es: 'Curl con barra' },
+  category: { tr: 'Kol', en: 'Arms', es: 'Brazos' },
+  equipmentLabel: { tr: 'Barbell', en: 'Barbell', es: 'Barra' },
+  muscles: ['biceps', 'forearms'],
+  tempo: '1-0.5-2',
+  view: { yaw: 90, pitch: 6 },
+  alt: { yaw: 14, pitch: 6, title: { tr: 'Önden bak', en: 'Front view', es: 'Vista frontal' },
+    text: { tr: 'Dirsekler gövdenin yanında, açılmaz', en: 'Elbows stay at your sides, no flaring', es: 'Codos junto al cuerpo, sin abrirse' } },
+  setupView: { yaw: 30, pitch: 10 },
+  setupMarks: [
+    { type: 'aline', joints: ['handL', 'handR'] },
+    { type: 'span', joints: ['ankleR', 'ankleL'], label: { tr: 'Kalça genişliği', en: 'Hip width', es: 'Ancho de cadera' } },
+  ],
+  props: [['barbell', { grip: 'supinated' }]],
+  ctx: { anchorX: ['ankleL', 'ankleR'], plant: ['ankleL', 'ankleR'] },
+  poses: {
+    start: { knee: 5, abd: 4, sh: 5, shAbd: 5, el: 7, neck: -2 },
+    top: { knee: 5, abd: 4, sh: 20, shAbd: 5, el: 146, neck: -2 },
+  },
+  rest: 'start',
+  rep: [
+    { to: 'top', dur: 1.0, phase: 0 },
+    { to: 'top', dur: 0.5, phase: 1 },
+    { to: 'start', dur: 2.0, phase: 2 },
+  ],
+  setup: { tr: 'Dik dur, ayaklar kalça genişliğinde. Barı omuz genişliğinde, avuçlar öne bakacak şekilde tut.',
+    en: 'Stand tall, feet hip-width. Grip the bar shoulder-width with palms facing forward.',
+    es: 'De pie, pies al ancho de cadera. Agarra la barra al ancho de hombros, palmas al frente.' },
+  phases: [
+    { name: { tr: 'Kaldır', en: 'Curl', es: 'Sube' }, breath: 'out', line: ['shoulderR', 'elbowR'],
+      text: { tr: 'Dirsekleri bük, barı göğse doğru getir. Üst kol gövdenin yanında kalır.', en: 'Bend the elbows and bring the bar up. Upper arms stay at your sides.', es: 'Dobla los codos y sube la barra. Brazos pegados al cuerpo.' } },
+    { name: { tr: 'Tepede sık', en: 'Squeeze', es: 'Aprieta' }, breath: 'hold', line: ['shoulderR', 'elbowR'], marks: [{ type: 'mark', joint: 'elbowR' }],
+      text: { tr: 'Biceps’i sık. Omuzlar aşağıda, gövde dik.', en: 'Squeeze the biceps. Shoulders down, torso tall.', es: 'Aprieta el bíceps. Hombros abajo, torso recto.' } },
+    { name: { tr: 'Kontrollü indir', en: 'Lower slowly', es: 'Baja despacio' }, breath: 'in', line: ['shoulderR', 'elbowR'],
+      text: { tr: 'İki saniyede kollar tam açılana kadar indir.', en: 'Take two seconds until the arms are fully straight.', es: 'Dos segundos hasta estirar del todo los brazos.' } },
+  ],
+  tempoText: { tr: '1 sn kaldır · 0,5 sn sık · 2 sn indir', en: '1 s up · 0.5 s squeeze · 2 s down', es: '1 s sube · 0,5 s aprieta · 2 s baja' },
+  mistakes: [
+    { title: { tr: 'Gövdeyle sallanmak', en: 'Swinging the torso', es: 'Balancear el torso' },
+      fix: { tr: 'Dik dur, karnı sık', en: 'Stand tall, brace', es: 'Recto, abdomen firme' },
+      fixText: { tr: 'Daha hafif ağırlık seç, sadece dirsek bükülür', en: 'Go lighter; only the elbows bend', es: 'Usa menos peso; solo se doblan los codos' },
+      at: 'top', pose: { trunk: -12, hip: -10, knee: 9, lumbar: -5 }, line: ['pelvis', 'neck'], goodLine: ['pelvis', 'neck'], parts: ['waist', 'chest'] },
+    { title: { tr: 'Dirsekler öne kaçıyor', en: 'Elbows swing forward', es: 'Codos hacia delante' },
+      fix: { tr: 'Dirsekleri yanda sabitle', en: 'Pin the elbows', es: 'Codos fijos' },
+      fixText: { tr: 'Üst kol yanda kalır, işi biceps yapar', en: 'Upper arms stay put so the biceps work', es: 'El brazo no se mueve y trabaja el bíceps' },
+      at: 'top', pose: { sh: 58, el: 128 }, marks: ['elbowR'], line: ['shoulderR', 'elbowR'], parts: ['upperR', 'upperL'] },
+  ],
+  cues: [{ tr: 'Dirsekler yanda sabit', en: 'Elbows glued to your sides', es: 'Codos pegados' },
+    { tr: 'Tepede sık, sallanma', en: 'Squeeze, no swinging', es: 'Aprieta, sin balanceo' },
+    { tr: 'İki saniyede indir', en: 'Two seconds down', es: 'Dos segundos al bajar' }],
+};

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=block">
+<style>
+  :root { --bg:#060b1a; --navy:#0b1430; --card:rgba(14,22,44,.92); --line:rgba(148,163,184,.16); --text:#f8fafc; --muted:#94a3b8;
+    --orange:#ff6d00; --orange-l:#ffab40; --cyan:#00b0ff; --cyan-l:#40c4ff; --bad:#ff3b4e; --good:#22d38a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1920px; overflow:hidden; background:var(--bg); }
+  body { font-family:Inter, system-ui, sans-serif; color:var(--text); -webkit-font-smoothing:antialiased; position:relative; }
+  #bg { position:absolute; inset:0; background:
+      radial-gradient(900px 760px at 50% 960px, rgba(0,176,255,.13), transparent 70%),
+      radial-gradient(700px 500px at 85% 200px, rgba(255,109,0,.10), transparent 70%),
+      linear-gradient(180deg,#0a1330 0%, #070d22 55%, #050916 100%); }
+  #grid { position:absolute; inset:0; background-image: radial-gradient(rgba(148,163,184,.10) 1.5px, transparent 1.6px); background-size:44px 44px;
+      mask-image: radial-gradient(ellipse 70% 45% at 50% 52%, #000 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse 70% 45% at 50% 52%, #000 30%, transparent 80%); }
+  svg.layer, #gl { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+  #header { position:absolute; left:72px; right:72px; top:96px; }
+  .brand { display:flex; align-items:center; gap:14px; font:800 26px/1 Outfit; letter-spacing:.2em; color:#cbd5e1; }
+  .brand i { width:14px; height:14px; border-radius:50%; background:var(--orange); box-shadow:0 0 18px var(--orange); }
+  .brand em { font-style:normal; color:var(--muted); font-weight:600; letter-spacing:.16em; }
+  .brand .sep { width:40px; height:2px; background:rgba(148,163,184,.35); }
+  #cat { color:var(--orange-l); }
+  #title { margin-top:26px; font:800 92px/1.02 Outfit; letter-spacing:-.025em; }
+  #chips { margin-top:28px; display:flex; flex-wrap:wrap; gap:14px; }
+  .chip { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; border-radius:999px; font:600 28px/1 Inter; transform-origin:left center; }
+  .chip.m { background:rgba(0,176,255,.14); color:#7fd6ff; border:2px solid rgba(0,176,255,.35); }
+  .chip.m::before { content:''; width:12px; height:12px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px var(--cyan); }
+  .chip.e { background:rgba(148,163,184,.12); color:#cbd5e1; border:2px solid rgba(148,163,184,.25); }
+  #counter { position:absolute; right:72px; top:520px; text-align:right; opacity:0; }
+  #counter small { display:block; font:800 24px/1 Outfit; letter-spacing:.2em; color:var(--muted); }
+  #counter b { display:inline-block; font:900 120px/1 Outfit; color:var(--text); transform-origin:right bottom; }
+  #counter em { font:700 44px/1 Outfit; font-style:normal; color:var(--muted); }
+  #viewTag { position:absolute; left:56px; right:56px; top:540px; opacity:0; display:flex; align-items:center; gap:18px; }
+  #viewTag b { display:inline-block; padding:12px 22px; border-radius:16px; background:var(--cyan); color:#04121f; font:800 30px/1 Outfit; letter-spacing:.02em; }
+  #viewTag b { flex:0 0 auto; }
+  #viewTag span { display:block; font:600 32px/1.25 Inter; color:#e2e8f0; text-shadow:0 2px 12px #000; }
+  #card { position:absolute; left:56px; right:56px; bottom:118px; height:10px; }
+  .card { position:absolute; left:0; right:0; bottom:0; min-height:220px; display:flex; gap:30px; padding:38px 40px; border-radius:40px;
+     background:var(--card); border:2px solid var(--line); box-shadow:0 30px 80px rgba(0,0,0,.45); }
+  .card .num { flex:0 0 auto; width:88px; height:88px; border-radius:28px; display:grid; place-items:center; font:900 50px/1 Outfit; background:var(--orange); color:#1a0a00; }
+  .card .num.bad { background:var(--bad); color:#fff; } .card .num.good { background:var(--good); color:#03200f; }
+  .card .num.info { background:rgba(0,176,255,.18); color:var(--cyan); border:2px solid rgba(0,176,255,.5); font-size:34px; }
+  .card .num.tempo { background:var(--cyan); color:#04121f; }
+  .card .body { flex:1; min-width:0; }
+  .lbl { font:800 24px/1 Outfit; letter-spacing:.2em; color:var(--orange-l); margin:4px 0 12px; text-transform:uppercase; }
+  .lbl.bad { color:var(--bad); } .lbl.good { color:var(--good); }
+  .ct { font:800 50px/1.08 Outfit; letter-spacing:-.01em; }
+  .cx { margin-top:14px; font:500 35px/1.35 Inter; color:#cbd5e1; }
+  .card.bad { border-color:rgba(255,59,78,.55); background:linear-gradient(180deg, rgba(60,10,20,.92), rgba(30,8,16,.92)); }
+  .card.good { border-color:rgba(34,211,138,.55); background:linear-gradient(180deg, rgba(6,48,32,.92), rgba(6,28,22,.92)); }
+  .breath { display:inline-flex; align-items:center; gap:10px; margin-top:18px; padding:10px 20px; border-radius:999px; font:700 28px/1 Inter;
+     background:rgba(0,176,255,.14); color:#8be0ff; border:2px solid rgba(0,176,255,.35); }
+  .breath.out { background:rgba(255,109,0,.14); color:var(--orange-l); border-color:rgba(255,109,0,.4); }
+  .breath.hold { background:rgba(148,163,184,.14); color:#e2e8f0; border-color:rgba(148,163,184,.35); }
+  .card.cues { flex-direction:column; gap:16px; }
+  .card.cues .ct { font-size:34px; letter-spacing:.18em; text-transform:uppercase; color:var(--orange-l); margin-bottom:6px; }
+  .cue { display:flex; align-items:center; gap:22px; font:700 40px/1.2 Outfit; }
+  .cue b { flex:0 0 auto; width:54px; height:54px; border-radius:50%; display:grid; place-items:center; background:var(--good); color:#03200f; font-size:30px; }
+  #chapters { position:absolute; left:56px; right:56px; top:1836px; display:flex; gap:14px; }
+  .ch { flex:1; }
+  .ch .bar { height:8px; border-radius:8px; background:rgba(148,163,184,.18); overflow:hidden; }
+  .ch .bar i { display:block; height:100%; background:var(--orange); transform-origin:left; transform:scaleX(0); }
+  .ch span { display:block; margin-top:12px; font:700 22px/1 Inter; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ch.on span { color:#f8fafc; } .ch.done .bar i { background:#7c8aa5; }
+  #inter { position:absolute; left:56px; right:56px; top:auto; bottom:420px; text-align:left; opacity:0; pointer-events:none; }
+  #inter span { display:inline-block; padding:16px 32px; border-radius:20px; background:var(--orange); color:#1a0a00; font:900 50px/1 Outfit; letter-spacing:.05em;
+     box-shadow:0 30px 80px rgba(255,109,0,.35); }
+  #outro { position:absolute; inset:0; display:grid; place-items:center; opacity:0; background:radial-gradient(800px 600px at 50% 50%, rgba(255,109,0,.18), transparent 70%), rgba(5,9,22,.94); }
+  #outro .w { text-align:center; }
+  #outro .logo { font:900 120px/1 Outfit; letter-spacing:-.02em; }
+  #outro .logo span { color:var(--orange); }
+  #outro .url { margin-top:26px; font:600 40px/1 Inter; color:var(--muted); letter-spacing:.06em; }
+</style>
+<script src="engine/core.js"></script>
+<script src="engine/draw.js"></script>
+<script src="engine/props.js"></script>
+<script src="engine/composer.js"></script>
+<script type="importmap">{ "imports": { "three": "../node_modules/three/build/three.module.js", "three/addons/": "../node_modules/three/examples/jsm/" } }</script>
+<script type="module" src="engine/rig3d.js"></script>
+</head>
+<body>
+<div id="bg"></div><div id="grid"></div>
+<svg id="under" class="layer" viewBox="0 0 1080 1920"></svg>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<svg id="over" class="layer" viewBox="0 0 1080 1920"></svg>
+<div id="header">
+  <div class="brand"><i></i>FULL BALANCE<span class="sep"></span><span id="cat"></span></div>
+  <div id="title"></div>
+  <div id="chips"></div>
+</div>
+<div id="viewTag"></div>
+<div id="counter"></div>
+<div id="card"></div>
+<div id="chapters"></div>
+<div id="inter"></div>
+<div id="outro"><div class="w"><div class="logo">Full<span>Balance</span></div><div class="url">fullbalance.app</div></div></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const exId = q.get('ex') || 'goblet_squat';
+  const lang = q.get('lang') || 'tr';
+  const s = document.createElement('script');
+  s.src = (exId.startsWith('_') ? 'dev/fixtures/' : 'exercises/') + exId + '.js';
+  s.onload = async () => {
+    await document.fonts.ready;
+    if (!window.FB3) await new Promise((r) => window.addEventListener('fb3ready', r, { once: true }));
+    await FB3.init(document.getElementById('gl'));
+    const tl = FB.setup(window.EXERCISE, lang);
+    window.DURATION = tl.DURATION;
+    window.render = (t) => FB.render(t);
+    FB.render(q.has('t') ? +q.get('t') : 0);
+    window.ready = true;
+    if (q.has('play')) { const t0 = performance.now(); const loop = () => { const t = ((performance.now() - t0) / 1000) % tl.DURATION; FB.render(t); requestAnimationFrame(loop); }; loop(); }
+  };
+  document.head.appendChild(s);
+</script>
+</body></html>

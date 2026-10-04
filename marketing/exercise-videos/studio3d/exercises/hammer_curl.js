@@ -1,0 +1,53 @@
+/* Hammer curl (strength_pull), both arms together. Neutral grip (thumbs up / palms face the body) the whole way.
+ * FK arms: upper arm angle nearly constant, the elbow bends. Bottom sh 4 / shAbd 7 so the bells hang beside the thighs
+ * (handle front-to-back, as a real hanging hammer grip; the spec's "long axis vertical" only holds mid-curl). Top sh ~16 (spec 20). */
+window.EXERCISE = {
+  id: 'hammer_curl',
+  name: { tr: 'Hammer Curl', en: 'Hammer Curl', es: 'Curl martillo' },
+  category: { tr: 'Kol', en: 'Arms', es: 'Brazos' },
+  equipmentLabel: { tr: 'Dambıl', en: 'Dumbbells', es: 'Mancuernas' },
+  muscles: ['biceps', 'forearms'],
+  tempo: '1-0.5-2',
+  view: { yaw: 16, pitch: 5 },
+  alt: { yaw: 90, pitch: 6, title: { tr: 'Yandan bak', en: 'Side view', es: 'Vista lateral' },
+    text: { tr: 'Başparmak yukarıda, dirsek yerinde kalır', en: 'Thumb on top, the elbow stays put', es: 'Pulgar arriba, el codo no se mueve' } },
+  setupView: { yaw: 34, pitch: 10 },
+  setupMarks: [{ type: 'span', joints: ['ankleR', 'ankleL'], label: { tr: 'Kalça genişliği', en: 'Hip width', es: 'Ancho de cadera' } }],
+  props: [['dumbbell', { grip: 'neutral', len: 0.28 }]],
+  ctx: { anchorX: ['ankleL', 'ankleR'], plant: ['ankleL', 'ankleR'] },
+  poses: {
+    start: { knee: 5, abd: 4, sh: 4, shAbd: 7, el: 7, neck: -2 },
+    top: { knee: 5, abd: 4, sh: 16, shAbd: 7, shRot: -8, el: 146, neck: -2 },
+  },
+  rest: 'start',
+  rep: [
+    { to: 'top', dur: 1.0, phase: 0 },
+    { to: 'top', dur: 0.5, phase: 1 },
+    { to: 'start', dur: 2.0, phase: 2 },
+  ],
+  setup: { tr: 'Dik dur. Dambılları çekiç gibi tut: avuçlar bacaklara, başparmaklar öne bakar.',
+    en: 'Stand tall. Hold the dumbbells like hammers: palms face your legs, thumbs forward.',
+    es: 'De pie. Sujeta las mancuernas como martillos: palmas hacia las piernas.' },
+  phases: [
+    { name: { tr: 'Kaldır', en: 'Curl', es: 'Sube' }, breath: 'out', line: ['shoulderR', 'elbowR'],
+      text: { tr: 'Avuçlar birbirine bakarken dirsekleri bük. Başparmak hep yukarıda.', en: 'Bend the elbows with palms facing in. Thumbs stay on top.', es: 'Dobla los codos con las palmas enfrentadas. Pulgares arriba.' } },
+    { name: { tr: 'Tepede sık', en: 'Squeeze', es: 'Aprieta' }, breath: 'hold', marks: [{ type: 'mark', joint: 'elbowR' }, { type: 'mark', joint: 'elbowL' }],
+      text: { tr: 'Dambıllar omuzların önünde. Kısa bir an sık.', en: 'Bells in front of the shoulders. Squeeze for a moment.', es: 'Mancuernas frente a los hombros. Aprieta un momento.' } },
+    { name: { tr: 'Kontrollü indir', en: 'Lower slowly', es: 'Baja despacio' }, breath: 'in', line: ['shoulderR', 'elbowR'],
+      text: { tr: 'İki saniyede, kollar tam düzleşene kadar indir.', en: 'Take two seconds until the arms are straight.', es: 'Dos segundos hasta estirar los brazos.' } },
+  ],
+  tempoText: { tr: '1 sn kaldır · 0,5 sn sık · 2 sn indir', en: '1 s up · 0.5 s squeeze · 2 s down', es: '1 s sube · 0,5 s aprieta · 2 s baja' },
+  mistakes: [
+    { title: { tr: 'Kalçayla sallamak', en: 'Swinging with the hips', es: 'Balanceo con la cadera' },
+      fix: { tr: 'Karnı sık, gövde sabit', en: 'Brace, still torso', es: 'Abdomen firme, torso quieto' },
+      fixText: { tr: 'Daha hafif dambıl seç, sadece kollar hareket eder', en: 'Go lighter; only the arms move', es: 'Usa menos peso; solo se mueven los brazos' },
+      at: 'top', pose: { trunk: -12, hip: -10, knee: 9, lumbar: -5 }, view: { yaw: 90, pitch: 6 }, line: ['pelvis', 'neck'], parts: ['waist', 'chest'] },
+    { title: { tr: 'Dirsekler dışa ve öne açılıyor', en: 'Elbows flare out and forward', es: 'Codos abiertos y adelante' },
+      fix: { tr: 'Dirsekleri yana yapıştır', en: 'Tuck the elbows', es: 'Codos pegados' },
+      fixText: { tr: 'Dirsekler kaburgaların yanında kalır', en: 'Elbows stay beside the ribs', es: 'Codos junto a las costillas' },
+      at: 'top', pose: { sh: 34, shAbd: 26, shRot: -20, el: 132 }, marks: ['elbowR', 'elbowL'], parts: ['upperR', 'upperL'] },
+  ],
+  cues: [{ tr: 'Başparmaklar hep yukarıda', en: 'Thumbs up the whole way', es: 'Pulgares siempre arriba' },
+    { tr: 'Dirsekler yerinde', en: 'Elbows stay still', es: 'Codos quietos' },
+    { tr: 'Yavaş indir', en: 'Slow lowering', es: 'Baja despacio' }],
+};

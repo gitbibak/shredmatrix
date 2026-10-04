@@ -1,0 +1,5967 @@
+{
+ "batch": "reformer",
+ "apparatus": {
+  "id": "apparatus",
+  "reference_model": "Balanced Body Allegro 2 (modern 'contemporary' reformer); classical Gratz/Basi-style machines differ mainly in spring colors, footbar and box dimensions. Numbers are modelling approximations rounded from manufacturer specs; items marked (est.) are estimates, not published specs.",
+  "units": "cm; angles in degrees",
+  "coordinate_system": {
+   "x_long_axis": "0 at the footbar end of the frame, +x toward the headrest/shoulder-block end",
+   "y_up": "up from floor",
+   "z_lateral": "across frame width, 0 at centreline",
+   "carriage_displacement_convention": "0 cm = carriage fully closed (against the stopper/springs at the footbar end). Positive = carriage rolled away from the footbar (springs stretched). Mannequin ~170 cm tall, thigh ~43, shin ~43 cm; footwork excursion scales roughly 0.4 x leg length."
+  },
+  "frame": {
+   "length_cm": 239,
+   "width_cm": 64,
+   "width_with_footbar_posts_cm": 79,
+   "height_with_legs_cm": 38,
+   "height_without_legs_cm": 23,
+   "rail": "two parallel aluminum/wood side rails with rollers; frame is a rectangle, footbar end called 'front'",
+   "floor_clearance": "carriage top surface ~36-38 cm above floor with legs (est.)"
+  },
+  "carriage": {
+   "length_cm": 100,
+   "width_cm": 60,
+   "length_to_shoulder_rests_cm": 70,
+   "thickness_cm": 8,
+   "pad": "firm padded top, ~5 cm",
+   "usable_travel_cm": "~55-65 (est.; adjusted by carriage stopper/gear bar)",
+   "rest_position": "closed at footbar end, pulled in by springs",
+   "stopper": "adjustable carriage stopper limits closing; on classical machine carriage rests on felt bumpers"
+  },
+  "headrest": {
+   "description": "padded, 2-3 height positions (flat 0 deg, raised ~10-12 deg); 25 cm long x ~25 cm wide at the head end of the carriage, hinged",
+   "use": "raised for most supine work if neck is not neutral; lowered for long-box, arabesque etc."
+  },
+  "shoulder_blocks": {
+   "description": "two padded blocks at the head end of the carriage, ~35-38 cm apart inside edge-to-edge (est.), ~8-10 cm high x 8 cm wide x 20 cm long; they stop the sliding body and are used as hand/foot targets",
+   "use": "shoulders press into blocks during footwork; feet or knees lodge against them in standing/kneeling work"
+  },
+  "footbar": {
+   "description": "steel/wood bar (diameter ~3 cm) across the frame at the front, ~55 cm long, mounted on two posts; the Balanced Body Infinity footbar adjusts vertically in 4 positions (including 'down') and slides horizontally to 9 positions; classical footbar has 2-3 heights and hinges down flat",
+   "positions": {
+    "down": "bar lies near deck height (~2-5 cm above carriage level) - used for footwork, long stretch, balance control front (est.)",
+    "low (1)": "~10-12 cm above carriage level (est.)",
+    "mid (2)": "~18-20 cm above carriage level (est.)",
+    "high (3)": "~25-30 cm above carriage level (est.)"
+   },
+   "cautions": "bar height plus carriage travel changes hip/knee angles of every footwork exercise"
+  },
+  "springs": {
+   "count": "4-5 hooked to the gear (spring) bar at the footbar end and the carriage underside; 3-5 gear bar positions set base tension; pins/hooks along 5 slots",
+   "balanced_body_colors": {
+    "yellow": "very light",
+    "blue": "light",
+    "red": "medium (default heavy for most work on a standard machine)",
+    "green": "heavy"
+   },
+   "standard_set": "3 red + 1 blue + 1 yellow (Allegro 2); some models 3 red, 1 blue, 1 green",
+   "classical_note": "Gratz-style springs are all similar tension; heavy = 3-4 springs, medium = 2, light = 1",
+   "default_footwork": "2 red + 1 blue (3 springs) typical; 'light' = 1 red or 1 blue + 1 red",
+   "spring_visual": "coil springs, ~40 cm long unloaded, drawn as colored rings along the underside; stretch visibly as carriage rolls out (~1.5x rest length at full travel)"
+  },
+  "straps_ropes_pulleys": {
+   "description": "two long ropes (~2 m) each ending in a hand loop (padded handle) and a foot loop; ropes run through pulleys at the head end of the frame (per sources) and terminate on the carriage; pulling the straps with the arms or legs rolls the carriage away from the footbar",
+   "hook_rest": "ropes hang on hooks at the frame; handles stored on the posts",
+   "pulley_riser": "two upright posts (risers) ~25-35 cm high (est.) that lift the pulleys out of the frame line; used for strap work with straps over the body (leg circles, frog, arm work); without risers the pulleys sit in the frame line",
+   "strap_behaviour": "strap line from hands/feet goes up and toward the pulley; tension is constant because the rope is attached to the carriage - carriage cannot close until the strap is eased"
+  },
+  "long_box": {
+   "dimensions_cm": "approx. 80-90 L x 55 W x 18-20 H, padded (est.)",
+   "placement": "lies on the carriage lengthwise with its short end against the shoulder rests (head-end), footbar down; used for pulling straps, backstroke, swan, T, rowing variations"
+  },
+  "short_box": {
+   "dimensions_cm": "approx. 55-60 L x 40-45 W x 20-22 H (BB short box 12 in/30 cm high, 3 height settings) (est.)",
+   "placement": "placed crosswise on the carriage behind the shoulder rests, strap attached at footbar end; client sits on it with feet under the footstrap or footbar; used for short box series"
+  },
+  "jump_board": {
+   "description": "padded 50-55 cm wide board attached at the footbar end, ~40-50 cm high, tilted ~10 deg back from vertical; replaces footbar; used for jumps and plyos",
+   "use": "feet land flat/toe on the board; client lies supine with carriage out/in; light springs (1 blue + 1 red typical) with maximum safe fall of carriage ~0.5 s"
+  },
+  "footstrap_and_sit_box": "Short box uses a footstrap (strap with two foot loops on the front of the carriage / on the footbar); also 'sitting box' or half-circle on the carriage for stretches",
+  "wunda_chair": {
+   "dimensions_cm": {
+    "length": 74,
+    "width": 55,
+    "height": 60
+   },
+   "seat_cm": {
+    "width": 54,
+    "depth": 34,
+    "thickness": 3,
+    "height_from_floor": "~38-40 (est.)"
+   },
+   "pedal": "single padded rectangular pedal ~45 cm wide at the front hinged to the chair back; vertical travel ~28-30 cm; some chairs have split pedals (Exo chair)",
+   "springs": "two heavy springs, each with 4 attachment positions on the back post (BB cactus system) giving ~8 resistance levels; spring tension set per exercise",
+   "handles": "two side handles on posts at the sides of the chair (BB Exo chair) used for push-ups; back straps optional",
+   "notes": "chair is used by one body at a time; floor in front = mat space"
+  },
+  "sources": [
+   "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+   "https://pilatesology.com/?p=46617",
+   "https://www.pilates.com/products/wunda-chair/",
+   "https://www.northernfitness.ca/products/exo-chair"
+  ],
+  "confidence": "medium (published specs for frame/carriage/box; footbar and riser heights estimated)"
+ },
+ "specs": [
+  {
+   "id": "footwork",
+   "app_names": [
+    "Footwork (Paralel, hafif yay)",
+    "Footwork (Paralel)",
+    "Footwork (V Pozisyon)"
+   ],
+   "names": {
+    "tr": "Footwork (Paralel / V Pozisyon)",
+    "en": "Footwork (Parallel / V Position)",
+    "es": "Footwork (paralelo / posición en V)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 red + 1 blue springs (3 springs, medium); 'hafif yay' variant: 1 red + 1 blue or 1 red only. Footbar down/low. Headrest down or slightly raised; shoulder blocks against shoulders.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "hamstrings",
+    "calves"
+   ],
+   "secondary_muscles": [
+    "deep abdominals",
+    "hip adductors",
+    "intrinsic foot muscles",
+    "pelvic stabilisers"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows hip-knee-ankle angles and carriage excursion; front shows knee tracking and foot position (parallel vs V)"
+   },
+   "start_pose": {
+    "description": "Lie supine, shoulder tops against the blocks, head on headrest, hands by sides palms down. Feet on footbar at toes (balls of feet) position, heels together or hip-width, pelvis neutral. Carriage closed.",
+    "angles": {
+     "body_pelvis_tilt": 0,
+     "lumbar_flexion": 0,
+     "hip_flexion": 105,
+     "knee_flexion": 108,
+     "ankle_dorsiflexion": -45,
+     "hip_external_rotation_parallel": 0,
+     "hip_external_rotation_V": 25,
+     "stance_width": 0.6,
+     "foot_turn_out_V_deg": 45,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0,
+     "neck": 0
+    },
+    "contacts": [
+     "whole spine/pelvis lying on carriage pad",
+     "shoulder tops against shoulder blocks",
+     "head on headrest",
+     "balls of both feet on footbar",
+     "hands flat on carriage"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 red + 1 blue (medium); light variant 1 red or 1 red + 1 blue",
+    "footbar_position": "down or low (1); bar centered across frame",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest end, feet toward footbar",
+    "body_contacts": "carriage pad (back/pelvis), shoulder blocks (shoulder tops), headrest (head), footbar (balls of feet)",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press the carriage away by extending hips and knees evenly; pelvis, ribcage and shoulders stay still on the carriage; knees stay over 2nd toes",
+     "duration_s": 3.0,
+     "breathing": "exhale as you press",
+     "end_angles": {
+      "hip_flexion": 22,
+      "knee_flexion": 4,
+      "ankle_dorsiflexion": -55,
+      "pelvis_tilt": 0,
+      "lumbar_flexion": 0
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "feet on footbar, balls of feet",
+      "shoulders against blocks"
+     ],
+     "implement_path": "carriage rolls from closed to 35 cm; springs stretch",
+     "notes": "stop 3-5 degrees short of knee lock; heels stay high/level"
+    },
+    {
+     "name": "extended_hold",
+     "description": "Brief pause with legs long, hip flexors/glutes active, no gripping of toes",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "hip_flexion": 22,
+      "knee_flexion": 3,
+      "ankle_dorsiflexion": -55
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "feet on footbar",
+      "shoulders against blocks"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Bend hips and knees slowly to bring the carriage back; control spring pull; do not let the carriage clunk",
+     "duration_s": 3.0,
+     "breathing": "inhale as you return",
+     "end_angles": {
+      "hip_flexion": 105,
+      "knee_flexion": 108,
+      "ankle_dorsiflexion": -45
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on footbar",
+      "shoulders against blocks"
+     ],
+     "implement_path": "carriage closes smoothly 35 -> 0 cm (stop 1-2 cm short of the stopper)",
+     "notes": "keep pelvis neutral (no posterior tilt at the end)"
+    }
+   ],
+   "rep_loop": "press_out -> extended_hold -> return (repeat 8-10)",
+   "tempo_default": "3-0.5-3",
+   "cues": [
+    "Shoulders heavy against the blocks",
+    "Move from the hips, not the back",
+    "Heels level, knees track over second toe"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis tucks (posterior tilt) as the carriage closes",
+     "visual": "lower back lifts off the pad and knees collapse toward chest",
+     "fix": "stop earlier, use lighter springs or add a heel-height cue"
+    },
+    {
+     "mistake": "Knees hyperextend at full extension",
+     "visual": "knee joint locks backward",
+     "fix": "stop 3-5 degrees short of lock"
+    },
+    {
+     "mistake": "Carriage slams home",
+     "visual": "audible clunk, sudden spring recoil",
+     "fix": "control the return, stop 1-2 cm short of the stopper"
+    }
+   ],
+   "safety": "Reduce load or range with a back/hip/knee issue; keep neck neutral; avoid knee lock.",
+   "regression": "Parallel feet at toes with lighter springs; keep neutral pelvis, reduce range.",
+   "progression": "Heavier/lighter springs, single leg, add arm series; 'running'; feet on arches/heels/tendon stretch.",
+   "variants": [
+    {
+     "app_name": "Footwork (Paralel, hafif yay)",
+     "difference": "same motion with 1 red/blue spring: slower tempo, carriage returns less forcefully, same angles"
+    },
+    {
+     "app_name": "Footwork (V Pozisyon)",
+     "difference": "heels together, toes apart ~45 deg (first position), hips externally rotated ~25 deg per leg; knees track over toes, same carriage excursion"
+    },
+    {
+     "app_name": "Position variants (animation hint)",
+     "difference": "Toes: ankle -45; Arches: arch on bar, ankle -10; Heels: ankle +5..+15, toes pulled; Wide/second: stance 1.4, turn-out 45"
+    }
+   ],
+   "sources": [
+    "https://www.buzzsprout.com/1005949/episodes/15124056-a-closer-look-at-footwork",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "single_leg_footwork",
+   "app_names": [
+    "Single Leg Footwork",
+    "Leg Press (Single Leg)"
+   ],
+   "names": {
+    "tr": "Tek Bacak Footwork",
+    "en": "Single Leg Footwork",
+    "es": "Footwork a una pierna"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red + 1 blue (lighter than double-leg footwork); footbar down/low.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "hamstrings",
+    "deep abdominals"
+   ],
+   "secondary_muscles": [
+    "hip rotators",
+    "calves",
+    "glute medius"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front 3q shows pelvic level and working-knee tracking; side shows hip/knee excursion"
+   },
+   "start_pose": {
+    "description": "Supine, one foot (balls) on footbar, other leg in tabletop (hip 90, knee 90) or straight toward ceiling. Pelvis level, carriage closed.",
+    "angles": {
+     "hip_flexion_working": 105,
+     "knee_flexion_working": 108,
+     "ankle_dorsiflexion_working": -45,
+     "hip_flexion_other": 90,
+     "knee_flexion_other": 90,
+     "pelvis_tilt": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "torso on carriage",
+     "shoulder tops on blocks",
+     "balls of working foot on footbar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "down or low",
+    "box_use": "none",
+    "start_orientation": "Supine, feet toward footbar",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, one foot on footbar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Working leg extends and carriage rolls out; pelvis stays square, non-working leg holds tabletop still",
+     "duration_s": 2.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_working": 22,
+      "knee_flexion_working": 4,
+      "ankle_dorsiflexion_working": -55,
+      "hip_flexion_other": 90,
+      "knee_flexion_other": 90
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "working foot on footbar"
+     ],
+     "implement_path": "",
+     "notes": "pelvis must not rotate or drop on the free-leg side"
+    },
+    {
+     "name": "return",
+     "description": "Bend working leg slowly back; free leg stays at 90/90",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion_working": 105,
+      "knee_flexion_working": 108,
+      "hip_flexion_other": 90,
+      "knee_flexion_other": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "working foot on footbar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out -> return (repeat 8-10 per side)",
+   "tempo_default": "2.5-0-2.5",
+   "cues": [
+    "Pelvis square",
+    "Free leg quiet",
+    "Press through whole foot"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis rotates toward the free leg",
+     "visual": "hip on free-leg side drops and lumbar twists",
+     "fix": "lighten springs, shorten range"
+    },
+    {
+     "mistake": "Working knee falls inward",
+     "visual": "knee drifts toward midline",
+     "fix": "push knee over 2nd toe"
+    }
+   ],
+   "safety": "Reduce range if pelvis shifts.",
+   "regression": "Both feet footwork with lighter springs.",
+   "progression": "Add straight-leg lift, heavier spring, single-leg 'running'.",
+   "variants": [
+    {
+     "app_name": "Leg Press (Single Leg)",
+     "difference": "same motion, often with heavier spring and heel position; free leg extended 45 deg up"
+    }
+   ],
+   "sources": [
+    "https://www.buzzsprout.com/1005949/episodes/15124056-a-closer-look-at-footwork",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "footwork_running",
+   "app_names": [
+    "Running on Reformer"
+   ],
+   "names": {
+    "tr": "Reformerda Koşu (Running)",
+    "en": "Running (Footwork)",
+    "es": "Correr (Running) en reformer"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 red + 1 blue or 1 red + 1 blue; footbar down/low.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "calves",
+    "soleus",
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "core",
+    "foot intrinsics"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows alternating heel heights; front shows knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, balls of both feet on footbar, legs extended with carriage out (~35 cm, knees ~3 deg), heels together/hip-width, pelvis neutral.",
+    "angles": {
+     "hip_flexion": 22,
+     "knee_flexion": 3,
+     "ankle_dorsiflexion_L": -55,
+     "ankle_dorsiflexion_R": -55
+    },
+    "contacts": [
+     "carriage pad",
+     "shoulder blocks",
+     "balls of both feet on bar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 red + 1 blue",
+    "footbar_position": "down or low",
+    "box_use": "none",
+    "start_orientation": "Supine, feet toward footbar",
+    "body_contacts": "carriage pad, blocks, headrest, balls of feet on bar",
+    "carriage_start_cm": 35,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "left_heel_down",
+     "description": "Lower left heel (dorsiflex, ankle +10) while the right heel lifts (ankle -55); carriage stays out; hips and ribs do not move",
+     "duration_s": 0.6,
+     "breathing": "natural, rhythmic",
+     "end_angles": {
+      "ankle_dorsiflexion_L": 10,
+      "ankle_dorsiflexion_R": -60,
+      "knee_flexion": 3
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "balls of both feet on bar"
+     ],
+     "implement_path": "",
+     "notes": "knees stay straight; no carriage bounce (<1 cm)"
+    },
+    {
+     "name": "right_heel_down",
+     "description": "Mirror: right heel down, left heel up",
+     "duration_s": 0.6,
+     "breathing": "natural",
+     "end_angles": {
+      "ankle_dorsiflexion_L": -60,
+      "ankle_dorsiflexion_R": 10,
+      "knee_flexion": 3
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "balls of both feet on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "left_heel_down <-> right_heel_down (repeat 20-30)",
+   "tempo_default": "0.6-0.6",
+   "cues": [
+    "Knees long and still",
+    "Rhythm like running in place",
+    "Pelvis stays quiet"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees bend and carriage bobs",
+     "visual": "carriage moves in and out each step",
+     "fix": "keep knee extension and press into bar"
+    }
+   ],
+   "safety": "Avoid knee hyperextension.",
+   "regression": "Lighter spring or slow tempo.",
+   "progression": "Add single-leg running or heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://www.buzzsprout.com/1005949/episodes/15124056-a-closer-look-at-footwork",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "leg_circles_straps",
+   "app_names": [
+    "Leg Circles (Ağır Yay)",
+    "Leg Circles (Kayışlı)"
+   ],
+   "names": {
+    "tr": "Bacak Daireleri (Kayışlı)",
+    "en": "Leg Circles (in Straps)",
+    "es": "Círculos de pierna (con correas)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps",
+    "pulley risers"
+   ],
+   "equipment_setup": "Feet in foot loops; ropes through pulleys on risers; light springs (1 blue/ 1 red) or heavy ('ağır yay': 2-3 red) so the carriage stays closed; footbar down; headrest down.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "hip flexors",
+    "hip adductors",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "deep abdominals",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows leg level and pelvis stability; front shows circle width"
+   },
+   "start_pose": {
+    "description": "Supine, carriage closed, both feet in straps, legs extended vertical (hip flexion 90) or slightly forward (hip 80); pelvis neutral, arms by sides pressing down, head on headrest.",
+    "angles": {
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": -30,
+     "hip_abduction": 0,
+     "pelvis_tilt": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "torso on carriage",
+     "shoulder blocks against shoulders",
+     "both feet in straps",
+     "hands on carriage"
+    ],
+    "implement": "foot loops, ropes angling to pulley above/behind the hips"
+   },
+   "reformer": {
+    "springs": "1 red (light) or 2-3 red (heavy variant)",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Supine, feet in straps, head at headrest end",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, feet in strap loops",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via pulley risers"
+   },
+   "phases": [
+    {
+     "name": "down",
+     "description": "Lower both legs together to about 45 deg above carriage (hip flexion ~45), pelvis stays still",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 45,
+      "hip_abduction": 0,
+      "knee_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "open",
+     "description": "Open legs sideways to a shoulder+ width circle (abduction ~35-40 deg per leg) keeping legs straight",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 55,
+      "hip_abduction": 38,
+      "knee_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "up",
+     "description": "Lift the legs back up around the circle to vertical, squeezing the heels together at the top",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90,
+      "hip_abduction": 0,
+      "knee_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": "carriage stays closed (<1 cm)"
+    },
+    {
+     "name": "reverse",
+     "description": "Reverse direction: open, down, up (repeat other way)",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 45,
+      "hip_abduction": 38
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "down -> open -> up (3-5 reps), reverse (3-5 reps)",
+   "tempo_default": "2-2-2",
+   "cues": [
+    "Pelvis still",
+    "Circle small and controlled",
+    "Ribs knit down"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis rocks or lumbar arches as legs lower",
+     "visual": "low back lifts off pad",
+     "fix": "reduce circle size/range"
+    },
+    {
+     "mistake": "Carriage opens",
+     "visual": "carriage bumps out as legs push straps",
+     "fix": "use heavier spring, press legs back toward vertical"
+    }
+   ],
+   "safety": "Neutral spine; support neck if tense.",
+   "regression": "Smaller circles or bent knees; lighter weight not needed.",
+   "progression": "Heavier/lighter springs, circles with flexed head curl, add Scissors.",
+   "variants": [
+    {
+     "app_name": "Leg Circles (Ağır Yay)",
+     "difference": "heavier spring so carriage stays closed even with larger circles; same joint angles"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt",
+    "https://pilatesology.com/?p=46617"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "frog",
+   "app_names": [
+    "Frog"
+   ],
+   "names": {
+    "tr": "Frog (Kurbağa)",
+    "en": "Frog (Supine Hip Work)",
+    "es": "Rana (Frog)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps",
+    "pulley risers"
+   ],
+   "equipment_setup": "Light springs (1 blue + 1 red), feet in straps, footbar down; carriage stays closed.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "glutes",
+    "hip adductors",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "deep abdominals",
+    "hip rotators"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front 3q shows turn-out and knee splay; side shows leg-extension diagonal"
+   },
+   "start_pose": {
+    "description": "Supine, feet in straps, heels together, toes apart (turned out ~45 deg each), knees bent and open, hips flexed ~120, heels ~25 cm from sit bones.",
+    "angles": {
+     "hip_flexion": 125,
+     "knee_flexion": 125,
+     "hip_external_rotation": 45,
+     "hip_abduction": 30,
+     "ankle_dorsiflexion": 0,
+     "pelvis_tilt": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "torso on carriage",
+     "feet in straps heels touching"
+    ],
+    "implement": "strap loops around feet"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Supine, feet in straps",
+    "body_contacts": "carriage pad, blocks, headrest, strap loops",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps on risers"
+   },
+   "phases": [
+    {
+     "name": "press",
+     "description": "Press legs along a diagonal to extension (hip flexion ~55, knee ~0), legs together, rotated out",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 55,
+      "knee_flexion": 0,
+      "hip_external_rotation": 20,
+      "hip_abduction": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Bend knees back to starting frog, heels stay together",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 125,
+      "knee_flexion": 125,
+      "hip_external_rotation": 45,
+      "hip_abduction": 30
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet in straps"
+     ],
+     "implement_path": "",
+     "notes": "carriage stays closed"
+    }
+   ],
+   "rep_loop": "press -> return (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Heels together",
+    "Pelvis anchored",
+    "Legs press out, not up"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis lifts as legs open",
+     "visual": "tailbone curls up",
+     "fix": "keep pelvis neutral, shorter range"
+    }
+   ],
+   "safety": "Avoid sharp hip pinch; modify range.",
+   "regression": "Reduced range.",
+   "progression": "Add head curl, heavier springs.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "backstroke",
+   "app_names": [
+    "Backstroke"
+   ],
+   "names": {
+    "tr": "Backstroke (Uzun Kutuda)",
+    "en": "Backstroke (Long Box)",
+    "es": "Backstroke (caja larga)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps",
+    "long box",
+    "pulley risers"
+   ],
+   "equipment_setup": "1-2 red springs; long box on carriage with short end against shoulder rests; footbar down; hands in handles, no foot straps.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "shoulder stabilisers",
+    "hip adductors",
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows curl, carriage travel and arm/leg circle; front shows 'carriage-wide' circle"
+   },
+   "start_pose": {
+    "description": "Supine on long box, scapulae just off the back edge, knees bent toward chest, head and shoulders curled, handles in hands with elbows bent, wrists above eye level palms out.",
+    "angles": {
+     "spine_flexion_thoracic": 30,
+     "neck_flexion": 25,
+     "hip_flexion": 120,
+     "knee_flexion": 120,
+     "shoulder_flexion": 90,
+     "elbow_flexion": 100
+    },
+    "contacts": [
+     "sacrum/low back on box",
+     "feet off carriage",
+     "hands on handles"
+    ],
+    "implement": "handles in hands, strap rope toward pulleys"
+   },
+   "reformer": {
+    "springs": "1-2 red",
+    "footbar_position": "down",
+    "box_use": "long box, short end against shoulder rests",
+    "start_orientation": "Supine on box, head toward footbar end",
+    "body_contacts": "box (sacrum/lumbar), hands on handles",
+    "carriage_start_cm": 0,
+    "other_equipment": "box on carriage"
+   },
+   "phases": [
+    {
+     "name": "reach_up",
+     "description": "Reach arms and legs straight up toward ceiling, legs together, curl maintained",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90,
+      "knee_flexion": 0,
+      "shoulder_flexion": 90,
+      "elbow_flexion": 0
+     },
+     "carriage_displacement_cm": 8,
+     "contacts": [
+      "box",
+      "hands on handles"
+     ],
+     "implement_path": "",
+     "notes": "carriage moves slightly out as arms press"
+    },
+    {
+     "name": "open_circle",
+     "description": "Open arms and legs to carriage width and circle forward",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 45,
+      "hip_abduction": 30,
+      "shoulder_flexion": 45,
+      "shoulder_horizontal_abduction": 45
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "box",
+      "hands on handles"
+     ],
+     "implement_path": "",
+     "notes": "keep curl; no neck strain"
+    },
+    {
+     "name": "return",
+     "description": "Close legs/arms to front, bend knees and elbows back to start",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 120,
+      "knee_flexion": 120,
+      "shoulder_flexion": 90,
+      "elbow_flexion": 100
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "reach_up -> open_circle -> return (repeat 3-5)",
+   "tempo_default": "1.5-2-2",
+   "cues": [
+    "Head and shoulders stay curled",
+    "Legs squeeze together on the finish",
+    "Control the carriage"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Neck drops back at the reach",
+     "visual": "chin rises and curl lost",
+     "fix": "lower range, keep chin tucked"
+    }
+   ],
+   "safety": "Avoid with neck issues; box edge can bruise.",
+   "regression": "Prep with knees bent.",
+   "progression": "Longer range; add head-up.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6230/video/Pilates-Backstroke-by-Sarah-Bertucelli",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "coordination",
+   "app_names": [
+    "Coordination"
+   ],
+   "names": {
+    "tr": "Coordination (Koordinasyon)",
+    "en": "Coordination",
+    "es": "Coordinación"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red (light) to 1 red + 1 blue (standard) to 2 red (heavy); straps in hands; footbar down.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "shoulder extensors"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "triceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows curl and arm/leg lines"
+   },
+   "start_pose": {
+    "description": "Supine, head and shoulders curled, legs in tabletop (hip 90, knee 90), straps held straight up from the shoulders.",
+    "angles": {
+     "spine_flexion_thoracic": 35,
+     "neck_flexion": 25,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion": 90,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "pelvis on carriage",
+     "hands on strap handles"
+    ],
+    "implement": "straps vertical"
+   },
+   "reformer": {
+    "springs": "1-2 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest",
+    "body_contacts": "carriage pad, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via risers"
+   },
+   "phases": [
+    {
+     "name": "extend",
+     "description": "Extend legs diagonally and arms in line, curl held",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 55,
+      "knee_flexion": 0,
+      "shoulder_flexion": 70
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands in straps"
+     ],
+     "implement_path": "",
+     "notes": "strap pulls carriage slightly out when arms drop"
+    },
+    {
+     "name": "return",
+     "description": "Bend knees and bring arms back to vertical",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90,
+      "knee_flexion": 90,
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "extend -> return (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Curl stays lifted",
+    "Legs and arms move together"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Head drops",
+     "visual": "neck extends",
+     "fix": "lower curl, regress legs"
+    }
+   ],
+   "safety": "Neck and lower back caution.",
+   "regression": "Keep legs tabletop, move arms only.",
+   "progression": "Both limbs extended lower.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6269/video/Pilates-Coordination-by-Meredith-Rogers"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "rowing_series",
+   "app_names": [
+    "Rowing Series"
+   ],
+   "names": {
+    "tr": "Rowing Serisi (Rowing 1 - Sternuma)",
+    "en": "Rowing Series (Rowing 1, Into the Sternum)",
+    "es": "Serie de remo (Rowing 1, hacia el esternón)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 heavy spring (1-2 red); straps in hands, ropes from head-end pulleys; footbar down; sit facing the shoulder blocks with legs straddling them (Rowing Back). Chosen as the series' representative animation; Shaving/Hug a Tree have their own specs.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "latissimus dorsi",
+    "rhomboids",
+    "posterior deltoids"
+   ],
+   "secondary_muscles": [
+    "hip flexors",
+    "triceps",
+    "spinal extensors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows C-curve roll, arm path and carriage opening"
+   },
+   "start_pose": {
+    "description": "Seated upright on the carriage facing the shoulder blocks (back toward footbar), legs straddling blocks, handles pulled to the chest in fists palms down, elbows bent wide, spine tall.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "knee_flexion": 5,
+     "shoulder_flexion": 20,
+     "elbow_flexion": 120,
+     "lumbar_flexion": 0,
+     "thoracic_flexion": 0,
+     "spine_rotation": 0
+    },
+    "contacts": [
+     "sit bones on carriage",
+     "feet/legs on carriage around shoulder blocks",
+     "hands on handles at sternum"
+    ],
+    "implement": "handles at the sternum"
+   },
+   "reformer": {
+    "springs": "1-2 red (heavy)",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Seated facing shoulder blocks",
+    "body_contacts": "sit bones on carriage pad, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via pulleys"
+   },
+   "phases": [
+    {
+     "name": "roll_back",
+     "description": "Roll back in a C-curve pulling handles into the sternum; carriage opens",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -35,
+      "lumbar_flexion": 35,
+      "thoracic_flexion": 20,
+      "pelvis_tilt": -25,
+      "shoulder_extension": 10,
+      "elbow_flexion": 130
+     },
+     "carriage_displacement_cm": 25,
+     "contacts": [
+      "sit bones",
+      "legs around blocks",
+      "hands at sternum"
+     ],
+     "implement_path": "carriage 0->25",
+     "notes": "hold the carriage open"
+    },
+    {
+     "name": "open_round_forward",
+     "description": "Press arms wide to the sides, round forward like a roll-up while keeping the carriage open",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 40,
+      "lumbar_flexion": 50,
+      "shoulder_horizontal_abduction": 80,
+      "shoulder_flexion": 0,
+      "elbow_flexion": 10
+     },
+     "carriage_displacement_cm": 25,
+     "contacts": [
+      "sit bones",
+      "hands on handles"
+     ],
+     "implement_path": "",
+     "notes": "do not let the carriage close"
+    },
+    {
+     "name": "circle_roll_up",
+     "description": "Sweep arms back toward footbar, circle up and reach toward toes then stack up to sitting as carriage returns",
+     "duration_s": 2.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "lumbar_flexion": 0,
+      "shoulder_flexion": 110,
+      "elbow_flexion": 10
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "sit bones",
+      "hands on handles"
+     ],
+     "implement_path": "carriage 25->0",
+     "notes": "stack spine vertebra by vertebra"
+    }
+   ],
+   "rep_loop": "roll_back -> open_round_forward -> circle_roll_up (repeat 3-5)",
+   "tempo_default": "2-2-2.5",
+   "cues": [
+    "Pull from the back",
+    "Spine articulates in one long C",
+    "Control the carriage"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Carriage slams closed",
+     "visual": "sudden spring recoil",
+     "fix": "press into handles and keep carriage open"
+    }
+   ],
+   "safety": "Avoid with disc issues; keep abdominals engaged.",
+   "regression": "Sit on a box or lighter spring.",
+   "progression": "Heavier spring, rowing 2-4.",
+   "variants": [
+    {
+     "app_name": "Rowing Series",
+     "difference": "representative movement Rowing 1 (Into the Sternum); Rowing 2-6 are separate/variants"
+    }
+   ],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6227/video/Pilates-Rowing-Back-1-by-Sarah-Bertucelli",
+    "https://pilatesanytime.com/exercise-view/4025/video/Pilates-Rowing-Back-and-Rowing-Front-by-Meredith-Rogers",
+    "https://onlinepilatesclasses.com/pilates-exercises/reformer-exercises/reformer-rowing-1-sternum/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "rowing_shaving",
+   "app_names": [
+    "Rowing — Shaving"
+   ],
+   "names": {
+    "tr": "Rowing - Tıraş (Shave)",
+    "en": "Rowing 5 - Shave",
+    "es": "Remo - Afeitado (Shave)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red or 1 red + 1 blue, footbar down; sit cross-legged hips against shoulder blocks facing footbar.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "deltoids",
+    "latissimus",
+    "triceps",
+    "spinal erectors"
+   ],
+   "secondary_muscles": [
+    "abdominals",
+    "hip stabilisers"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows arm diagonal and spine stack"
+   },
+   "start_pose": {
+    "description": "Cross-legged seated, hips against blocks facing footbar, handles across palms, hands behind head with palms toward head, elbows wide.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 100,
+     "knee_flexion": 110,
+     "hip_external_rotation": 50,
+     "shoulder_flexion": 100,
+     "shoulder_external_rotation": 60,
+     "elbow_flexion": 130
+    },
+    "contacts": [
+     "sit bones on carriage",
+     "legs crossed on carriage",
+     "hands on handles behind head"
+    ],
+    "implement": "handles across palms"
+   },
+   "reformer": {
+    "springs": "1 red (+1 blue)",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Seated facing footbar, cross-legged",
+    "body_contacts": "carriage pad, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via pulleys"
+   },
+   "phases": [
+    {
+     "name": "reach_up_diagonal",
+     "description": "Press arms up to the high diagonal keeping palms toward head, index fingers and thumbs together",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "shoulder_flexion": 165,
+      "elbow_flexion": 0
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "sit bones",
+      "hands on handles"
+     ],
+     "implement_path": "",
+     "notes": "carriage opens as hands move from the pulleys"
+    },
+    {
+     "name": "bend_wide",
+     "description": "Bend elbows wide back to behind head and close the springs",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 100,
+      "elbow_flexion": 130
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "sit bones"
+     ],
+     "implement_path": "",
+     "notes": "carriage closes slowly"
+    }
+   ],
+   "rep_loop": "reach_up_diagonal <-> bend_wide (repeat 3-5, switch leg cross)",
+   "tempo_default": "1.5-1.5",
+   "cues": [
+    "Palms facing head",
+    "Tall spine",
+    "Reach long and diagonal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Ribs flare",
+     "visual": "back arches",
+     "fix": "lower arms or tighten abs"
+    }
+   ],
+   "safety": "Shoulder caution.",
+   "regression": "Reduce reach.",
+   "progression": "More spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6227/video/Pilates-Rowing-Back-1-by-Sarah-Bertucelli",
+    "https://pilatesanytime.com/exercise-view/4025/video/Pilates-Rowing-Back-and-Rowing-Front-by-Meredith-Rogers",
+    "https://onlinepilatesclasses.com/pilates-exercises/reformer-exercises/reformer-rowing-1-sternum/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "rowing_hug_a_tree",
+   "app_names": [
+    "Rowing — Hug a Tree"
+   ],
+   "names": {
+    "tr": "Rowing - Ağaç Sarma (Hug a Tree)",
+    "en": "Rowing 6 - Hug a Tree",
+    "es": "Remo - Abrazar un árbol (Hug a Tree)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red; same seated cross-leg position as Shave; carriage stays semi-open.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "posterior deltoids",
+    "pectorals",
+    "rhomboids"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "top",
+    "why": "front shows the arc of the arms; top shows horizontal adduction"
+   },
+   "start_pose": {
+    "description": "Cross-legged seated, arms long to the sides in T (elbows slightly lower than shoulders), carriage open ~20 cm.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "shoulder_abduction": 90,
+     "shoulder_horizontal_abduction": 80,
+     "elbow_flexion": 5,
+     "hip_external_rotation": 50
+    },
+    "contacts": [
+     "sit bones on carriage",
+     "hands on handles"
+    ],
+    "implement": "arms long to the sides"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Seated cross-legged, facing footbar",
+    "body_contacts": "carriage pad, hands in straps",
+    "carriage_start_cm": 20,
+    "other_equipment": "straps via pulleys"
+   },
+   "phases": [
+    {
+     "name": "hug",
+     "description": "Hug arms forward and together as if around a tree, reaching from the back",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_horizontal_abduction": -10,
+      "shoulder_abduction": 85,
+      "elbow_flexion": 10
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "sit bones"
+     ],
+     "implement_path": "",
+     "notes": "carriage stays steady"
+    },
+    {
+     "name": "open",
+     "description": "Open the arms back to the T, resisting springs",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_horizontal_abduction": 80,
+      "shoulder_abduction": 90
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "sit bones"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "hug <-> open (repeat 3-5)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Reach from the back",
+    "Ribs stay still",
+    "Shoulders low"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Shoulders hike",
+     "visual": "shoulders rise to ears",
+     "fix": "depress scapulae"
+    }
+   ],
+   "safety": "Shoulder caution.",
+   "regression": "Lower range.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6227/video/Pilates-Rowing-Back-1-by-Sarah-Bertucelli",
+    "https://pilatesanytime.com/exercise-view/4025/video/Pilates-Rowing-Back-and-Rowing-Front-by-Meredith-Rogers",
+    "https://onlinepilatesclasses.com/pilates-exercises/reformer-exercises/reformer-rowing-1-sternum/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "chest_expansion",
+   "app_names": [
+    "Chest Expansion"
+   ],
+   "names": {
+    "tr": "Chest Expansion (Göğüs Genişletme)",
+    "en": "Chest Expansion",
+    "es": "Expansión de pecho"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red or 1 red + 1 blue; straps in hands; kneel facing the back (head end).",
+   "body_orientation": "kneeling",
+   "primary_muscles": [
+    "triceps",
+    "posterior deltoids",
+    "rhomboids"
+   ],
+   "secondary_muscles": [
+    "spinal extensors",
+    "abdominals",
+    "neck rotators"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows arm extension and carriage opening; front shows head turn"
+   },
+   "start_pose": {
+    "description": "Kneeling upright near the footbar end of the carriage facing the pulleys, handles in hands, arms by sides, thighs vertical, spine tall.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 90,
+     "shoulder_extension": 0,
+     "elbow_flexion": 0,
+     "neck_rotation": 0
+    },
+    "contacts": [
+     "knees on carriage pad",
+     "shins on carriage",
+     "hands on handles"
+    ],
+    "implement": "straps in front"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Kneeling facing back",
+    "body_contacts": "knees on carriage, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via pulleys"
+   },
+   "phases": [
+    {
+     "name": "arms_back",
+     "description": "Press arms straight back behind body to ~45 deg extension, chest lifts",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "shoulder_extension": 45,
+      "elbow_flexion": 0
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "knees on carriage"
+     ],
+     "implement_path": "",
+     "notes": "carriage opens as hands move away from pulleys"
+    },
+    {
+     "name": "head_turn",
+     "description": "Turn the head right then left holding arms",
+     "duration_s": 1.5,
+     "breathing": "inhale / exhale",
+     "end_angles": {
+      "neck_rotation_right": 45,
+      "neck_rotation_left": 45
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "knees on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Bring arms back to sides and close carriage",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_extension": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "knees on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "arms_back -> head_turn -> return (repeat 3-5)",
+   "tempo_default": "2-1.5-2",
+   "cues": [
+    "Tall spine",
+    "Ribs knit down",
+    "Open chest without arching"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Lower back arches",
+     "visual": "ribs flare forward",
+     "fix": "brace core"
+    }
+   ],
+   "safety": "Avoid with neck/knee issues.",
+   "regression": "Light spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6216/video/Pilates-Chest-Expansion-by-Amy-Havens"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "reverse_chest_expansion",
+   "app_names": [
+    "Reverse Chest Expansion"
+   ],
+   "names": {
+    "tr": "Ters Chest Expansion",
+    "en": "Reverse Chest Expansion",
+    "es": "Expansión de pecho inversa"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red; kneel facing the front (footbar) with heels pressed against shoulder blocks; straps from pulleys behind.",
+   "body_orientation": "kneeling",
+   "primary_muscles": [
+    "pectorals",
+    "anterior deltoids",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "spinal extensors",
+    "glutes",
+    "abdominals"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows ribcage/pelvis stacking; front shows arm path"
+   },
+   "start_pose": {
+    "description": "Kneeling facing footbar, heels against blocks, torso upright, arms low behind/at sides holding handles.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 90,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "knees on carriage",
+     "heels against shoulder blocks"
+    ],
+    "implement": "handles low"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Kneeling facing front",
+    "body_contacts": "knees on carriage, heels on blocks, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps via pulleys"
+   },
+   "phases": [
+    {
+     "name": "press_forward",
+     "description": "Press arms forward to shoulder height keeping ribs stable",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 90,
+      "elbow_flexion": 0
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "knees on carriage"
+     ],
+     "implement_path": "",
+     "notes": "carriage opens as hands move away from pulleys"
+    },
+    {
+     "name": "return",
+     "description": "Lower arms back down",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "knees on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_forward <-> return (repeat 5)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Ribs over pelvis",
+    "Press from the back"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Torso leans back",
+     "visual": "spine tilts behind vertical",
+     "fix": "brace core"
+    }
+   ],
+   "safety": "Balance caution.",
+   "regression": "Lighter spring.",
+   "progression": "More range.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6217/video/Pilates-Reverse-Chest-Expansion-by-Amy-Havens"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "short_box_round_back",
+   "app_names": [
+    "Short Box — Round Back"
+   ],
+   "names": {
+    "tr": "Short Box - Yuvarlak Sırt",
+    "en": "Short Box - Round Back",
+    "es": "Caja corta - Espalda redonda"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "equipment_setup": "1 red spring (medium); short box crosswise on carriage behind the shoulder rests; feet under footstrap or on footbar (feet hooked); carriage stays still.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "rectus abdominis",
+    "obliques"
+   ],
+   "secondary_muscles": [
+    "hip flexors",
+    "spinal erectors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows C-curve depth and roll"
+   },
+   "start_pose": {
+    "description": "Seated on box, hands crossed on chest/behind head, spine upright, feet in strap.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "lumbar_flexion": 0,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet under footstrap"
+    ],
+    "implement": "hands behind head or crossed on chest"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "short box crosswise",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet under strap",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + footstrap"
+   },
+   "phases": [
+    {
+     "name": "round_back",
+     "description": "Roll back in a C-curve to ~45 deg behind vertical, pelvis tucks",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -45,
+      "lumbar_flexion": 40,
+      "thoracic_flexion": 20,
+      "pelvis_tilt": -25
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box",
+      "feet in strap"
+     ],
+     "implement_path": "",
+     "notes": "spine rounds with deep abdominals"
+    },
+    {
+     "name": "roll_up",
+     "description": "Roll back up vertebra by vertebra",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "lumbar_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box",
+      "feet in strap"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 3-5)",
+   "tempo_default": "2-1-2",
+   "cues": [
+    "Scoop abs",
+    "Round one vertebra at a time"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Neck forward",
+     "visual": "chin juts",
+     "fix": "keep chin tucked"
+    }
+   ],
+   "safety": "Neck/spine caution; keep carriage still.",
+   "regression": "Hands on thighs.",
+   "progression": "Add pole overhead.",
+   "variants": [],
+   "sources": [
+    "https://pilatesanytime.com/class-view/2735/video/Pilates-Wunda-Chair-Sequencing-by-Benjamin-Degenhardt",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "short_box_flat_back",
+   "app_names": [
+    "Short Box — Flat Back"
+   ],
+   "names": {
+    "tr": "Short Box - Düz Sırt",
+    "en": "Short Box - Flat Back",
+    "es": "Caja corta - Espalda plana"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "equipment_setup": "1 red spring (medium); short box crosswise on carriage behind the shoulder rests; feet under footstrap or on footbar (feet hooked); carriage stays still.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "obliques"
+   ],
+   "secondary_muscles": [
+    "hip flexors",
+    "spinal erectors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows spine staying straight like a plank"
+   },
+   "start_pose": {
+    "description": "Seated on box, spine tall, hands behind head, feet in strap.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "lumbar_flexion": 0
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet under footstrap"
+    ],
+    "implement": "hands behind head or crossed on chest"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "short box crosswise",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet under strap",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + footstrap"
+   },
+   "phases": [
+    {
+     "name": "hinge_back",
+     "description": "Hinge from hips leaning back with a flat spine to ~45 deg behind vertical",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -45,
+      "lumbar_flexion": 0,
+      "hip_flexion": 135
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box",
+      "feet in strap"
+     ],
+     "implement_path": "",
+     "notes": "flat spine like a board"
+    },
+    {
+     "name": "return",
+     "description": "Return upright keeping flat",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 3-5)",
+   "tempo_default": "2-1-2",
+   "cues": [
+    "Hinge at hips",
+    "Long spine"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Lumbar rounds",
+     "visual": "back curves",
+     "fix": "stop earlier"
+    }
+   ],
+   "safety": "Neck/spine caution; keep carriage still.",
+   "regression": "Hands on thighs.",
+   "progression": "Add pole overhead.",
+   "variants": [],
+   "sources": [
+    "https://pilatesanytime.com/class-view/2735/video/Pilates-Wunda-Chair-Sequencing-by-Benjamin-Degenhardt",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "short_box_side_reach",
+   "app_names": [
+    "Short Box — Side Reach"
+   ],
+   "names": {
+    "tr": "Short Box - Yana Uzanma",
+    "en": "Short Box - Side Reach",
+    "es": "Caja corta - Alcance lateral"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "equipment_setup": "1 red spring (medium); short box crosswise on carriage behind the shoulder rests; feet under footstrap or on footbar (feet hooked); carriage stays still.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "obliques",
+    "quadratus lumborum"
+   ],
+   "secondary_muscles": [
+    "hip flexors",
+    "spinal erectors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "front shows lateral flexion arc and arm overhead"
+   },
+   "start_pose": {
+    "description": "Seated astride box, one hand behind head, other arm hanging, spine tall.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "spine_lateral_flexion": 0,
+     "shoulder_abduction_working": 0
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet under footstrap"
+    ],
+    "implement": "hands behind head or crossed on chest"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "short box crosswise",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet under strap",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + footstrap"
+   },
+   "phases": [
+    {
+     "name": "side_bend",
+     "description": "Lean to side with arm reaching overhead along an arc, lateral flexion ~45 deg",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "spine_lateral_flexion": 45,
+      "shoulder_abduction_working": 170,
+      "trunk_from_vertical": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box",
+      "feet in strap"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Return upright through center",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "spine_lateral_flexion": 0,
+      "shoulder_abduction_working": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 3-5)",
+   "tempo_default": "2-1-2",
+   "cues": [
+    "Length then bend",
+    "Shoulders level"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Torso rotates",
+     "visual": "chest turns toward floor",
+     "fix": "keep ribcage facing front"
+    }
+   ],
+   "safety": "Neck/spine caution; keep carriage still.",
+   "regression": "Hands on thighs.",
+   "progression": "Add pole overhead.",
+   "variants": [],
+   "sources": [
+    "https://pilatesanytime.com/class-view/2735/video/Pilates-Wunda-Chair-Sequencing-by-Benjamin-Degenhardt",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "short_box_twist",
+   "app_names": [
+    "Short Box — Twist"
+   ],
+   "names": {
+    "tr": "Short Box - Twist",
+    "en": "Short Box - Twist",
+    "es": "Caja corta - Giro"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footstrap",
+    "pole (optional)"
+   ],
+   "equipment_setup": "1 red spring (medium); short box crosswise on carriage behind the shoulder rests; feet under footstrap or on footbar (feet hooked); carriage stays still.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "obliques"
+   ],
+   "secondary_muscles": [
+    "hip flexors",
+    "spinal erectors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "top shows rotation; front shows ribcage turn"
+   },
+   "start_pose": {
+    "description": "Seated on box, hands behind head, elbows wide.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "spine_rotation": 0,
+     "hip_flexion": 90
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet under footstrap"
+    ],
+    "implement": "hands behind head or crossed on chest"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "short box crosswise",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet under strap",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + footstrap"
+   },
+   "phases": [
+    {
+     "name": "twist_right",
+     "description": "Rotate torso 60 deg right with spine upright; elbows stay wide",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "spine_rotation": 60,
+      "thoracic_rotation": 45,
+      "lumbar_rotation": 15
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box",
+      "feet in strap"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "twist_left",
+     "description": "Rotate through center to left 60 deg",
+     "duration_s": 2.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "spine_rotation": -60
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 3-5)",
+   "tempo_default": "2-1-2",
+   "cues": [
+    "Rotate from the waist",
+    "Lift tall"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips shift",
+     "visual": "pelvis rotates",
+     "fix": "anchor sit bones"
+    }
+   ],
+   "safety": "Neck/spine caution; keep carriage still.",
+   "regression": "Hands on thighs.",
+   "progression": "Add pole overhead.",
+   "variants": [],
+   "sources": [
+    "https://pilatesanytime.com/class-view/2735/video/Pilates-Wunda-Chair-Sequencing-by-Benjamin-Degenhardt",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "long_box_pulling_straps",
+   "app_names": [
+    "Long Box Pulling Straps",
+    "Long Box — Pulling Straps",
+    "Arms Pulling Straps"
+   ],
+   "names": {
+    "tr": "Uzun Kutuda Pulling Straps",
+    "en": "Long Box Pulling Straps",
+    "es": "Caja larga - Pulling Straps"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "long box",
+    "straps"
+   ],
+   "equipment_setup": "1 red + 1 blue; long box on carriage, short end against shoulder rests; prone on box facing the pulley end holding straps; footbar down.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "spinal extensors",
+    "posterior deltoids",
+    "rhomboids",
+    "latissimus dorsi"
+   ],
+   "secondary_muscles": [
+    "glutes",
+    "hamstrings",
+    "abdominals"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows chest lift, arm sweep and carriage travel"
+   },
+   "start_pose": {
+    "description": "Prone on long box with chest at box end, hands in handles, arms extended forward, legs long and together, head in line with spine.",
+    "angles": {
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "spine_extension": 0,
+     "shoulder_flexion": 160,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "torso on box",
+     "legs on box",
+     "hands in straps"
+    ],
+    "implement": "straps held"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "down",
+    "box_use": "long box, short end at shoulder rests",
+    "start_orientation": "Prone facing pulley end",
+    "body_contacts": "torso on box, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + straps"
+   },
+   "phases": [
+    {
+     "name": "pull_back",
+     "description": "Sweep arms back along sides while chest lifts into thoracic extension (like swan)",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "spine_extension_thoracic": 30,
+      "spine_extension_lumbar": 10,
+      "shoulder_extension": 40,
+      "elbow_flexion": 0,
+      "hip_flexion": -5
+     },
+     "carriage_displacement_cm": 20,
+     "contacts": [
+      "box",
+      "legs on box"
+     ],
+     "implement_path": "",
+     "notes": "carriage opens as hands move away from pulleys"
+    },
+    {
+     "name": "return",
+     "description": "Lower chest and reach arms forward again",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "spine_extension_thoracic": 0,
+      "shoulder_flexion": 160
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pull_back <-> return (repeat 5-6)",
+   "tempo_default": "2-0.5-2.5",
+   "cues": [
+    "Lengthen before lifting",
+    "Pull from the back",
+    "Neck long"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Neck cranks up",
+     "visual": "chin lifts",
+     "fix": "look at floor"
+    }
+   ],
+   "safety": "Back caution; avoid hyperextension.",
+   "regression": "Smaller range.",
+   "progression": "Add T variation.",
+   "variants": [
+    {
+     "app_name": "Arms Pulling Straps",
+     "difference": "uncertain mapping: app name lacks 'Long Box'; same shoulder-extension pattern; confirm if refers to a supine arm exercise"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "long_box_t_shape",
+   "app_names": [
+    "Pulling Straps II",
+    "Arms T-Shape"
+   ],
+   "names": {
+    "tr": "Pulling Straps II (T Şekli)",
+    "en": "Pulling Straps II (T Shape)",
+    "es": "Pulling Straps II (forma de T)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "long box",
+    "straps"
+   ],
+   "equipment_setup": "1 red + 1 blue; same prone long-box setup; arms open to a T instead of back to sides.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "posterior deltoids",
+    "rhomboids",
+    "middle trapezius"
+   ],
+   "secondary_muscles": [
+    "spinal extensors",
+    "glutes"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows T arm line; side shows chest lift"
+   },
+   "start_pose": {
+    "description": "Prone on long box, arms forward holding straps, legs long.",
+    "angles": {
+     "shoulder_flexion": 160,
+     "spine_extension": 0
+    },
+    "contacts": [
+     "torso on box",
+     "hands in straps"
+    ],
+    "implement": "straps"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "down",
+    "box_use": "long box",
+    "start_orientation": "Prone facing pulley end",
+    "body_contacts": "torso on box, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "box + straps"
+   },
+   "phases": [
+    {
+     "name": "open_t",
+     "description": "Open arms out to sides in a T at shoulder height while chest lifts",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_abduction": 90,
+      "shoulder_horizontal_abduction": 90,
+      "spine_extension_thoracic": 30
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": "carriage opens ~15 cm"
+    },
+    {
+     "name": "return",
+     "description": "Bring arms back forward and lower",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 160
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "open_t <-> return (repeat 5)",
+   "tempo_default": "2-2.5",
+   "cues": [
+    "Reach long through arms",
+    "Squeeze shoulder blades"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Shoulders shrug",
+     "visual": "traps lift",
+     "fix": "depress scapulae"
+    }
+   ],
+   "safety": "Back caution.",
+   "regression": "Smaller range.",
+   "progression": "Heavier spring.",
+   "variants": [
+    {
+     "app_name": "Arms T-Shape",
+     "difference": "mapped here as the T-shaped arm pull; if it is the supine T-arms exercise, the shoulder motion (horizontal abduction) is the same"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "jumps_basic",
+   "app_names": [
+    "Basic Jumps (Paralel)",
+    "Jumps (First Position)",
+    "Plyometric Jumps"
+   ],
+   "names": {
+    "tr": "Temel Jumps (Paralel / First Position)",
+    "en": "Basic Jumps (Parallel / First Position)",
+    "es": "Saltos básicos (paralelo / primera posición)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue + 1 red, jump board attached, carriage closed.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "calves"
+   ],
+   "secondary_muscles": [
+    "glutes",
+    "hamstrings",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, both feet parallel on jump board (balls of feet, heels together), knees ~115, carriage closed.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0,
+     "hip_external_rotation": 0
+    },
+    "contacts": [
+     "feet on board",
+     "torso on carriage",
+     "head on headrest"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Hold bent knees against the board with carriage closed, core braced",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board",
+      "shoulders on blocks"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "push_off",
+     "description": "Explode through legs to straight; carriage flies out, feet leave board",
+     "duration_s": 0.35,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 18,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": -65
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "flight - no foot contact",
+      "torso on carriage"
+     ],
+     "implement_path": "carriage 0->40 (+5 overshoot)",
+     "notes": "flight 0.2-0.3 s"
+    },
+    {
+     "name": "land",
+     "description": "Soft landing: balls then heels on board, knees absorb, carriage returns",
+     "duration_s": 0.45,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board",
+      "shoulders on blocks"
+     ],
+     "implement_path": "carriage back to 0",
+     "notes": "land quietly with bent knees"
+    }
+   ],
+   "rep_loop": "load -> push_off -> land (repeat 10-15)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Soft landing",
+    "Heels together in V variant",
+    "Neutral pelvis"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Landing with straight knees",
+     "visual": "jerky carriage recoil",
+     "fix": "bend knees on land"
+    }
+   ],
+   "safety": "Jump board must be locked; land softly with bent knees; avoid with joint or bone-density concerns; keep pelvis neutral.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [
+    {
+     "app_name": "Jumps (First Position)",
+     "difference": "feet in V (heels together, toes 45 deg out), hips externally rotated ~25 deg"
+    },
+    {
+     "app_name": "Plyometric Jumps",
+     "difference": "same as Basic Jumps with faster rhythm/greater height; same angles"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "jumps_alternating",
+   "app_names": [
+    "Alternating Jumps"
+   ],
+   "names": {
+    "tr": "Alternating Jumps",
+    "en": "Alternating Jumps",
+    "es": "Saltos alternados"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue + 1 red, jump board.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "core",
+    "glute medius"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, both feet on board, knees bent.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "feet on board",
+     "torso on carriage"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Both feet on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "jump_left",
+     "description": "Push off, land on left foot only, right foot hovers",
+     "duration_s": 0.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_L": 110,
+      "knee_flexion_L": 115,
+      "hip_flexion_R": 90,
+      "knee_flexion_R": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "left foot on board"
+     ],
+     "implement_path": "carriage 0->40->0",
+     "notes": ""
+    },
+    {
+     "name": "jump_right",
+     "description": "Push off, land on right foot only",
+     "duration_s": 0.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_R": 110,
+      "knee_flexion_R": 115,
+      "hip_flexion_L": 90,
+      "knee_flexion_L": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "right foot on board"
+     ],
+     "implement_path": "carriage 0->40->0",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> jump_left -> jump_right (repeat)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Alternate quietly",
+    "Pelvis level"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drop on landing",
+     "visual": "pelvis tilts to one side",
+     "fix": "lighter spring"
+    }
+   ],
+   "safety": "Jump board must be locked; land softly with bent knees; avoid with joint or bone-density concerns; keep pelvis neutral.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "jumps_scissors",
+   "app_names": [
+    "Scissors Jumps"
+   ],
+   "names": {
+    "tr": "Scissors Jumps",
+    "en": "Scissors Jumps",
+    "es": "Saltos tijera"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue + 1 red, jump board.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "core",
+    "adductors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, one foot high on board, other low (split stance), knees bent.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "both feet on board"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Split stance on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion_high": 125,
+      "knee_flexion_high": 130,
+      "hip_flexion_low": 100,
+      "knee_flexion_low": 100
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "jump_switch",
+     "description": "Push off and switch feet positions in the air then land",
+     "duration_s": 0.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_high": 100,
+      "knee_flexion_high": 100,
+      "hip_flexion_low": 125,
+      "knee_flexion_low": 130
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "carriage 0->40->0",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> jump_switch (repeat)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Quick switch",
+    "Quiet landing"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Feet land asymmetrically",
+     "visual": "carriage skews",
+     "fix": "keep tempo"
+    }
+   ],
+   "safety": "Jump board must be locked; land softly with bent knees; avoid with joint or bone-density concerns; keep pelvis neutral.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "jumps_single_leg",
+   "app_names": [
+    "Single Leg Jumps",
+    "Single Leg Plyos"
+   ],
+   "names": {
+    "tr": "Tek Bacak Jumps / Plyo",
+    "en": "Single Leg Jumps / Plyos",
+    "es": "Saltos a una pierna / pliometría"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue (light), jump board.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "glute medius",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, one foot on board, other leg tabletop (hip 90, knee 90).",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0,
+     "hip_flexion_other": 90,
+     "knee_flexion_other": 90
+    },
+    "contacts": [
+     "one foot on board"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "One foot loaded",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "one foot on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "push_off",
+     "description": "Single-leg extension, carriage flies",
+     "duration_s": 0.35,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 18,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": -65
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "no contact"
+     ],
+     "implement_path": "",
+     "notes": "lower spring tension"
+    },
+    {
+     "name": "land",
+     "description": "Land softly on one foot",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "one foot on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> push_off -> land (8-10 per side)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Pelvis level",
+    "Knee over toes"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis rotates",
+     "visual": "hip lifts on free leg side",
+     "fix": "lighter spring"
+    }
+   ],
+   "safety": "Single-leg impact: use light springs and soft landings.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [
+    {
+     "app_name": "Single Leg Plyos",
+     "difference": "faster rhythm and greater flight; same angles"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "jumps_tuck",
+   "app_names": [
+    "Tuck Jumps"
+   ],
+   "names": {
+    "tr": "Tuck Jumps",
+    "en": "Tuck Jumps",
+    "es": "Saltos con rodillas al pecho (tuck)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue (light), jump board.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "core",
+    "hip flexors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, feet on board, knees bent.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "feet on board"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Both feet on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "tuck",
+     "description": "Jump and draw knees toward chest in flight (hip ~125, knee ~130)",
+     "duration_s": 0.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 125,
+      "knee_flexion": 130
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "no contact"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "land",
+     "description": "Extend and land softly on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> tuck -> land (repeat 8)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Soft landing",
+    "Keep pelvis neutral"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees collide with chest",
+     "visual": "carriage bounces",
+     "fix": "reduce tuck"
+    }
+   ],
+   "safety": "Advanced; landing control required.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "jumps_split",
+   "app_names": [
+    "Split Jumps"
+   ],
+   "names": {
+    "tr": "Split Jumps",
+    "en": "Split Jumps",
+    "es": "Saltos en abertura (split)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue + 1 red, jump board.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "glutes"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Supine, feet on board in wide second position, knees bent.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0,
+     "stance_width": 1.6,
+     "hip_abduction": 25
+    },
+    "contacts": [
+     "feet on board"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Wide stance on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0,
+      "hip_abduction": 25
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "jump",
+     "description": "Push off straight, land wide again",
+     "duration_s": 0.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 18,
+      "knee_flexion": 0,
+      "hip_abduction": 25
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "no contact"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "land",
+     "description": "Soft landing wide",
+     "duration_s": 0.4,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0,
+      "hip_abduction": 25
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> jump -> land (repeat 10)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Wide knees over toes",
+    "Quiet landing"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees drift inward",
+     "visual": "valgus",
+     "fix": "push knees out"
+    }
+   ],
+   "safety": "Jump board must be locked; land softly with bent knees; avoid with joint or bone-density concerns; keep pelvis neutral.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "jumps_lateral",
+   "app_names": [
+    "Lateral Jumps"
+   ],
+   "names": {
+    "tr": "Lateral Jumps (Yan Yatış)",
+    "en": "Lateral Jumps (Side-lying)",
+    "es": "Saltos laterales (de lado)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "jump board"
+   ],
+   "equipment_setup": "1 blue (light), side-lying on carriage, jump board attached.",
+   "body_orientation": "side_lying",
+   "primary_muscles": [
+    "quadriceps"
+   ],
+   "secondary_muscles": [
+    "obliques",
+    "glute medius"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip/knee/ankle and carriage flight; front shows foot placement and knee tracking"
+   },
+   "start_pose": {
+    "description": "Side-lying on carriage (head on arm or headrest), both feet on board, knees bent.",
+    "angles": {
+     "hip_flexion": 110,
+     "knee_flexion": 115,
+     "ankle_dorsiflexion": -20,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "side torso on carriage",
+     "feet on board"
+    ],
+    "implement": "jump board"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red (light-medium)",
+    "footbar_position": "jump board in place of footbar",
+    "box_use": "none",
+    "start_orientation": "Supine, head toward headrest, feet on jump board",
+    "body_contacts": "carriage pad, shoulder blocks, headrest, balls of feet on jump board",
+    "carriage_start_cm": 0,
+    "other_equipment": "jump board"
+   },
+   "phases": [
+    {
+     "name": "load",
+     "description": "Feet on board",
+     "duration_s": 0.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "jump",
+     "description": "Push straight, carriage flies",
+     "duration_s": 0.35,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 18,
+      "knee_flexion": 0
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "no contact"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "land",
+     "description": "Soft landing",
+     "duration_s": 0.45,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 110,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": -20,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on board"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "load -> jump -> land (repeat 10, switch side)",
+   "tempo_default": "explosive-controlled",
+   "cues": [
+    "Pelvis stacked",
+    "Soft landing"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis rolls",
+     "visual": "top hip tilts back",
+     "fix": "stack hips"
+    }
+   ],
+   "safety": "Side-lying jumps need stable carriage and light spring.",
+   "regression": "Footwork without jump, lighter range.",
+   "progression": "Heavier spring, longer flight, single-leg variants.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=46617",
+    "https://www.pilatesanytime.com/class-view/5956/video/Pilates-Athletic-Reformer-Flow-by-Carrie-Pages"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "long_stretch",
+   "app_names": [
+    "Long Stretch"
+   ],
+   "names": {
+    "tr": "Long Stretch",
+    "en": "Long Stretch",
+    "es": "Long Stretch (plancha larga)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red (light-medium) springs; footbar up/ mid; heels against shoulder blocks, hands on footbar. Carriage start is open (plank length); absolute start value estimated.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "shoulder stabilisers",
+    "serratus anterior",
+    "abdominals"
+   ],
+   "secondary_muscles": [
+    "triceps",
+    "glutes",
+    "quadriceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows plank line and carriage travel"
+   },
+   "start_pose": {
+    "description": "Plank: hands on footbar shoulder-width, feet against shoulder blocks (heels or toes), body in a straight line from head to heels, shoulders over wrists.",
+    "angles": {
+     "trunk_from_vertical": 80,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 90,
+     "elbow_flexion": 0,
+     "ankle_dorsiflexion": -30,
+     "pelvis_tilt": 0,
+     "neck": 0
+    },
+    "contacts": [
+     "hands on footbar",
+     "feet against shoulder blocks"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red (light-medium)",
+    "footbar_position": "mid or high (so hands are above carriage level)",
+    "box_use": "none",
+    "start_orientation": "Prone plank facing footbar",
+    "body_contacts": "hands on footbar, feet/heels against shoulder blocks",
+    "carriage_start_cm": 50,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press the carriage out by pushing the shoulders slightly forward past wrists and pelvis stays level",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 75,
+      "shoulder_flexion": 100,
+      "elbow_flexion": 0,
+      "hip_flexion": 0
+     },
+     "carriage_displacement_cm": 65,
+     "contacts": [
+      "hands on bar",
+      "feet on blocks"
+     ],
+     "implement_path": "carriage 50 -> 65",
+     "notes": "carriage +15 cm from plank start"
+    },
+    {
+     "name": "return",
+     "description": "Pull carriage back in with the shoulders (extension) keeping the body rigid",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 80,
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 50,
+     "contacts": [
+      "hands on bar",
+      "feet on blocks"
+     ],
+     "implement_path": "carriage 65 -> 50",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out <-> return (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Rigid plank",
+    "Do not sag in the lumbar spine",
+    "Press down into the bar"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips sag",
+     "visual": "lumbar extends",
+     "fix": "brace deep abdominals"
+    },
+    {
+     "mistake": "Hips pike",
+     "visual": "hips rise",
+     "fix": "keep a straight line"
+    }
+   ],
+   "safety": "Wrist/shoulder caution.",
+   "regression": "Knees down or shorter range.",
+   "progression": "Down stretch/up stretch transition.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://www.merrithew.com/blog/post/2025-04-22/exercise-of-the-month-control-front-on-the-reformer"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "up_stretch",
+   "app_names": [
+    "Up Stretch"
+   ],
+   "names": {
+    "tr": "Up Stretch",
+    "en": "Up Stretch",
+    "es": "Up Stretch (estiramiento hacia arriba)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red spring; hands on footbar, feet against blocks; start in plank.",
+   "body_orientation": "inverted",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "shoulder stabilisers"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "calves",
+    "triceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pike/hip angle and carriage travel"
+   },
+   "start_pose": {
+    "description": "Plank with feet on carriage pressing toward blocks, hands on footbar.",
+    "angles": {
+     "trunk_from_vertical": 80,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 90
+    },
+    "contacts": [
+     "hands on bar",
+     "feet on carriage"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "mid/high",
+    "box_use": "none",
+    "start_orientation": "Prone/plank to pike",
+    "body_contacts": "hands on bar, feet on carriage",
+    "carriage_start_cm": 55,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "pike_up",
+     "description": "Lift hips up and back into a pike while the carriage rolls toward the footbar",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 100,
+      "trunk_from_vertical": 40,
+      "shoulder_flexion": 135,
+      "knee_flexion": 0,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 30,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "carriage 55 -> 30",
+     "notes": "carriage closes ~25 cm"
+    },
+    {
+     "name": "plank_back",
+     "description": "Lower hips and roll the carriage out back to plank",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 0,
+      "trunk_from_vertical": 80,
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 55,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "carriage 30 -> 55",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pike_up <-> plank_back (repeat 3-5)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Hips up and over hands",
+    "Keep legs straight"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees bend",
+     "visual": "knee flexion",
+     "fix": "straighten"
+    },
+    {
+     "mistake": "Carriage slams",
+     "visual": "bounces in",
+     "fix": "control"
+    }
+   ],
+   "safety": "Wrist/shoulder caution.",
+   "regression": "Keep knees bent.",
+   "progression": "Add Elephant.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "elephant",
+   "app_names": [
+    "Elephant"
+   ],
+   "names": {
+    "tr": "Elephant (Fil)",
+    "en": "Elephant",
+    "es": "Elefante"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red + 1 blue; feet flat on carriage with heels against shoulder blocks, hands on footbar.",
+   "body_orientation": "inverted",
+   "primary_muscles": [
+    "abdominals",
+    "hamstrings",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "calves",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pelvic height and carriage excursion"
+   },
+   "start_pose": {
+    "description": "Standing pike on carriage: hands on bar, feet flat with heels at blocks, round back, pelvis high, knees straight.",
+    "angles": {
+     "trunk_from_vertical": 60,
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "shoulder_flexion": 160,
+     "lumbar_flexion": 20,
+     "pelvis_tilt": -20,
+     "ankle_dorsiflexion": 10
+    },
+    "contacts": [
+     "hands on bar",
+     "feet on carriage"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "mid/high",
+    "box_use": "none",
+    "start_orientation": "Standing pike on carriage",
+    "body_contacts": "hands on footbar, feet on carriage",
+    "carriage_start_cm": 15,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "roll_out",
+     "description": "Push carriage out by flexing hips deeper, belly pulls up toward spine",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 100,
+      "trunk_from_vertical": 60,
+      "shoulder_flexion": 160
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Pull carriage back in controlled",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "roll_out <-> return (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Belly lifts up and in",
+    "Push through heels"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees bend",
+     "visual": "bent knees",
+     "fix": "keep straight"
+    }
+   ],
+   "safety": "Hamstring caution.",
+   "regression": "Bend knees.",
+   "progression": "Arabesque.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "arabesque",
+   "app_names": [
+    "Arabesque"
+   ],
+   "names": {
+    "tr": "Arabesque",
+    "en": "Arabesque (one-leg Elephant)",
+    "es": "Arabesque"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "As Elephant but one leg lifted behind. 1 red + 1 blue.",
+   "body_orientation": "inverted",
+   "primary_muscles": [
+    "glutes",
+    "hamstrings",
+    "shoulder stabilisers"
+   ],
+   "secondary_muscles": [
+    "abdominals"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows leg lift and carriage"
+   },
+   "start_pose": {
+    "description": "Elephant position: one foot on carriage at blocks, other leg lifted behind (hip extension 40).",
+    "angles": {
+     "trunk_from_vertical": 60,
+     "hip_flexion_standing": 90,
+     "hip_extension_lifted": 40,
+     "knee_flexion": 0
+    },
+    "contacts": [
+     "hands on bar",
+     "one foot on carriage"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "mid/high",
+    "box_use": "none",
+    "start_orientation": "Standing pike one leg",
+    "body_contacts": "hands on bar, one foot on carriage",
+    "carriage_start_cm": 15,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "roll_out",
+     "description": "Standing leg pulls under; carriage rolls out",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 100,
+      "hip_extension_lifted": 45
+     },
+     "carriage_displacement_cm": 30,
+     "contacts": [
+      "hands on bar",
+      "one foot on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Return",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "hands on bar",
+      "one foot on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "roll_out <-> return (3-5 per leg)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Hips square",
+    "Back leg long"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hip hikes",
+     "visual": "pelvis tilts",
+     "fix": "square hips"
+    }
+   ],
+   "safety": "Balance caution.",
+   "regression": "Elephant.",
+   "progression": "Arabesque 2 with box.",
+   "variants": [],
+   "sources": [
+    "https://www.pilatesanytime.com/class-view/4918/video/Pilates-Lower-Body-Reformer-by-Carrie-Pages"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "balance_control_front",
+   "app_names": [
+    "Balance Control Front"
+   ],
+   "names": {
+    "tr": "Balance Control Front",
+    "en": "Balance Control Front",
+    "es": "Control de equilibrio frontal"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1-2 red springs; footbar position 1; carriage stopper set; plank with feet on carriage.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "abdominals",
+    "shoulder stabilisers",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "glutes",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows plank-to-pike and carriage travel"
+   },
+   "start_pose": {
+    "description": "Plank on carriage: hands on bar, feet against blocks.",
+    "angles": {
+     "trunk_from_vertical": 80,
+     "hip_flexion": 0,
+     "shoulder_flexion": 90,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "hands on bar",
+     "feet on carriage"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1-2 red",
+    "footbar_position": "position 1",
+    "box_use": "none",
+    "start_orientation": "Prone plank facing footbar",
+    "body_contacts": "hands on footbar, feet on carriage",
+    "carriage_start_cm": 45,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "push",
+     "description": "Push carriage out (press hands into bar, shoulders flexed), body in plank",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 100,
+      "trunk_from_vertical": 78
+     },
+     "carriage_displacement_cm": 60,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Carriage returns controlled; body maintains plank",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 45,
+     "contacts": [
+      "hands on bar",
+      "feet on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push <-> return (repeat 5)",
+   "tempo_default": "1.5-1.5",
+   "cues": [
+    "Plank on moving carriage",
+    "Press into bar"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips sag",
+     "visual": "lumbar extends",
+     "fix": "brace"
+    }
+   ],
+   "safety": "Advanced; wrists and shoulders.",
+   "regression": "Knees down.",
+   "progression": "Heavier/lighter spring.",
+   "variants": [],
+   "sources": [
+    "https://www.merrithew.com/blog/post/2025-04-22/exercise-of-the-month-control-front-on-the-reformer",
+    "https://www.pilatesanytime.com/workshop-view/3136/video/Pilates-Balance-Control-Front-Deconstructed-by-Rael-Isacowitz"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "side_splits",
+   "app_names": [
+    "Side Splits",
+    "Side Split Control"
+   ],
+   "names": {
+    "tr": "Side Splits",
+    "en": "Side Splits (Standing)",
+    "es": "Aperturas laterales (Side Splits)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "standing platform"
+   ],
+   "equipment_setup": "1 blue + 1 red springs (light-medium); standing platform at footbar end; one foot on platform, one on carriage.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "hip adductors",
+    "hip abductors"
+   ],
+   "secondary_muscles": [
+    "core",
+    "glutes"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows leg abduction; side shows pelvic stack"
+   },
+   "start_pose": {
+    "description": "Stand facing side: one foot on platform, one on carriage, hips neutral, arms wide.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_abduction_each": 20,
+     "knee_flexion": 0,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "one foot on carriage",
+     "one foot on platform"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 blue + 1 red",
+    "footbar_position": "n/a",
+    "box_use": "none",
+    "start_orientation": "Standing sideways, feet on platform and carriage",
+    "body_contacts": "one foot on carriage, one on platform",
+    "carriage_start_cm": 0,
+    "other_equipment": "standing platform"
+   },
+   "phases": [
+    {
+     "name": "push_out",
+     "description": "Push carriage away from platform to wide stance",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_abduction_each": 35
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "foot on carriage",
+      "foot on platform"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "pull_in",
+     "description": "Pull carriage back in with adductors",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_abduction_each": 20
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "foot on carriage",
+      "foot on platform"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push_out <-> pull_in (repeat 8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Tall spine",
+    "Pelvis neutral"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis tilts",
+     "visual": "tuck at extreme",
+     "fix": "limit range"
+    }
+   ],
+   "safety": "Balance caution.",
+   "regression": "Shorter range.",
+   "progression": "Control phase.",
+   "variants": [
+    {
+     "app_name": "Side Split Control",
+     "difference": "same movement with slow controlled return"
+    }
+   ],
+   "sources": [
+    "https://www.pilatesanytime.com/exercise-view/6221/video/Pilates-Side-Splits-by-Amy-Havens",
+    "https://ideafit.com/side-splits"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "front_splits",
+   "app_names": [
+    "Front Splits"
+   ],
+   "names": {
+    "tr": "Front Splits",
+    "en": "Front Splits",
+    "es": "Front Splits (split frontal)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 heavy springs; one foot on footbar, other foot against shoulder rest, kneeling/low lunge on carriage.",
+   "body_orientation": "kneeling",
+   "primary_muscles": [
+    "hip flexors",
+    "hamstrings",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows split depth"
+   },
+   "start_pose": {
+    "description": "Low lunge: front foot on footbar, back foot against shoulder rest, hands on hips.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion_front": 90,
+     "hip_extension_back": 30,
+     "knee_flexion_front": 90
+    },
+    "contacts": [
+     "front foot on bar",
+     "back foot on blocks"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 heavy",
+    "footbar_position": "low",
+    "box_use": "none",
+    "start_orientation": "Low lunge facing footbar",
+    "body_contacts": "front foot on bar, back foot on blocks, knees on carriage",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "open",
+     "description": "Press back leg into shoulder rest to open carriage without using front leg",
+     "duration_s": 2.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_front": 60,
+      "knee_flexion_front": 10
+     },
+     "carriage_displacement_cm": 50,
+     "contacts": [
+      "foot on bar",
+      "foot on blocks"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "close",
+     "description": "Lift sternum and resist springs to close carriage",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion_front": 90,
+      "knee_flexion_front": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "foot on bar",
+      "foot on blocks"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "open <-> close (repeat 5)",
+   "tempo_default": "2.5-2.5",
+   "cues": [
+    "Lift sternum",
+    "Square hips"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis rotates",
+     "visual": "hips open",
+     "fix": "square"
+    }
+   ],
+   "safety": "Hamstring caution.",
+   "regression": "Lighter spring, shorter range.",
+   "progression": "More range.",
+   "variants": [],
+   "sources": [
+    "https://onlinepilatesclasses.com/pilates-exercises/reformer-exercises/reformer-front-splits/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "semi_circle_prep",
+   "app_names": [
+    "Semi Circle Prep"
+   ],
+   "names": {
+    "tr": "Semi Circle Prep",
+    "en": "Semi Circle Prep",
+    "es": "Preparación del semicírculo"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 heavy springs (outer positions of gear bar); footbar down; headpiece up; hands on shoulder blocks.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "glutes",
+    "hamstrings",
+    "spinal extensors"
+   ],
+   "secondary_muscles": [
+    "abdominals",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows bridge height and carriage motion"
+   },
+   "start_pose": {
+    "description": "Supine: balls of feet on footbar, hands on shoulder blocks, hips in bridge.",
+    "angles": {
+     "hip_flexion": 100,
+     "knee_flexion": 100,
+     "spine_flexion": 0,
+     "pelvis_tilt": 5,
+     "shoulder_flexion": 160
+    },
+    "contacts": [
+     "upper back on carriage",
+     "feet on footbar",
+     "hands on blocks"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 heavy",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Supine in bridge",
+    "body_contacts": "upper back, feet on footbar, hands on blocks",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press carriage out until knees ~90 deg with bridge held",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 90,
+      "hip_flexion": 0
+     },
+     "carriage_displacement_cm": 18,
+     "contacts": [
+      "feet on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "pull_in",
+     "description": "Pull carriage in with hamstrings and glutes",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "knee_flexion": 105
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out <-> pull_in (repeat 3)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Keep carriage still while spine moves"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drop",
+     "visual": "bridge collapses",
+     "fix": "maintain lift"
+    }
+   ],
+   "safety": "Avoid with shoulder or knee injury.",
+   "regression": "Footwork bridge.",
+   "progression": "Full Semi Circle.",
+   "variants": [],
+   "sources": [
+    "https://pilatesology.com/pilatesology-encyclopedia-semi-circle-on-the-reformer/",
+    "https://onlinepilatesclasses.com/pilates-exercises/reformer-exercises/reformer-semi-circle/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "scooter",
+   "app_names": [
+    "Scooter"
+   ],
+   "names": {
+    "tr": "Scooter",
+    "en": "Scooter",
+    "es": "Scooter"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red + 1 blue; standing leg on floor/platform beside footbar, working foot on carriage, hands on footbar.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "glutes",
+    "hamstrings",
+    "quadriceps"
+   ],
+   "secondary_muscles": [
+    "core",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows leg push-pull and torso angle"
+   },
+   "start_pose": {
+    "description": "Standing beside footbar, one foot on floor, other foot on carriage against block, hands on footbar, torso 45 deg.",
+    "angles": {
+     "trunk_from_vertical": 45,
+     "hip_flexion_standing": 45,
+     "knee_flexion_standing": 15
+    },
+    "contacts": [
+     "standing foot on floor",
+     "working foot on carriage",
+     "hands on bar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red + 1 blue",
+    "footbar_position": "low",
+    "box_use": "none",
+    "start_orientation": "Standing beside footbar",
+    "body_contacts": "one foot floor, one foot carriage, hands on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "push_back",
+     "description": "Push carriage back with working leg",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_extension_working": 15,
+      "knee_flexion_working": 0
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "working foot on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Pull carriage back in",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion_working": 20,
+      "knee_flexion_working": 60
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "working foot on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push_back <-> return (repeat 8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Square hips",
+    "Strong standing leg"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips twist",
+     "visual": "pelvis rotation",
+     "fix": "square"
+    }
+   ],
+   "safety": "Balance caution.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "standing_lunge",
+   "app_names": [
+    "Standing Lunge",
+    "Eve's Lunge"
+   ],
+   "names": {
+    "tr": "Standing Lunge / Eve's Lunge",
+    "en": "Standing Lunge / Eve's Lunge",
+    "es": "Zancada de pie / Eve's Lunge"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 springs (moderate); front foot on floor/platform by footbar, back toes tucked against shoulder block, both hands on footbar.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows lunge depth"
+   },
+   "start_pose": {
+    "description": "Facing footbar: front foot on platform/floor, back toes on carriage against block, hands on footbar.",
+    "angles": {
+     "trunk_from_vertical": 15,
+     "hip_flexion_front": 80,
+     "knee_flexion_front": 90,
+     "hip_extension_back": 20
+    },
+    "contacts": [
+     "front foot on floor",
+     "back toes on carriage",
+     "hands on bar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 (moderate)",
+    "footbar_position": "low or down",
+    "box_use": "none",
+    "start_orientation": "Standing lunge",
+    "body_contacts": "front foot floor, back toes on carriage, hands on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "push_back",
+     "description": "Push carriage back, straightening back leg",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_front": 70,
+      "knee_flexion_front": 60,
+      "hip_extension_back": 30
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "back toes on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "draw_in",
+     "description": "Draw carriage back in",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion_front": 80,
+      "knee_flexion_front": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "back toes on carriage"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push_back <-> draw_in (repeat 8 per leg)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Tall chest",
+    "Front knee over ankle"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Front knee collapses",
+     "visual": "valgus",
+     "fix": "track over toes"
+    }
+   ],
+   "safety": "Knee caution.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [
+    {
+     "app_name": "Eve's Lunge",
+     "difference": "same as Standing Lunge; outside leg at front, inside toes tucked against shoulder block"
+    }
+   ],
+   "sources": [
+    "https://blog.alomoves.com/movement/pilates-reformer-exercises",
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "mermaid",
+   "app_names": [
+    "Mermaid (İleri)",
+    "Mermaid (Reformer)"
+   ],
+   "names": {
+    "tr": "Mermaid (Denizkızı)",
+    "en": "Mermaid",
+    "es": "Sirena"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red spring; sit sideways on carriage, one hand on footbar.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "obliques",
+    "latissimus",
+    "shoulder"
+   ],
+   "secondary_muscles": [
+    "hip stabilisers"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows side-bend arc"
+   },
+   "start_pose": {
+    "description": "Sit sideways cross-legged/Z-sit, inside hand on footbar, outside arm overhead.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "spine_lateral_flexion": 0,
+     "shoulder_abduction": 170,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "sit bones",
+     "hand on footbar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Seated sideways",
+    "body_contacts": "sit bones, hand on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "side_bend",
+     "description": "Arc torso toward the side while pressing hand into footbar to roll carriage out",
+     "duration_s": 2.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "spine_lateral_flexion": 50,
+      "shoulder_abduction": 175
+     },
+     "carriage_displacement_cm": 25,
+     "contacts": [
+      "hand on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Return tall; carriage closes",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "spine_lateral_flexion": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hand on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "side_bend <-> return (repeat 3-5)",
+   "tempo_default": "2.5-2.5",
+   "cues": [
+    "Reach long then bend",
+    "Hips anchored"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips lift",
+     "visual": "pelvis shifts",
+     "fix": "stay seated"
+    }
+   ],
+   "safety": "Knee caution in cross-leg position.",
+   "regression": "Sit on a pad.",
+   "progression": "Add forward/advanced variation.",
+   "variants": [
+    {
+     "app_name": "Mermaid (İleri)",
+     "difference": "advanced/forward variation with greater range; same joint angles"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "pelvic_curl_reformer",
+   "app_names": [
+    "Pelvic Curl on Reformer"
+   ],
+   "names": {
+    "tr": "Reformerda Pelvic Curl",
+    "en": "Pelvic Curl on Reformer",
+    "es": "Enrollamiento pélvico en reformer"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "2 red + 1 blue springs; footbar low; feet on bar; carriage stays still.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "glutes",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "abdominals",
+    "spinal erectors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows articulation"
+   },
+   "start_pose": {
+    "description": "Supine, feet on bar, knees ~100.",
+    "angles": {
+     "hip_flexion": 100,
+     "knee_flexion": 105,
+     "pelvis_tilt": 0
+    },
+    "contacts": [
+     "whole spine on carriage",
+     "feet on bar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "2 red + 1 blue",
+    "footbar_position": "low",
+    "box_use": "none",
+    "start_orientation": "Supine",
+    "body_contacts": "whole spine, feet on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "curl_up",
+     "description": "Peel spine up vertebra by vertebra to shoulder bridge",
+     "duration_s": 3.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": -5,
+      "knee_flexion": 105,
+      "pelvis_tilt": -20
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "upper back",
+      "feet on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "roll_down",
+     "description": "Roll down in reverse order",
+     "duration_s": 3.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 100,
+      "pelvis_tilt": 0
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "whole spine",
+      "feet on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "curl_up <-> roll_down (repeat 5-8)",
+   "tempo_default": "3-3",
+   "cues": [
+    "Peel off one vertebra at a time"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Rib flare",
+     "visual": "ribs thrust up",
+     "fix": "keep ribs down"
+    }
+   ],
+   "safety": "Neck caution.",
+   "regression": "Smaller range.",
+   "progression": "Add leg extension.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "knee_stretch",
+   "app_names": [
+    "Knee Stretch Series"
+   ],
+   "names": {
+    "tr": "Knee Stretch Serisi",
+    "en": "Knee Stretch Series",
+    "es": "Serie de estiramiento de rodillas"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1-2 red springs; kneel with feet against shoulder blocks, hands on footbar. Representative movement = Round Back; Arched Back and Knees Off are variants.",
+   "body_orientation": "kneeling",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "quadriceps"
+   ],
+   "secondary_muscles": [
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows spine curve and carriage excursion"
+   },
+   "start_pose": {
+    "description": "Kneeling: knees on carriage, hands on footbar, round back (C-curve).",
+    "angles": {
+     "trunk_from_vertical": 50,
+     "hip_flexion": 100,
+     "knee_flexion": 100,
+     "lumbar_flexion": 35,
+     "pelvis_tilt": -15
+    },
+    "contacts": [
+     "knees on carriage",
+     "hands on bar",
+     "feet against blocks"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1-2 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Kneeling facing footbar",
+    "body_contacts": "knees on carriage, hands on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "push_out",
+     "description": "Press carriage out by extending hips with round back",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 80,
+      "knee_flexion": 90
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "knees on carriage",
+      "hands on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Draw knees in",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 100
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "knees on carriage",
+      "hands on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push_out <-> return (10-12)",
+   "tempo_default": "1.5-1.5",
+   "cues": [
+    "Back stays rounded",
+    "Hips steady"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Back arches",
+     "visual": "lumbar extends",
+     "fix": "maintain C-curve"
+    }
+   ],
+   "safety": "Knee caution.",
+   "regression": "Lighter spring.",
+   "progression": "Knees off.",
+   "variants": [
+    {
+     "app_name": "Knee Stretch Series",
+     "difference": "Round Back; Arched Back: spine flat/extended; Knees Off: knees hover 2-3 cm"
+    }
+   ],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "hamstring_stretch",
+   "app_names": [
+    "Hamstring Stretch"
+   ],
+   "names": {
+    "tr": "Hamstring Stretch",
+    "en": "Hamstring Stretch",
+    "es": "Estiramiento de isquiotibiales"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "footbar"
+   ],
+   "equipment_setup": "1 red; standing leg on box/floor, working knee/foot on carriage against shoulder rest, hands on footbar.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "glutes",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows trunk forward lean"
+   },
+   "start_pose": {
+    "description": "Standing hinge: trunk ~45 forward, standing knee slightly bent, other knee on carriage.",
+    "angles": {
+     "trunk_from_vertical": 45,
+     "hip_flexion": 45,
+     "knee_flexion": 15
+    },
+    "contacts": [
+     "standing foot on floor",
+     "carriage knee",
+     "hands on bar"
+    ],
+    "implement": "none"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "low",
+    "box_use": "box optional",
+    "start_orientation": "Standing hinge facing footbar",
+    "body_contacts": "standing foot, knee on carriage, hands on bar",
+    "carriage_start_cm": 0,
+    "other_equipment": ""
+   },
+   "phases": [
+    {
+     "name": "push_back",
+     "description": "Push carriage back, straightening hip and knee",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 55,
+      "knee_flexion": 5
+     },
+     "carriage_displacement_cm": 35,
+     "contacts": [
+      "hands on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "hold",
+     "description": "Hold stretch, toes lifted",
+     "duration_s": 4.0,
+     "breathing": "breathe",
+     "end_angles": {
+      "ankle_dorsiflexion": 15
+     },
+     "carriage_displacement_cm": 40,
+     "contacts": [
+      "hands on bar"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "push_back -> hold -> return",
+   "tempo_default": "2-4-2",
+   "cues": [
+    "Long back",
+    "Support leg stable"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Back rounds",
+     "visual": "lumbar flexes",
+     "fix": "hinge from hips"
+    }
+   ],
+   "safety": "Balance caution.",
+   "regression": "Bend knee.",
+   "progression": "Longer hold.",
+   "variants": [],
+   "sources": [
+    "https://us.physitrack.com/home-exercise-video/standing-hamstring-stretch"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "bicep_curls_reformer",
+   "app_names": [
+    "Bicep Curls (Reformer)"
+   ],
+   "names": {
+    "tr": "Biceps Curl (Reformer)",
+    "en": "Biceps Curls (Reformer)",
+    "es": "Curl de bíceps (reformer)"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "straps"
+   ],
+   "equipment_setup": "1 red; sit cross-legged facing the pulleys; straps in hands; elbows near sides.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "biceps brachii"
+   ],
+   "secondary_muscles": [
+    "forearm flexors",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows elbow flexion and carriage opening"
+   },
+   "start_pose": {
+    "description": "Seated tall, arms long forward-down, palms up.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "shoulder_flexion": 20,
+     "elbow_flexion": 10,
+     "hip_flexion": 90
+    },
+    "contacts": [
+     "sit bones",
+     "hands in straps"
+    ],
+    "implement": "straps"
+   },
+   "reformer": {
+    "springs": "1 red",
+    "footbar_position": "down",
+    "box_use": "none",
+    "start_orientation": "Seated facing pulleys",
+    "body_contacts": "sit bones, hands in straps",
+    "carriage_start_cm": 0,
+    "other_equipment": "straps"
+   },
+   "phases": [
+    {
+     "name": "curl",
+     "description": "Curl hands to shoulders; elbows stay pinned; carriage opens slightly",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "elbow_flexion": 140,
+      "shoulder_flexion": 20
+     },
+     "carriage_displacement_cm": 15,
+     "contacts": [
+      "hands in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower arms with control",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "elbow_flexion": 10
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands in straps"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "curl <-> lower (repeat 8-10)",
+   "tempo_default": "1.5-1.5",
+   "cues": [
+    "Elbows still",
+    "Shoulders low"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows drift forward",
+     "visual": "shoulder flexion",
+     "fix": "pin elbows"
+    }
+   ],
+   "safety": "None specific.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "stomach_massage_round",
+   "app_names": [
+    "Stomach Massage — Round"
+   ],
+   "names": {
+    "tr": "Stomach Massage - Round",
+    "en": "Stomach Massage - Round",
+    "es": "Masaje abdominal - Redonda"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "equipment_setup": "2 red springs (heavy); short box placed behind footbar, feet on footbar, hands on box.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "spinal flexors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows spine curve and carriage travel"
+   },
+   "start_pose": {
+    "description": "Seated on box, feet on footbar, round back (C-curve), hands on box edge.",
+    "angles": {
+     "trunk_from_vertical": -25,
+     "lumbar_flexion": 40,
+     "hip_flexion": 100,
+     "knee_flexion": 110
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet on footbar",
+     "hands on box"
+    ],
+    "implement": "short box"
+   },
+   "reformer": {
+    "springs": "2 red",
+    "footbar_position": "low or down",
+    "box_use": "short box",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet on bar, hands on box",
+    "carriage_start_cm": 0,
+    "other_equipment": "short box"
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press carriage out with knees extending, spine stays in position",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 10,
+      "hip_flexion": 110,
+      "trunk_from_vertical": -25
+     },
+     "carriage_displacement_cm": 30,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "pull_in",
+     "description": "Pull carriage in with hamstrings",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": -25,
+      "lumbar_flexion": 40,
+      "hip_flexion": 100,
+      "knee_flexion": 110
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out <-> pull_in (repeat 8-10)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Stay lifted"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Spine collapses",
+     "visual": "chest drops",
+     "fix": "lift"
+    }
+   ],
+   "safety": "Back caution.",
+   "regression": "Light spring.",
+   "progression": "Heavy spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "stomach_massage_hands_back",
+   "app_names": [
+    "Stomach Massage — Hands Back"
+   ],
+   "names": {
+    "tr": "Stomach Massage - Hands Back",
+    "en": "Stomach Massage - Hands Back",
+    "es": "Masaje abdominal - Manos atrás"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "equipment_setup": "2 red springs (heavy); short box placed behind footbar, feet on footbar, hands on box.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "spinal flexors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows spine curve and carriage travel"
+   },
+   "start_pose": {
+    "description": "Seated, hands on box behind hips, chest open, flat back.",
+    "angles": {
+     "trunk_from_vertical": -10,
+     "lumbar_flexion": 0,
+     "hip_flexion": 100,
+     "knee_flexion": 110,
+     "shoulder_extension": 40
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet on footbar",
+     "hands on box"
+    ],
+    "implement": "short box"
+   },
+   "reformer": {
+    "springs": "2 red",
+    "footbar_position": "low or down",
+    "box_use": "short box",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet on bar, hands on box",
+    "carriage_start_cm": 0,
+    "other_equipment": "short box"
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press carriage out with knees extending, spine stays in position",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 10,
+      "hip_flexion": 110,
+      "trunk_from_vertical": -10,
+      "shoulder_extension": 40
+     },
+     "carriage_displacement_cm": 30,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "pull_in",
+     "description": "Pull carriage in with hamstrings",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": -10,
+      "lumbar_flexion": 0,
+      "hip_flexion": 100,
+      "knee_flexion": 110,
+      "shoulder_extension": 40
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out <-> pull_in (repeat 8-10)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Stay lifted"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Spine collapses",
+     "visual": "chest drops",
+     "fix": "lift"
+    }
+   ],
+   "safety": "Back caution.",
+   "regression": "Light spring.",
+   "progression": "Heavy spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "stomach_massage_reach",
+   "app_names": [
+    "Stomach Massage — Reach"
+   ],
+   "names": {
+    "tr": "Stomach Massage - Reach",
+    "en": "Stomach Massage - Reach",
+    "es": "Masaje abdominal - Alcance"
+   },
+   "category": "reformer",
+   "equipment": [
+    "reformer",
+    "short box",
+    "footbar"
+   ],
+   "equipment_setup": "2 red springs (heavy); short box placed behind footbar, feet on footbar, hands on box.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "spinal flexors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows spine curve and carriage travel"
+   },
+   "start_pose": {
+    "description": "Seated, arms reach forward at shoulder height, flat back.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "lumbar_flexion": 0,
+     "hip_flexion": 100,
+     "knee_flexion": 110,
+     "shoulder_flexion": 90
+    },
+    "contacts": [
+     "sit bones on box",
+     "feet on footbar",
+     "hands on box"
+    ],
+    "implement": "short box"
+   },
+   "reformer": {
+    "springs": "2 red",
+    "footbar_position": "low or down",
+    "box_use": "short box",
+    "start_orientation": "Seated on box facing footbar",
+    "body_contacts": "sit bones on box, feet on bar, hands on box",
+    "carriage_start_cm": 0,
+    "other_equipment": "short box"
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Press carriage out with knees extending, spine stays in position",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 10,
+      "hip_flexion": 110,
+      "trunk_from_vertical": 0,
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 30,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    },
+    {
+     "name": "pull_in",
+     "description": "Pull carriage in with hamstrings",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "lumbar_flexion": 0,
+      "hip_flexion": 100,
+      "knee_flexion": 110,
+      "shoulder_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "feet on bar",
+      "hands on box"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out <-> pull_in (repeat 8-10)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Stay lifted"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Spine collapses",
+     "visual": "chest drops",
+     "fix": "lift"
+    }
+   ],
+   "safety": "Back caution.",
+   "regression": "Light spring.",
+   "progression": "Heavy spring.",
+   "variants": [],
+   "sources": [
+    "https://www.pilates.com/products/allegro-2-pilates-reformer/",
+    "https://pilatesology.com/?p=308783",
+    "https://www.pilatesanytime.com/class-view/486/video/Pilates-Reformer-Workout-by-Alisa-Wyatt"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "pike_on_chair",
+   "app_names": [
+    "Pike on Chair"
+   ],
+   "names": {
+    "tr": "Chair'de Pike",
+    "en": "Pike on Chair",
+    "es": "Pike en la silla"
+   },
+   "category": "reformer",
+   "equipment": [
+    "wunda chair"
+   ],
+   "equipment_setup": "Sit on floor facing the chair, arches of feet on seat, hands on pedal, pedal pressed down.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "shoulders"
+   ],
+   "secondary_muscles": [
+    "core",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pedal travel and torso angle"
+   },
+   "start_pose": {
+    "description": "Seated on floor, feet on chair seat, hands on pedal.",
+    "angles": {
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "feet on seat",
+     "hands on pedal"
+    ],
+    "implement": "pedal down"
+   },
+   "reformer": {
+    "springs": "chair springs: medium",
+    "footbar_position": "n/a",
+    "box_use": "none",
+    "start_orientation": "seated",
+    "body_contacts": "hands on pedal, feet on seat/pedal",
+    "carriage_start_cm": 0,
+    "other_equipment": "Wunda chair geometry in apparatus.wunda_chair"
+   },
+   "phases": [
+    {
+     "name": "lift_pike",
+     "description": "Lift hips into pike pressing pedal down",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 120,
+      "trunk_from_vertical": 40
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal",
+      "feet on seat"
+     ],
+     "implement_path": "",
+     "notes": "pedal travel 0->28 cm (pressed down)"
+    },
+    {
+     "name": "lower",
+     "description": "Lower hips under control",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Core engaged",
+    "Control the pedal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pedal slams",
+     "visual": "pedal bangs",
+     "fix": "control"
+    }
+   ],
+   "safety": "Wunda chair is unstable; spot if needed.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://onlinepilatesclasses.com/pilates-exercises/wunda-chair-exercises/wunda-chair-going-up-front/",
+    "https://gymequipment.co.uk/balanced-body-wunda-chair",
+    "https://www.northernfitness.ca/products/exo-chair"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "teaser_on_chair",
+   "app_names": [
+    "Teaser on Chair"
+   ],
+   "names": {
+    "tr": "Chair'de Teaser",
+    "en": "Teaser on Chair",
+    "es": "Teaser en la silla"
+   },
+   "category": "reformer",
+   "equipment": [
+    "wunda chair"
+   ],
+   "equipment_setup": "One middle spring; sit on floor, legs on seat, hands on pedal.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "abdominals",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "core",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pedal travel and torso angle"
+   },
+   "start_pose": {
+    "description": "Seated, legs on seat, hands on pedal.",
+    "angles": {
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "trunk_from_vertical": 0
+    },
+    "contacts": [
+     "legs on seat",
+     "hands on pedal"
+    ],
+    "implement": "pedal up"
+   },
+   "reformer": {
+    "springs": "chair springs: medium",
+    "footbar_position": "n/a",
+    "box_use": "none",
+    "start_orientation": "seated",
+    "body_contacts": "hands on pedal, feet on seat/pedal",
+    "carriage_start_cm": 0,
+    "other_equipment": "Wunda chair geometry in apparatus.wunda_chair"
+   },
+   "phases": [
+    {
+     "name": "teaser",
+     "description": "Press pedal and lift legs into V without leaning back",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 60,
+      "trunk_from_vertical": -30
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal"
+     ],
+     "implement_path": "",
+     "notes": "pedal 0->20"
+    },
+    {
+     "name": "lower",
+     "description": "Lower legs",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Core engaged",
+    "Control the pedal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pedal slams",
+     "visual": "pedal bangs",
+     "fix": "control"
+    }
+   ],
+   "safety": "Wunda chair is unstable; spot if needed.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://onlinepilatesclasses.com/pilates-exercises/wunda-chair-exercises/wunda-chair-going-up-front/",
+    "https://gymequipment.co.uk/balanced-body-wunda-chair",
+    "https://www.northernfitness.ca/products/exo-chair"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "going_up_front",
+   "app_names": [
+    "Going Up Front"
+   ],
+   "names": {
+    "tr": "Going Up Front",
+    "en": "Going Up Front",
+    "es": "Subir de frente"
+   },
+   "category": "reformer",
+   "equipment": [
+    "wunda chair"
+   ],
+   "equipment_setup": "One top and one bottom spring; stand facing chair, hands on chair, one foot on pedal.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes"
+   ],
+   "secondary_muscles": [
+    "core",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pedal travel and torso angle"
+   },
+   "start_pose": {
+    "description": "Standing, hands on chair, one foot on pedal, other on seat.",
+    "angles": {
+     "hip_flexion": 80,
+     "knee_flexion": 90
+    },
+    "contacts": [
+     "foot on pedal",
+     "foot on seat"
+    ],
+    "implement": "pedal down"
+   },
+   "reformer": {
+    "springs": "chair springs: medium",
+    "footbar_position": "n/a",
+    "box_use": "none",
+    "start_orientation": "standing",
+    "body_contacts": "hands on pedal, feet on seat/pedal",
+    "carriage_start_cm": 0,
+    "other_equipment": "Wunda chair geometry in apparatus.wunda_chair"
+   },
+   "phases": [
+    {
+     "name": "rise",
+     "description": "Scissor legs to rise toward ceiling; pedal lifts",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion": 10,
+      "knee_flexion": 5
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "foot on pedal"
+     ],
+     "implement_path": "",
+     "notes": "pedal 0->28 up"
+    },
+    {
+     "name": "lower",
+     "description": "Resist back down",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 80,
+      "knee_flexion": 90
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "foot on pedal"
+     ],
+     "implement_path": "",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "phases (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Core engaged",
+    "Control the pedal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pedal slams",
+     "visual": "pedal bangs",
+     "fix": "control"
+    }
+   ],
+   "safety": "Wunda chair is unstable; spot if needed.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://onlinepilatesclasses.com/pilates-exercises/wunda-chair-exercises/wunda-chair-going-up-front/",
+    "https://gymequipment.co.uk/balanced-body-wunda-chair",
+    "https://www.northernfitness.ca/products/exo-chair"
+   ],
+   "confidence": "low"
+  },
+  {
+   "id": "swan_on_chair",
+   "app_names": [
+    "Swan on Chair"
+   ],
+   "names": {
+    "tr": "Chair'de Swan",
+    "en": "Swan on Chair",
+    "es": "Cisne en la silla"
+   },
+   "category": "reformer",
+   "equipment": [
+    "wunda chair"
+   ],
+   "equipment_setup": "Hips on seat, hands on pedal, legs long.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "spinal extensors",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "core",
+    "shoulders"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows pedal travel and torso angle"
+   },
+   "start_pose": {
+    "description": "Prone on seat, hands on pedal, shoulders over wrists.",
+    "angles": {
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "spine_extension": 0,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "hips on seat",
+     "hands on pedal"
+    ],
+    "implement": "pedal down"
+   },
+   "reformer": {
+    "springs": "chair springs: medium",
+    "footbar_position": "n/a",
+    "box_use": "none",
+    "start_orientation": "prone",
+    "body_contacts": "hands on pedal, feet on seat/pedal",
+    "carriage_start_cm": 0,
+    "other_equipment": "Wunda chair geometry in apparatus.wunda_chair"
+   },
+   "phases": [
+    {
+     "name": "pump",
+     "description": "Pump pedal by bending and straightening elbows",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "elbow_flexion": 60,
+      "spine_extension": 10
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal"
+     ],
+     "implement_path": "",
+     "notes": "pedal 0->15"
+    },
+    {
+     "name": "lift",
+     "description": "Lift pedal with straight arms",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "elbow_flexion": 0,
+      "spine_extension": 20
+     },
+     "carriage_displacement_cm": 0,
+     "contacts": [
+      "hands on pedal"
+     ],
+     "implement_path": "",
+     "notes": "pedal 0->28"
+    }
+   ],
+   "rep_loop": "phases (repeat 5-8)",
+   "tempo_default": "2-2",
+   "cues": [
+    "Core engaged",
+    "Control the pedal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pedal slams",
+     "visual": "pedal bangs",
+     "fix": "control"
+    }
+   ],
+   "safety": "Wunda chair is unstable; spot if needed.",
+   "regression": "Lighter spring.",
+   "progression": "Heavier spring.",
+   "variants": [],
+   "sources": [
+    "https://onlinepilatesclasses.com/pilates-exercises/wunda-chair-exercises/wunda-chair-going-up-front/",
+    "https://gymequipment.co.uk/balanced-body-wunda-chair",
+    "https://www.northernfitness.ca/products/exo-chair"
+   ],
+   "confidence": "low"
+  }
+ ],
+ "non_demo": [
+  {
+   "app_name": "Advanced Footwork Flow",
+   "reason": "Flow of several footwork positions (toes, arches, heels, V, single leg, running)",
+   "components": [
+    "footwork",
+    "single_leg_footwork",
+    "footwork_running"
+   ]
+  },
+  {
+   "app_name": "Long Stretch Series",
+   "reason": "Sequence of plank-based stretches",
+   "components": [
+    "elephant",
+    "long_stretch",
+    "up_stretch"
+   ]
+  },
+  {
+   "app_name": "Stretch Serisi",
+   "reason": "Series of stretch movements, not a single movement",
+   "components": [
+    "elephant",
+    "long_stretch",
+    "up_stretch",
+    "hamstring_stretch"
+   ]
+  },
+  {
+   "app_name": "Leg Spring Series",
+   "reason": "Series of supine strap exercises",
+   "components": [
+    "frog",
+    "leg_circles_straps"
+   ]
+  },
+  {
+   "app_name": "Arm Spring Series",
+   "reason": "Series of arm exercises with straps",
+   "components": [
+    "bicep_curls_reformer",
+    "long_box_t_shape",
+    "chest_expansion"
+   ]
+  },
+  {
+   "app_name": "Stomach Massage Series",
+   "reason": "Series of three variations (Round, Hands Back, Reach)",
+   "components": [
+    "stomach_massage_round",
+    "stomach_massage_hands_back",
+    "stomach_massage_reach"
+   ]
+  },
+  {
+   "app_name": "Hip Stretch Series",
+   "reason": "Series of hip-opening strap/standing movements",
+   "components": [
+    "frog",
+    "leg_circles_straps",
+    "side_splits",
+    "front_splits"
+   ]
+  },
+  {
+   "app_name": "Full Classical Repertoire",
+   "reason": "Full classical class",
+   "components": [
+    "footwork",
+    "frog",
+    "leg_circles_straps",
+    "rowing_series",
+    "long_stretch",
+    "elephant",
+    "short_box_round_back"
+   ]
+  },
+  {
+   "app_name": "Full Reformer Flow (45 dk)",
+   "reason": "Full class flow",
+   "components": [
+    "footwork",
+    "single_leg_footwork",
+    "rowing_series",
+    "long_stretch",
+    "elephant",
+    "knee_stretch",
+    "pelvic_curl_reformer"
+   ]
+  },
+  {
+   "app_name": "Reformer + Mat Fusion",
+   "reason": "Class mixing reformer and mat exercises",
+   "components": [
+    "footwork",
+    "pelvic_curl_reformer",
+    "knee_stretch"
+   ]
+  },
+  {
+   "app_name": "Nefes & Meditasyon",
+   "reason": "Breathing/meditation, not a reformer movement",
+   "components": []
+  }
+ ],
+ "unmapped": []
+}

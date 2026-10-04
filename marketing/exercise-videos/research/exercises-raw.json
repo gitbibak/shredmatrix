@@ -1,0 +1,5778 @@
+[
+ {
+  "name": "Tam Dinlenme",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "yoga",
+   "pilates",
+   "reformer",
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 67200
+ },
+ {
+  "name": "20-30 dk rahat yürüyüş (opsiyonel)",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Toparlanma"
+  ],
+  "reps": "20-30 dk",
+  "count": 12348
+ },
+ {
+  "name": "Seated Cable Row",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 12222
+ },
+ {
+  "name": "Tempolu Yürüyüş veya Bisiklet",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30-40 dk",
+  "count": 11214
+ },
+ {
+  "name": "Mobilite Akışı",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 dk",
+  "count": 11214
+ },
+ {
+  "name": "Lat Pulldown",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 10857
+ },
+ {
+  "name": "Dumbbell Shoulder Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 10854
+ },
+ {
+  "name": "Lateral Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 10620
+ },
+ {
+  "name": "Glute Bridge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Kalça",
+   "Arka Bacak"
+  ],
+  "reps": "12-17",
+  "count": 10573
+ },
+ {
+  "name": "Leg Curl",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer",
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "reps": "14-17",
+  "count": 10387
+ },
+ {
+  "name": "Hip Thrust",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 10008
+ },
+ {
+  "name": "Tempolu Yürüyüş",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 9282
+ },
+ {
+  "name": "Leg Press",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer",
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "reps": "14-17",
+  "count": 9091
+ },
+ {
+  "name": "Bench Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-10",
+  "count": 8820
+ },
+ {
+  "name": "Incline Dumbbell Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 8820
+ },
+ {
+  "name": "Romanian Deadlift",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 8778
+ },
+ {
+  "name": "Resistance Band Row",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "resistance_band",
+  "muscles": [
+   "Sırt",
+   "Biceps"
+  ],
+  "reps": "12-17",
+  "count": 7882
+ },
+ {
+  "name": "Standing Calf Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-14",
+  "count": 7224
+ },
+ {
+  "name": "Yüzüstü Lat Çekiş",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "pilates"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "gym",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Sırt",
+   "Arka Omuz"
+  ],
+  "reps": "12-17",
+  "count": 6946
+ },
+ {
+  "name": "Dumbbell Romanian Deadlift",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Arka Bacak",
+   "Kalça"
+  ],
+  "reps": "10-14",
+  "count": 6880
+ },
+ {
+  "name": "Dumbbell Row",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 6678
+ },
+ {
+  "name": "Goblet Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-14",
+  "count": 6636
+ },
+ {
+  "name": "Dumbbell Glute Bridge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Kalça",
+   "Arka Bacak"
+  ],
+  "reps": "12-17",
+  "count": 6350
+ },
+ {
+  "name": "Resistance Band Pull-Apart",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "resistance_band",
+  "muscles": [
+   "Üst Sırt",
+   "Arka Omuz"
+  ],
+  "reps": "14-22",
+  "count": 6312
+ },
+ {
+  "name": "Hammer Curl",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 6270
+ },
+ {
+  "name": "Tek Bacak Calf Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Baldır"
+  ],
+  "reps": "12-20/taraf",
+  "count": 6048
+ },
+ {
+  "name": "Goblet Squat / Chair Squat",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 5922
+ },
+ {
+  "name": "Incline Push-Up",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-12",
+  "count": 5922
+ },
+ {
+  "name": "Suitcase March",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Core"
+  ],
+  "reps": "30-45 sn/taraf",
+  "count": 5670
+ },
+ {
+  "name": "Dead Bug",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "yoga",
+   "pilates"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic",
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Core"
+  ],
+  "reps": "6-10/taraf",
+  "count": 5521
+ },
+ {
+  "name": "Face Pull",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17-22",
+  "count": 5436
+ },
+ {
+  "name": "Prone Y-T-W",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Üst Sırt",
+   "Arka Omuz"
+  ],
+  "reps": "6/tip",
+  "count": 5148
+ },
+ {
+  "name": "Tek Bacak Glute Bridge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Kalça",
+   "Arka Bacak"
+  ],
+  "reps": "8-12/taraf",
+  "count": 4992
+ },
+ {
+  "name": "Tek Kol Dumbbell Row",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Sırt",
+   "Biceps"
+  ],
+  "reps": "8-12/taraf",
+  "count": 4704
+ },
+ {
+  "name": "Reverse Snow Angel",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Sırt",
+   "Arka Omuz"
+  ],
+  "reps": "12-17",
+  "count": 4674
+ },
+ {
+  "name": "Lying Leg Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 4662
+ },
+ {
+  "name": "Cable Crossover",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 4536
+ },
+ {
+  "name": "Side Plank",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Core"
+  ],
+  "reps": "15-30 sn/taraf",
+  "count": 4452
+ },
+ {
+  "name": "Calf Raise",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 4290
+ },
+ {
+  "name": "Incline Barbell Press",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 4158
+ },
+ {
+  "name": "Dumbbell Curl",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Biceps"
+  ],
+  "reps": "12-17",
+  "count": 4056
+ },
+ {
+  "name": "Barbell Row",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 4032
+ },
+ {
+  "name": "Leg Extension",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 4032
+ },
+ {
+  "name": "Weighted Pull-Up",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-10",
+  "count": 3780
+ },
+ {
+  "name": "Leg Press (hafif)",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15",
+  "count": 3738
+ },
+ {
+  "name": "Pallof Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "gym",
+  "muscles": [
+   "Core"
+  ],
+  "reps": "10/taraf",
+  "count": 3708
+ },
+ {
+  "name": "Düşük Etkili Interval Yürüyüş",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Kardiyo"
+  ],
+  "reps": "1 dk hızlı / 1 dk rahat",
+  "count": 3696
+ },
+ {
+  "name": "Barbell Curl",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 3546
+ },
+ {
+  "name": "Split Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 3520
+ },
+ {
+  "name": "Pike Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Omuz",
+   "Triceps"
+  ],
+  "reps": "8-12",
+  "count": 3438
+ },
+ {
+  "name": "Dumbbell Floor Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "10-14",
+  "count": 3360
+ },
+ {
+  "name": "Dumbbell Reverse Lunge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 3360
+ },
+ {
+  "name": "Tüm Vücut Mobilite Akışı",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Mobilite"
+  ],
+  "reps": "8-10 dk",
+  "count": 3360
+ },
+ {
+  "name": "Bulgarian Split Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/bacak",
+  "count": 3276
+ },
+ {
+  "name": "Dumbbell Split Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 3080
+ },
+ {
+  "name": "Squat",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-10",
+  "count": 3024
+ },
+ {
+  "name": "Seated Calf Raise",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17-22",
+  "count": 3024
+ },
+ {
+  "name": "Arnold Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 3024
+ },
+ {
+  "name": "Incline Dumbbell Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 3024
+ },
+ {
+  "name": "Hanging Leg Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "gym",
+  "muscles": [
+   "Core"
+  ],
+  "reps": "10-12",
+  "count": 2916
+ },
+ {
+  "name": "Triceps Pushdown",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 2646
+ },
+ {
+  "name": "Weighted Dips",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 2646
+ },
+ {
+  "name": "Triceps Dip",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-15",
+  "count": 2646
+ },
+ {
+  "name": "Reverse Lunge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-14",
+  "count": 2520
+ },
+ {
+  "name": "Yüzüstü W İzometrik",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Üst Sırt",
+   "Arka Omuz"
+  ],
+  "reps": "20-30 sn",
+  "count": 2508
+ },
+ {
+  "name": "Tempo Squat (3 sn iniş)",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "12-17",
+  "count": 2464
+ },
+ {
+  "name": "Geri Lunge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 2464
+ },
+ {
+  "name": "Hamstring Walkout",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Arka Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12",
+  "count": 2464
+ },
+ {
+  "name": "Dar Tutuş Dumbbell Floor Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Triceps",
+   "Göğüs"
+  ],
+  "reps": "12-17",
+  "count": 2464
+ },
+ {
+  "name": "Dumbbell Reverse Fly",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Arka Omuz",
+   "Üst Sırt"
+  ],
+  "reps": "14-22",
+  "count": 2436
+ },
+ {
+  "name": "Overhead Triceps Extension",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 2268
+ },
+ {
+  "name": "Rope Pushdown",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-15",
+  "count": 2268
+ },
+ {
+  "name": "Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-12",
+  "count": 2208
+ },
+ {
+  "name": "Advanced Footwork Flow",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12 dk",
+  "count": 2190
+ },
+ {
+  "name": "Landmine Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 2142
+ },
+ {
+  "name": "Self-Resisted Biceps Curl",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Biceps"
+  ],
+  "reps": "20-30 sn/taraf",
+  "count": 2142
+ },
+ {
+  "name": "Glute Bridge March",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Kalça",
+   "Core"
+  ],
+  "reps": "10-16 toplam",
+  "count": 2070
+ },
+ {
+  "name": "Dolphin Pose Prep",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20s",
+  "count": 2010
+ },
+ {
+  "name": "Wall Shoulder Opener",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45s",
+  "count": 2010
+ },
+ {
+  "name": "Dar Tutuş Diz Üstü Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Triceps",
+   "Göğüs"
+  ],
+  "reps": "10-17",
+  "count": 1992
+ },
+ {
+  "name": "Bent-Knee Calf Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Baldır"
+  ],
+  "reps": "17-27",
+  "count": 1974
+ },
+ {
+  "name": "Resistance Band Hamstring Curl",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "resistance_band",
+  "muscles": [
+   "Arka Bacak"
+  ],
+  "reps": "14-22",
+  "count": 1974
+ },
+ {
+  "name": "Cable Flyes",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "gym",
+  "muscles": [
+   "Göğüs"
+  ],
+  "reps": "12-15",
+  "count": 1944
+ },
+ {
+  "name": "Dumbbell Bench Press",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1890
+ },
+ {
+  "name": "Chest-Supported Row",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1872
+ },
+ {
+  "name": "Dumbbell Lateral Raise",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Yan Omuz"
+  ],
+  "reps": "14-22",
+  "count": 1852
+ },
+ {
+  "name": "Standart Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-17",
+  "count": 1848
+ },
+ {
+  "name": "Machine Chest Press",
+  "goals": [
+   "muscle",
+   "fat_loss",
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer",
+   "home_bodyweight",
+   "home_basic"
+  ],
+  "reps": "12",
+  "count": 1798
+ },
+ {
+  "name": "Hack Squat",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 1764
+ },
+ {
+  "name": "OHP",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-10",
+  "count": 1764
+ },
+ {
+  "name": "Straight Arm Pulldown",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 1764
+ },
+ {
+  "name": "Deadlift",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "7-8",
+  "count": 1680
+ },
+ {
+  "name": "Serbest Gün",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 1680
+ },
+ {
+  "name": "Supported Bridge",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "2 dk",
+  "count": 1650
+ },
+ {
+  "name": "Dumbbell Overhead Triceps Extension",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Triceps"
+  ],
+  "reps": "12-17",
+  "count": 1524
+ },
+ {
+  "name": "Pull-Ups",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1512
+ },
+ {
+  "name": "Skull Crushers",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 1512
+ },
+ {
+  "name": "Lateral Raise (21s Method)",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "7+7+7",
+  "count": 1512
+ },
+ {
+  "name": "Overhead Cable Extension",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 1512
+ },
+ {
+  "name": "Renegade Row",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 1512
+ },
+ {
+  "name": "Battle Ropes (Tabata)",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20s iş / 10s dinl.",
+  "count": 1512
+ },
+ {
+  "name": "Devre — Dumbbell Row",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 1512
+ },
+ {
+  "name": "Devre — Shoulder Press",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 1512
+ },
+ {
+  "name": "Devre — Bicep Curl",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17",
+  "count": 1512
+ },
+ {
+  "name": "Devre — Triceps Dip",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 1512
+ },
+ {
+  "name": "Long Box Pulling Straps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 1440
+ },
+ {
+  "name": "Dumbbell Step-Up",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 1380
+ },
+ {
+  "name": "Legs Up The Wall",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 1380
+ },
+ {
+  "name": "Destekli Tek Bacak Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "6-10/taraf",
+  "count": 1316
+ },
+ {
+  "name": "Tek Bacak Hip Hinge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Arka Bacak",
+   "Kalça"
+  ],
+  "reps": "8-12/taraf",
+  "count": 1316
+ },
+ {
+  "name": "Side Split Control",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 1200
+ },
+ {
+  "name": "Paused Bench Press (3s)",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5-7",
+  "count": 1134
+ },
+ {
+  "name": "Close Grip Bench Press",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1134
+ },
+ {
+  "name": "Bayesian Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 1134
+ },
+ {
+  "name": "Standing Single Leg Calf Raise",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14-17",
+  "count": 1134
+ },
+ {
+  "name": "JM Press",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1134
+ },
+ {
+  "name": "Hafif Yürüyüş",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 1134
+ },
+ {
+  "name": "Foam Rolling",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 1134
+ },
+ {
+  "name": "↻ Turlar arası dinlenme: 90s",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 1134
+ },
+ {
+  "name": "Açık Farkındalık",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 1110
+ },
+ {
+  "name": "Reverse Pec Deck",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17",
+  "count": 1062
+ },
+ {
+  "name": "Tempo Şınav (3 sn iniş)",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-14",
+  "count": 1029
+ },
+ {
+  "name": "Ayakları Yükseltilmiş Pike Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Omuz",
+   "Triceps"
+  ],
+  "reps": "8-12",
+  "count": 1029
+ },
+ {
+  "name": "T-Bar Row",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 1008
+ },
+ {
+  "name": "Preacher Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-14",
+  "count": 1008
+ },
+ {
+  "name": "Bird Dog",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Core",
+   "Kalça"
+  ],
+  "reps": "8/taraf",
+  "count": 1008
+ },
+ {
+  "name": "Push-Up + Plyo Push-Up Combo",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8+5",
+  "count": 1008
+ },
+ {
+  "name": "Hafif Tempo Yürüyüş",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "40 dk",
+  "count": 1008
+ },
+ {
+  "name": "Yoga / Esneme",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 1008
+ },
+ {
+  "name": "Devre (3 tur) — Push-Up",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17",
+  "count": 1008
+ },
+ {
+  "name": "Hafif Yüzme veya Bisiklet",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 1008
+ },
+ {
+  "name": "Stretching Routine",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 1008
+ },
+ {
+  "name": "Farkındalık Yürüyüşü",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 dk",
+  "count": 990
+ },
+ {
+  "name": "Sevgi-Şefkat Meditasyonu",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 960
+ },
+ {
+  "name": "Front Squat",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10-12",
+  "count": 924
+ },
+ {
+  "name": "Kontrollü Vücut Ağırlığı Squat",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "10-14",
+  "count": 896
+ },
+ {
+  "name": "Destekli Geri Lunge",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Ön Bacak",
+   "Kalça"
+  ],
+  "reps": "6-10/taraf",
+  "count": 896
+ },
+ {
+  "name": "Step-Ups",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15/bacak",
+  "count": 882
+ },
+ {
+  "name": "Eğimli Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "stable_surface",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-14",
+  "count": 840
+ },
+ {
+  "name": "Diz Üstü veya Standart Şınav",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_bodyweight"
+  ],
+  "equipment": "none",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-14",
+  "count": 840
+ },
+ {
+  "name": "Yoga Nidra",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 840
+ },
+ {
+  "name": "Chest Lift",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 840
+ },
+ {
+  "name": "Single Leg Stretch Prep",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 840
+ },
+ {
+  "name": "Semi Circle Prep",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 840
+ },
+ {
+  "name": "Deadlift (Orta Ağırlık)",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 819
+ },
+ {
+  "name": "Plank to Push-Up",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 819
+ },
+ {
+  "name": "Deficit Deadlift",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5-7",
+  "count": 756
+ },
+ {
+  "name": "Pendlay Row",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8-10",
+  "count": 756
+ },
+ {
+  "name": "Back Squat (RPE 9)",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5-7",
+  "count": 756
+ },
+ {
+  "name": "Spider Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 756
+ },
+ {
+  "name": "Cable Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-15",
+  "count": 756
+ },
+ {
+  "name": "Süperset: Lateral Raise + Cable Crossover",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 + 12",
+  "count": 756
+ },
+ {
+  "name": "Süperset: Skull Crushers + Rope Pushdown",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 + 15",
+  "count": 756
+ },
+ {
+  "name": "⚠️ Deload Notu: 4. haftada ağırlıkları %60'a düşür",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 756
+ },
+ {
+  "name": "Süperset: Seal Row + Face Pull",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 + 20",
+  "count": 756
+ },
+ {
+  "name": "⚠️ Deload Notu: 4. haftada toplam seti %50 azalt",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 756
+ },
+ {
+  "name": "Cable Crossover (Dropset)",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12-10-8",
+  "count": 756
+ },
+ {
+  "name": "Süperset: Overhead Cable Extension + Triceps Dip",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12 + 15",
+  "count": 756
+ },
+ {
+  "name": "Hafif Yüzme",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 756
+ },
+ {
+  "name": "Mobilite Çalışması",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 756
+ },
+ {
+  "name": "Soğuk / Sıcak Kontrast",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 dk",
+  "count": 756
+ },
+ {
+  "name": "Push-Up Variations",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "17",
+  "count": 756
+ },
+ {
+  "name": "Shoulder Press",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "14",
+  "count": 756
+ },
+ {
+  "name": "→ ardından Assault Bike Sprint",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 756
+ },
+ {
+  "name": "→ ardından Rowing Sprint",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "200m",
+  "count": 756
+ },
+ {
+  "name": "Side Kick Front-Back",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 720
+ },
+ {
+  "name": "Şefkat Meditasyonu",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 dk",
+  "count": 720
+ },
+ {
+  "name": "Süperset: Leg Extension + Lying Leg Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 + 15",
+  "count": 672
+ },
+ {
+  "name": "Neutral Pelvis Breathing",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6 nefes",
+  "count": 630
+ },
+ {
+  "name": "Knee Fold",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 630
+ },
+ {
+  "name": "Footwork (Paralel, hafif yay)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 630
+ },
+ {
+  "name": "Nefes Farkındalığı",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 600
+ },
+ {
+  "name": "Dumbbell Floor Press (nötr tutuş)",
+  "goals": [
+   "muscle",
+   "fat_loss"
+  ],
+  "envs": [
+   "home_basic"
+  ],
+  "equipment": "dumbbell",
+  "muscles": [
+   "Göğüs",
+   "Triceps"
+  ],
+  "reps": "8-12",
+  "count": 583
+ },
+ {
+  "name": "⚠️ Deload Notu: Her 4. haftada ağırlıkları %60'a düşür, seti %50 azalt",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 504
+ },
+ {
+  "name": "Süperset: Barbell Curl + Hammer Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 + 12",
+  "count": 504
+ },
+ {
+  "name": "⚠️ Deload Notu: 4. haftada squat ağırlığı max %65",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 504
+ },
+ {
+  "name": "Süperset: Arnold Press + Lateral Raise",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 + 15",
+  "count": 504
+ },
+ {
+  "name": "Süperset: Meadows Row + Reverse Pec Deck",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 + 15",
+  "count": 504
+ },
+ {
+  "name": "Süperset: Preacher Curl + Cable Curl",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 + 15",
+  "count": 504
+ },
+ {
+  "name": "Süperset: OHP + Lateral Raise",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 + 15",
+  "count": 504
+ },
+ {
+  "name": "Finisher: 100 Push-Up Challenge (min sürede)",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "100",
+  "count": 504
+ },
+ {
+  "name": "Crow Pose (Bakasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s",
+  "count": 480
+ },
+ {
+  "name": "Side Crow Prep",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10s/taraf",
+  "count": 480
+ },
+ {
+  "name": "Firefly Pose Prep",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10s",
+  "count": 480
+ },
+ {
+  "name": "Eight Angle Pose Prep",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10s/taraf",
+  "count": 480
+ },
+ {
+  "name": "Yin Yoga — Dragon Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "3 dk/taraf",
+  "count": 480
+ },
+ {
+  "name": "Yin Yoga — Butterfly",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 480
+ },
+ {
+  "name": "Yin Yoga — Seal",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 480
+ },
+ {
+  "name": "Yin Yoga — Twisted Root",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "3 dk/taraf",
+  "count": 480
+ },
+ {
+  "name": "Dolphin Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 480
+ },
+ {
+  "name": "Wheel Pose (Urdhva Dhanurasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 480
+ },
+ {
+  "name": "King Pigeon (Eka Pada)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 480
+ },
+ {
+  "name": "Camel Pose (Ustrasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 480
+ },
+ {
+  "name": "Bow Pose (Dhanurasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 480
+ },
+ {
+  "name": "Yin — Saddle",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 480
+ },
+ {
+  "name": "Yin — Caterpillar",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 480
+ },
+ {
+  "name": "Yin — Sphinx",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 480
+ },
+ {
+  "name": "Teaser (Full)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Hip Circles",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6/yön",
+  "count": 480
+ },
+ {
+  "name": "Corkscrew",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6/yön",
+  "count": 480
+ },
+ {
+  "name": "Side Bend",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Twist (Spine Twist Supine)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Thread the Needle",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Magic Circle — Inner Thigh",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15",
+  "count": 480
+ },
+ {
+  "name": "Magic Circle — Chest Press",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 480
+ },
+ {
+  "name": "Resistance Band Roll Up",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Ball Between Knees Bridge",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 480
+ },
+ {
+  "name": "Hundred → Roll Up → Rollover",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "Akış",
+  "count": 480
+ },
+ {
+  "name": "Leg Circle → Rolling → Series of 5",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "Akış",
+  "count": 480
+ },
+ {
+  "name": "Spine Stretch → Open Leg Rocker",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "Akış",
+  "count": 480
+ },
+ {
+  "name": "Corkscrew → Saw → Swan Dive",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "Akış",
+  "count": 480
+ },
+ {
+  "name": "Swan Dive (Full)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 480
+ },
+ {
+  "name": "Swimming (İleri)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 nefes",
+  "count": 480
+ },
+ {
+  "name": "Rocking",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Shoulder Bridge",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Wall Roll Down",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 480
+ },
+ {
+  "name": "Constructive Rest",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 dk",
+  "count": 480
+ },
+ {
+  "name": "Full Body Stretch Serisi",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 dk",
+  "count": 480
+ },
+ {
+  "name": "Single Leg Footwork",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 480
+ },
+ {
+  "name": "Running on Reformer",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20",
+  "count": 480
+ },
+ {
+  "name": "Leg Circles (Ağır Yay)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Frog",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Pulling Straps II",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Backstroke",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Rowing — Shaving",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Rowing — Hug a Tree",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Reverse Chest Expansion",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Short Box — Round Back",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Short Box — Flat Back",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Short Box — Side Reach",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Short Box — Twist",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 480
+ },
+ {
+  "name": "Long Box — Pulling Straps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 480
+ },
+ {
+  "name": "Basic Jumps (Paralel)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20",
+  "count": 480
+ },
+ {
+  "name": "Jumps (First Position)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20",
+  "count": 480
+ },
+ {
+  "name": "Alternating Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20",
+  "count": 480
+ },
+ {
+  "name": "Scissors Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "16",
+  "count": 480
+ },
+ {
+  "name": "Single Leg Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 480
+ },
+ {
+  "name": "Long Stretch Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 480
+ },
+ {
+  "name": "Up Stretch",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 480
+ },
+ {
+  "name": "Arabesque",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6/taraf",
+  "count": 480
+ },
+ {
+  "name": "Balance Control Front",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 480
+ },
+ {
+  "name": "Nefes Sayımı",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 dk",
+  "count": 450
+ },
+ {
+  "name": "Sessiz Farkındalık Oturumu",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "35 dk",
+  "count": 450
+ },
+ {
+  "name": "EMOM 16dk (4 tur) — Clean & Press x5",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "7",
+  "count": 378
+ },
+ {
+  "name": "EMOM — Devil Press x5",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "7",
+  "count": 378
+ },
+ {
+  "name": "EMOM — Burpee x8",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 378
+ },
+ {
+  "name": "EMOM — Toes to Bar x10",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 378
+ },
+ {
+  "name": "Surya Namaskar A",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 akış",
+  "count": 360
+ },
+ {
+  "name": "Warrior I (Virabhadrasana I)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Warrior II",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Tree Pose (Vrksasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Downward Dog",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45s",
+  "count": 360
+ },
+ {
+  "name": "Savasana",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 360
+ },
+ {
+  "name": "Cat-Cow Stretch",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 tekrar",
+  "count": 360
+ },
+ {
+  "name": "Pigeon Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 dk/taraf",
+  "count": 360
+ },
+ {
+  "name": "Seated Forward Fold",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45s",
+  "count": 360
+ },
+ {
+  "name": "Supine Twist",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Happy Baby",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45s",
+  "count": 360
+ },
+ {
+  "name": "Child Pose (Balasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 dk",
+  "count": 360
+ },
+ {
+  "name": "Reclining Butterfly",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "3 dk",
+  "count": 360
+ },
+ {
+  "name": "Sun Salutation C",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 akış",
+  "count": 360
+ },
+ {
+  "name": "Extended Side Angle",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Revolved Triangle",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Dancer Pose (Natarajasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Eagle Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Flying Crow",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10s",
+  "count": 360
+ },
+ {
+  "name": "Astavakrasana (Eight Angle)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Firefly (Tittibhasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s",
+  "count": 360
+ },
+ {
+  "name": "Side Crow",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Kişisel Vinyasa Akışı",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45 dk",
+  "count": 360
+ },
+ {
+  "name": "Yin Yoga Derin Seri",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45 dk",
+  "count": 360
+ },
+ {
+  "name": "The Hundred",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 nefes",
+  "count": 360
+ },
+ {
+  "name": "Single Leg Circle",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Single Leg Stretch",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 360
+ },
+ {
+  "name": "Pelvic Curl",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Side Leg Lift Series",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12/taraf",
+  "count": 360
+ },
+ {
+  "name": "Clam Shell",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15/taraf",
+  "count": 360
+ },
+ {
+  "name": "Inner Thigh Lift",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12/taraf",
+  "count": 360
+ },
+ {
+  "name": "Bridge Variations",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Swimming",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 nefes",
+  "count": 360
+ },
+ {
+  "name": "Swan Dive Prep",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 360
+ },
+ {
+  "name": "Arm Circles (Hafif Ağırlık)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 360
+ },
+ {
+  "name": "Seal",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Rocker with Open Legs",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 360
+ },
+ {
+  "name": "Side Kick Up-Down",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 360
+ },
+ {
+  "name": "Side Kick Circles",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Inner Thigh Presses",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12/taraf",
+  "count": 360
+ },
+ {
+  "name": "Hot Potato",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Joseph Pilates Orijinal 34 Hareket",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45 dk akış",
+  "count": 360
+ },
+ {
+  "name": "Magic Circle Full Body Serisi",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20 dk",
+  "count": 360
+ },
+ {
+  "name": "Resistance Band Complex",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 360
+ },
+ {
+  "name": "Foam Roller Challenge",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 360
+ },
+ {
+  "name": "Star",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Twist",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Snake/Twist",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6/taraf",
+  "count": 360
+ },
+ {
+  "name": "Footwork (Paralel)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Footwork (V Pozisyon)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Leg Circles (Kayışlı)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Coordination",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 360
+ },
+ {
+  "name": "Arms Pulling Straps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Arms T-Shape",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Bicep Curls (Reformer)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 360
+ },
+ {
+  "name": "Chest Expansion",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 360
+ },
+ {
+  "name": "Rowing Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 360
+ },
+ {
+  "name": "Leg Press (Single Leg)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 360
+ },
+ {
+  "name": "Side Splits",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 360
+ },
+ {
+  "name": "Scooter",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 360
+ },
+ {
+  "name": "Front Splits",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 360
+ },
+ {
+  "name": "Mermaid (İleri)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Leg Spring Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 360
+ },
+ {
+  "name": "Arm Spring Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 360
+ },
+ {
+  "name": "Stretch Serisi",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10 dk",
+  "count": 360
+ },
+ {
+  "name": "Full Classical Repertoire",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "50 dk",
+  "count": 360
+ },
+ {
+  "name": "Plyometric Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15",
+  "count": 360
+ },
+ {
+  "name": "Tuck Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 360
+ },
+ {
+  "name": "Split Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 360
+ },
+ {
+  "name": "Lateral Jumps",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "12",
+  "count": 360
+ },
+ {
+  "name": "Single Leg Plyos",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 360
+ },
+ {
+  "name": "Vücut Taraması",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 360
+ },
+ {
+  "name": "Uzun Vücut Taraması",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "25 dk",
+  "count": 360
+ },
+ {
+  "name": "Back Extension",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 320
+ },
+ {
+  "name": "Side Plank Pilates",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20s/taraf",
+  "count": 320
+ },
+ {
+  "name": "Standing Lunge",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/taraf",
+  "count": 320
+ },
+ {
+  "name": "Eve's Lunge",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 320
+ },
+ {
+  "name": "Push-Up (Pilates)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 300
+ },
+ {
+  "name": "Chair Pose (Utkatasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 270
+ },
+ {
+  "name": "Chaturanga",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Boat Pose (Navasana)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 270
+ },
+ {
+  "name": "Crow Pose Prep",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15s",
+  "count": 270
+ },
+ {
+  "name": "Surya Bhedana",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 270
+ },
+ {
+  "name": "Meditasyon Oturumu",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 270
+ },
+ {
+  "name": "Spine Stretch Forward",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Saw",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 270
+ },
+ {
+  "name": "Toe Tap Prep",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 270
+ },
+ {
+  "name": "Mat Koreografi (Müzikli)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 270
+ },
+ {
+  "name": "Serbest Hareket Çalışması",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 270
+ },
+ {
+  "name": "Long Stretch",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Elephant",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 270
+ },
+ {
+  "name": "Stomach Massage Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Pelvic Curl on Reformer",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Pike on Chair",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 270
+ },
+ {
+  "name": "Teaser on Chair",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 270
+ },
+ {
+  "name": "Going Up Front",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 270
+ },
+ {
+  "name": "Swan on Chair",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 270
+ },
+ {
+  "name": "Kısa Vücut Taraması",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 dk",
+  "count": 270
+ },
+ {
+  "name": "Yürüyüş Meditasyonu",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "35 dk",
+  "count": 270
+ },
+ {
+  "name": "⚠️ Deload Notu: 4. haftada toplam hacmi %50 azalt",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "-",
+  "count": 252
+ },
+ {
+  "name": "Back Squat",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 252
+ },
+ {
+  "name": "Step-Up (low box)",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10/bacak",
+  "count": 252
+ },
+ {
+  "name": "→ ardından Kettlebell Swing",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15",
+  "count": 252
+ },
+ {
+  "name": "Finisher: Sled Push + Farmer Walk",
+  "goals": [
+   "fat_loss"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30m + 40m",
+  "count": 252
+ },
+ {
+  "name": "Plank Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s",
+  "count": 240
+ },
+ {
+  "name": "Nadi Shodhana",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "3 dk",
+  "count": 240
+ },
+ {
+  "name": "Seated Meditation",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 240
+ },
+ {
+  "name": "Ashtanga Primary Series (Kısa)",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "60 dk",
+  "count": 240
+ },
+ {
+  "name": "Roll Down (Standing)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 240
+ },
+ {
+  "name": "Figure 4 Stretch",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 dk/taraf",
+  "count": 240
+ },
+ {
+  "name": "Thoracic Spine Rotation",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 240
+ },
+ {
+  "name": "Neck & Shoulder Release",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 240
+ },
+ {
+  "name": "Scissors (Üst Pozisyon)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 240
+ },
+ {
+  "name": "Bicycle (Üst Pozisyon)",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 240
+ },
+ {
+  "name": "Jackknife",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6",
+  "count": 240
+ },
+ {
+  "name": "Teaser 1-2-3",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "4",
+  "count": 240
+ },
+ {
+  "name": "Stomach Massage — Round",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 240
+ },
+ {
+  "name": "Stomach Massage — Hands Back",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 240
+ },
+ {
+  "name": "Stomach Massage — Reach",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8",
+  "count": 240
+ },
+ {
+  "name": "Full Reformer Flow (45 dk)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45 dk",
+  "count": 240
+ },
+ {
+  "name": "Duygu Gözlemi",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "25 dk",
+  "count": 240
+ },
+ {
+  "name": "Surya Namaskar B",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "1 akış",
+  "count": 180
+ },
+ {
+  "name": "Warrior III",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Half Moon",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Triangle Pose",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Standing Split",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "20s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Serbest Vinyasa Flow",
+  "goals": [
+   "yoga"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "45 dk",
+  "count": 180
+ },
+ {
+  "name": "Mermaid Stretch",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Spine Twist",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8/taraf",
+  "count": 180
+ },
+ {
+  "name": "Foam Roller Sırt",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "5 dk",
+  "count": 180
+ },
+ {
+  "name": "Hip Flexor Stretch",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Push-Up → Pike → Teaser Geçiş",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "4 geçiş",
+  "count": 180
+ },
+ {
+  "name": "Pilates + Yoga Fusion",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 180
+ },
+ {
+  "name": "Body Awareness Meditasyon",
+  "goals": [
+   "pilates"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 180
+ },
+ {
+  "name": "Hip Stretch Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Knee Stretch Series",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "10",
+  "count": 180
+ },
+ {
+  "name": "Hamstring Stretch",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30s/taraf",
+  "count": 180
+ },
+ {
+  "name": "Mermaid (Reformer)",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "6/taraf",
+  "count": 180
+ },
+ {
+  "name": "Reformer + Mat Fusion",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "30 dk",
+  "count": 180
+ },
+ {
+  "name": "Nefes & Meditasyon",
+  "goals": [
+   "reformer"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "15 dk",
+  "count": 180
+ },
+ {
+  "name": "Rehberli Görselleştirme",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "8 dk",
+  "count": 180
+ },
+ {
+  "name": "Öz-Sorgulama",
+  "goals": [
+   "meditation"
+  ],
+  "envs": [
+   "gym",
+   "home_bodyweight",
+   "home_basic",
+   "studio",
+   "home_reformer"
+  ],
+  "reps": "35 dk",
+  "count": 180
+ },
+ {
+  "name": "Rear Delt Fly",
+  "goals": [
+   "muscle"
+  ],
+  "envs": [
+   "gym",
+   "studio",
+   "home_reformer"
+  ],
+  "equipment": "gym",
+  "muscles": [
+   "Arka Omuz"
+  ],
+  "reps": "12-15",
+  "count": 108
+ }
+]

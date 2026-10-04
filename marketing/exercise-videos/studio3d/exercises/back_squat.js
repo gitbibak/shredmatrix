@@ -1,0 +1,50 @@
+// High-bar back squat. Copy template for the strength_legs_hinge batch (barbell on the back, planted feet).
+// Bar = midpoint of the hands (barbell prop), so holdL/holdR place the bar on the upper traps in the thorax frame.
+const BAR = { holdL: [-0.085, 0.11, 0.42], holdR: [-0.085, 0.11, 0.42], elbowPole: [-0.9, -1, 0.6], sh: -30, shAbd: 60, el: 120 };
+window.EXERCISE = {
+  id: 'back_squat',
+  name: { tr: 'Back Squat', en: 'Barbell Back Squat', es: 'Sentadilla trasera' },
+  category: { tr: 'Bacak · Kalça', en: 'Legs · Glutes', es: 'Piernas · Glúteos' },
+  equipmentLabel: { tr: 'Halter', en: 'Barbell', es: 'Barra' },
+  muscles: ['quads', 'glutes', 'adductors', 'core'],
+  tempo: '2-0.5-1',
+  view: { yaw: 90, pitch: 6 },
+  alt: { yaw: 18, pitch: 7, title: { tr: 'Önden bak', en: 'Front view', es: 'Vista frontal' }, text: { tr: 'Dizler ayak uçlarıyla aynı yöne bakar', en: 'Knees track over the toes', es: 'Rodillas en línea con los pies' } },
+  setupView: { yaw: 28, pitch: 12 },
+  setupMarks: [{ type: 'span', joints: ['ankleR', 'ankleL'], label: { tr: 'Omuzdan biraz geniş', en: 'Just wider than shoulders', es: 'Algo más que los hombros' } }],
+  props: [['barbell', { grip: 'pronated' }]],
+  ctx: { anchorX: ['ankleL', 'ankleR'], plant: ['ankleL', 'ankleR'] },
+  poses: {
+    start: Object.assign({ trunk: 5, hip: 2, abd: 6, hrot: 20, neck: 0 }, BAR),
+    bottom: Object.assign({ trunk: 42, hip: 137, knee: 130, abd: 14, hrot: 22, neck: -6, thoracic: -3 }, BAR),
+  },
+  rest: 'start',
+  rep: [
+    { to: 'bottom', dur: 2.0, phase: 0 },
+    { to: 'bottom', dur: 0.5, phase: 1 },
+    { to: 'start', dur: 1.0, phase: 2 },
+  ],
+  setup: { tr: 'Bar üst sırtta, trapezin üstünde. Eller omuzdan biraz geniş, dirsekler aşağı. Ayak uçları hafif dışa.',
+    en: 'Bar on the upper traps. Hands just outside the shoulders, elbows down. Toes turned slightly out.',
+    es: 'Barra sobre los trapecios. Manos algo más abiertas que los hombros, codos abajo. Puntas un poco fuera.' },
+  phases: [
+    { name: { tr: 'İniş', en: 'Lower', es: 'Baja' }, breath: 'in',
+      text: { tr: 'Nefes al, karnı sık. Kalça ve dizler birlikte bükülür, bar orta ayağın üstünde iner.', en: 'Breathe in and brace. Hips and knees bend together; the bar drops over mid-foot.', es: 'Inhala y aprieta el core. Cadera y rodillas a la vez; la barra baja sobre el mediopié.' } },
+    { name: { tr: 'Dipte dur', en: 'Pause', es: 'Pausa' }, breath: 'hold', arc: ['hipR', 'kneeR', 'ankleR'], line: ['heelR', 'ballR'],
+      text: { tr: 'Kalça diz hizasının biraz altında. Topuklar yerde, sırt düz.', en: 'Hip crease just below the knee. Heels down, back flat.', es: 'Cadera algo por debajo de la rodilla. Talones abajo, espalda recta.' } },
+    { name: { tr: 'Kalkış', en: 'Drive up', es: 'Sube' }, breath: 'out',
+      text: { tr: 'Yeri it; kalça ve göğüs aynı hızda yükselir. Tepede kalçanı sık.', en: 'Push the floor away; hips and chest rise together. Squeeze glutes at the top.', es: 'Empuja el suelo; cadera y pecho suben a la vez. Aprieta glúteos arriba.' } },
+  ],
+  tempoText: { tr: '2 sn in · 0,5 sn dur · 1 sn kalk', en: '2 s down · 0.5 s pause · 1 s up', es: '2 s abajo · 0,5 s pausa · 1 s arriba' },
+  mistakes: [
+    { title: { tr: 'Dizler içe çöküyor', en: 'Knees cave in', es: 'Rodillas hacia dentro' },
+      fix: { tr: 'Dizleri dışa it', en: 'Push the knees out', es: 'Empuja las rodillas hacia fuera' },
+      fixText: { tr: 'Dizler 2. ve 3. parmak hizasında', en: 'Knees over the 2nd–3rd toe', es: 'Rodillas sobre el 2.º y 3.er dedo' },
+      at: 'bottom', pose: { abd: 6, hrot: 0 }, view: { yaw: 14, pitch: 7 }, marks: ['kneeL', 'kneeR'], parts: ['thigh', 'shin'] },
+    { title: { tr: 'Kalça göğüsten önce kalkıyor', en: 'Hips shoot up first', es: 'La cadera sube primero' },
+      fix: { tr: 'Göğüsle birlikte kalk', en: 'Lead with the chest', es: 'Sube con el pecho' },
+      fixText: { tr: 'Kalça ve omuzlar aynı hızda yükselir', en: 'Hips and shoulders rise at the same rate', es: 'Cadera y hombros suben a la vez' },
+      at: 'bottom', pose: { trunk: 64, hip: 128, knee: 88, neck: -14 }, line: ['pelvis', 'neck'], parts: ['pelvis', 'waist'] },
+  ],
+  cues: [{ tr: 'Nefes al, karnı sık', en: 'Big breath, brace', es: 'Inhala y aprieta' }, { tr: 'Dizler ayak uçları yönünde', en: 'Knees out over toes', es: 'Rodillas sobre los pies' }, { tr: 'Yeri it', en: 'Drive the floor away', es: 'Empuja el suelo' }],
+};

@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+import { serve } from './serve.mjs';
+const [a,b,st,lang]=process.argv.slice(2);
+const S = await serve();
+const br = await chromium.launch({ channel: 'chrome' });
+const p = await br.newPage({ viewport: { width: 1080, height: 1920 } });
+await p.goto(S.base + `player.html?ex=thread_the_needle&lang=${lang||'tr'}`); await p.waitForFunction(() => window.ready);
+const r = await p.evaluate(([a,b,st]) => { const tl = FB.getTL(); const o=[]; for(let t=a;t<=b;t+=st){const s=tl.solveP(tl.poseAt(t)); o.push([+t.toFixed(2), s.J.elbowR.map(x=>+x.toFixed(2)).join(','), s.J.handR.map(x=>+x.toFixed(2)).join(',')]);} return o;}, [+a,+b,+st]);
+console.log(r.map(x=>x.join(' | ')).join('\n'));
+await br.close(); S.srv.close();

@@ -1,0 +1,3982 @@
+{
+ "batch": "strength_legs_hinge",
+ "specs": [
+  {
+   "id": "back_squat",
+   "app_names": [
+    "Back Squat",
+    "Back Squat (RPE 9)"
+   ],
+   "names": {
+    "tr": "Back Squat (Arka Squat)",
+    "en": "Barbell Back Squat",
+    "es": "Sentadilla trasera con barra"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "barbell",
+    "squat rack"
+   ],
+   "equipment_setup": "Bar racked across upper traps/rear delts (high bar) at mid-shoulder-blade height in the rack; hands just outside shoulders gripping bar, elbows pointing down/back, bar on the shelf of the upper back; 2-3 steps back from rack",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "hamstrings",
+    "erector spinae",
+    "core",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip-knee-ankle angles, torso lean and bar over mid-foot; front shows knee tracking and symmetry"
+   },
+   "start_pose": {
+    "description": "Standing tall, feet 1.0-1.2x shoulder width, toes turned out 15-30 deg, bar on upper back, chest up, braced core, gaze forward/slightly down",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_extension": 40,
+     "elbow_flexion": 100,
+     "stance_width": 1.1,
+     "foot_turnout_deg": 20,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat on floor",
+     "bar on upper back"
+    ],
+    "implement": "barbell on traps, horizontal, over mid-foot line"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Inhale and brace, break at hips and knees together, sit down between the hips; knees track over toes, torso leans forward as a unit with shins, bar stays over mid-foot",
+     "duration_s": 2.5,
+     "breathing": "inhale and brace before descent, hold",
+     "end_angles": {
+      "trunk_from_vertical": 40,
+      "hip_flexion": 137,
+      "knee_flexion": 125,
+      "ankle_dorsiflexion": 28,
+      "stance_width": 1.1,
+      "foot_turnout_deg": 20,
+      "elbow_flexion": 100
+     },
+     "contacts": [
+      "both feet flat, weight mid-foot, heels down"
+     ],
+     "implement_path": "bar travels straight down over mid-foot; torso angle roughly parallel to shin angle",
+     "notes": "bottom: hip crease at or just below top of knee (thighs just past parallel, thigh ~97 deg from vertical); knee flexion 120-135 depending on depth"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief pause at depth with tension, no relaxation or bounce",
+     "duration_s": 0.5,
+     "breathing": "hold breath",
+     "end_angles": {
+      "trunk_from_vertical": 40,
+      "hip_flexion": 137,
+      "knee_flexion": 125,
+      "ankle_dorsiflexion": 28
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bar static",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Drive floor away, hips and shoulders rise at the same rate, knees stay out, finish tall with glutes squeezed",
+     "duration_s": 1.5,
+     "breathing": "exhale through the sticking point or at the top",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "both feet flat, whole foot pushing"
+     ],
+     "implement_path": "bar rises vertically over mid-foot",
+     "notes": "avoid hips shooting up first (good-morning squat)"
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "2-0.5-1 (RPE 9 set: controlled descent, slow grinding last reps)",
+   "cues": [
+    "Brace, big breath into belly",
+    "Sit between your hips",
+    "Knees out over toes",
+    "Chest tall, bar over mid-foot",
+    "Drive the floor away"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees cave inward (valgus) on ascent",
+     "visual": "both knees collapse toward midline while coming up from the bottom, feet roll to arches",
+     "fix": "push knees out in line with toes, think spread the floor"
+    },
+    {
+     "mistake": "Good-morning squat: hips rise faster than chest",
+     "visual": "buttocks shoot up behind, torso tips toward horizontal (trunk > 60 deg) while knee angle barely changes",
+     "fix": "lead with chest, push floor away, reduce load"
+    },
+    {
+     "mistake": "Heels lift / weight shifts onto toes",
+     "visual": "heels come off floor at bottom, knees travel excessively forward and torso too upright",
+     "fix": "keep whole foot planted, use heel wedge or work ankle mobility"
+    }
+   ],
+   "safety": "Use safety arms/pins or spotters when training near failure (RPE 9); keep neutral spine, avoid rounding lower back at depth; stop if sharp knee or back pain.",
+   "regression": "Goblet squat or box squat",
+   "progression": "Pause squat, front squat, heavier loads",
+   "variants": [
+    {
+     "app_name": "Back Squat (RPE 9)",
+     "difference": "same movement near failure: slightly slower grinding last reps, possible small forward lean increase; show effort not form change"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/Quadriceps/BBSquat",
+    "https://doaj.org/article/ce9d6dfc98b348b0bca19f25cd119704"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "bodyweight_squat",
+   "app_names": [
+    "Squat",
+    "Kontrollü Vücut Ağırlığı Squat",
+    "Tempo Squat (3 sn iniş)"
+   ],
+   "names": {
+    "tr": "Vücut Ağırlığı Squat",
+    "en": "Bodyweight Squat",
+    "es": "Sentadilla con peso corporal"
+   },
+   "category": "strength_legs",
+   "equipment": [],
+   "equipment_setup": "No equipment; arms extended forward at shoulder height or hands clasped at chest as counterbalance",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "hamstrings",
+    "core",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip-knee-ankle angles and torso lean; front shows knee tracking"
+   },
+   "start_pose": {
+    "description": "Standing tall, feet shoulder width, toes out 10-20 deg, arms by sides or hands at chest",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 0,
+     "stance_width": 1.0,
+     "foot_turnout_deg": 15,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Inhale, push hips back and bend knees, knees track over toes, arms swing forward to shoulder height as counterweight, chest stays up",
+     "duration_s": 3.0,
+     "breathing": "inhale and brace",
+     "end_angles": {
+      "trunk_from_vertical": 35,
+      "hip_flexion": 132,
+      "knee_flexion": 125,
+      "ankle_dorsiflexion": 28,
+      "shoulder_flexion": 85,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat, heels down"
+     ],
+     "implement_path": "none (arms level with shoulders)",
+     "notes": "depth: thighs at or just below parallel (thigh ~97 deg from vertical)"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief controlled pause, no bounce",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 35,
+      "hip_flexion": 132,
+      "knee_flexion": 125,
+      "ankle_dorsiflexion": 28,
+      "shoulder_flexion": 85
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Drive through whole foot, squeeze glutes at the top",
+     "duration_s": 1.0,
+     "breathing": "exhale on the way up",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "shoulder_flexion": 0
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "3-0.5-1 (controlled/tempo: 3 s lowering, quick but smooth up)",
+   "cues": [
+    "Hips back and down",
+    "Knees track over toes",
+    "Chest tall",
+    "Heels stay down",
+    "Stand tall, squeeze glutes"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knees cave inward",
+     "visual": "knees drift toward each other on the way up",
+     "fix": "push knees out over 2nd-3rd toe"
+    },
+    {
+     "mistake": "Heels rise off the floor",
+     "visual": "heels lift and weight rolls onto toes at the bottom, trunk topples forward",
+     "fix": "plant whole foot, elevate heels slightly or reduce depth"
+    },
+    {
+     "mistake": "Torso collapses forward / rounded back",
+     "visual": "chest drops toward knees, lumbar rounds at bottom",
+     "fix": "arms forward counterbalance, keep chest tall"
+    }
+   ],
+   "safety": "Stop at pain-free depth; if knees or back complain, squat to a chair. Keep neutral spine.",
+   "regression": "Chair/box squat with hands on a support",
+   "progression": "Goblet squat, tempo with pause, jump squat",
+   "variants": [
+    {
+     "app_name": "Kontrollü Vücut Ağırlığı Squat",
+     "difference": "slow controlled tempo, ~3 s lowering, full control, same angles"
+    },
+    {
+     "app_name": "Tempo Squat (3 sn iniş)",
+     "difference": "3 s eccentric (descent duration 3.0 s), otherwise identical; if loaded in the app it may be a barbell/goblet version, geometry is the same"
+    },
+    {
+     "app_name": "Squat",
+     "difference": "generic squat; app's own cues describe the bodyweight squat"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/Quadriceps/BBSquat",
+    "https://doaj.org/article/ce9d6dfc98b348b0bca19f25cd119704"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "front_squat",
+   "app_names": [
+    "Front Squat"
+   ],
+   "names": {
+    "tr": "Front Squat (Ön Squat)",
+    "en": "Barbell Front Squat",
+    "es": "Sentadilla frontal"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "barbell",
+    "squat rack"
+   ],
+   "equipment_setup": "Bar racked on front delts and clavicles; clean grip (fingers under bar, elbows high, upper arms parallel to floor) or crossed-arm grip; bar close to throat without choking",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "upper back",
+    "core",
+    "erector spinae"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows upright torso and elbow height; 3q shows rack position"
+   },
+   "start_pose": {
+    "description": "Standing, feet shoulder width, toes out 15-25 deg, bar on front delts, elbows high pointing forward, torso vertical",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 90,
+     "elbow_flexion": 130,
+     "stance_width": 1.1,
+     "foot_turnout_deg": 20
+    },
+    "contacts": [
+     "both feet flat"
+    ],
+    "implement": "barbell resting on front delts, forearms ~parallel to floor"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Brace, sit straight down keeping elbows high and torso more upright than a back squat; knees travel forward over toes",
+     "duration_s": 2.5,
+     "breathing": "inhale and brace",
+     "end_angles": {
+      "trunk_from_vertical": 25,
+      "hip_flexion": 128,
+      "knee_flexion": 135,
+      "ankle_dorsiflexion": 32,
+      "shoulder_flexion": 90,
+      "elbow_flexion": 130
+     },
+     "contacts": [
+      "both feet flat, heels down"
+     ],
+     "implement_path": "bar moves vertically over mid-foot",
+     "notes": "thighs just below parallel"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Short pause, elbows still high",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 25,
+      "hip_flexion": 128,
+      "knee_flexion": 135,
+      "ankle_dorsiflexion": 32
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bar static",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Drive up keeping elbows high, chest up, finish tall",
+     "duration_s": 1.5,
+     "breathing": "exhale at/near top",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bar rises vertically",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "2-0.5-1",
+   "cues": [
+    "Elbows high",
+    "Chest tall, torso upright",
+    "Knees out over toes",
+    "Drive up through mid-foot"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows drop",
+     "visual": "elbows fall toward floor and bar rolls forward off the shoulders",
+     "fix": "drive elbows up, improve wrist/lat mobility or use straps/cross grip"
+    },
+    {
+     "mistake": "Torso folds forward",
+     "visual": "trunk leans past ~45 deg and hips rise first",
+     "fix": "lighter load, upper back tight, elbows up"
+    },
+    {
+     "mistake": "Heels rise",
+     "visual": "heels lift at bottom",
+     "fix": "heel-elevated shoes, ankle mobility"
+    }
+   ],
+   "safety": "Use safeties; if wrists hurt use crossed-arm grip. Don't rest the bar on the throat. Bail forward by dropping the bar.",
+   "regression": "Goblet squat",
+   "progression": "Pause front squat, heavier loads",
+   "variants": [],
+   "sources": [
+    "https://exrx.net/WeightExercises/OlympicLifts/FrontSquat"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "goblet_squat",
+   "app_names": [
+    "Goblet Squat",
+    "Goblet Squat / Chair Squat"
+   ],
+   "names": {
+    "tr": "Goblet Squat",
+    "en": "Goblet Squat",
+    "es": "Sentadilla goblet"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "dumbbell or kettlebell"
+   ],
+   "equipment_setup": "Dumbbell held vertically against the sternum by the top bell (or kettlebell by the horns/halo), elbows pointing down, forearms vertical",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "core",
+    "upper back",
+    "biceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows upright torso and depth; front shows knee tracking and elbows inside knees"
+   },
+   "start_pose": {
+    "description": "Standing, feet 1.0-1.3x shoulder width, toes out 15-30 deg, weight at chest, elbows tucked, chest tall",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 45,
+     "elbow_flexion": 130,
+     "stance_width": 1.2,
+     "foot_turnout_deg": 20
+    },
+    "contacts": [
+     "both feet flat"
+    ],
+    "implement": "dumbbell vertical against sternum, 5 cm in front of chest"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Brace, sit hips back and down between legs, elbows travel inside the knees, torso stays tall",
+     "duration_s": 2.5,
+     "breathing": "inhale and brace",
+     "end_angles": {
+      "trunk_from_vertical": 28,
+      "hip_flexion": 126,
+      "knee_flexion": 130,
+      "ankle_dorsiflexion": 32,
+      "shoulder_flexion": 45,
+      "elbow_flexion": 130
+     },
+     "contacts": [
+      "both feet flat, heels down"
+     ],
+     "implement_path": "weight over mid-foot, elbows end inside knees",
+     "notes": "thighs at or below parallel; hip crease below knee"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief pause; optionally push knees out with elbows",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 28,
+      "hip_flexion": 126,
+      "knee_flexion": 130,
+      "ankle_dorsiflexion": 32
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "static",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Drive up through whole foot, keep chest tall, stand fully",
+     "duration_s": 1.5,
+     "breathing": "exhale on the way up",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "weight rises vertically",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "2-0.5-1",
+   "cues": [
+    "Chest tall",
+    "Elbows inside knees",
+    "Knees out over toes",
+    "Whole foot on the floor",
+    "Stand up tall"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Weight drifts away from chest",
+     "visual": "dumbbell swings out forward, arms extend, torso leans back",
+     "fix": "elbows tucked, weight glued to sternum"
+    },
+    {
+     "mistake": "Knees cave in",
+     "visual": "knees move toward midline on ascent",
+     "fix": "use elbows to push knees out"
+    },
+    {
+     "mistake": "Torso leans forward / heels lift",
+     "visual": "chest drops toward knees",
+     "fix": "chest tall, whole foot down"
+    }
+   ],
+   "safety": "Choose a weight you can hold at the chest comfortably. For chair variant sit lightly, do not drop onto the chair.",
+   "regression": "Box/chair squat with lighter load",
+   "progression": "Heavier goblet, tempo/pause goblet, front squat",
+   "variants": [
+    {
+     "app_name": "Goblet Squat / Chair Squat",
+     "difference": "a chair/box sits behind the buttocks at ~knee height; lightly touch the seat at the bottom (hip crease at/just below knee, knee ~95-100 deg) and stand up without rocking; seat touch is a depth guide, not a rest"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/Kettlebell/KBGobletSquat"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "hack_squat",
+   "app_names": [
+    "Hack Squat"
+   ],
+   "names": {
+    "tr": "Hack Squat (Makine)",
+    "en": "Machine Hack Squat",
+    "es": "Sentadilla hack en máquina"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "hack squat machine"
+   ],
+   "equipment_setup": "Back and shoulders against the angled pad (~45 deg sled), shoulders under shoulder pads, feet shoulder width on platform, toes out 10-15 deg, safety handles released",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps"
+   ],
+   "secondary_muscles": [
+    "gluteus maximus",
+    "adductors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows sled path, knee travel and hip-back contact with pad"
+   },
+   "start_pose": {
+    "description": "Body leaning back against pad, legs nearly straight (knee not locked), feet on platform shoulder width",
+    "angles": {
+     "trunk_from_vertical": -45,
+     "hip_flexion": 15,
+     "knee_flexion": 10,
+     "ankle_dorsiflexion": 5,
+     "stance_width": 1.0,
+     "foot_turnout_deg": 12
+    },
+    "contacts": [
+     "back and head on pad",
+     "shoulders under pads",
+     "both feet flat on platform",
+     "hands on handles"
+    ],
+    "implement": "sled at top of its 45 deg rail"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Unlock safeties, lower along the rail with control until thighs parallel or below; knees travel forward, heels stay flat, hips stay against pad",
+     "duration_s": 3.0,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "trunk_from_vertical": -45,
+      "hip_flexion": 100,
+      "knee_flexion": 115,
+      "ankle_dorsiflexion": 25
+     },
+     "contacts": [
+      "back pad contact, feet flat heels down"
+     ],
+     "implement_path": "sled slides down 45 deg rail; hips remain on pad",
+     "notes": "depth to ~90-120 deg knee flexion according to mobility"
+    },
+    {
+     "name": "ascent",
+     "description": "Press platform away through the whole foot, stop just short of locking the knees",
+     "duration_s": 1.5,
+     "breathing": "exhale as you press",
+     "end_angles": {
+      "trunk_from_vertical": -45,
+      "hip_flexion": 15,
+      "knee_flexion": 10,
+      "ankle_dorsiflexion": 5
+     },
+     "contacts": [
+      "back pad, feet flat"
+     ],
+     "implement_path": "sled rises back along rail",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "3-0-1.5",
+   "cues": [
+    "Back flat on the pad",
+    "Knees track over toes",
+    "Heels down",
+    "Press through the whole foot",
+    "Do not lock out knees"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips peel off the pad at bottom",
+     "visual": "buttocks tuck under, lower back rounds off the pad",
+     "fix": "reduce depth or move feet slightly lower/forward"
+    },
+    {
+     "mistake": "Knees cave inward",
+     "visual": "knees collapse toward midline during press",
+     "fix": "push knees out over toes"
+    },
+    {
+     "mistake": "Heels lift",
+     "visual": "heels come off platform, weight on toes",
+     "fix": "move feet lower/forward on platform, press through heels"
+    }
+   ],
+   "safety": "Use safety stops; do not hard-lock knees; don't bounce at the bottom.",
+   "regression": "Bodyweight or goblet squat",
+   "progression": "Heavier loads, single-leg hack squat, tempo/pause reps",
+   "variants": [],
+   "sources": [
+    "https://www.bodykore.com/blog/hack-squat-how-to-do-and-variations",
+    "https://setgraph.app/articles/hack-squat-the-ultimate-guide-to-perfect-form-benefits-programming"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "leg_press",
+   "app_names": [
+    "Leg Press",
+    "Leg Press (hafif)"
+   ],
+   "names": {
+    "tr": "Leg Press",
+    "en": "Seated Leg Press (45 degree)",
+    "es": "Prensa de piernas"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "leg press machine"
+   ],
+   "equipment_setup": "Seat adjusted so knees can reach ~90 deg without hips lifting; back and glutes fully on pad; feet shoulder width mid-platform, toes out 10-15 deg; hands on handles",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "hamstrings",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows knee angle, hip/back contact with seat and sled path; front shows knee tracking"
+   },
+   "start_pose": {
+    "description": "Reclined on seat (trunk leaning back ~40 deg from vertical), legs extended, knees soft not locked",
+    "angles": {
+     "trunk_from_vertical": -40,
+     "hip_flexion": 85,
+     "knee_flexion": 8,
+     "ankle_dorsiflexion": 0,
+     "stance_width": 1.0,
+     "foot_turnout_deg": 12
+    },
+    "contacts": [
+     "back and glutes flat on pad",
+     "both feet flat on platform",
+     "hands on seat handles"
+    ],
+    "implement": "sled at top, safety released"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower the sled under control until knees reach ~90 deg (not deeper than where the pelvis starts to tuck), heels flat, knees track over toes",
+     "duration_s": 3.0,
+     "breathing": "inhale on the way down",
+     "end_angles": {
+      "trunk_from_vertical": -40,
+      "hip_flexion": 115,
+      "knee_flexion": 95,
+      "ankle_dorsiflexion": 15
+     },
+     "contacts": [
+      "glutes and lower back stay on pad",
+      "feet flat heels down"
+     ],
+     "implement_path": "sled travels along 45 deg rails toward chest",
+     "notes": "stop before lower back lifts off pad"
+    },
+    {
+     "name": "ascent",
+     "description": "Push through whole foot, extend knees without locking out",
+     "duration_s": 1.5,
+     "breathing": "exhale on the push",
+     "end_angles": {
+      "trunk_from_vertical": -40,
+      "hip_flexion": 85,
+      "knee_flexion": 8,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "glutes on pad",
+      "feet flat"
+     ],
+     "implement_path": "sled returns to top",
+     "notes": "keep a slight knee bend at top"
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "3-0-1.5 (light/hafif set: smooth 2-0-2, lighter load)",
+   "cues": [
+    "Hips and back stay on the pad",
+    "Knees track over toes",
+    "Push through whole foot",
+    "Never lock the knees"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Butt wink / hips lift off pad",
+     "visual": "pelvis tucks and glutes peel off seat at the bottom, lower back rounds",
+     "fix": "limit depth to ~90 deg knee angle"
+    },
+    {
+     "mistake": "Locking out knees hard",
+     "visual": "legs snap to fully straight at the top with sled stopping",
+     "fix": "stop with a soft bend of ~5-10 deg"
+    },
+    {
+     "mistake": "Knees cave inward",
+     "visual": "knees fall toward midline while pressing",
+     "fix": "push knees in line with toes"
+    }
+   ],
+   "safety": "Always set safeties; never lock the knees; don't let knees approach the chest; don't push on the knees with hands.",
+   "regression": "Bodyweight squat or lighter weight/box squat",
+   "progression": "Heavier loads, single-leg leg press, tempo/pause reps",
+   "variants": [
+    {
+     "app_name": "Leg Press (hafif)",
+     "difference": "light load, same geometry, smoother 2-0-2 tempo"
+    }
+   ],
+   "sources": [
+    "https://www.nasm.org/resource-center/exercise-library/leg-press",
+    "https://www.acefitness.org/resources/everyone/exercise-library/154/seated-leg-press/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "bulgarian_split_squat",
+   "app_names": [
+    "Bulgarian Split Squat"
+   ],
+   "names": {
+    "tr": "Bulgar Split Squat",
+    "en": "Bulgarian Split Squat",
+    "es": "Sentadilla búlgara"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "bench",
+    "dumbbells (optional)"
+   ],
+   "equipment_setup": "Bench/box ~40-45 cm high behind; rear foot laces down on bench; front foot ~0.6-0.9 m ahead of the bench; dumbbells hanging at sides if loaded",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "hamstrings",
+    "core",
+    "gluteus medius"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows front shin, torso lean and rear-leg stretch; 3q shows front-knee tracking and balance"
+   },
+   "start_pose": {
+    "description": "Standing on front leg, rear foot on bench behind, feet hip width laterally, torso tall",
+    "angles": {
+     "trunk_from_vertical": 5,
+     "hip_flexion": 5,
+     "knee_flexion": 5,
+     "ankle_dorsiflexion": 5,
+     "rear_hip_flexion": -15,
+     "rear_knee_flexion": 55,
+     "stance_width": 0.8,
+     "front_foot_forward_m": 0.8
+    },
+    "contacts": [
+     "front foot flat on floor",
+     "rear foot top on bench"
+    ],
+    "implement": "dumbbells at sides or none"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower straight down; front knee tracks over toes, front shin near vertical to slightly forward, torso inclined slightly forward; rear knee drops toward floor",
+     "duration_s": 2.5,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "trunk_from_vertical": 15,
+      "hip_flexion": 100,
+      "knee_flexion": 105,
+      "ankle_dorsiflexion": 20,
+      "rear_hip_flexion": -15,
+      "rear_knee_flexion": 100
+     },
+     "contacts": [
+      "front foot flat (heel down)",
+      "rear foot top on bench"
+     ],
+     "implement_path": "dumbbells hang straight down at sides",
+     "notes": "rear knee 2-5 cm above floor; front thigh near parallel"
+    },
+    {
+     "name": "ascent",
+     "description": "Drive through the front heel/mid-foot, extend hip and knee, keep hips square",
+     "duration_s": 1.5,
+     "breathing": "exhale as you drive up",
+     "end_angles": {
+      "trunk_from_vertical": 5,
+      "hip_flexion": 5,
+      "knee_flexion": 5,
+      "ankle_dorsiflexion": 5,
+      "rear_knee_flexion": 55
+     },
+     "contacts": [
+      "front foot flat",
+      "rear foot on bench"
+     ],
+     "implement_path": "dumbbells straight at sides",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat); switch legs after set",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Straight down, not forward",
+    "Front knee tracks over toes",
+    "Slight forward lean for glutes",
+    "Drive through the front foot"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Front foot too close to bench",
+     "visual": "front knee travels far past the toes, heel lifts",
+     "fix": "step the front foot further forward"
+    },
+    {
+     "mistake": "Torso collapses / pushes off rear leg",
+     "visual": "trunk tips >35 deg and rear leg extends to do the work",
+     "fix": "rear foot is only a kickstand; stay tall"
+    },
+    {
+     "mistake": "Front knee caves",
+     "visual": "front knee drifts inward on ascent",
+     "fix": "push knee toward little toe"
+    }
+   ],
+   "safety": "Keep balance; use a wall/rack for support if needed; start bodyweight; avoid excessive ankle/knee pain.",
+   "regression": "Split squat (rear foot on floor)",
+   "progression": "Loaded Bulgarian split squat, deficit front foot, tempo",
+   "variants": [],
+   "sources": [
+    "https://central.gymshark.com/article/how-to-bulgarian-split-squat",
+    "https://experiencelife.lifetime.life/article/check-your-bulgarian-split-squat-form-with-these-4-expert-cues/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "split_squat",
+   "app_names": [
+    "Split Squat",
+    "Dumbbell Split Squat"
+   ],
+   "names": {
+    "tr": "Split Squat (Ayrık Squat)",
+    "en": "Split Squat",
+    "es": "Sentadilla dividida (split squat)"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "dumbbells (optional)"
+   ],
+   "equipment_setup": "Staggered stance, feet hip width apart laterally, stride ~0.9-1.2 m, rear heel up, dumbbells at sides if loaded",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "adductors",
+    "hamstrings",
+    "core",
+    "gluteus medius"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows front shin, rear knee drop and vertical torso; front shows hip alignment"
+   },
+   "start_pose": {
+    "description": "Split stance, front foot flat, rear foot on ball of toes, torso upright",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 5,
+     "ankle_dorsiflexion": 5,
+     "rear_hip_flexion": -20,
+     "rear_knee_flexion": 10,
+     "stance_width": 0.5,
+     "stride_length_m": 1.0
+    },
+    "contacts": [
+     "front foot flat",
+     "rear ball of foot on floor"
+    ],
+    "implement": "dumbbells at sides"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower straight down, front knee tracks over toes, rear knee drops toward floor, torso vertical",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 5,
+      "hip_flexion": 88,
+      "knee_flexion": 95,
+      "ankle_dorsiflexion": 15,
+      "rear_hip_flexion": -10,
+      "rear_knee_flexion": 90
+     },
+     "contacts": [
+      "front foot flat",
+      "rear toes on floor, heel up"
+     ],
+     "implement_path": "dumbbells hang straight at sides",
+     "notes": "rear knee ~5 cm above floor; front shin near vertical"
+    },
+    {
+     "name": "ascent",
+     "description": "Drive through front mid-foot/heel to stand, keep stance; do not step in",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 5,
+      "ankle_dorsiflexion": 5,
+      "rear_hip_flexion": -20,
+      "rear_knee_flexion": 10
+     },
+     "contacts": [
+      "front foot flat",
+      "rear toes on floor"
+     ],
+     "implement_path": "dumbbells at sides",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat); switch legs after set",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Straight down and up",
+    "Torso tall",
+    "Front knee over toes",
+    "Front foot drives"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Stride too short",
+     "visual": "front knee shoots far over toes, front heel lifts",
+     "fix": "lengthen stance to ~1 m"
+    },
+    {
+     "mistake": "Leaning forward over the front leg",
+     "visual": "trunk >30 deg and weight shifts to toes",
+     "fix": "chest tall, drop straight down"
+    },
+    {
+     "mistake": "Knee caves inward",
+     "visual": "front knee falls toward midline",
+     "fix": "knee stays over 2nd-3rd toe"
+    }
+   ],
+   "safety": "Use support (wall/rack) for balance if needed; keep front heel down.",
+   "regression": "Supported split squat/reverse lunge to box",
+   "progression": "Bulgarian split squat, heavier dumbbells",
+   "variants": [
+    {
+     "app_name": "Dumbbell Split Squat",
+     "difference": "dumbbells hang at sides, arms straight, shoulders neutral"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/",
+    "https://central.gymshark.com/article/how-to-bulgarian-split-squat"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "reverse_lunge",
+   "app_names": [
+    "Reverse Lunge",
+    "Geri Lunge",
+    "Dumbbell Reverse Lunge",
+    "Destekli Geri Lunge"
+   ],
+   "names": {
+    "tr": "Geri Lunge",
+    "en": "Reverse Lunge",
+    "es": "Zancada hacia atrás"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "dumbbells (optional)",
+    "wall/chair for supported version"
+   ],
+   "equipment_setup": "Feet hip width, dumbbells hanging at sides or hands on hips; for the supported version one hand rests on a wall/chair/countertop",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "adductors",
+    "core",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows step length, front shin angle and torso; front shows knee tracking and balance"
+   },
+   "start_pose": {
+    "description": "Standing tall, feet hip width, working leg ready to step back",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "stance_width": 0.6
+    },
+    "contacts": [
+     "both feet flat on floor"
+    ],
+    "implement": "dumbbells at sides or none"
+   },
+   "phases": [
+    {
+     "name": "step_back_and_descend",
+     "description": "Step back ~0.8-1.0 m landing on the ball of the foot, then lower the back knee toward the floor, front shin near vertical, torso upright with slight lean",
+     "duration_s": 2.0,
+     "breathing": "inhale as you step and lower",
+     "end_angles": {
+      "trunk_from_vertical": 10,
+      "hip_flexion": 95,
+      "knee_flexion": 92,
+      "ankle_dorsiflexion": 15,
+      "rear_hip_flexion": -10,
+      "rear_knee_flexion": 90,
+      "stride_length_m": 0.9
+     },
+     "contacts": [
+      "front foot flat (heel down)",
+      "rear toes on floor"
+     ],
+     "implement_path": "dumbbells hang straight down",
+     "notes": "rear knee ~5 cm above floor"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief hold, front heel down",
+     "duration_s": 0.3,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 10,
+      "hip_flexion": 95,
+      "knee_flexion": 92,
+      "ankle_dorsiflexion": 15,
+      "rear_knee_flexion": 90
+     },
+     "contacts": [
+      "front foot flat",
+      "rear toes on floor"
+     ],
+     "implement_path": "static",
+     "notes": ""
+    },
+    {
+     "name": "push_and_return",
+     "description": "Drive through front heel/mid-foot, push the floor away and bring the rear foot back to meet the front foot",
+     "duration_s": 1.7,
+     "breathing": "exhale as you drive up",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "stance_width": 0.6
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "dumbbells at sides",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "step_back_and_descend -> bottom_pause -> push_and_return (repeat; alternate legs or one side per set)",
+   "tempo_default": "2-0.3-1.7",
+   "cues": [
+    "Step back, drop straight down",
+    "Front heel down",
+    "Torso tall",
+    "Push through front foot to return"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Front knee collapses inward",
+     "visual": "front knee drifts toward midline as you rise",
+     "fix": "knee over 2nd toe"
+    },
+    {
+     "mistake": "Step too short or too long",
+     "visual": "short step: front knee past toes, heel lifts; long step: stance overstretched, torso tips forward",
+     "fix": "step ~0.8-1.0 m so both knees hit ~90 deg"
+    },
+    {
+     "mistake": "Torso folds forward / pushes off back foot",
+     "visual": "trunk leans >30 deg and weight rocks onto rear leg",
+     "fix": "stay tall; front leg does the work"
+    }
+   ],
+   "safety": "Keep front heel down; use hand support for balance if needed; stop if knee pain.",
+   "regression": "Supported reverse lunge (hand on wall/chair), shorter range",
+   "progression": "Loaded dumbbell/barbell reverse lunge, deficit reverse lunge",
+   "variants": [
+    {
+     "app_name": "Destekli Geri Lunge",
+     "difference": "one hand on a wall/chair/counter at about waist height for balance (shoulder flexion ~20, elbow ~20); same legs"
+    },
+    {
+     "app_name": "Dumbbell Reverse Lunge",
+     "difference": "dumbbells at sides, arms straight"
+    },
+    {
+     "app_name": "Geri Lunge",
+     "difference": "bodyweight, hands on hips or arms free"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "step_up",
+   "app_names": [
+    "Dumbbell Step-Up",
+    "Step-Up (low box)",
+    "Step-Ups"
+   ],
+   "names": {
+    "tr": "Step-Up (Basamağa Çıkış)",
+    "en": "Step-Up",
+    "es": "Subida al cajón (step-up)"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "box/bench (low 25-30 cm to knee height ~40 cm)",
+    "dumbbells (optional)"
+   ],
+   "equipment_setup": "Box 30-40 cm stable; stand facing it ~20-30 cm away; dumbbells at sides if loaded; low-box variant ~20-25 cm",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "calves",
+    "core",
+    "gluteus medius"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows box height, working-knee angle and torso; front shows knee tracking"
+   },
+   "start_pose": {
+    "description": "Standing facing box, working foot placed fully flat on box (heel included), other foot on floor",
+    "angles": {
+     "trunk_from_vertical": 10,
+     "hip_flexion": 80,
+     "knee_flexion": 80,
+     "ankle_dorsiflexion": 15,
+     "trail_hip_flexion": 0,
+     "trail_knee_flexion": 0
+    },
+    "contacts": [
+     "working foot flat on box",
+     "trailing foot on floor"
+    ],
+    "implement": "dumbbells at sides, arms straight"
+   },
+   "phases": [
+    {
+     "name": "drive_up",
+     "description": "Press through the working heel to stand on the box; trailing leg lifts as the body rises; don't push off the floor leg",
+     "duration_s": 1.2,
+     "breathing": "exhale as you rise",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "trail_hip_flexion": 60,
+      "trail_knee_flexion": 80
+     },
+     "contacts": [
+      "working foot flat on box",
+      "trailing foot hovering beside the box"
+     ],
+     "implement_path": "dumbbells at sides",
+     "notes": "stand tall, squeeze glute; trailing knee lifted ~60 deg hip flexion"
+    },
+    {
+     "name": "top_pause",
+     "description": "Stand fully upright, control balance for one beat",
+     "duration_s": 0.4,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "trail_hip_flexion": 60,
+      "trail_knee_flexion": 80
+     },
+     "contacts": [
+      "working foot flat on box"
+     ],
+     "implement_path": "static",
+     "notes": ""
+    },
+    {
+     "name": "controlled_down",
+     "description": "Lower the trailing foot back to the floor slowly by bending the working knee, hips travel back, control the descent without dropping",
+     "duration_s": 2.0,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "trunk_from_vertical": 10,
+      "hip_flexion": 80,
+      "knee_flexion": 80,
+      "ankle_dorsiflexion": 15,
+      "trail_hip_flexion": 0,
+      "trail_knee_flexion": 0
+     },
+     "contacts": [
+      "working foot flat on box",
+      "trailing toes touch floor lightly"
+     ],
+     "implement_path": "dumbbells at sides",
+     "notes": "tap floor lightly; do not bounce"
+    }
+   ],
+   "rep_loop": "drive_up -> top_pause -> controlled_down (repeat; switch leg after set)",
+   "tempo_default": "1-0.4-2",
+   "cues": [
+    "Whole foot on the box",
+    "Drive through the top leg",
+    "Stand tall, glute squeeze",
+    "Lower slowly, don't drop"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pushing off the trailing leg",
+     "visual": "back foot springs from the floor and hops",
+     "fix": "keep trailing foot light, work the top leg"
+    },
+    {
+     "mistake": "Knee caves inward",
+     "visual": "working knee falls toward midline as you push up",
+     "fix": "knee over 2nd toe"
+    },
+    {
+     "mistake": "Leaning forward / only toes on box",
+     "visual": "torso leans >30 deg and heel hangs off the box",
+     "fix": "foot flat, chest up"
+    }
+   ],
+   "safety": "Use a stable box; keep full foot on the box; choose height that allows knee ~90 deg or less; use support for balance if needed.",
+   "regression": "Lower box (15-20 cm), bodyweight",
+   "progression": "Higher box, loaded dumbbells/barbell, single-leg lowering",
+   "variants": [
+    {
+     "app_name": "Step-Up (low box)",
+     "difference": "box ~20-25 cm: working knee flexion at start ~60 deg, hip ~65"
+    },
+    {
+     "app_name": "Dumbbell Step-Up",
+     "difference": "dumbbells at sides, arms straight, shoulder_flexion 0"
+    },
+    {
+     "app_name": "Step-Ups",
+     "difference": "bodyweight standard step-up, same geometry"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "assisted_single_leg_squat",
+   "app_names": [
+    "Destekli Tek Bacak Squat"
+   ],
+   "names": {
+    "tr": "Destekli Tek Bacak Squat",
+    "en": "Assisted Single-Leg Squat",
+    "es": "Sentadilla a una pierna asistida"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "stable surface (doorframe/pole/TRX/wall) or box"
+   ],
+   "equipment_setup": "Stand on one leg next to a stable support (door frame, pole, suspension strap, wall) holding it with one or both hands; optional box behind to sit on",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "gluteus medius",
+    "adductors",
+    "core",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "3q shows knee tracking and pelvic level and the arm support; side shows depth and free-leg position"
+   },
+   "start_pose": {
+    "description": "Standing on one leg, other leg lifted slightly in front, hand(s) on support, torso upright",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "free_hip_flexion": 30,
+     "free_knee_flexion": 5,
+     "shoulder_flexion": 70,
+     "elbow_flexion": 30
+    },
+    "contacts": [
+     "working foot flat",
+     "hand(s) on support"
+    ],
+    "implement": "support at ~shoulder height"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Hips back and down on the working leg, knee tracks over toes, free leg extended forward, use hands only as needed for balance",
+     "duration_s": 3.0,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "trunk_from_vertical": 30,
+      "hip_flexion": 110,
+      "knee_flexion": 105,
+      "ankle_dorsiflexion": 25,
+      "free_hip_flexion": 50,
+      "free_knee_flexion": 5,
+      "shoulder_flexion": 70,
+      "elbow_flexion": 30
+     },
+     "contacts": [
+      "working foot flat, heel down",
+      "hand(s) on support"
+     ],
+     "implement_path": "none",
+     "notes": "go to a depth where the knee stays aligned over the toes; thigh around parallel"
+    },
+    {
+     "name": "ascent",
+     "description": "Push through the whole foot, stand up, assist as little as possible",
+     "duration_s": 2.0,
+     "breathing": "exhale up",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "free_hip_flexion": 30,
+      "shoulder_flexion": 70,
+      "elbow_flexion": 30
+     },
+     "contacts": [
+      "working foot flat",
+      "hand(s) on support"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat; switch side after set)",
+   "tempo_default": "3-0-2",
+   "cues": [
+    "Hips back and down",
+    "Knee over toes",
+    "Pelvis level",
+    "Use hands only to balance, legs do the work"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Knee caves inward",
+     "visual": "working knee drifts toward midline, hip drops on free side",
+     "fix": "knee over 2nd toe, push hip out"
+    },
+    {
+     "mistake": "Pulling up with the arms",
+     "visual": "arms straighten hard and bodyweight hangs on the support",
+     "fix": "use support lightly, reduce range"
+    },
+    {
+     "mistake": "Heel lifts / trunk collapses",
+     "visual": "weight onto toes, chest drops",
+     "fix": "heel down, chest tall"
+    }
+   ],
+   "safety": "Use a very stable support; go to a depth you can control; stop at knee pain; box behind for safety.",
+   "regression": "Box/chair sit-to-stand on one leg",
+   "progression": "Free pistol squat, pistol to box, loaded single-leg squat",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/",
+    "https://doaj.org/article/ce9d6dfc98b348b0bca19f25cd119704"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "conventional_deadlift",
+   "app_names": [
+    "Deadlift",
+    "Deadlift (Orta Ağırlık)",
+    "Deficit Deadlift"
+   ],
+   "names": {
+    "tr": "Deadlift (Yerden Çekiş)",
+    "en": "Conventional Barbell Deadlift",
+    "es": "Peso muerto convencional"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "barbell",
+    "weight plates"
+   ],
+   "equipment_setup": "Barbell loaded with plates on the floor, bar over mid-foot (~2-3 cm from shins), feet hip width, toes forward or out 5-15 deg, double overhand or mixed grip just outside the knees",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "gluteus maximus",
+    "hamstrings",
+    "erector spinae"
+   ],
+   "secondary_muscles": [
+    "quadriceps",
+    "lats",
+    "trapezius",
+    "forearm flexors",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows bar path, hip height and neutral spine; back 3q shows spinal alignment and symmetry"
+   },
+   "start_pose": {
+    "description": "Hinged setup: hips above knees and below shoulders, shoulders slightly in front of the bar, arms straight and vertical, flat back, lats tight, chest up, neutral neck",
+    "angles": {
+     "trunk_from_vertical": 55,
+     "hip_flexion": 100,
+     "knee_flexion": 60,
+     "ankle_dorsiflexion": 15,
+     "shoulder_flexion": 55,
+     "elbow_flexion": 0,
+     "stance_width": 0.9,
+     "foot_turnout_deg": 8,
+     "grip_width": 1.1,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat on floor",
+     "hands gripping bar",
+     "bar resting on floor"
+    ],
+    "implement": "bar on floor over mid-foot, touching or almost touching shins"
+   },
+   "phases": [
+    {
+     "name": "pull",
+     "description": "Brace, push the floor away, bar stays dragging up the shins and thighs; hips and shoulders rise at the same rate until the bar passes the knees, then drive hips forward to lockout",
+     "duration_s": 2.0,
+     "breathing": "inhale and brace before pull, hold through the lift",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "shoulder_flexion": 0,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat",
+      "hands on bar"
+     ],
+     "implement_path": "bar travels in a straight vertical line over mid-foot, in contact with shins then thighs",
+     "notes": "checkpoint at knee height: trunk ~45, hip ~60, knee ~25; lockout stands tall with glutes squeezed, no lean back"
+    },
+    {
+     "name": "lockout_pause",
+     "description": "Stand tall with hips and knees fully extended, shoulders back and down, no hyperextension",
+     "duration_s": 0.5,
+     "breathing": "exhale/reset",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "both feet flat",
+      "hands on bar"
+     ],
+     "implement_path": "bar at upper thigh level, static",
+     "notes": ""
+    },
+    {
+     "name": "lowering",
+     "description": "Hinge the hips back first, slide the bar down thighs, bend knees once bar passes them, back stays flat, lower bar under control to the floor",
+     "duration_s": 2.0,
+     "breathing": "inhale at top, hold while lowering",
+     "end_angles": {
+      "trunk_from_vertical": 55,
+      "hip_flexion": 100,
+      "knee_flexion": 60,
+      "ankle_dorsiflexion": 15,
+      "shoulder_flexion": 55
+     },
+     "contacts": [
+      "both feet flat",
+      "hands on bar"
+     ],
+     "implement_path": "bar travels straight down close to legs and sets on floor",
+     "notes": "do not drop; reset bar to floor then re-brace for next rep"
+    }
+   ],
+   "rep_loop": "pull -> lockout_pause -> lowering (repeat; dead-stop reps)",
+   "tempo_default": "2-0.5-2 (orta ağırlık: smooth, controlled; heavy set slower pull)",
+   "cues": [
+    "Bar over mid-foot",
+    "Chest up, lats tight",
+    "Push the floor away",
+    "Bar scrapes the legs",
+    "Hips through at the top"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Rounded lower back",
+     "visual": "lumbar/thoracic spine curves into flexion as the bar leaves the floor",
+     "fix": "lighter load, set lats, brace, keep neck neutral"
+    },
+    {
+     "mistake": "Hips shoot up first (stripper deadlift)",
+     "visual": "buttocks rise faster than shoulders, legs nearly straight while bar still at shins, trunk goes near horizontal",
+     "fix": "push the floor away, raise hips and chest together"
+    },
+    {
+     "mistake": "Bar drifts away from the body",
+     "visual": "bar path arcs forward away from shins/thighs, arms angle forward",
+     "fix": "keep bar dragging up the legs, lats tight"
+    }
+   ],
+   "safety": "Neutral spine always; do not jerk the bar off the floor; use lifting straps/chalk as needed; avoid hyperextension at lockout; bail by letting go if form fails.",
+   "regression": "Trap-bar deadlift, Romanian deadlift, rack pull",
+   "progression": "Heavier loads, deficit, pause deadlift",
+   "variants": [
+    {
+     "app_name": "Deadlift (Orta Ağırlık)",
+     "difference": "moderate load, same geometry; smooth tempo, less strain on face and trunk"
+    },
+    {
+     "app_name": "Deficit Deadlift",
+     "difference": "lifter stands on a 2-5 cm platform: deeper start (trunk ~55, hip ~105, knee ~75, ankle ~18), hips slightly lower, longer pull; same lockout"
+    }
+   ],
+   "sources": [
+    "https://educ.jmu.edu/~strength/CSCCA/CSCCa_ex_tech_Conv_Deadlift.htm",
+    "https://www.powerliftingtowin.com/powerlifting-technique-deadlift-setup/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "romanian_deadlift",
+   "app_names": [
+    "Romanian Deadlift",
+    "Dumbbell Romanian Deadlift"
+   ],
+   "names": {
+    "tr": "Romanian Deadlift (RDL)",
+    "en": "Romanian Deadlift",
+    "es": "Peso muerto rumano"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "barbell or dumbbells"
+   ],
+   "equipment_setup": "Bar held at the thighs (overhand grip shoulder width) or dumbbells held at sides/front of thighs; standing hip width, soft knees",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "hamstrings",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "erector spinae",
+    "lats",
+    "forearm flexors",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows hip hinge, knee angle, bar path and neutral spine"
+   },
+   "start_pose": {
+    "description": "Standing tall with soft knees, bar/dumbbells against upper thighs, shoulders back, flat back",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 10,
+     "ankle_dorsiflexion": 3,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0,
+     "stance_width": 0.9,
+     "foot_turnout_deg": 5
+    },
+    "contacts": [
+     "both feet flat"
+    ],
+    "implement": "bar/dumbbells in front of upper thighs, arms straight"
+   },
+   "phases": [
+    {
+     "name": "hinge_down",
+     "description": "Push hips straight back, knees stay softly bent (fixed angle), torso tips forward as one unit, bar/dumbbells slide down the thighs to just below the knees until hamstring stretch",
+     "duration_s": 2.5,
+     "breathing": "inhale and brace before descent",
+     "end_angles": {
+      "trunk_from_vertical": 70,
+      "hip_flexion": 80,
+      "knee_flexion": 15,
+      "ankle_dorsiflexion": 3,
+      "shoulder_flexion": 70,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat, weight mid-foot to heel"
+     ],
+     "implement_path": "bar stays in contact with/close to thighs and shins, travels to mid-shin (4-6 in below knee)",
+     "notes": "stop when hamstrings are stretched or spine would start to round, not at the floor; arms hang plumb (shoulder_flexion = trunk lean)"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief pause with flat back",
+     "duration_s": 0.3,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 70,
+      "hip_flexion": 80,
+      "knee_flexion": 15,
+      "ankle_dorsiflexion": 3
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "static near mid-shin",
+     "notes": ""
+    },
+    {
+     "name": "drive_up",
+     "description": "Drive hips forward, squeeze glutes, return to standing tall; bar close to legs",
+     "duration_s": 1.5,
+     "breathing": "exhale at top",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 10,
+      "ankle_dorsiflexion": 3,
+      "shoulder_flexion": 0
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bar rises along thighs",
+     "notes": "do not hyperextend the lower back at the top"
+    }
+   ],
+   "rep_loop": "hinge_down -> bottom_pause -> drive_up (repeat)",
+   "tempo_default": "2.5-0.3-1.5",
+   "cues": [
+    "Hips back like closing a car door",
+    "Soft knees, don't squat",
+    "Bar glued to the legs",
+    "Flat back, chest proud",
+    "Squeeze glutes at the top"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Squatting the movement",
+     "visual": "knees bend a lot (>40 deg) and hips drop while torso stays upright",
+     "fix": "push hips back with knees nearly fixed"
+    },
+    {
+     "mistake": "Rounding the lower back",
+     "visual": "spine curves into flexion at the bottom, shoulders slump forward",
+     "fix": "reduce range, lats tight, chest up"
+    },
+    {
+     "mistake": "Bar swings away from legs",
+     "visual": "bar drifts forward, arms angle",
+     "fix": "keep bar sliding on thighs"
+    }
+   ],
+   "safety": "Keep spine neutral and range limited to what hamstring flexibility allows; do not round to chase depth; avoid hyperextending at the top.",
+   "regression": "Bodyweight hip hinge, dowel hinge, dumbbell RDL",
+   "progression": "Heavier RDL, single-leg RDL, deficit RDL",
+   "variants": [
+    {
+     "app_name": "Dumbbell Romanian Deadlift",
+     "difference": "dumbbells at the sides/front of thighs, arms straight, dumbbells track down the sides of the legs to mid-shin"
+    }
+   ],
+   "sources": [
+    "https://www.nasm.org/resource-center/exercise-library/romanian-deadlift-barbell",
+    "https://educ.jmu.edu/~strength/Exercise_Technique/romanian_deadlift.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "single_leg_hip_hinge",
+   "app_names": [
+    "Tek Bacak Hip Hinge"
+   ],
+   "names": {
+    "tr": "Tek Bacak Hip Hinge",
+    "en": "Single-Leg Hip Hinge (Single-Leg RDL)",
+    "es": "Bisagra de cadera a una pierna"
+   },
+   "category": "strength_legs",
+   "equipment": [],
+   "equipment_setup": "Bodyweight (optionally holding a light dumbbell in the hand opposite the standing leg); stand on one leg with the standing knee slightly bent; a wall/chair may be touched for balance",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "hamstrings",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "gluteus medius",
+    "erector spinae",
+    "core",
+    "foot stabilizers"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows T-shaped hinge, neutral spine and free-leg line; back view shows pelvis level"
+   },
+   "start_pose": {
+    "description": "Standing on one leg, other foot just off the floor, soft standing knee, arms down",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 10,
+     "ankle_dorsiflexion": 3,
+     "free_hip_flexion": 0,
+     "free_knee_flexion": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "standing foot flat on floor"
+    ],
+    "implement": "none or light dumbbell hanging"
+   },
+   "phases": [
+    {
+     "name": "hinge_down",
+     "description": "Hinge at the hip on the standing leg, free leg extends straight back in line with the torso, torso and free leg lower together like a T, pelvis stays level",
+     "duration_s": 2.0,
+     "breathing": "inhale as you hinge",
+     "end_angles": {
+      "trunk_from_vertical": 80,
+      "hip_flexion": 90,
+      "knee_flexion": 15,
+      "ankle_dorsiflexion": 3,
+      "free_hip_flexion": 0,
+      "free_knee_flexion": 0,
+      "shoulder_flexion": 80
+     },
+     "contacts": [
+      "standing foot flat",
+      "free foot off floor"
+     ],
+     "implement_path": "arms hang plumb toward the floor (or light weight near shin)",
+     "notes": "torso and free leg near horizontal; hips square (no opening up)"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Hold one beat, pelvis level, spine neutral",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 80,
+      "hip_flexion": 90,
+      "knee_flexion": 15
+     },
+     "contacts": [
+      "standing foot flat"
+     ],
+     "implement_path": "static",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Drive the hip forward, glute squeeze, torso and free leg rise together to standing",
+     "duration_s": 1.5,
+     "breathing": "exhale up",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 10,
+      "free_hip_flexion": 0,
+      "shoulder_flexion": 0
+     },
+     "contacts": [
+      "standing foot flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "hinge_down -> bottom_pause -> return (repeat; switch sides after set)",
+   "tempo_default": "2-0.5-1.5",
+   "cues": [
+    "Hips back, leg long behind",
+    "Keep hips square",
+    "Flat back",
+    "Soft standing knee",
+    "Squeeze glute to stand"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Rotating the hips open",
+     "visual": "free-side hip rotates up toward the ceiling, torso twists",
+     "fix": "point the free toe at the floor, hips square"
+    },
+    {
+     "mistake": "Rounding the back",
+     "visual": "upper back rounds as torso lowers",
+     "fix": "chest proud, neck neutral, reduce range"
+    },
+    {
+     "mistake": "Standing knee bends too much",
+     "visual": "knee dips >30 deg like a squat",
+     "fix": "hinge from hips; knee soft but fixed"
+    }
+   ],
+   "safety": "Touch a wall/chair if balance is poor; keep spine neutral; stop if the hamstring/back hurts.",
+   "regression": "Staggered-stance RDL (kickstand), two-leg hip hinge",
+   "progression": "Single-leg RDL with dumbbell/kettlebell",
+   "variants": [],
+   "sources": [
+    "https://www.nasm.org/resource-center/exercise-library/romanian-deadlift-barbell",
+    "https://educ.jmu.edu/~strength/Exercise_Technique/romanian_deadlift.htm"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "glute_bridge",
+   "app_names": [
+    "Glute Bridge",
+    "Dumbbell Glute Bridge"
+   ],
+   "names": {
+    "tr": "Glute Bridge (Kalça Köprüsü)",
+    "en": "Glute Bridge",
+    "es": "Puente de glúteos"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "mat",
+    "dumbbell (optional)"
+   ],
+   "equipment_setup": "Lie supine on mat; knees bent ~120 deg, feet hip width flat on floor, heels 25-30 cm from glutes, toes forward; arms alongside body palms down (or dumbbell held on the hip crease with both hands)",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "core",
+    "erector spinae",
+    "adductors"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip extension and neutral pelvis/rib alignment; front shows knee/hip symmetry"
+   },
+   "start_pose": {
+    "description": "Supine, knees bent, feet flat, hips on the floor, ribs down, spine neutral, arms at sides",
+    "angles": {
+     "hip_flexion": 55,
+     "knee_flexion": 120,
+     "ankle_dorsiflexion": 15,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0,
+     "stance_width": 0.8,
+     "neck": "neutral, head on floor"
+    },
+    "contacts": [
+     "head, upper back, arms on floor",
+     "feet flat on floor",
+     "buttocks resting on floor"
+    ],
+    "implement": "none (dumbbell on hip crease for loaded variation)"
+   },
+   "phases": [
+    {
+     "name": "lift",
+     "description": "Press through the heels, squeeze the glutes and lift the hips until knees, hips and shoulders form a straight line, ribs down, no arch in the low back",
+     "duration_s": 1.5,
+     "breathing": "exhale as you lift",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105,
+      "ankle_dorsiflexion": 5,
+      "shoulder_flexion": 0
+     },
+     "contacts": [
+      "head, upper back (shoulder blades), arms on floor",
+      "feet flat, heels down"
+     ],
+     "implement_path": "dumbbell, if used, rides on the hip crease with hands holding it",
+     "notes": "top: shoulder-hip-knee in a straight line (hip extension to neutral, never hyperextend); shins near vertical"
+    },
+    {
+     "name": "top_hold",
+     "description": "Squeeze glutes for 1-2 s at the top, do not arch",
+     "duration_s": 1.0,
+     "breathing": "hold/continue exhale",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105
+     },
+     "contacts": [
+      "upper back on floor",
+      "feet flat"
+     ],
+     "implement_path": "dumbbell static",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower hips back to the floor with control, roll down segment by segment, tap and go",
+     "duration_s": 2.0,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "hip_flexion": 55,
+      "knee_flexion": 120
+     },
+     "contacts": [
+      "upper back on floor",
+      "feet flat",
+      "buttocks lightly touch floor"
+     ],
+     "implement_path": "dumbbell lowers with hips",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "lift -> top_hold -> lower (repeat)",
+   "tempo_default": "1.5-1-2",
+   "cues": [
+    "Press through heels",
+    "Squeeze glutes at the top",
+    "Ribs down, no arch",
+    "Straight line from knees to shoulders"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Overarching the lower back at the top",
+     "visual": "ribs flare, lumbar curve visible, hips higher than the knee-shoulder line",
+     "fix": "tuck pelvis (posterior tilt), stop at straight line"
+    },
+    {
+     "mistake": "Knees cave or splay",
+     "visual": "knees move inward/outward during lift",
+     "fix": "keep knees over ankles, press through heels"
+    },
+    {
+     "mistake": "Pushing through the toes",
+     "visual": "heels lift, quads/hamstrings take over, feet slide",
+     "fix": "heels down, feet flat"
+    }
+   ],
+   "safety": "Use a mat; keep neck neutral; stop if lower back or hamstrings cramp; pad the weight if loaded.",
+   "regression": "Reduced range or supported bridge",
+   "progression": "Single-leg glute bridge, march, hip thrust (bench), loaded bridge",
+   "variants": [
+    {
+     "app_name": "Dumbbell Glute Bridge",
+     "difference": "dumbbell held vertically on the hip crease with both hands, arms straight (shoulder_flexion ~20, elbow ~10)"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/66/glute-bridge/",
+    "https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "single_leg_glute_bridge",
+   "app_names": [
+    "Tek Bacak Glute Bridge"
+   ],
+   "names": {
+    "tr": "Tek Bacak Glute Bridge",
+    "en": "Single-Leg Glute Bridge",
+    "es": "Puente de glúteos a una pierna"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "mat"
+   ],
+   "equipment_setup": "Supine on mat; working leg knee bent ~120 deg with foot flat; other leg extended in line with the working thigh (or knee pulled toward chest); arms at sides",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "gluteus medius",
+    "core",
+    "erector spinae"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip line and free-leg alignment; front shows pelvis level"
+   },
+   "start_pose": {
+    "description": "Supine, one foot flat, other leg held up straight (knee 0) in line with the working thigh, hips on floor",
+    "angles": {
+     "hip_flexion": 55,
+     "knee_flexion": 120,
+     "ankle_dorsiflexion": 15,
+     "free_hip_flexion": 55,
+     "free_knee_flexion": 0,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "head, upper back, arms on floor",
+     "working foot flat on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "lift",
+     "description": "Drive through the working heel and lift hips until the torso and both thighs form one line; keep pelvis level, free leg stays aligned with working thigh",
+     "duration_s": 1.5,
+     "breathing": "exhale as you lift",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105,
+      "ankle_dorsiflexion": 5,
+      "free_hip_flexion": 0,
+      "free_knee_flexion": 0
+     },
+     "contacts": [
+      "upper back on floor",
+      "working foot flat"
+     ],
+     "implement_path": "none",
+     "notes": "free thigh lines up with the working thigh and torso; hips stay level (no drop on free side)"
+    },
+    {
+     "name": "top_hold",
+     "description": "Hold 1 s squeezing glute, pelvis level",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105,
+      "free_hip_flexion": 0
+     },
+     "contacts": [
+      "upper back on floor",
+      "working foot flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower under control until buttocks lightly touch, don't rest",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 55,
+      "knee_flexion": 120,
+      "free_hip_flexion": 55
+     },
+     "contacts": [
+      "upper back on floor",
+      "working foot flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "lift -> top_hold -> lower (repeat; switch legs after set)",
+   "tempo_default": "1.5-1-2",
+   "cues": [
+    "Drive through one heel",
+    "Hips level",
+    "Free leg in line",
+    "Squeeze at the top"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pelvis drops/rotates on the free side",
+     "visual": "free-side hip sags toward floor, pelvis twists",
+     "fix": "squeeze glute med, reduce height"
+    },
+    {
+     "mistake": "Overarching the back",
+     "visual": "ribs flare, back arches",
+     "fix": "tuck pelvis, ribs down"
+    },
+    {
+     "mistake": "Pushing off the free foot",
+     "visual": "free foot touches floor and assists",
+     "fix": "free leg stays off floor"
+    }
+   ],
+   "safety": "Stop if cramping; keep neck neutral; use two-leg bridge to build up.",
+   "regression": "Two-leg glute bridge, marching bridge",
+   "progression": "Elevated single-leg bridge, single-leg hip thrust",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/145/glute-bridge-single-leg-progression/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "glute_bridge_march",
+   "app_names": [
+    "Glute Bridge March"
+   ],
+   "names": {
+    "tr": "Glute Bridge March (Köprüde Yürüyüş)",
+    "en": "Glute Bridge March",
+    "es": "Marcha en puente de glúteos"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "mat"
+   ],
+   "equipment_setup": "Supine on mat; set up in a glute bridge with hips high; arms at sides",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "gluteus maximus",
+    "core"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "hip flexors",
+    "obliques"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip height maintained and knee lift; front shows pelvis level"
+   },
+   "start_pose": {
+    "description": "Glute bridge top position held: hips high, torso and thighs in a line, both feet flat",
+    "angles": {
+     "hip_flexion": 0,
+     "knee_flexion": 105,
+     "ankle_dorsiflexion": 5,
+     "shoulder_flexion": 0
+    },
+    "contacts": [
+     "upper back on floor",
+     "both feet flat"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "lift_knee",
+     "description": "Keeping hips high and level, lift one knee toward chest until thigh near vertical; stance glute works hard; no pelvic rotation",
+     "duration_s": 1.0,
+     "breathing": "exhale as knee lifts",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105,
+      "free_hip_flexion": 70,
+      "free_knee_flexion": 100
+     },
+     "contacts": [
+      "upper back on floor",
+      "one foot flat"
+     ],
+     "implement_path": "none",
+     "notes": "marching knee stops with thigh roughly vertical (~70 deg flexion relative to trunk); hips stay level"
+    },
+    {
+     "name": "switch",
+     "description": "Lower the lifted foot back to the floor and raise the other knee, hips stay high",
+     "duration_s": 1.0,
+     "breathing": "inhale as foot lowers",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 105,
+      "free_hip_flexion": 70,
+      "free_knee_flexion": 100
+     },
+     "contacts": [
+      "upper back on floor",
+      "one foot flat"
+     ],
+     "implement_path": "none",
+     "notes": "alternating sides"
+    }
+   ],
+   "rep_loop": "lift_knee (right) -> switch -> lift_knee (left) (repeat)",
+   "tempo_default": "1-1 per leg",
+   "cues": [
+    "Hips stay high and level",
+    "Squeeze the standing-side glute",
+    "Don't twist",
+    "Slow knee lift"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drop on the lifted side",
+     "visual": "pelvis sags toward the lifted-leg side",
+     "fix": "squeeze stance glute, shorten the march"
+    },
+    {
+     "mistake": "Overarching the back",
+     "visual": "ribs flare, lumbar arch",
+     "fix": "ribs down, posterior tilt"
+    },
+    {
+     "mistake": "Rushing the march",
+     "visual": "feet and hips bounce",
+     "fix": "slow, controlled"
+    }
+   ],
+   "safety": "Stop if cramping; keep neck neutral; reduce range if the hips drop.",
+   "regression": "Glute bridge hold, double-leg bridge",
+   "progression": "Single-leg glute bridge, band-resisted marching bridge",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/66/glute-bridge/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "hip_thrust",
+   "app_names": [
+    "Hip Thrust"
+   ],
+   "names": {
+    "tr": "Hip Thrust",
+    "en": "Hip Thrust",
+    "es": "Empuje de cadera (hip thrust)"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "bench",
+    "barbell + pad (optional)",
+    "dumbbell (optional)"
+   ],
+   "equipment_setup": "Upper back (shoulder blade bottom edge) against a 40-45 cm bench; barbell with a pad across the hip crease; feet flat shoulder width, toes slightly out; chin tucked",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "adductors",
+    "core",
+    "quadriceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows shin vertical at the top, posterior pelvic tilt and torso parallel to floor"
+   },
+   "start_pose": {
+    "description": "Seated on the floor, upper back resting on the bench edge, hips low near floor, feet flat, barbell over hip crease held with both hands",
+    "angles": {
+     "hip_flexion": 85,
+     "knee_flexion": 120,
+     "ankle_dorsiflexion": 10,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 20,
+     "stance_width": 0.9,
+     "foot_turnout_deg": 10,
+     "neck": "chin tucked, gaze forward"
+    },
+    "contacts": [
+     "upper back on bench",
+     "feet flat on floor"
+    ],
+    "implement": "barbell on hip crease, hands on bar"
+   },
+   "phases": [
+    {
+     "name": "thrust",
+     "description": "Drive through heels, lift hips until torso is parallel to the floor, shins vertical, posterior pelvic tilt, ribs down, chin tucked",
+     "duration_s": 1.2,
+     "breathing": "exhale as you thrust",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 90,
+      "ankle_dorsiflexion": 0,
+      "trunk_from_vertical": 90
+     },
+     "contacts": [
+      "upper back on bench",
+      "feet flat"
+     ],
+     "implement_path": "barbell travels straight up from hip crease to hip height (~35-45 cm rise)",
+     "notes": "knees ~90 deg and shins vertical at lockout; hips in line with torso and thighs"
+    },
+    {
+     "name": "top_hold",
+     "description": "Squeeze glutes at the top for 1 s",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 90,
+      "trunk_from_vertical": 90
+     },
+     "contacts": [
+      "upper back on bench",
+      "feet flat"
+     ],
+     "implement_path": "barbell static at top",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower hips straight down with control until buttocks are an inch off the floor, back stays on bench",
+     "duration_s": 1.8,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "hip_flexion": 85,
+      "knee_flexion": 120,
+      "ankle_dorsiflexion": 10
+     },
+     "contacts": [
+      "upper back on bench",
+      "feet flat"
+     ],
+     "implement_path": "barbell lowers vertically",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "thrust -> top_hold -> lower (repeat)",
+   "tempo_default": "1.2-1-1.8",
+   "cues": [
+    "Shins vertical at the top",
+    "Chin tucked, ribs down",
+    "Posterior pelvic tilt",
+    "Squeeze glutes hard"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Overarching the lower back at the top",
+     "visual": "ribs flare, lumbar hyperextension, hips pushed beyond torso line",
+     "fix": "tuck chin and pelvis, ribs down"
+    },
+    {
+     "mistake": "Feet too close/far",
+     "visual": "feet far from glutes: shin leans out, hamstrings burn; too close: knees push forward, quads take over",
+     "fix": "adjust feet so shins are vertical at top"
+    },
+    {
+     "mistake": "Bar slides / hips don't lock out",
+     "visual": "hips stop below torso-line, torso incline at top",
+     "fix": "reduce load, finish full extension"
+    }
+   ],
+   "safety": "Use a bar pad and secure bench against a wall; keep neck neutral; don't hyperextend; ramp load gradually.",
+   "regression": "Glute bridge from floor",
+   "progression": "Single-leg hip thrust, banded hip thrust, heavy barbell",
+   "variants": [],
+   "sources": [
+    "https://bretcontreras.com/10-steps-to-the-perfect-hip-thrust"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "kettlebell_swing",
+   "app_names": [
+    "Kettlebell Swing"
+   ],
+   "names": {
+    "tr": "Kettlebell Swing",
+    "en": "Two-Hand Kettlebell Swing",
+    "es": "Swing con pesa rusa (kettlebell)"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "kettlebell"
+   ],
+   "equipment_setup": "Kettlebell about 30-45 cm in front of the feet, feet shoulder width, toes slightly out; hike the bell back between the legs with both hands (double overhand grip)",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "gluteus maximus",
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "erector spinae",
+    "core",
+    "lats",
+    "forearms",
+    "quadriceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hinge, bell arc and hip snap; front shows symmetry"
+   },
+   "start_pose": {
+    "description": "Hinged setup, bell hiked back between thighs, arms straight against the inner thighs, back flat, chest up",
+    "angles": {
+     "trunk_from_vertical": 60,
+     "hip_flexion": 88,
+     "knee_flexion": 40,
+     "ankle_dorsiflexion": 12,
+     "shoulder_flexion": 50,
+     "elbow_flexion": 0,
+     "stance_width": 1.1,
+     "foot_turnout_deg": 10
+    },
+    "contacts": [
+     "both feet flat"
+    ],
+    "implement": "kettlebell hiked behind knees, handle at height of knee/upper thigh"
+   },
+   "phases": [
+    {
+     "name": "hip_drive",
+     "description": "Explosively extend hips and knees (snap), squeeze glutes, arms just guide the bell forward; trunk stands tall",
+     "duration_s": 0.35,
+     "breathing": "sharp exhale at the top",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0,
+      "shoulder_flexion": 85,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat, weight mid-foot"
+     ],
+     "implement_path": "bell arcs forward and upward to chest height (arms ~parallel to floor), moving from momentum not arms",
+     "notes": "arms ~85 deg shoulder flexion at the top; do not lean back"
+    },
+    {
+     "name": "float",
+     "description": "Bell floats weightless at the top for an instant, torso vertical, glutes squeezed",
+     "duration_s": 0.15,
+     "breathing": "hold exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion": 85
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bell at apex at chest height",
+     "notes": ""
+    },
+    {
+     "name": "backswing",
+     "description": "Bell falls; as arms come to the abdomen hinge hips back and let the bell travel between the thighs, torso leans forward ~60 deg, shins nearly vertical",
+     "duration_s": 0.6,
+     "breathing": "inhale as bell descends",
+     "end_angles": {
+      "trunk_from_vertical": 60,
+      "hip_flexion": 88,
+      "knee_flexion": 40,
+      "ankle_dorsiflexion": 12,
+      "shoulder_flexion": 50
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "bell swings back between the thighs above knee height, forearms against inner thighs",
+     "notes": "this is a hinge, not a squat; back stays flat"
+    }
+   ],
+   "rep_loop": "hip_drive -> float -> backswing (continuous loop; rep starts at the hiked position)",
+   "tempo_default": "0.35-0.15-0.6 (~1.1 s per swing)",
+   "cues": [
+    "Hinge, don't squat",
+    "Snap the hips",
+    "Arms are ropes",
+    "Stand tall, squeeze glutes",
+    "Bell to chest height"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Squatting the swing",
+     "visual": "knees bend deeply (>70 deg) and hips drop low, torso upright",
+     "fix": "push hips back; keep shins near vertical"
+    },
+    {
+     "mistake": "Lifting with the arms / overswing",
+     "visual": "arms pull and shoulders shrug, bell rises above chest height with leaning back",
+     "fix": "snap hips; arms relaxed; bell to chest height"
+    },
+    {
+     "mistake": "Rounded back at the bottom",
+     "visual": "spine rounds as bell drops between legs, head drops",
+     "fix": "chest up, hinge deeper at hips, neutral spine"
+    }
+   ],
+   "safety": "Learn the hip hinge first; keep neutral spine; use a weight you can control; clear the area; don't let the bell pull your shoulders forward.",
+   "regression": "Kettlebell deadlift, hip hinge drills, light weight swing",
+   "progression": "Heavier swings, single-arm swing, American/overhead swing",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/391/swing/",
+    "https://dxpprod.nsca.com/education/articles/kinetic-select/two-arm-kettlebell-swing/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "farmer_walk",
+   "app_names": [
+    "Farmer Walk"
+   ],
+   "names": {
+    "tr": "Farmer Walk (Çiftçi Yürüyüşü)",
+    "en": "Farmer's Walk",
+    "es": "Paseo del granjero"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "two heavy dumbbells or kettlebells"
+   ],
+   "equipment_setup": "Two heavy dumbbells on the floor at the sides of the feet; pick up with a hip hinge, flat back; hold at sides with a firm grip",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "forearm flexors",
+    "trapezius",
+    "core"
+   ],
+   "secondary_muscles": [
+    "gluteus maximus",
+    "quadriceps",
+    "hamstrings",
+    "calves",
+    "shoulder stabilizers"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front 3q shows level shoulders and no sway; side shows upright posture and short steps"
+   },
+   "start_pose": {
+    "description": "Standing tall holding a heavy dumbbell in each hand at the sides, shoulders back and down, chest up, core braced, neck neutral",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 0,
+     "shoulder_extension": 5,
+     "elbow_flexion": 0,
+     "neck": "neutral, gaze forward"
+    },
+    "contacts": [
+     "both feet flat",
+     "hands gripping dumbbells at sides"
+    ],
+    "implement": "dumbbells hang by the sides of thighs, 5-10 cm from legs"
+   },
+   "phases": [
+    {
+     "name": "pickup",
+     "description": "Hinge hips back, flat back, grip the weights, drive up to standing tall (deadlift-like)",
+     "duration_s": 2.0,
+     "breathing": "inhale and brace before lift",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "both feet flat",
+      "hands on dumbbells"
+     ],
+     "implement_path": "dumbbells rise from floor to hanging at sides",
+     "notes": "from hinged setup (trunk ~55, knee ~50) to tall"
+    },
+    {
+     "name": "walk",
+     "description": "Take short, quick steps (step length ~0.5-0.6 m) with upright posture, shoulders level, weights hang without swinging, core braced",
+     "duration_s": 0.55,
+     "breathing": "steady breathing, brace between breaths",
+     "end_angles": {
+      "trunk_from_vertical": 2,
+      "hip_flexion": 22,
+      "knee_flexion": 10,
+      "ankle_dorsiflexion": 3,
+      "shoulder_flexion": 0,
+      "shoulder_extension": 5,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "one foot on floor at a time (alternating)",
+      "hands gripping dumbbells"
+     ],
+     "implement_path": "dumbbells hang by sides, minimal swing; walking forward ~1.0-1.4 m/s",
+     "notes": "values are a heel-strike snapshot of the lead leg (hip flexion 22); trailing leg hip extension -10, knee 5; repeat alternating"
+    },
+    {
+     "name": "set_down",
+     "description": "Stop, hinge hips back and lower the dumbbells to the floor under control, flat back",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 55,
+      "hip_flexion": 100,
+      "knee_flexion": 50,
+      "ankle_dorsiflexion": 15
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "dumbbells lower to floor beside feet",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pickup -> walk (cycle, e.g. 20-30 m) -> set_down",
+   "tempo_default": "0.55 s per step (about 110 steps/min), 20-40 s per set",
+   "cues": [
+    "Tall posture",
+    "Shoulders back and down",
+    "Short quick steps",
+    "Don't let the weights swing",
+    "Crush the handles"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Leaning forward / head forward",
+     "visual": "torso inclines >10 deg and head juts forward",
+     "fix": "chest up, ribs stacked over hips, gaze forward"
+    },
+    {
+     "mistake": "Shrugging the shoulders",
+     "visual": "shoulders rise toward ears with weights pulling them down",
+     "fix": "pull shoulder blades down and back"
+    },
+    {
+     "mistake": "Swinging / overstriding",
+     "visual": "dumbbells swing and steps too long, trunk sways",
+     "fix": "shorter steps, braced core"
+    }
+   ],
+   "safety": "Use a weight you can hold with a firm grip; keep spine neutral; clear the walkway; set down with control, not a drop.",
+   "regression": "Lighter dumbbells, shorter distance, single dumbbell suitcase carry",
+   "progression": "Heavier farmer handles, trap-bar carries, fat grips",
+   "variants": [],
+   "sources": [
+    "https://www.hsnstore.eu/blog/training-routines/core/how-to-do-the-farmer-carry/",
+    "https://www.masterclass.com/articles/farmers-walk-exercise-guide"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "suitcase_march",
+   "app_names": [
+    "Suitcase March"
+   ],
+   "names": {
+    "tr": "Suitcase March (Valiz Yürüyüşü)",
+    "en": "Suitcase March",
+    "es": "Marcha con maleta (suitcase march)"
+   },
+   "category": "core",
+   "equipment": [
+    "dumbbell"
+   ],
+   "equipment_setup": "One dumbbell held in one hand at the side, arm straight, like a suitcase; other hand free (on hip or hanging); feet hip width",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "obliques",
+    "quadratus lumborum",
+    "transversus abdominis"
+   ],
+   "secondary_muscles": [
+    "gluteus medius",
+    "hip flexors",
+    "forearm flexors",
+    "trapezius"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows resisting lateral lean and level shoulders/pelvis; side shows knee lift and upright posture"
+   },
+   "start_pose": {
+    "description": "Standing tall, weight in one hand, shoulders and pelvis level, torso vertical (no lean toward the weight), core braced",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "spine_lateral_flexion": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0,
+     "stance_width": 0.6,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat",
+     "one hand gripping dumbbell",
+     "free hand on hip"
+    ],
+    "implement": "dumbbell hangs at the side of the thigh, arm straight"
+   },
+   "phases": [
+    {
+     "name": "knee_lift",
+     "description": "March in place: lift one knee until the thigh is ~parallel to the floor, standing leg stays straight, torso stays vertical, no side lean",
+     "duration_s": 0.6,
+     "breathing": "steady exhale as knee lifts",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "spine_lateral_flexion": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "free_hip_flexion": 90,
+      "free_knee_flexion": 90
+     },
+     "contacts": [
+      "one foot flat (alternating)",
+      "hand on dumbbell"
+     ],
+     "implement_path": "dumbbell hangs still beside the thigh, no swing",
+     "notes": "free leg: hip 90, knee 90; pelvis level; shoulder not hiked"
+    },
+    {
+     "name": "knee_lower",
+     "description": "Lower the foot under control and immediately lift the opposite knee",
+     "duration_s": 0.6,
+     "breathing": "inhale as foot lowers",
+     "end_angles": {
+      "free_hip_flexion": 0,
+      "free_knee_flexion": 0
+     },
+     "contacts": [
+      "both feet flat for a moment"
+     ],
+     "implement_path": "dumbbell hangs still",
+     "notes": "alternate legs"
+    }
+   ],
+   "rep_loop": "knee_lift (left) -> knee_lower -> knee_lift (right) -> knee_lower (alternating for 30-45 s, then switch hand)",
+   "tempo_default": "0.6-0.6 per knee (about 1 step/s)",
+   "cues": [
+    "Stand tall, don't lean",
+    "Ribs over hips",
+    "Slow knee lifts",
+    "Level shoulders and hips"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Leaning toward the weight",
+     "visual": "torso tilts toward the loaded side, hip hikes on the other side",
+     "fix": "stack ribs over hips, lighter weight"
+    },
+    {
+     "mistake": "Leaning away / hip shove",
+     "visual": "hip pushes sideways, shoulder hikes",
+     "fix": "stay vertical, lighter weight"
+    },
+    {
+     "mistake": "Weight swinging / rushing",
+     "visual": "dumbbell swings and steps fast",
+     "fix": "slow tempo, still arm"
+    }
+   ],
+   "safety": "Choose a weight you can hold stable; keep knees and spine neutral; stop if lower back strains.",
+   "regression": "Lighter weight, march without weight",
+   "progression": "Heavier weight, walking suitcase carry, offset farmer carry",
+   "variants": [],
+   "sources": [
+    "https://kettlebellsworkouts.com/kettlebell-suitcase-carry/",
+    "https://www.soletreadmills.com/blogs/news/farmers-walk-vs-suitcase-carry-differences-weight-muscles-worked"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "sled_push",
+   "app_names": [
+    "Sled Push"
+   ],
+   "names": {
+    "tr": "Sled Push (Kızak İtme)",
+    "en": "Sled Push",
+    "es": "Empuje de trineo"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "push sled with weight plates"
+   ],
+   "equipment_setup": "Sled loaded with plates on turf; hands gripping upper handles (high-handle grip), arms nearly straight; feet behind, torso inclined",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "calves"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "core",
+    "shoulders",
+    "triceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows body lean line from heel to head, arm extension and short strides"
+   },
+   "start_pose": {
+    "description": "Leaning forward at ~45 deg with a straight line from heels to head, hands on high handles, arms straight, rear foot behind",
+    "angles": {
+     "trunk_from_vertical": 50,
+     "hip_flexion": 20,
+     "knee_flexion": 30,
+     "ankle_dorsiflexion": 10,
+     "shoulder_flexion": 110,
+     "elbow_flexion": 10,
+     "stance_width": 0.6,
+     "neck": "neutral, gaze down/forward 2 m ahead"
+    },
+    "contacts": [
+     "both feet on floor (rear on ball of foot)",
+     "hands on sled handles"
+    ],
+    "implement": "sled handles at about chest/shoulder height, sled stationary"
+   },
+   "phases": [
+    {
+     "name": "drive_step",
+     "description": "Drive the stance leg to full extension with each step (ankle/knee/hip), swing the other knee forward with short quick steps; arms stay locked, shoulders anchored in handles",
+     "duration_s": 0.55,
+     "breathing": "controlled rhythmic breathing, brace",
+     "end_angles": {
+      "trunk_from_vertical": 50,
+      "hip_flexion": 40,
+      "knee_flexion": 15,
+      "ankle_dorsiflexion": -20,
+      "shoulder_flexion": 110,
+      "elbow_flexion": 10,
+      "swing_hip_flexion": 70,
+      "swing_knee_flexion": 90
+     },
+     "contacts": [
+      "one foot driving on ball of the foot (alternating)",
+      "hands on sled handles"
+     ],
+     "implement_path": "sled slides forward at a steady ~1 m/s; hands do not push, shoulders anchor",
+     "notes": "stance leg: knee ~15, ankle plantarflexed during toe-off; swing leg: hip 70, knee 90; torso line stays constant; step length ~0.5 m"
+    },
+    {
+     "name": "repeat_step",
+     "description": "Alternate legs with the same stiff torso line and short strides",
+     "duration_s": 0.55,
+     "breathing": "controlled breathing",
+     "end_angles": {
+      "trunk_from_vertical": 50,
+      "hip_flexion": 40,
+      "knee_flexion": 15,
+      "swing_hip_flexion": 70,
+      "swing_knee_flexion": 90
+     },
+     "contacts": [
+      "alternating foot drive",
+      "hands on handles"
+     ],
+     "implement_path": "sled keeps moving",
+     "notes": "mirrored leg roles compared to drive_step"
+    }
+   ],
+   "rep_loop": "drive_step -> repeat_step (cycle for 10-30 m, then rest)",
+   "tempo_default": "0.55 s per step, continuous",
+   "cues": [
+    "Straight line heel to head",
+    "Arms locked, shoulders in handles",
+    "Short quick steps",
+    "Push the ground away",
+    "Eyes down 2 m ahead"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Standing too upright",
+     "visual": "torso <25 deg lean, sled pushes up not forward",
+     "fix": "lean into the sled at ~45 deg"
+    },
+    {
+     "mistake": "Rounded back / head up",
+     "visual": "spine rounds, head cranes up",
+     "fix": "neutral spine, gaze down"
+    },
+    {
+     "mistake": "Long strides / pushing with arms",
+     "visual": "overstriding with elbows bending and shoulders shrugging",
+     "fix": "short quick steps, arms locked"
+    }
+   ],
+   "safety": "Pick a load that allows good posture; keep neutral spine; warm up; use turf or smooth floor; don't let the sled run into you.",
+   "regression": "Lighter sled load or high-handle at lower speed, walking pushes",
+   "progression": "Heavier loads, low-handle grip, sprint pushes",
+   "variants": [],
+   "sources": [
+    "https://thebarbell.com/sled-push-and-pull/",
+    "https://www.crossfitinvictus.com/?p=47012"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "lying_leg_curl",
+   "app_names": [
+    "Leg Curl",
+    "Lying Leg Curl"
+   ],
+   "names": {
+    "tr": "Lying Leg Curl (Yatarak Leg Curl)",
+    "en": "Lying Leg Curl (machine)",
+    "es": "Curl femoral tumbado"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "lying leg curl machine"
+   ],
+   "equipment_setup": "Lie prone on the bench, knees just off the edge aligned with the machine axis, roller pad on lower calves just above the heels, hands on handles, hips pressed down",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "calves (gastrocnemius)",
+    "gluteus maximus"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows knee flexion range and hips staying down; back view shows heel/pad symmetry"
+   },
+   "start_pose": {
+    "description": "Prone on the bench, legs nearly straight (knee ~5 deg), pad on lower calves, chest and hips on bench, grip handles",
+    "angles": {
+     "hip_flexion": 8,
+     "knee_flexion": 5,
+     "ankle_dorsiflexion": 0,
+     "elbow_flexion": 90,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "torso, hips and thighs on bench",
+     "pad on lower calves",
+     "hands on handles"
+    ],
+    "implement": "pad at lower calf just above the heels"
+   },
+   "phases": [
+    {
+     "name": "curl",
+     "description": "Curl heels toward the buttocks by flexing the knees, hips stay pressed down, pad rises on an arc",
+     "duration_s": 1.5,
+     "breathing": "exhale as you curl",
+     "end_angles": {
+      "hip_flexion": 8,
+      "knee_flexion": 105,
+      "ankle_dorsiflexion": 5
+     },
+     "contacts": [
+      "torso/hips on bench",
+      "pad on calves"
+     ],
+     "implement_path": "pad travels in an arc up toward the buttocks, stopping before touching",
+     "notes": "ankles slightly dorsiflexed; top ~100-110 deg knee flexion"
+    },
+    {
+     "name": "peak_pause",
+     "description": "Squeeze hamstrings at the top for a beat",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "knee_flexion": 105
+     },
+     "contacts": [
+      "torso/hips on bench"
+     ],
+     "implement_path": "pad static",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower under control to near full extension, keep tension, don't let the stack slam",
+     "duration_s": 2.0,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "hip_flexion": 8,
+      "knee_flexion": 5
+     },
+     "contacts": [
+      "torso/hips on bench"
+     ],
+     "implement_path": "pad returns along the same arc",
+     "notes": "stop just short of full lock"
+    }
+   ],
+   "rep_loop": "curl -> peak_pause -> lower (repeat)",
+   "tempo_default": "1.5-0.5-2",
+   "cues": [
+    "Hips stay down",
+    "Heels to glutes",
+    "Squeeze the hamstrings",
+    "Control the lowering"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips lift off the bench",
+     "visual": "pelvis rises and lower back arches during curl",
+     "fix": "lower the weight, keep hips pressed"
+    },
+    {
+     "mistake": "Swinging with momentum",
+     "visual": "legs snap up and drop quickly",
+     "fix": "slow tempo, lighter weight"
+    },
+    {
+     "mistake": "Partial range",
+     "visual": "knees only bend ~45 deg then stop",
+     "fix": "full control through ~100+ deg"
+    }
+   ],
+   "safety": "Align knee axis with the machine pivot; use a controlled load; stop if there is cramping or hamstring pain; avoid hyperextending knees at the bottom.",
+   "regression": "Band hamstring curl, lighter weight",
+   "progression": "Slow eccentric, single-leg curl, Nordic curl",
+   "variants": [
+    {
+     "app_name": "Leg Curl",
+     "difference": "app's generic leg curl is the prone/lying machine version; if the gym machine is seated, the knee motion is the same but the body is seated"
+    }
+   ],
+   "sources": [
+    "https://www.nasm.org/resource-center/exercise-library/lying-leg-curl",
+    "https://fitnessvolt.com/24561/lying-leg-curl/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "band_hamstring_curl",
+   "app_names": [
+    "Resistance Band Hamstring Curl"
+   ],
+   "names": {
+    "tr": "Direnç Bandı Hamstring Curl",
+    "en": "Resistance Band Hamstring Curl (prone)",
+    "es": "Curl femoral con banda elástica"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "resistance band"
+   ],
+   "equipment_setup": "Anchor the band at floor level behind the feet (door/leg of a heavy object); loop the band around both ankles; lie prone with forehead on stacked hands; band has slight tension at start",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "hamstrings"
+   ],
+   "secondary_muscles": [
+    "gluteus maximus",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows knee flexion arc and band path; back view shows symmetry"
+   },
+   "start_pose": {
+    "description": "Prone on a mat, legs straight with band around ankles, hips flat, forehead on hands",
+    "angles": {
+     "hip_flexion": 0,
+     "knee_flexion": 5,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 150,
+     "elbow_flexion": 120,
+     "neck": "neutral, forehead on hands"
+    },
+    "contacts": [
+     "front of torso and thighs on mat",
+     "forehead/forearms on mat"
+    ],
+    "implement": "band from anchor behind feet to ankles, taut at start"
+   },
+   "phases": [
+    {
+     "name": "curl",
+     "description": "Bend the knees and bring heels toward the buttocks against the band's resistance, hips stay flat on mat",
+     "duration_s": 1.5,
+     "breathing": "exhale as you curl",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 110,
+      "ankle_dorsiflexion": 5
+     },
+     "contacts": [
+      "torso and thighs on mat"
+     ],
+     "implement_path": "band stretches along the line toward the anchor, heels move in an arc",
+     "notes": "stop before the lower back arches"
+    },
+    {
+     "name": "peak_pause",
+     "description": "Squeeze the hamstrings for 1 s",
+     "duration_s": 0.5,
+     "breathing": "hold",
+     "end_angles": {
+      "knee_flexion": 110
+     },
+     "contacts": [
+      "torso on mat"
+     ],
+     "implement_path": "band stretched",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Slowly straighten the legs, keep tension",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 5
+     },
+     "contacts": [
+      "torso on mat"
+     ],
+     "implement_path": "band returns to start tension",
+     "notes": "do not let band snap"
+    }
+   ],
+   "rep_loop": "curl -> peak_pause -> lower (repeat)",
+   "tempo_default": "1.5-0.5-2",
+   "cues": [
+    "Heels to glutes",
+    "Hips stay flat",
+    "Squeeze hamstrings",
+    "Slow lowering"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips lift and back arches",
+     "visual": "pelvis rises and lower back extends as band pulls",
+     "fix": "tuck pelvis, shorten range or lighter band"
+    },
+    {
+     "mistake": "Letting the band snap back",
+     "visual": "legs drop fast",
+     "fix": "control eccentric"
+    },
+    {
+     "mistake": "Only bending part-way",
+     "visual": "knees bend ~30 deg and stop",
+     "fix": "full range"
+    }
+   ],
+   "safety": "Anchor must be secure; check band for tears; keep neck neutral; stop with cramping.",
+   "regression": "Lighter band, bridge walkout",
+   "progression": "Heavier band, single-leg curl, Nordic curl",
+   "variants": [],
+   "sources": [
+    "https://fitnessvolt.com/24561/lying-leg-curl/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "leg_extension",
+   "app_names": [
+    "Leg Extension"
+   ],
+   "names": {
+    "tr": "Leg Extension (Diz Ekstansiyonu)",
+    "en": "Machine Leg Extension",
+    "es": "Extensión de piernas en máquina"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "leg extension machine"
+   ],
+   "equipment_setup": "Seat adjusted so the knee aligns with the machine pivot; back pad supports the lower back; ankle pad sits on the lower shin just above the ankles; hands on side handles",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "quadriceps"
+   ],
+   "secondary_muscles": [
+    "hip flexors (rectus femoris)"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows knee extension arc and back against pad; front shows leg/foot alignment"
+   },
+   "start_pose": {
+    "description": "Seated upright (back reclined ~10 deg), thighs on seat, knees at 90 deg, shins vertical, pad on lower shin",
+    "angles": {
+     "trunk_from_vertical": -10,
+     "hip_flexion": 80,
+     "knee_flexion": 90,
+     "ankle_dorsiflexion": 0,
+     "elbow_flexion": 30
+    },
+    "contacts": [
+     "back and buttocks on seat",
+     "thighs on seat",
+     "pad on lower shins",
+     "hands on handles"
+    ],
+    "implement": "weight stack at rest, pad at ankle height"
+   },
+   "phases": [
+    {
+     "name": "extend",
+     "description": "Extend knees until the legs are almost straight, squeeze quads at top, back stays on pad",
+     "duration_s": 1.5,
+     "breathing": "exhale as you extend",
+     "end_angles": {
+      "trunk_from_vertical": -10,
+      "hip_flexion": 80,
+      "knee_flexion": 5,
+      "ankle_dorsiflexion": 0
+     },
+     "contacts": [
+      "back and thighs on seat",
+      "pad on shins"
+     ],
+     "implement_path": "pad travels from shins vertical to nearly horizontal in an arc",
+     "notes": "stop short of hard lockout (~5 deg)"
+    },
+    {
+     "name": "peak_pause",
+     "description": "Squeeze at the top for 1 s",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "knee_flexion": 5
+     },
+     "contacts": [
+      "back and thighs on seat"
+     ],
+     "implement_path": "pad static",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower slowly to 90 deg, keep tension, don't drop the weight stack",
+     "duration_s": 2.5,
+     "breathing": "inhale as you lower",
+     "end_angles": {
+      "knee_flexion": 90
+     },
+     "contacts": [
+      "back and thighs on seat"
+     ],
+     "implement_path": "pad returns along the arc",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "extend -> peak_pause -> lower (repeat)",
+   "tempo_default": "1.5-1-2.5",
+   "cues": [
+    "Slow and controlled",
+    "Squeeze quads at top",
+    "Back on pad",
+    "Don't lock out hard"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips lift off the seat / swinging",
+     "visual": "buttocks rise and torso rocks to throw the weight up",
+     "fix": "lower the load, hold the handles"
+    },
+    {
+     "mistake": "Locking out violently",
+     "visual": "knee snaps to full lock at top",
+     "fix": "stop 5 deg short"
+    },
+    {
+     "mistake": "Dropping the weight",
+     "visual": "legs fall quickly",
+     "fix": "control the eccentric for 2-3 s"
+    }
+   ],
+   "safety": "Align knee axis with machine pivot; avoid heavy loads if you have kneecap pain; control the eccentric.",
+   "regression": "Short range of motion, lighter load",
+   "progression": "Single-leg extension, slow eccentric, pause",
+   "variants": [],
+   "sources": [
+    "https://planfit.ai/exercise/4007",
+    "https://cslife.clubsports.com/trainer-tip-proper-leg-extension-form/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "standing_calf_raise",
+   "app_names": [
+    "Calf Raise",
+    "Standing Calf Raise"
+   ],
+   "names": {
+    "tr": "Ayakta Calf Raise (Baldır)",
+    "en": "Standing Calf Raise",
+    "es": "Elevación de talones de pie"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "step/platform (optional)",
+    "dumbbells or machine (optional)"
+   ],
+   "equipment_setup": "Balls of both feet on the edge of a step/platform with heels hanging off, feet hip width and parallel; hand on wall/rail for balance",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "gastrocnemius",
+    "soleus"
+   ],
+   "secondary_muscles": [
+    "tibialis posterior",
+    "peroneals",
+    "foot intrinsics"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows heel drop and rise; back view shows ankles stacking straight over the foot"
+   },
+   "start_pose": {
+    "description": "Standing upright, balls of feet on the step edge, heels level with the step, knees straight, torso vertical",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 0,
+     "stance_width": 0.5,
+     "foot_turnout_deg": 0
+    },
+    "contacts": [
+     "balls of both feet on step edge",
+     "hand lightly on support"
+    ],
+    "implement": "none (dumbbells at sides if loaded)"
+   },
+   "phases": [
+    {
+     "name": "stretch_down",
+     "description": "Lower heels below the step to a deep stretch with straight knees, control",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 15
+     },
+     "contacts": [
+      "balls of feet on step",
+      "hand on support"
+     ],
+     "implement_path": "none",
+     "notes": "ankle dorsiflexed ~15 deg"
+    },
+    {
+     "name": "rise",
+     "description": "Push through the balls of the feet up as high as possible, ankles stay stacked (no rolling out)",
+     "duration_s": 1.0,
+     "breathing": "exhale as you rise",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": -50
+     },
+     "contacts": [
+      "balls of feet on step"
+     ],
+     "implement_path": "none",
+     "notes": "ankle plantarflexed ~50 deg (negative per convention); body rises straight up, torso vertical"
+    },
+    {
+     "name": "top_hold",
+     "description": "Squeeze calves and hold 1-2 s",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "ankle_dorsiflexion": -50
+     },
+     "contacts": [
+      "balls of feet on step"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "stretch_down -> rise -> top_hold (repeat)",
+   "tempo_default": "1.5-0.5-1",
+   "cues": [
+    "Full stretch at the bottom",
+    "Rise onto big toe side",
+    "Hold the top for a beat",
+    "Knees straight"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bouncing / partial range",
+     "visual": "heels barely move and bounce at the bottom",
+     "fix": "full stretch and pause"
+    },
+    {
+     "mistake": "Rolling out onto the outside of the feet",
+     "visual": "ankles buckle outward at the top",
+     "fix": "push through the big toe"
+    },
+    {
+     "mistake": "Bending the knees to cheat",
+     "visual": "knees bend and knees travel forward on the way up",
+     "fix": "keep legs straight"
+    }
+   ],
+   "safety": "Use support for balance; progress load gradually; stop with Achilles pain.",
+   "regression": "Floor calf raise with support",
+   "progression": "Single-leg calf raise, loaded calf raise, slow eccentric",
+   "variants": [
+    {
+     "app_name": "Calf Raise",
+     "difference": "generic calf raise: heels hang off a step as in the in-app cue; can be done on flat floor with smaller range"
+    }
+   ],
+   "sources": [
+    "https://www.muscleandstrength.com/articles/standing-calf-raise-seated-bigger-calves",
+    "https://library.theprehabguys.com/?p=7176"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "single_leg_calf_raise",
+   "app_names": [
+    "Standing Single Leg Calf Raise",
+    "Tek Bacak Calf Raise"
+   ],
+   "names": {
+    "tr": "Tek Bacak Calf Raise",
+    "en": "Single-Leg Standing Calf Raise",
+    "es": "Elevación de talones a una pierna"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "step (optional)",
+    "wall/rail for balance"
+   ],
+   "equipment_setup": "Stand on one foot with the ball of the foot on the edge of a step (or floor); other foot lifted with knee bent ~90 deg behind; one hand lightly on a wall",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "gastrocnemius",
+    "soleus"
+   ],
+   "secondary_muscles": [
+    "tibialis posterior",
+    "peroneals",
+    "foot intrinsics",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows heel drop and rise; back view shows ankle alignment"
+   },
+   "start_pose": {
+    "description": "Balanced on one foot, standing leg straight, other foot lifted behind with knee bent 90 deg, hand on wall",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 0,
+     "free_hip_flexion": -5,
+     "free_knee_flexion": 90,
+     "shoulder_flexion": 40,
+     "elbow_flexion": 30
+    },
+    "contacts": [
+     "ball of one foot on step/floor",
+     "hand lightly on wall"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "stretch_down",
+     "description": "Lower the heel below the step to a deep stretch, controlled",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": 15,
+      "free_knee_flexion": 90
+     },
+     "contacts": [
+      "ball of working foot on step",
+      "hand on wall"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "rise",
+     "description": "Press up through the ball of the foot as high as possible, ankle stays stacked",
+     "duration_s": 1.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 0,
+      "ankle_dorsiflexion": -50,
+      "free_knee_flexion": 90
+     },
+     "contacts": [
+      "ball of working foot",
+      "hand on wall"
+     ],
+     "implement_path": "none",
+     "notes": "ankle plantarflexed ~50 deg; do not lean on the wall"
+    },
+    {
+     "name": "top_hold",
+     "description": "Hold and squeeze 1 s",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "ankle_dorsiflexion": -50
+     },
+     "contacts": [
+      "ball of working foot"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "stretch_down -> rise -> top_hold (repeat; switch legs after set)",
+   "tempo_default": "1.5-0.5-1",
+   "cues": [
+    "Full stretch, full rise",
+    "Don't lean on the wall",
+    "Ankle straight over the foot",
+    "Slow lowering"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Using the wall to pull up",
+     "visual": "arm straightens hard on the wall and torso leans",
+     "fix": "light fingertip touch only"
+    },
+    {
+     "mistake": "Ankle rolls outward",
+     "visual": "heel tilts out at the top",
+     "fix": "press through big toe"
+    },
+    {
+     "mistake": "Bouncing",
+     "visual": "fast partial reps",
+     "fix": "pause at bottom and top"
+    }
+   ],
+   "safety": "Support for balance; progress slowly; stop with Achilles pain.",
+   "regression": "Two-leg calf raise",
+   "progression": "Loaded single-leg calf raise, deficit single-leg calf raise",
+   "variants": [
+    {
+     "app_name": "Tek Bacak Calf Raise",
+     "difference": "same as standing single-leg calf raise, bodyweight"
+    }
+   ],
+   "sources": [
+    "https://www.muscleandstrength.com/articles/standing-calf-raise-seated-bigger-calves",
+    "https://library.theprehabguys.com/?p=7176"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "seated_calf_raise",
+   "app_names": [
+    "Seated Calf Raise"
+   ],
+   "names": {
+    "tr": "Oturarak Calf Raise",
+    "en": "Seated Calf Raise (machine)",
+    "es": "Elevación de talones sentado"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "seated calf raise machine"
+   ],
+   "equipment_setup": "Sit upright with knees at ~90 deg under the knee pad; balls of feet on the platform, heels hanging; lever released by turning the handle",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "soleus"
+   ],
+   "secondary_muscles": [
+    "gastrocnemius (less)",
+    "tibialis posterior"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows heel drop, knee pad contact and ankle range"
+   },
+   "start_pose": {
+    "description": "Seated upright, thighs under pad, knees ~90 deg, balls of feet on platform, heels level",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "ankle_dorsiflexion": 0,
+     "elbow_flexion": 30
+    },
+    "contacts": [
+     "buttocks on seat",
+     "thighs under pad",
+     "balls of both feet on platform",
+     "hands on handles"
+    ],
+    "implement": "weight loaded on thigh pad"
+   },
+   "phases": [
+    {
+     "name": "stretch_down",
+     "description": "Lower heels as far as possible to stretch the calf, pause 1 s to avoid rebound",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90,
+      "knee_flexion": 90,
+      "ankle_dorsiflexion": 20
+     },
+     "contacts": [
+      "seat",
+      "thigh pad",
+      "balls of feet on platform"
+     ],
+     "implement_path": "pad lowers with heels",
+     "notes": ""
+    },
+    {
+     "name": "rise",
+     "description": "Push through the balls of the feet up to full contraction, squeeze at top",
+     "duration_s": 1.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "knee_flexion": 90,
+      "ankle_dorsiflexion": -45
+     },
+     "contacts": [
+      "seat",
+      "thigh pad",
+      "balls of feet"
+     ],
+     "implement_path": "pad rises with heels",
+     "notes": "ankle plantarflexed ~45 deg"
+    },
+    {
+     "name": "top_hold",
+     "description": "Squeeze 1 s",
+     "duration_s": 1.0,
+     "breathing": "hold",
+     "end_angles": {
+      "ankle_dorsiflexion": -45
+     },
+     "contacts": [
+      "seat",
+      "balls of feet"
+     ],
+     "implement_path": "static",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "stretch_down -> rise -> top_hold (repeat)",
+   "tempo_default": "1.5-0.5-1",
+   "cues": [
+    "Full stretch",
+    "Pause at the bottom",
+    "Rise high on toes",
+    "No bouncing"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bouncing at the bottom",
+     "visual": "rapid short reps using the Achilles spring",
+     "fix": "pause 1 s in the stretch"
+    },
+    {
+     "mistake": "Partial range",
+     "visual": "heels barely rise or drop",
+     "fix": "full range"
+    },
+    {
+     "mistake": "Lifting knees off the pad / swaying",
+     "visual": "knees lift and torso rocks",
+     "fix": "lighter load, stay seated"
+    }
+   ],
+   "safety": "Keep controlled; stop with Achilles pain; don't bounce.",
+   "regression": "Bent-knee bodyweight calf raise",
+   "progression": "Heavier load, slow eccentric, single-leg variations",
+   "variants": [],
+   "sources": [
+    "https://www.muscleandstrength.com/articles/standing-calf-raise-seated-bigger-calves",
+    "https://www.rdlfitness.com/blog/seated-vs-standing-calf-raise"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "bent_knee_calf_raise",
+   "app_names": [
+    "Bent-Knee Calf Raise"
+   ],
+   "names": {
+    "tr": "Dizler Bükülü Calf Raise",
+    "en": "Bent-Knee Calf Raise (standing)",
+    "es": "Elevación de talones con rodillas flexionadas"
+   },
+   "category": "strength_legs",
+   "equipment": [
+    "wall/rail for balance"
+   ],
+   "equipment_setup": "Stand with knees slightly bent (~35-45 deg, quarter squat), feet hip width on floor/step, hands lightly on a wall; no weight (bodyweight soleus focus)",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "soleus"
+   ],
+   "secondary_muscles": [
+    "gastrocnemius",
+    "tibialis posterior",
+    "quadriceps (isometric)"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows constant knee bend and heel rise"
+   },
+   "start_pose": {
+    "description": "Quarter-squat position held: knees ~40 deg bent, torso leaning slightly forward, feet flat, hands on wall",
+    "angles": {
+     "trunk_from_vertical": 25,
+     "hip_flexion": 50,
+     "knee_flexion": 40,
+     "ankle_dorsiflexion": 15,
+     "shoulder_flexion": 50,
+     "elbow_flexion": 20,
+     "stance_width": 0.6
+    },
+    "contacts": [
+     "both feet flat",
+     "hands lightly on wall"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "rise",
+     "description": "Keeping the knee bend constant, push through the balls of the feet to lift the heels as high as possible",
+     "duration_s": 1.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 25,
+      "hip_flexion": 50,
+      "knee_flexion": 40,
+      "ankle_dorsiflexion": -40
+     },
+     "contacts": [
+      "balls of both feet",
+      "hands on wall"
+     ],
+     "implement_path": "none",
+     "notes": "knee angle does not change; heels rise ~8-10 cm; hips rise slightly"
+    },
+    {
+     "name": "top_hold",
+     "description": "Squeeze 1 s",
+     "duration_s": 0.7,
+     "breathing": "hold",
+     "end_angles": {
+      "knee_flexion": 40,
+      "ankle_dorsiflexion": -40
+     },
+     "contacts": [
+      "balls of both feet"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower heels to the floor slowly, keep knees bent",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 25,
+      "hip_flexion": 50,
+      "knee_flexion": 40,
+      "ankle_dorsiflexion": 15
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "rise -> top_hold -> lower (repeat)",
+   "tempo_default": "1-0.7-2",
+   "cues": [
+    "Keep the knees bent",
+    "Rise high",
+    "Slow lowering",
+    "Don't bounce"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Straightening the knees as you rise",
+     "visual": "knees extend and the body stands up instead",
+     "fix": "hold the knee angle"
+    },
+    {
+     "mistake": "Bouncing",
+     "visual": "quick small reps",
+     "fix": "slow tempo and pause"
+    },
+    {
+     "mistake": "Leaning on the wall",
+     "visual": "torso presses into the wall, arms straight",
+     "fix": "light touch only"
+    }
+   ],
+   "safety": "Use a wall for balance; stop with Achilles pain; increase tempo only when range is controlled.",
+   "regression": "Seated calf raise with light load, standing calf raise on floor",
+   "progression": "Loaded bent-knee (barbell/dumbbell), single-leg bent-knee",
+   "variants": [],
+   "sources": [
+    "https://www.muscleandstrength.com/articles/standing-calf-raise-seated-bigger-calves",
+    "https://library.theprehabguys.com/?p=7176"
+   ],
+   "confidence": "medium"
+  }
+ ],
+ "non_demo": [],
+ "unmapped": []
+}

@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+import { serve } from '/Users/ahmetdeveci/Downloads/gitbibak/shredmatrix/marketing/exercise-videos/anim/dev/serve.mjs';
+const S = await serve();
+const b = await chromium.launch({ channel: 'chrome', args: ['--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=metal'] });
+const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
+p.on('console', m => console.log('console', m.type(), m.text()));
+p.on('pageerror', e => console.log('pageerror', e.message));
+p.on('requestfailed', r => console.log('fail', r.url()));
+p.on('response', r => { if (r.status() >= 400) console.log('http', r.status(), r.url()); });
+await p.goto(S.base + 'player.html?ex=goblet_squat');
+await p.waitForFunction(() => window.ready, null, { timeout: 30000 });
+console.log(await p.evaluate(() => JSON.stringify({ fb3: !!window.FB3, gl: (() => { const c = document.getElementById('gl'); const g = c.getContext('webgl2'); return g ? g.getParameter(g.RENDERER) : null })() })));
+await b.close(); S.srv.close();

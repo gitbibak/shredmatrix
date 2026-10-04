@@ -1,0 +1,4672 @@
+{
+ "batch": "strength_push_core_conditioning",
+ "specs": [
+  {
+   "id": "push_up",
+   "app_names": [
+    "Push-Up",
+    "Şınav",
+    "Standart Şınav",
+    "Tempo Şınav (3 sn iniş)",
+    "Diz Üstü veya Standart Şınav",
+    "Push-Up + Plyo Push-Up Combo"
+   ],
+   "names": {
+    "tr": "Şınav",
+    "en": "Push-Up",
+    "es": "Flexión de brazos (push-up)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "bodyweight"
+   ],
+   "equipment_setup": "Floor. Hands under/just outside shoulders, rigid plank from head to heels.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "pectoralis major",
+    "anterior deltoid",
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "core",
+    "glutes"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the straight body line, elbow depth and head position; front_3q shows elbow flare and scapular motion"
+   },
+   "start_pose": {
+    "description": "High plank: arms vertical, body one rigid line from ears to ankles, ~8 deg downward tilt toward the feet because hands are on the floor and toes are the pivot.",
+    "angles": {
+     "trunk_from_vertical": 82,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": -60,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "hand_width": 1.3,
+     "elbow_flare_from_torso": 0,
+     "neck": "neutral, gaze ~30 cm ahead of fingertips",
+     "spine": "neutral"
+    },
+    "contacts": [
+     "both palms flat on floor ~1.3x shoulder width, fingers forward",
+     "both feet on floor on toes, hip width"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Elbows bend and travel back at ~45 deg from torso; whole body lowers as a single plank until chest is ~2-5 cm from floor.",
+     "duration_s": 2.0,
+     "breathing": "inhale on the way down",
+     "end_angles": {
+      "trunk_from_vertical": 84,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion_trunk_frame": 40,
+      "elbow_flexion": 95,
+      "elbow_flare_from_torso": 45,
+      "scapula": "retracting slightly, winging avoided"
+     },
+     "contacts": [
+      "both palms flat on floor ~1.3x shoulder width, fingers forward",
+      "both feet on floor on toes, hip width"
+     ],
+     "implement_path": "none",
+     "notes": "forearms near vertical at bottom, wrists under elbows; hips and shoulders lower at the same speed"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Brief stop with chest hovering just above floor.",
+     "duration_s": 0.3,
+     "breathing": "hold",
+     "end_angles": {
+      "elbow_flexion": 95,
+      "trunk_from_vertical": 84
+     },
+     "contacts": [
+      "both palms flat on floor ~1.3x shoulder width, fingers forward",
+      "both feet on floor on toes, hip width"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Push the floor away, elbows extend, body rises as one piece; protract scapulae at the top.",
+     "duration_s": 1.2,
+     "breathing": "exhale through the press",
+     "end_angles": {
+      "trunk_from_vertical": 82,
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0,
+      "elbow_flare_from_torso": 0
+     },
+     "contacts": [
+      "both palms flat on floor ~1.3x shoulder width, fingers forward",
+      "both feet on floor on toes, hip width"
+     ],
+     "implement_path": "none",
+     "notes": "do not lock out hard; shoulders end slightly protracted (plus)"
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "2-0.3-1",
+   "cues": [
+    "Body in one straight line",
+    "Elbows ~45 deg, not flared",
+    "Chest to just above the floor",
+    "Squeeze glutes and brace abs",
+    "Push the floor away"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips sag",
+     "visual": "pelvis drops below the shoulder-ankle line, lower back arches",
+     "fix": "squeeze glutes, brace abs, raise hips to the line"
+    },
+    {
+     "mistake": "Elbows flare to 90 deg",
+     "visual": "elbows point straight out to the sides forming a T with the torso",
+     "fix": "tuck to ~45 deg"
+    },
+    {
+     "mistake": "Half reps / head leads",
+     "visual": "only head dips, chest stays 15+ cm above the floor, neck cranes forward",
+     "fix": "chest to 2-5 cm of floor, neutral neck"
+    }
+   ],
+   "safety": "Stop if shoulder or wrist pain; wrists can be neutral on push-up handles or fists. Keep neck neutral.",
+   "regression": "Incline push-up or knee push-up.",
+   "progression": "Feet elevated, tempo (3 s eccentric), archer, plyo, weighted vest.",
+   "variants": [
+    {
+     "app_name": "Tempo Şınav (3 sn iniş)",
+     "difference": "descent duration 3 s, bottom pause 0.3 s, ascent 1 s"
+    },
+    {
+     "app_name": "Push-Up + Plyo Push-Up Combo",
+     "difference": "regular push-ups then explosive reps where the hands leave the floor (ascent 0.4 s, flight ~0.25 s, hands land with elbows slightly bent ~20 deg, absorb)"
+    },
+    {
+     "app_name": "Diz Üstü veya Standart Şınav",
+     "difference": "same movement; knees may be on floor as regression -> see knee_push_up"
+    },
+    {
+     "app_name": "Şınav / Standart Şınav / Push-Up",
+     "difference": "identical"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/PectoralSternal/BWPushup.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "knee_push_up",
+   "app_names": [
+    "Dar Tutuş Diz Üstü Şınav"
+   ],
+   "names": {
+    "tr": "Diz Üstü Şınav",
+    "en": "Knee Push-Up",
+    "es": "Flexión de brazos con rodillas"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "bodyweight"
+   ],
+   "equipment_setup": "Floor, mat under knees. Hands on floor, knees down, ankles crossed or feet up.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "pectoralis major",
+    "triceps brachii",
+    "anterior deltoid"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the shoulder-hip-knee line staying straight"
+   },
+   "start_pose": {
+    "description": "Knee plank: straight line from head to knees, arms vertical, shins on/near floor with feet lifted.",
+    "angles": {
+     "trunk_from_vertical": 65,
+     "hip_flexion": 0,
+     "knee_flexion": 90,
+     "ankle_dorsiflexion": -45,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "hand_width": 1.0,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both palms flat on floor",
+     "both knees (just above kneecaps, padded) on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Elbows bend back at ~45 deg, body (shoulder-to-knee line) lowers as one piece, chest ~3 cm above floor.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 70,
+      "hip_flexion": 0,
+      "knee_flexion": 90,
+      "shoulder_flexion_trunk_frame": 40,
+      "elbow_flexion": 95,
+      "elbow_flare_from_torso": 35
+     },
+     "contacts": [
+      "both palms flat on floor",
+      "both knees (just above kneecaps, padded) on floor"
+     ],
+     "implement_path": "none",
+     "notes": "close grip: hands ~0.8x shoulder width under chest, elbows brush the ribs (flare ~20-30 deg), more triceps"
+    },
+    {
+     "name": "ascent",
+     "description": "Press up, extend elbows, maintain hip line.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 65,
+      "elbow_flexion": 0,
+      "shoulder_flexion_trunk_frame": 90
+     },
+     "contacts": [
+      "both palms flat on floor",
+      "both knees (just above kneecaps, padded) on floor"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1",
+   "cues": [
+    "Line from head to knees",
+    "Hips do not pike",
+    "Elbows tucked",
+    "Chest to floor, full range"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips pike upward",
+     "visual": "butt rises above the shoulder-knee line, trunk looks like an inverted V",
+     "fix": "drive hips forward to straighten the line"
+    },
+    {
+     "mistake": "Half range",
+     "visual": "chest stops a hand's width above floor",
+     "fix": "lower until 3 cm"
+    },
+    {
+     "mistake": "Hands too far forward",
+     "visual": "hands ahead of shoulders, arms angled forward at the top",
+     "fix": "hands under shoulders"
+    }
+   ],
+   "safety": "Pad knees; keep neck neutral.",
+   "regression": "Incline push-up.",
+   "progression": "Standard push-up, close-grip push-up.",
+   "variants": [
+    {
+     "app_name": "Dar Tutuş Diz Üstü Şınav",
+     "difference": "hands 0.7-0.8x shoulder width (diamond-ish), elbows kept close to ribs, triceps emphasis"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/PectoralSternal/BWPushup.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "incline_push_up",
+   "app_names": [
+    "Incline Push-Up",
+    "Eğimli Şınav"
+   ],
+   "names": {
+    "tr": "Eğimli Şınav",
+    "en": "Incline Push-Up",
+    "es": "Flexión inclinada"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "bench/box/bar"
+   ],
+   "equipment_setup": "Hands on a stable bench or bar at 60-90 cm height, feet on floor.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "pectoralis major",
+    "anterior deltoid",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the incline of the body line"
+   },
+   "start_pose": {
+    "description": "Hands on a 60 cm surface, body in a straight incline (trunk ~58 deg from vertical, ~32 deg above horizontal), arms vertical.",
+    "angles": {
+     "trunk_from_vertical": 58,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": -60,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "hand_width": 1.3
+    },
+    "contacts": [
+     "both hands on edge of bench, shoulder-width+",
+     "both feet on floor on toes, hip width"
+    ],
+    "implement": "bench/bar 60 cm high"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Elbows bend ~45 deg from torso; chest travels to the edge of the bench.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 62,
+      "shoulder_flexion_trunk_frame": 40,
+      "elbow_flexion": 100,
+      "elbow_flare_from_torso": 45
+     },
+     "contacts": [
+      "hands on bench",
+      "toes on floor"
+     ],
+     "implement_path": "bench fixed",
+     "notes": "chest touches/hovers 2 cm from bench edge"
+    },
+    {
+     "name": "ascent",
+     "description": "Press away until arms straight.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 58,
+      "elbow_flexion": 0,
+      "shoulder_flexion_trunk_frame": 90
+     },
+     "contacts": [
+      "hands on bench",
+      "toes on floor"
+     ],
+     "implement_path": "bench fixed",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1",
+   "cues": [
+    "Body straight line",
+    "Elbows ~45 deg",
+    "Chest to bench edge",
+    "Higher surface = easier"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips sag",
+     "visual": "waist drops below the line",
+     "fix": "brace core, squeeze glutes"
+    },
+    {
+     "mistake": "Head pokes forward",
+     "visual": "chin leads, neck extended",
+     "fix": "neutral gaze"
+    },
+    {
+     "mistake": "Elbows flare out",
+     "visual": "T shape in front view",
+     "fix": "tuck to 45 deg"
+    }
+   ],
+   "safety": "Use a stable, immovable surface (do not use a rolling bench).",
+   "regression": "Higher surface (wall push-up).",
+   "progression": "Lower surface -> floor push-up -> feet-elevated.",
+   "variants": [
+    {
+     "app_name": "Eğimli Şınav",
+     "difference": "identical, usually bench or Smith bar"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "pike_push_up",
+   "app_names": [
+    "Pike Şınav",
+    "Ayakları Yükseltilmiş Pike Şınav"
+   ],
+   "names": {
+    "tr": "Pike Şınav",
+    "en": "Pike Push-Up",
+    "es": "Flexión pike (pike push-up)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "bodyweight",
+    "optional bench/box"
+   ],
+   "equipment_setup": "Floor; hands shoulder width, hips piked high so body forms an inverted V. Feet optionally on a 40-60 cm box.",
+   "body_orientation": "inverted",
+   "primary_muscles": [
+    "anterior deltoid",
+    "triceps",
+    "upper pectoralis"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "upper trapezius",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the vertical torso and head path; front shows elbow tracking"
+   },
+   "start_pose": {
+    "description": "Downward-dog style: hips high, legs and arms nearly straight, torso ~65 deg above horizontal (trunk_from_vertical ~25), head between arms.",
+    "angles": {
+     "trunk_from_vertical": 25,
+     "hip_flexion": 90,
+     "knee_flexion": 0,
+     "ankle_dorsiflexion": 25,
+     "shoulder_flexion_trunk_frame": 170,
+     "elbow_flexion": 0,
+     "hand_width": 1.1,
+     "neck": "neutral, head between arms"
+    },
+    "contacts": [
+     "both palms on floor ~1.0-1.2x shoulder width",
+     "both feet on floor (or elevated), hip width"
+    ],
+    "implement": "none; feet-elevated variant: toes on 50 cm box (trunk_from_vertical ~12, shoulder_flexion_trunk_frame 175)"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Bend elbows (flare ~45-60 deg), lower the crown of the head toward the floor in a forward-and-down arc between the hands.",
+     "duration_s": 1.8,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 30,
+      "hip_flexion": 95,
+      "elbow_flexion": 100,
+      "shoulder_flexion_trunk_frame": 120,
+      "neck": "neutral, head nears floor ahead of hands"
+     },
+     "contacts": [
+      "both palms on floor ~1.0-1.2x shoulder width",
+      "both feet on floor (or elevated), hip width"
+     ],
+     "implement_path": "none",
+     "notes": "head touches/hovers 3 cm above floor, forearms ~vertical"
+    },
+    {
+     "name": "ascent",
+     "description": "Press back up along the same path, hips stay high.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 25,
+      "hip_flexion": 90,
+      "elbow_flexion": 0,
+      "shoulder_flexion_trunk_frame": 170
+     },
+     "contacts": [
+      "both palms on floor ~1.0-1.2x shoulder width",
+      "both feet on floor (or elevated), hip width"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1",
+   "cues": [
+    "Hips high, like an upside-down V",
+    "Head travels between the hands",
+    "Elbows 45-60 deg",
+    "Press straight up"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drop into a regular push-up",
+     "visual": "body becomes a straight line, trunk nearly horizontal",
+     "fix": "walk feet in until hips high"
+    },
+    {
+     "mistake": "Head not forward",
+     "visual": "head goes straight down, hips push back; works like a squat",
+     "fix": "bring head slightly ahead of hands"
+    },
+    {
+     "mistake": "Flared elbows",
+     "visual": "T-shaped arms in front view",
+     "fix": "keep elbows within 60 deg"
+    }
+   ],
+   "safety": "Neck neutral; do not crash the head into the floor. Wrist/shoulder pain stops the set.",
+   "regression": "Wall/incline pike, hands on a box.",
+   "progression": "Feet-elevated pike, then wall-supported handstand push-up.",
+   "variants": [
+    {
+     "app_name": "Ayakları Yükseltilmiş Pike Şınav",
+     "difference": "feet on bench/box 40-60 cm; torso more vertical (trunk_from_vertical ~12), more shoulder load, longer vertical path"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "plank_to_push_up",
+   "app_names": [
+    "Plank to Push-Up"
+   ],
+   "names": {
+    "tr": "Plank'ten Şınava (Up-Down Plank)",
+    "en": "Plank to Push-Up (Up-Down Plank)",
+    "es": "Plancha a flexión (up-down plank)"
+   },
+   "category": "core",
+   "equipment": [
+    "bodyweight"
+   ],
+   "equipment_setup": "Start in forearm plank; press up one arm at a time to high plank, lower back down.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "triceps",
+    "anterior deltoid",
+    "rectus abdominis",
+    "transverse abdominis"
+   ],
+   "secondary_muscles": [
+    "pectoralis",
+    "serratus anterior",
+    "glutes",
+    "quadriceps"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows hip stability; front shows left/right alternation and hip sway"
+   },
+   "start_pose": {
+    "description": "Forearm plank: elbows under shoulders, forearms parallel (palms down), body straight; feet slightly wider than hips.",
+    "angles": {
+     "trunk_from_vertical": 85,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 90,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both forearms on floor",
+     "both feet on toes"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "press_up_lead_arm",
+     "description": "Place right palm where right elbow was, extend that arm, then the left; reach high plank.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 80,
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both palms on floor under shoulders (hands or forearms alternate)",
+      "both feet on floor wide ~1.2x hip width for stability"
+     ],
+     "implement_path": "none",
+     "notes": "hips stay level; no rocking > 2 cm"
+    },
+    {
+     "name": "lower_back_down",
+     "description": "Lower right forearm then left forearm back to elbow plank, same lead arm.",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 85,
+      "elbow_flexion": 90
+     },
+     "contacts": [
+      "both forearms",
+      "both feet"
+     ],
+     "implement_path": "none",
+     "notes": "alternate lead arm every rep"
+    }
+   ],
+   "rep_loop": "press_up_lead_arm -> lower_back_down -> (switch lead arm) repeat",
+   "tempo_default": "1.5-0-1.5",
+   "cues": [
+    "Squeeze glutes",
+    "Hips stay level",
+    "Same pace up and down",
+    "Switch lead arm each rep"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips swing side-to-side",
+     "visual": "pelvis rocks as arms alternate",
+     "fix": "widen feet, slow down"
+    },
+    {
+     "mistake": "Hips pike when pressing up",
+     "visual": "butt rises into inverted V",
+     "fix": "brace abs"
+    },
+    {
+     "mistake": "Sagging lower back",
+     "visual": "pelvis below line",
+     "fix": "tuck pelvis, glutes tight"
+    }
+   ],
+   "safety": "Wrists neutral; stop if shoulder pain. Keep neck neutral.",
+   "regression": "Knees-down version.",
+   "progression": "Add push-up at top, weighted vest, feet elevated.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "barbell_bench_press",
+   "app_names": [
+    "Bench Press",
+    "Paused Bench Press (3s)",
+    "Close Grip Bench Press"
+   ],
+   "names": {
+    "tr": "Bench Press",
+    "en": "Barbell Bench Press",
+    "es": "Press de banca con barra"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "barbell",
+    "flat bench",
+    "rack"
+   ],
+   "equipment_setup": "Flat bench, bar in rack above eyes. Lie with eyes under bar, shoulder blades retracted/depressed, slight lumbar arch, feet flat. Grip ~1.5x shoulder width (forearms vertical at bottom).",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "pectoralis major (sternal)",
+    "anterior deltoid",
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "lats (stability)"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows bar path (slight J-curve), elbow angle and forearm verticality; front_3q shows elbow flare"
+   },
+   "start_pose": {
+    "description": "Bar held locked out directly above the shoulders (over mid-chest-upper chest), arms vertical, scapulae pinned to bench, small natural lumbar arch, feet flat and driven back.",
+    "angles": {
+     "bench_angle_deg": 0,
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "grip_width": 1.5,
+     "elbow_flare_from_torso": 0,
+     "wrist": "neutral, bar low in palm, stacked over forearm"
+    },
+    "contacts": [
+     "upper back/glutes/head on bench",
+     "both feet flat on floor, knees ~90-100 deg, heels under knees",
+     "both hands on bar"
+    ],
+    "implement": "bar directly above shoulder joints, ~100-110 cm above floor"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower bar under control to lower sternum/nipple line, elbows ~45-60 deg from torso, forearms vertical.",
+     "duration_s": 2.0,
+     "breathing": "inhale and brace",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 50,
+      "elbow_flexion": 95,
+      "elbow_flare_from_torso": 50,
+      "shoulder_horizontal_abduction": 60
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor, knees ~90-100 deg, heels under knees",
+      "both hands on bar"
+     ],
+     "implement_path": "bar travels down and slightly toward the feet in a shallow J path, touches chest ~ at the lower sternum",
+     "notes": "bar touches lightly, no bounce"
+    },
+    {
+     "name": "bottom_pause",
+     "description": "Bar touches chest, brief stop (competition pause up to 1-3 s in Paused variant).",
+     "duration_s": 0.5,
+     "breathing": "hold breath",
+     "end_angles": {
+      "elbow_flexion": 95
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor, knees ~90-100 deg, heels under knees",
+      "both hands on bar"
+     ],
+     "implement_path": "bar on chest",
+     "notes": "Paused variant: 3 s on chest, no relaxation"
+    },
+    {
+     "name": "ascent",
+     "description": "Press up and slightly back over the shoulders, driving feet into floor, elbows extend.",
+     "duration_s": 1.2,
+     "breathing": "exhale after the sticking point",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0,
+      "elbow_flare_from_torso": 0
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor, knees ~90-100 deg, heels under knees",
+      "both hands on bar"
+     ],
+     "implement_path": "bar returns to the start line above shoulders",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> bottom_pause -> ascent (repeat)",
+   "tempo_default": "2-0.5-1",
+   "cues": [
+    "Pin shoulder blades together",
+    "Feet planted, leg drive",
+    "Bar to lower chest",
+    "Forearms vertical",
+    "Press the bar back over the shoulders"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bouncing bar off the chest",
+     "visual": "bar rebounds without a pause, chest visibly compressed",
+     "fix": "control the descent and touch lightly"
+    },
+    {
+     "mistake": "Elbows flare to 90 deg",
+     "visual": "upper arms perpendicular to torso, T-shape",
+     "fix": "tuck to ~45-60 deg"
+    },
+    {
+     "mistake": "Hips lift off bench",
+     "visual": "butt rises above bench during ascent",
+     "fix": "keep glutes on bench, feet planted"
+    }
+   ],
+   "safety": "Use a spotter or safeties; do not use a thumbless grip. Lock the bar into the rack only with safe bar height.",
+   "regression": "Dumbbell bench press, push-ups.",
+   "progression": "Paused reps, pin presses, heavier loading.",
+   "variants": [
+    {
+     "app_name": "Paused Bench Press (3s)",
+     "difference": "3 s stop on the chest, then press; same geometry"
+    },
+    {
+     "app_name": "Close Grip Bench Press",
+     "difference": "grip ~0.8-1.0x shoulder width, elbows tucked 30-40 deg, bar to lower chest, more triceps"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "dumbbell_bench_press",
+   "app_names": [
+    "Dumbbell Bench Press"
+   ],
+   "names": {
+    "tr": "Dumbbell Bench Press",
+    "en": "Dumbbell Bench Press",
+    "es": "Press de banca con mancuernas"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "dumbbells",
+    "flat bench"
+   ],
+   "equipment_setup": "Sit with dumbbells on thighs, kick back to lie, press to start. Scapulae retracted, feet flat.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "pectoralis major",
+    "anterior deltoid",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "biceps (stabilizing)"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front_3q shows both dumbbell paths and elbow angle; side shows depth"
+   },
+   "start_pose": {
+    "description": "Dumbbells held over the shoulders, arms vertical, palms facing the feet (or neutral), dumbbells almost touching.",
+    "angles": {
+     "bench_angle_deg": 0,
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "hand_separation_m": 0.45
+    },
+    "contacts": [
+     "upper back/glutes/head on bench",
+     "both feet flat on floor",
+     "both hands holding dumbbells"
+    ],
+    "implement": "dumbbells over mid-chest, palms toward feet"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower dumbbells to chest sides, elbows ~60 deg from torso, forearms vertical; deeper than barbell allows (elbows slightly below bench line).",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 45,
+      "elbow_flexion": 95,
+      "elbow_flare_from_torso": 55,
+      "hand_separation_m": 0.7
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands holding dumbbells"
+     ],
+     "implement_path": "dumbbells travel down and outward in a small arc, ending beside lower chest",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Press up and slightly inward until dumbbells nearly meet over the chest.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0,
+      "hand_separation_m": 0.45
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands holding dumbbells"
+     ],
+     "implement_path": "arc back to over-shoulder, dumbbells do not clank",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1",
+   "cues": [
+    "Wrists stacked over elbows",
+    "Bring bells together over chest",
+    "Control the stretch",
+    "Feet planted"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Dumbbells drift wide / forearms angle",
+     "visual": "dumbbells over-spread, forearms tilt outward",
+     "fix": "keep forearms vertical"
+    },
+    {
+     "mistake": "Elbows flare to 90 deg",
+     "visual": "upper arm perpendicular to torso",
+     "fix": "tuck ~60 deg"
+    },
+    {
+     "mistake": "Uneven press",
+     "visual": "one dumbbell rises faster, shoulders tilt",
+     "fix": "reduce load, match speed"
+    }
+   ],
+   "safety": "Get dumbbells into position safely; drop to sides only if failing (never over the face).",
+   "regression": "Machine press / push-up.",
+   "progression": "Neutral-grip, tempo, incline.",
+   "variants": [],
+   "sources": [
+    "https://exrx.net/WeightExercises/PectoralSternal/DBBenchPress.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "incline_press",
+   "app_names": [
+    "Incline Barbell Press",
+    "Incline Dumbbell Press"
+   ],
+   "names": {
+    "tr": "Incline Press",
+    "en": "Incline Bench Press",
+    "es": "Press inclinado"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "barbell or dumbbells",
+    "incline bench 30 deg"
+   ],
+   "equipment_setup": "Bench set at 30 deg (15-45 range). Feet flat, scapulae retracted; barbell grip ~1.3-1.5x shoulder width or dumbbells at shoulders.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "pectoralis major (clavicular)",
+    "anterior deltoid",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows bench incline and press path"
+   },
+   "start_pose": {
+    "description": "Bench at 30 deg; implement locked out over the upper chest/shoulders, arms perpendicular to the floor.",
+    "angles": {
+     "bench_angle_deg": 30,
+     "trunk_from_vertical": 60,
+     "hip_flexion": 120,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 120,
+     "elbow_flexion": 0,
+     "grip_width": 1.4
+    },
+    "contacts": [
+     "upper back/glutes against inclined bench",
+     "both feet flat on floor",
+     "both hands on implement"
+    ],
+    "implement": "bar/dumbbells directly above shoulders, vertical forearms"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower to upper chest (collarbone-nipple region) with elbows ~60 deg from torso.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 80,
+      "elbow_flexion": 95,
+      "elbow_flare_from_torso": 55
+     },
+     "contacts": [
+      "upper back/glutes against inclined bench",
+      "both feet flat on floor",
+      "both hands on implement"
+     ],
+     "implement_path": "vertical-ish line; barbell touches upper chest, dumbbells beside upper chest",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Press up (slightly back) until elbows extend.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 120,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "upper back/glutes against inclined bench",
+      "both feet flat on floor",
+      "both hands on implement"
+     ],
+     "implement_path": "returns over shoulders",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1",
+   "cues": [
+    "Shoulder blades pinned",
+    "Press up over the shoulders",
+    "Elbows 45-60 deg",
+    "Do not overarch"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bench too steep (>50 deg)",
+     "visual": "press becomes shoulder press, bar to the neck",
+     "fix": "use 30 deg"
+    },
+    {
+     "mistake": "Hips lift",
+     "visual": "butt rises off the bench",
+     "fix": "stay planted"
+    },
+    {
+     "mistake": "Bar to the neck",
+     "visual": "bar lowers toward throat",
+     "fix": "touch upper chest"
+    }
+   ],
+   "safety": "Use a spotter for barbell; keep wrists neutral.",
+   "regression": "Machine press, flat DB press.",
+   "progression": "Heavier loading, paused reps.",
+   "variants": [
+    {
+     "app_name": "Incline Barbell Press",
+     "difference": "barbell, grip 1.4x shoulder width, bar over upper chest, rack required"
+    },
+    {
+     "app_name": "Incline Dumbbell Press",
+     "difference": "dumbbells start at shoulder, move in a slight arc to meet above the shoulders"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/PectoralClavicular/BBInclineBenchPress.html",
+    "https://exrx.net/WeightExercises/PectoralClavicular/DBInclinePress.html"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "dumbbell_floor_press",
+   "app_names": [
+    "Dumbbell Floor Press",
+    "Dumbbell Floor Press (nötr tutuş)",
+    "Dar Tutuş Dumbbell Floor Press"
+   ],
+   "names": {
+    "tr": "Dumbbell Floor Press",
+    "en": "Dumbbell Floor Press",
+    "es": "Press de suelo con mancuernas"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "dumbbells",
+    "floor"
+   ],
+   "equipment_setup": "Lie on floor, knees bent, dumbbells in hands over the chest; floor limits elbow depth.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "triceps",
+    "pectoralis major",
+    "anterior deltoid"
+   ],
+   "secondary_muscles": [
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front_3q shows elbows resting on floor at the bottom"
+   },
+   "start_pose": {
+    "description": "Dumbbells locked above the chest, arms vertical, palms facing feet (pronated) or each other (neutral).",
+    "angles": {
+     "bench_angle_deg": 0,
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "hand_separation_m": 0.45
+    },
+    "contacts": [
+     "upper back/glutes/head on floor",
+     "both feet flat on floor, knees ~90 deg (or legs extended)",
+     "both hands on dumbbells"
+    ],
+    "implement": "dumbbells above mid-chest"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lower until the back of the upper arms touches the floor (elbows ~45 deg from torso, upper arms resting on the floor); forearms vertical.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 45,
+      "elbow_flexion": 90,
+      "elbow_flare_from_torso": 45,
+      "hand_separation_m": 0.55
+     },
+     "contacts": [
+      "upper back/glutes/head on floor",
+      "both feet flat on floor, knees ~90 deg (or legs extended)",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "dumbbells end beside the chest, upper arms resting on floor",
+     "notes": ""
+    },
+    {
+     "name": "ascent",
+     "description": "Pause 1 s on the floor (no bounce), then press up until arms lock.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0,
+      "hand_separation_m": 0.45
+     },
+     "contacts": [
+      "upper back/glutes/head on floor",
+      "both feet flat on floor, knees ~90 deg (or legs extended)",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "over mid-chest",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> floor_touch_pause -> ascent (repeat)",
+   "tempo_default": "2-1-1",
+   "cues": [
+    "Elbows touch the floor lightly",
+    "Stop, don't bounce",
+    "Wrists straight",
+    "Press up over chest"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bouncing elbows off floor",
+     "visual": "upper arm slams onto floor, rebounds",
+     "fix": "control, pause 1 s"
+    },
+    {
+     "mistake": "Flared elbows 90 deg",
+     "visual": "T shape",
+     "fix": "tuck 45 deg"
+    },
+    {
+     "mistake": "Arched lower back",
+     "visual": "gap under back",
+     "fix": "feet flat, knees bent"
+    }
+   ],
+   "safety": "Floor protects shoulder range; use reasonable loads when setting dumbbells.",
+   "regression": "Lighter dumbbells.",
+   "progression": "Single-arm floor press, heavier loads.",
+   "variants": [
+    {
+     "app_name": "Dumbbell Floor Press (nötr tutuş)",
+     "difference": "palms face each other (neutral), elbows tucked 30-45 deg"
+    },
+    {
+     "app_name": "Dar Tutuş Dumbbell Floor Press",
+     "difference": "dumbbells touching each other, elbows tucked ~20-30 deg, triceps emphasis"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "machine_chest_press",
+   "app_names": [
+    "Machine Chest Press"
+   ],
+   "names": {
+    "tr": "Makine Göğüs Press",
+    "en": "Machine Chest Press",
+    "es": "Press de pecho en máquina"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "chest press machine (seated lever)"
+   ],
+   "equipment_setup": "Adjust seat so handles align with mid-chest (low pec/nipple line). Back flat against pad, feet on floor, shoulder blades retracted.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "pectoralis major",
+    "anterior deltoid",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows seat/handle height and horizontal press path"
+   },
+   "start_pose": {
+    "description": "Seated upright (back pad ~100 deg), hands on handles at mid-chest, elbows bent ~90 deg with upper arms ~45 deg from torso, forearms horizontal.",
+    "angles": {
+     "trunk_from_vertical": 8,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 65,
+     "elbow_flexion": 90,
+     "grip": "pronated or neutral, wrists neutral"
+    },
+    "contacts": [
+     "back and head against seat pad",
+     "both feet flat on floor/footrest",
+     "both hands on handles"
+    ],
+    "implement": "handles at mid-chest height (~35 cm above seat), ~10 cm in front of chest"
+   },
+   "phases": [
+    {
+     "name": "press",
+     "description": "Push handles forward horizontally until arms nearly straight, shoulders stay down.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 10,
+      "elbow_flare_from_torso": 0
+     },
+     "contacts": [
+      "back and head against seat pad",
+      "both feet flat on floor/footrest",
+      "both hands on handles"
+     ],
+     "implement_path": "handles move ~35 cm forward in a horizontal line at chest height (converging machines arc inward)",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Slowly return, elbows to 90 deg.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 65,
+      "elbow_flexion": 90,
+      "elbow_flare_from_torso": 45
+     },
+     "contacts": [
+      "back and head against seat pad",
+      "both feet flat on floor/footrest",
+      "both hands on handles"
+     ],
+     "implement_path": "reverse path, stop before weight stack touches",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press -> return (repeat)",
+   "tempo_default": "1.5-0-2",
+   "cues": [
+    "Back against the pad",
+    "Handles at mid-chest",
+    "Press, do not shrug",
+    "Controlled return"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Back arches off the pad",
+     "visual": "lower back leaves pad, chest lifts toward the handles",
+     "fix": "lower weight, keep back on pad"
+    },
+    {
+     "mistake": "Shoulders shrug",
+     "visual": "shoulders ride toward ears",
+     "fix": "depress scapulae"
+    },
+    {
+     "mistake": "Slamming stack",
+     "visual": "weights bounce at the bottom",
+     "fix": "stop short of rest"
+    }
+   ],
+   "safety": "Set seat height first; avoid locking elbows hard.",
+   "regression": "Lighter load.",
+   "progression": "Higher load, tempo.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "cable_fly",
+   "app_names": [
+    "Cable Crossover",
+    "Cable Crossover (Dropset)",
+    "Cable Flyes"
+   ],
+   "names": {
+    "tr": "Kablo Fly / Crossover",
+    "en": "Cable Fly (Crossover)",
+    "es": "Aperturas con cable / cruce de poleas"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "cable crossover (dual pulleys)",
+    "D-handles"
+   ],
+   "equipment_setup": "Pulleys set high (crossover, high-to-low) or at chest/low. Step forward in the center, staggered stance, hinge slightly forward, handles at sides.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "pectoralis major"
+   ],
+   "secondary_muscles": [
+    "anterior deltoid",
+    "serratus anterior",
+    "biceps"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows the arc of both hands converging; side shows the slight forward lean and fixed elbow angle"
+   },
+   "start_pose": {
+    "description": "Staggered stance (front foot forward), torso leans ~20 deg forward, arms out wide and slightly below shoulder height with elbows bent ~15-20 deg, handles behind the body line.",
+    "angles": {
+     "trunk_from_vertical": 20,
+     "hip_flexion": 20,
+     "knee_flexion": 15,
+     "shoulder_horizontal_abduction": 85,
+     "shoulder_abduction": 60,
+     "elbow_flexion": 18,
+     "stance_width": 0.5,
+     "stagger_cm": 40
+    },
+    "contacts": [
+     "both feet planted staggered (one foot forward)",
+     "both hands on cable handles"
+    ],
+    "implement": "handles at hip/shoulder height depending on pulley, cable angled down-and-back"
+   },
+   "phases": [
+    {
+     "name": "fly_in",
+     "description": "Bring hands in an arc down and forward to meet in front of the lower chest, elbows fixed at ~15-20 deg, squeeze.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_horizontal_abduction": 0,
+      "shoulder_flexion": 40,
+      "elbow_flexion": 18,
+      "trunk_from_vertical": 20
+     },
+     "contacts": [
+      "both feet planted staggered (one foot forward)",
+      "both hands on cable handles"
+     ],
+     "implement_path": "high pulleys: arc from shoulder height down to belly-button/lower chest line; hands meet or cross 5-10 cm",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Open the arms back along the same arc until a stretch across the chest.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_horizontal_abduction": 85,
+      "shoulder_abduction": 60,
+      "elbow_flexion": 18
+     },
+     "contacts": [
+      "both feet planted staggered (one foot forward)",
+      "both hands on cable handles"
+     ],
+     "implement_path": "reverse arc, hands end level with shoulders-chest",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "fly_in -> hold_1s -> return (repeat)",
+   "tempo_default": "1.5-1-2",
+   "cues": [
+    "Soft, fixed elbows",
+    "Hug a big tree",
+    "Squeeze at the center",
+    "Chest up, shoulders down"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Turning it into a press",
+     "visual": "elbows bend 90 deg and extend, hands push forward",
+     "fix": "fix elbow angle at ~15-20 deg"
+    },
+    {
+     "mistake": "Overstretching",
+     "visual": "hands pass far behind the torso, shoulders roll forward",
+     "fix": "stop at chest line"
+    },
+    {
+     "mistake": "Swinging with the torso",
+     "visual": "trunk rocks back and forth",
+     "fix": "stagger stance, brace"
+    }
+   ],
+   "safety": "Do not overload the shoulder at the stretch; stay in a pain-free range.",
+   "regression": "Pec deck / light dumbbell fly.",
+   "progression": "Single-arm cable fly, tempo, dropset.",
+   "variants": [
+    {
+     "app_name": "Cable Crossover (Dropset)",
+     "difference": "same movement; weight reduced after failure without rest"
+    },
+    {
+     "app_name": "Cable Flyes",
+     "difference": "pulleys at chest or low height; low-to-high path goes up instead of down"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "barbell_overhead_press",
+   "app_names": [
+    "OHP"
+   ],
+   "names": {
+    "tr": "Overhead Press (OHP)",
+    "en": "Barbell Overhead Press",
+    "es": "Press militar con barra"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "barbell",
+    "rack"
+   ],
+   "equipment_setup": "Bar at collar-bone height in rack; grip just outside shoulders, elbows slightly in front of the bar.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "anterior deltoid",
+    "triceps",
+    "lateral deltoid"
+   ],
+   "secondary_muscles": [
+    "upper trapezius",
+    "serratus anterior",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows bar path around the face and torso lean; front shows symmetry"
+   },
+   "start_pose": {
+    "description": "Standing, feet hip width, glutes tight. Bar rests on front delts/clavicle, forearms vertical, elbows slightly in front of bar, wrists neutral.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 80,
+     "elbow_flexion": 140,
+     "grip_width": 1.1,
+     "stance_width": 1.0
+    },
+    "contacts": [
+     "both feet flat on floor, hip width, glutes squeezed",
+     "both hands on bar"
+    ],
+    "implement": "bar at clavicle height, ~5 cm from throat"
+   },
+   "phases": [
+    {
+     "name": "press",
+     "description": "Tilt head back slightly, press bar straight up, moving head forward through the arms once the bar passes the forehead; lock out over mid-foot.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -3,
+      "shoulder_flexion": 170,
+      "elbow_flexion": 0,
+      "neck": "head pushed slightly through the window at lockout"
+     },
+     "contacts": [
+      "both feet flat on floor, hip width, glutes squeezed",
+      "both hands on bar"
+     ],
+     "implement_path": "bar travels in a nearly vertical line, slightly back around the face, ends over the shoulders/mid-foot",
+     "notes": "ears roughly between the biceps at lockout"
+    },
+    {
+     "name": "lower",
+     "description": "Lower bar back to the clavicle under control, moving head back.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "shoulder_flexion": 80,
+      "elbow_flexion": 140
+     },
+     "contacts": [
+      "both feet flat on floor, hip width, glutes squeezed",
+      "both hands on bar"
+     ],
+     "implement_path": "bar returns to the clavicle",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press -> lower (repeat)",
+   "tempo_default": "1.5-0-2",
+   "cues": [
+    "Glutes tight, ribs down",
+    "Bar close to the face",
+    "Head through at the top",
+    "Lock out over the mid-foot"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Excessive lumbar lean-back",
+     "visual": "trunk leans back >15 deg, ribs flare",
+     "fix": "squeeze glutes, tuck ribs"
+    },
+    {
+     "mistake": "Bar loops forward",
+     "visual": "bar path curves away from the body",
+     "fix": "keep it close to the face"
+    },
+    {
+     "mistake": "Elbows too wide",
+     "visual": "T-shape in front view",
+     "fix": "elbows slightly forward, ~30 deg"
+    }
+   ],
+   "safety": "Strict press only with controlled loads; avoid overarching the spine.",
+   "regression": "Dumbbell press.",
+   "progression": "Push press, heavier load.",
+   "variants": [],
+   "sources": [
+    "https://exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "dumbbell_shoulder_press",
+   "app_names": [
+    "Dumbbell Shoulder Press",
+    "Shoulder Press"
+   ],
+   "names": {
+    "tr": "Dumbbell Omuz Press",
+    "en": "Dumbbell Shoulder Press",
+    "es": "Press de hombros con mancuernas"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "dumbbells",
+    "bench with back support (optional)"
+   ],
+   "equipment_setup": "Seated with a bench back at 80-90 deg (or standing); dumbbells at shoulder height, palms forward, elbows slightly in front of the frontal plane.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "anterior deltoid",
+    "lateral deltoid",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "upper trapezius",
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows symmetry and dumbbell path; side shows elbow plane"
+   },
+   "start_pose": {
+    "description": "Seated upright, dumbbells at ear/shoulder level, elbows ~90 deg, upper arms ~70 deg abduction angled slightly forward (scapular plane ~30 deg).",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_abduction": 75,
+     "shoulder_horizontal_abduction": 60,
+     "elbow_flexion": 90,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat on floor",
+     "back supported by bench (seated) or standing",
+     "both hands on dumbbells"
+    ],
+    "implement": "dumbbells beside the ears, forearms vertical"
+   },
+   "phases": [
+    {
+     "name": "press",
+     "description": "Press up and slightly inward until arms are nearly straight; dumbbells almost touch over the head.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_abduction": 170,
+      "elbow_flexion": 5,
+      "trunk_from_vertical": 0,
+      "hand_separation_m": 0.3
+     },
+     "contacts": [
+      "both feet flat on floor",
+      "back supported by bench (seated) or standing",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "dumbbells travel in a vertical arc, converging to ~30 cm apart overhead",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower in control to ear level.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_abduction": 75,
+      "elbow_flexion": 90,
+      "hand_separation_m": 0.55
+     },
+     "contacts": [
+      "both feet flat on floor",
+      "back supported by bench (seated) or standing",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "reverse arc to ear height",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press -> lower (repeat)",
+   "tempo_default": "1.5-0-2",
+   "cues": [
+    "Back against the pad",
+    "Ribs down",
+    "Press up and slightly in",
+    "Elbows below wrists at the bottom"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Excessive arching",
+     "visual": "lower back lifts off the pad, ribs flare",
+     "fix": "lighter weight, brace"
+    },
+    {
+     "mistake": "Shrugged shoulders",
+     "visual": "shoulders reach ears at the top",
+     "fix": "depress scapulae"
+    },
+    {
+     "mistake": "Partial range",
+     "visual": "elbows stop above 90 deg",
+     "fix": "lower to ear level"
+    }
+   ],
+   "safety": "Do not force pain-free range; keep neutral neck.",
+   "regression": "Lighter weights, seated with back support.",
+   "progression": "Standing, single-arm, push press.",
+   "variants": [
+    {
+     "app_name": "Shoulder Press",
+     "difference": "generic app name; shown as dumbbell version, standing or seated"
+    },
+    {
+     "app_name": "Dumbbell Shoulder Press",
+     "difference": "as described"
+    }
+   ],
+   "sources": [
+    "https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress.html",
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "arnold_press",
+   "app_names": [
+    "Arnold Press"
+   ],
+   "names": {
+    "tr": "Arnold Press",
+    "en": "Arnold Press",
+    "es": "Press Arnold"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "dumbbells",
+    "seat with back support"
+   ],
+   "equipment_setup": "Seated upright, dumbbells in front of the chest palms facing you (supinated), elbows in front.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "anterior deltoid",
+    "lateral deltoid"
+   ],
+   "secondary_muscles": [
+    "triceps",
+    "upper trapezius"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows the rotation of the palms from facing in to facing forward"
+   },
+   "start_pose": {
+    "description": "Seated, upper arms ~45 deg flexed forward, elbows ~130 deg bent, palms facing the face, dumbbells at chin/upper chest.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 90,
+     "shoulder_flexion": 60,
+     "shoulder_horizontal_abduction": 20,
+     "shoulder_external_rotation": -60,
+     "elbow_flexion": 120,
+     "forearm": "supinated"
+    },
+    "contacts": [
+     "both feet flat on floor",
+     "back supported by bench (seated) or standing",
+     "both hands on dumbbells"
+    ],
+    "implement": "dumbbells in front of the face, palms toward the face"
+   },
+   "phases": [
+    {
+     "name": "rotate_and_press",
+     "description": "Press upward while rotating palms outward from facing you to facing forward; elbows swing out to the sides as the dumbbells pass the face.",
+     "duration_s": 1.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 160,
+      "shoulder_abduction": 150,
+      "shoulder_external_rotation": 50,
+      "elbow_flexion": 5,
+      "forearm": "pronated at top"
+     },
+     "contacts": [
+      "both feet flat on floor",
+      "back supported by bench (seated) or standing",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "dumbbells rise in an arc out and up, palms forward at top",
+     "notes": ""
+    },
+    {
+     "name": "lower_and_rotate",
+     "description": "Reverse: lower while rotating palms back toward the face.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 60,
+      "shoulder_horizontal_abduction": 20,
+      "elbow_flexion": 120,
+      "forearm": "supinated"
+     },
+     "contacts": [
+      "both feet flat on floor",
+      "back supported by bench (seated) or standing",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "reverse arc",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "rotate_and_press -> lower_and_rotate (repeat)",
+   "tempo_default": "1.8-0-2",
+   "cues": [
+    "Rotate smoothly",
+    "Start with palms toward you",
+    "Do not arch",
+    "Control the way down"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Jerky rotation",
+     "visual": "palms flip abruptly mid-press",
+     "fix": "slow rotation across the whole range"
+    },
+    {
+     "mistake": "Arching",
+     "visual": "ribs flare, back off pad",
+     "fix": "lighter weight, brace"
+    },
+    {
+     "mistake": "Short range",
+     "visual": "dumbbells stop at nose",
+     "fix": "lower to chin level"
+    }
+   ],
+   "safety": "Shoulder rotation; reduce weight if the shoulder pinches.",
+   "regression": "Dumbbell shoulder press.",
+   "progression": "Standing, heavier.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "landmine_press",
+   "app_names": [
+    "Landmine Press"
+   ],
+   "names": {
+    "tr": "Landmine Press",
+    "en": "Landmine Press",
+    "es": "Press landmine"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "barbell",
+    "landmine anchor / corner",
+    "plates (optional)"
+   ],
+   "equipment_setup": "Barbell end anchored in a corner or landmine post. Hold the free end at the shoulder, staggered stance, slight forward lean.",
+   "body_orientation": "half_kneeling",
+   "primary_muscles": [
+    "anterior deltoid",
+    "upper pectoralis",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "core",
+    "glutes"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the diagonal press arc and the slight lean"
+   },
+   "start_pose": {
+    "description": "Standing in a split (or half-kneeling) stance, torso leaning ~10 deg forward, bar end at front of the shoulder, elbow bent ~100 deg and tucked ~45 deg.",
+    "angles": {
+     "trunk_from_vertical": 10,
+     "hip_flexion": 10,
+     "knee_flexion": 15,
+     "shoulder_flexion": 60,
+     "elbow_flexion": 105,
+     "stance_width": 0.5,
+     "stagger_cm": 50
+    },
+    "contacts": [
+     "staggered or split stance, both feet flat",
+     "working hand holds bar end at shoulder (single arm) or both hands cupping"
+    ],
+    "implement": "bar end at shoulder height, bar angled ~40 deg up from the anchor"
+   },
+   "phases": [
+    {
+     "name": "press",
+     "description": "Press the bar end up and forward along the arc until the arm is straight, shoulder blade protracted.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 15,
+      "shoulder_flexion": 125,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "staggered or split stance, both feet flat",
+      "working hand holds bar end at shoulder (single arm) or both hands cupping"
+     ],
+     "implement_path": "bar end rises ~35 cm and travels ~20 cm forward along the arc (about 40-45 deg line)",
+     "notes": ""
+    },
+    {
+     "name": "lower",
+     "description": "Lower back to the shoulder.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 10,
+      "shoulder_flexion": 60,
+      "elbow_flexion": 105
+     },
+     "contacts": [
+      "staggered or split stance, both feet flat",
+      "working hand holds bar end at shoulder (single arm) or both hands cupping"
+     ],
+     "implement_path": "reverse arc",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press -> lower (repeat), then switch arms",
+   "tempo_default": "1.5-0-2",
+   "cues": [
+    "Ribs down",
+    "Press up and forward",
+    "Do not twist the torso",
+    "Brace the glutes"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Torso rotates",
+     "visual": "shoulders turn toward the working side",
+     "fix": "square the shoulders to the front"
+    },
+    {
+     "mistake": "Leaning back",
+     "visual": "chest tips back",
+     "fix": "slight forward lean 10-15 deg"
+    },
+    {
+     "mistake": "Bar drifts sideways",
+     "visual": "bar end swings off the arc",
+     "fix": "keep it close to the body"
+    }
+   ],
+   "safety": "Anchor the bar securely.",
+   "regression": "Half-kneeling.",
+   "progression": "Two-hand press, standing.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "dumbbell_overhead_triceps_extension",
+   "app_names": [
+    "Dumbbell Overhead Triceps Extension",
+    "Overhead Triceps Extension"
+   ],
+   "names": {
+    "tr": "Dumbbell Overhead Triceps Extension",
+    "en": "Dumbbell Overhead Triceps Extension",
+    "es": "Extensión de tríceps sobre la cabeza con mancuerna"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "dumbbell"
+   ],
+   "equipment_setup": "Stand or sit upright, hold one dumbbell vertically with both hands cupping the top plate, arms overhead, elbows pointing forward.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "triceps brachii (long head)"
+   ],
+   "secondary_muscles": [
+    "anconeus",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the elbow hinge and upper arm vertical; front shows elbows staying narrow"
+   },
+   "start_pose": {
+    "description": "Standing tall, ribs down, dumbbell locked overhead above the shoulders, upper arms vertical beside the ears.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 175,
+     "elbow_flexion": 0,
+     "neck": "neutral"
+    },
+    "contacts": [
+     "both feet flat on floor, hip width",
+     "both hands holding one dumbbell (palms under the top plate, diamond)"
+    ],
+    "implement": "dumbbell vertical, directly over the head/neck"
+   },
+   "phases": [
+    {
+     "name": "lower",
+     "description": "Bend only the elbows, lower the dumbbell behind the head until forearms are ~parallel to the floor to slightly below (elbows ~110-125 deg bent).",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 170,
+      "elbow_flexion": 120,
+      "trunk_from_vertical": 0
+     },
+     "contacts": [
+      "both feet flat on floor, hip width",
+      "both hands holding one dumbbell (palms under the top plate, diamond)"
+     ],
+     "implement_path": "dumbbell travels down behind the head along a vertical line",
+     "notes": "upper arms fixed near vertical, elbows narrow ~1 shoulder width or less"
+    },
+    {
+     "name": "extend",
+     "description": "Straighten the elbows, pressing the dumbbell back overhead.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 175,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat on floor, hip width",
+      "both hands holding one dumbbell (palms under the top plate, diamond)"
+     ],
+     "implement_path": "dumbbell rises vertically",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "lower -> extend (repeat)",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Elbows pointing forward",
+    "Upper arms still",
+    "Ribs down, glutes tight",
+    "Full lockout"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows flare out",
+     "visual": "elbows drift to the sides like wings",
+     "fix": "keep elbows pointed at the ceiling/forward"
+    },
+    {
+     "mistake": "Lower back arches",
+     "visual": "trunk leans back, ribs flare",
+     "fix": "brace abs, ribs down"
+    },
+    {
+     "mistake": "Upper arms drift forward",
+     "visual": "arm tilts toward horizontal",
+     "fix": "hold upper arms vertical"
+    }
+   ],
+   "safety": "Control the dumbbell behind the head; use a spotter or seated version for heavy loads.",
+   "regression": "Lighter dumbbell; cable version.",
+   "progression": "Single-arm, heavier load, seated.",
+   "variants": [
+    {
+     "app_name": "Overhead Triceps Extension",
+     "difference": "generic name; shown as the dumbbell two-hand version"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "overhead_cable_triceps_extension",
+   "app_names": [
+    "Overhead Cable Extension"
+   ],
+   "names": {
+    "tr": "Overhead Kablo Triceps Extension",
+    "en": "Overhead Cable Triceps Extension",
+    "es": "Extensión de tríceps sobre la cabeza con polea"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "cable stack (low or mid pulley)",
+    "rope attachment"
+   ],
+   "equipment_setup": "Rope on a low/mid pulley behind the lifter. Face away from the stack, split stance, hold rope behind head with elbows bent.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "triceps brachii (long head)"
+   ],
+   "secondary_muscles": [
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the cable line and fixed upper arm"
+   },
+   "start_pose": {
+    "description": "Split stance, torso leaning slightly forward (~10 deg), upper arms near vertical-ish pointing forward-up, elbows bent ~120 deg with the rope behind the head, cable pulling backward.",
+    "angles": {
+     "trunk_from_vertical": 10,
+     "hip_flexion": 10,
+     "knee_flexion": 15,
+     "shoulder_flexion": 155,
+     "elbow_flexion": 125,
+     "stance_width": 0.5,
+     "stagger_cm": 45
+    },
+    "contacts": [
+     "both feet in split stance (one forward), hip width",
+     "both hands holding rope/handle behind head"
+    ],
+    "implement": "rope handles beside the ears, cable pulls back/down toward the pulley behind"
+   },
+   "phases": [
+    {
+     "name": "extend",
+     "description": "Straighten the elbows and push the rope forward and up overhead, rope ends flare apart.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 165,
+      "elbow_flexion": 5,
+      "trunk_from_vertical": 10
+     },
+     "contacts": [
+      "both feet in split stance (one forward), hip width",
+      "both hands holding rope/handle behind head"
+     ],
+     "implement_path": "handles travel forward-up in an arc ending overhead (arms ~165 deg flexion)",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Bend elbows slowly back behind the head, feel the stretch.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 155,
+      "elbow_flexion": 125
+     },
+     "contacts": [
+      "both feet in split stance (one forward), hip width",
+      "both hands holding rope/handle behind head"
+     ],
+     "implement_path": "reverse path, cable resists pulling the rope back",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "extend -> return (repeat)",
+   "tempo_default": "1.5-0-2",
+   "cues": [
+    "Elbows high and forward",
+    "Upper arms steady",
+    "Brace the core",
+    "Full lockout"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows flare out",
+     "visual": "elbows point to the sides",
+     "fix": "narrow them"
+    },
+    {
+     "mistake": "Back arches",
+     "visual": "ribs flare, hyperextension",
+     "fix": "brace abs, slight forward lean"
+    },
+    {
+     "mistake": "Shoulders move",
+     "visual": "upper arms swing forward and back",
+     "fix": "fix upper arms"
+    }
+   ],
+   "safety": "Use a stable stance; avoid over-arching.",
+   "regression": "Dumbbell version or pushdown.",
+   "progression": "Heavier stack, single-arm.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "triceps_pushdown",
+   "app_names": [
+    "Triceps Pushdown",
+    "Rope Pushdown"
+   ],
+   "names": {
+    "tr": "Triceps Pushdown",
+    "en": "Triceps Pushdown",
+    "es": "Extensión de tríceps en polea (pushdown)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "cable stack (high pulley)",
+    "straight bar or rope"
+   ],
+   "equipment_setup": "High pulley, face the stack, stand close with a slight forward lean, upper arms pinned to the torso, elbows at the sides.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "anconeus",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the pinned elbow and bar path; front shows symmetry"
+   },
+   "start_pose": {
+    "description": "Standing 20-30 cm from the stack, trunk leaning ~10 deg forward, upper arms vertical at the sides, elbows bent ~90 deg, forearms horizontal, hands at lower-chest height.",
+    "angles": {
+     "trunk_from_vertical": 10,
+     "hip_flexion": 10,
+     "knee_flexion": 10,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 90,
+     "grip_width": 0.5
+    },
+    "contacts": [
+     "both feet planted hip width, knees soft",
+     "both hands on bar/rope at chest height"
+    ],
+    "implement": "bar/rope at lower-chest height, cable vertical from the pulley"
+   },
+   "phases": [
+    {
+     "name": "pushdown",
+     "description": "Extend the elbows, pushing the bar down to the thighs; for the rope, split the ends apart at the bottom.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": -5,
+      "elbow_flexion": 0,
+      "wrist": "neutral"
+     },
+     "contacts": [
+      "both feet planted hip width, knees soft",
+      "both hands on bar/rope at chest height"
+     ],
+     "implement_path": "bar travels down a vertical arc to the upper thighs (rope hands finish ~20 cm apart, palms slightly outward)",
+     "notes": "upper arms remain pinned"
+    },
+    {
+     "name": "return",
+     "description": "Let the bar rise with control until forearms ~horizontal; no higher.",
+     "duration_s": 1.8,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 0,
+      "elbow_flexion": 90
+     },
+     "contacts": [
+      "both feet planted hip width, knees soft",
+      "both hands on bar/rope at chest height"
+     ],
+     "implement_path": "reverse path to forearm-horizontal",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pushdown -> return (repeat)",
+   "tempo_default": "1.2-0.5-1.8",
+   "cues": [
+    "Pin the elbows to the sides",
+    "Full lockout",
+    "Do not lean over the weight",
+    "Rope: spread the ends"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows drift forward and flare",
+     "visual": "elbows swing away from the torso as the bar goes down",
+     "fix": "pin elbows to the sides"
+    },
+    {
+     "mistake": "Leaning body over the bar",
+     "visual": "trunk bends far forward to use bodyweight",
+     "fix": "lighter weight, upright torso"
+    },
+    {
+     "mistake": "Shrugged shoulders",
+     "visual": "shoulders rise",
+     "fix": "depress shoulders"
+    }
+   ],
+   "safety": "Use a stable stance; avoid heavy loads that let the torso swing.",
+   "regression": "Band pushdown.",
+   "progression": "Single-arm, reverse grip, rope.",
+   "variants": [
+    {
+     "app_name": "Rope Pushdown",
+     "difference": "rope attachment; hands finish ~20 cm apart, wrists rotate out at the bottom"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "skull_crusher",
+   "app_names": [
+    "Skull Crushers"
+   ],
+   "names": {
+    "tr": "Skull Crusher",
+    "en": "Skull Crusher (Lying Triceps Extension)",
+    "es": "Rompecráneos (extensión de tríceps tumbado)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "EZ-bar or dumbbells",
+    "flat bench"
+   ],
+   "equipment_setup": "Lie supine, EZ-bar held with narrow overhand grip over the eyes/chest, arms slightly tilted back (~10 deg behind vertical).",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "anconeus",
+    "anterior deltoid"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows upper arm angle and the bar path to the forehead"
+   },
+   "start_pose": {
+    "description": "Supine, bar over the upper chest/forehead, upper arms ~85-100 deg from trunk (slightly tilted behind vertical), elbows locked.",
+    "angles": {
+     "bench_angle_deg": 0,
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 80,
+     "elbow_flexion": 0,
+     "grip_width": 0.7
+    },
+    "contacts": [
+     "upper back/glutes/head on bench",
+     "both feet flat on floor",
+     "both hands on EZ-bar (narrow ~0.7x shoulder width) or dumbbells"
+    ],
+    "implement": "bar above the face/forehead, wrists neutral"
+   },
+   "phases": [
+    {
+     "name": "lower",
+     "description": "Bend only the elbows and lower the bar to just above the forehead (or behind the head), elbows ~110-120 deg flexed, upper arms fixed.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 80,
+      "elbow_flexion": 115
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands on EZ-bar (narrow ~0.7x shoulder width) or dumbbells"
+     ],
+     "implement_path": "bar travels in an arc toward the forehead/just behind it; elbows stay narrow",
+     "notes": "elbows point toward the ceiling"
+    },
+    {
+     "name": "extend",
+     "description": "Extend elbows to straight, bar returns over the upper chest.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 80,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands on EZ-bar (narrow ~0.7x shoulder width) or dumbbells"
+     ],
+     "implement_path": "bar rises vertically",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "lower -> extend (repeat)",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Elbows narrow, pointing up",
+    "Only the forearms move",
+    "Lower to forehead height",
+    "Smooth tempo"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Elbows flare wide",
+     "visual": "elbows spread to the sides",
+     "fix": "keep narrow"
+    },
+    {
+     "mistake": "Upper arms swing",
+     "visual": "arms move back and forth, bar swings",
+     "fix": "fix upper arms"
+    },
+    {
+     "mistake": "Hips lift/arched back",
+     "visual": "butt leaves the bench",
+     "fix": "feet planted, abs tight"
+    }
+   ],
+   "safety": "Control the bar near the face; use a spotter on heavy sets; keep wrists neutral.",
+   "regression": "Dumbbell or cable version, lighter bar.",
+   "progression": "Decline, JM press, heavier.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "jm_press",
+   "app_names": [
+    "JM Press"
+   ],
+   "names": {
+    "tr": "JM Press",
+    "en": "JM Press",
+    "es": "JM Press"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "barbell",
+    "flat bench",
+    "rack"
+   ],
+   "equipment_setup": "Flat bench, bar unracked, shoulder-width or slightly narrower grip (~0.8-1.0x shoulder width), elbows tucked, slight forward elbow position.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "anterior deltoid",
+    "pectoralis major"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the elbow-forward path and bar going to chin/neck"
+   },
+   "start_pose": {
+    "description": "Supine, bar locked out over the upper chest, arms vertical, elbows tucked ~30-45 deg, grip ~0.9x shoulder width.",
+    "angles": {
+     "bench_angle_deg": 0,
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "grip_width": 0.9,
+     "elbow_flare_from_torso": 35
+    },
+    "contacts": [
+     "upper back/glutes/head on bench",
+     "both feet flat on floor",
+     "both hands on bar (shoulder width or slightly narrower)"
+    ],
+    "implement": "bar over the shoulders/upper chest"
+   },
+   "phases": [
+    {
+     "name": "lower",
+     "description": "Bend the elbows and let them travel forward/down while lowering the bar toward the chin/throat; the upper arms stay near vertical to slightly back; wrists curl slightly at the bottom.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 75,
+      "elbow_flexion": 105,
+      "elbow_flare_from_torso": 40,
+      "wrist": "slight extension at bottom"
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands on bar (shoulder width or slightly narrower)"
+     ],
+     "implement_path": "bar travels in a curve toward the chin/throat (not the chest), stopping ~5-10 cm above the neck",
+     "notes": "hybrid of skull crusher and close-grip press"
+    },
+    {
+     "name": "press",
+     "description": "Extend elbows, pressing the bar up and slightly back over the shoulders.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "upper back/glutes/head on bench",
+      "both feet flat on floor",
+      "both hands on bar (shoulder width or slightly narrower)"
+     ],
+     "implement_path": "bar returns along the curved path to above the shoulders",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "lower -> press (repeat)",
+   "tempo_default": "2-0-1.2",
+   "cues": [
+    "Elbows tucked, pointing forward-up",
+    "Bar to chin, not the chest",
+    "Control the descent",
+    "Stay tight on the bench"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Lowering to the chest (turns into close-grip bench)",
+     "visual": "bar descends over the sternum with elbows tracking back",
+     "fix": "aim for the chin/throat, upper arms vertical"
+    },
+    {
+     "mistake": "Elbows flare wide",
+     "visual": "T shape in front view",
+     "fix": "keep them 30-45 deg"
+    },
+    {
+     "mistake": "Bar too close to the face",
+     "visual": "bar touches the chin",
+     "fix": "stop 5-10 cm above"
+    }
+   ],
+   "safety": "Advanced lift; use a spotter and safeties; control near the throat.",
+   "regression": "Skull crushers, close grip bench press.",
+   "progression": "Heavier, tempo, bands.",
+   "variants": [],
+   "sources": [
+    "https://catalystathletics.com/exercise/801/JM-Press/",
+    "https://elitefts.com/blogs/training/how-to-perform-the-jm-press-a-step-by-step-guide-from-the-inventor"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "bench_dip",
+   "app_names": [
+    "Triceps Dip"
+   ],
+   "names": {
+    "tr": "Bench Dip (Triceps Dip)",
+    "en": "Bench Dip (Triceps Dip)",
+    "es": "Fondos en banco (tríceps)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "bench or chair"
+   ],
+   "equipment_setup": "Hands on bench edge behind the hips, shoulder width apart, legs extended in front (heels on floor) or knees bent for an easier version.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "triceps brachii"
+   ],
+   "secondary_muscles": [
+    "anterior deltoid",
+    "pectoralis major (lower)"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows elbow bend and hip distance from the bench; front shows elbows tracking back, not out"
+   },
+   "start_pose": {
+    "description": "Arms straight, supporting body weight with hips just in front of the bench edge, torso upright (~5 deg lean), legs extended, heels on floor.",
+    "angles": {
+     "trunk_from_vertical": 5,
+     "hip_flexion": 80,
+     "knee_flexion": 5,
+     "shoulder_flexion": -45,
+     "elbow_flexion": 0,
+     "grip_width": 1.0,
+     "ankle_dorsiflexion": 0
+    },
+    "contacts": [
+     "both palms on bench edge behind the hips, fingers forward",
+     "both heels on floor (legs straight) or feet flat with knees 90 deg"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Bend the elbows to ~90 deg, hips slide down close to the bench, elbows point straight back.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 5,
+      "shoulder_flexion": -70,
+      "elbow_flexion": 90,
+      "hip_flexion": 80
+     },
+     "contacts": [
+      "both palms on bench edge behind the hips, fingers forward",
+      "both heels on floor (legs straight) or feet flat with knees 90 deg"
+     ],
+     "implement_path": "none",
+     "notes": "elbows point straight back, hips remain within 5 cm of the bench; limit depth to 90 deg elbow"
+    },
+    {
+     "name": "ascent",
+     "description": "Press down through the palms until arms are straight.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": -45,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both palms on bench edge behind the hips, fingers forward",
+      "both heels on floor (legs straight) or feet flat with knees 90 deg"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Elbows straight back",
+    "Shoulders down",
+    "Stay close to the bench",
+    "Only go to 90 deg"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drift away from the bench",
+     "visual": "body floats far in front, arms angled forward",
+     "fix": "keep hips close"
+    },
+    {
+     "mistake": "Elbows flare",
+     "visual": "elbows point sideways",
+     "fix": "elbows point backwards"
+    },
+    {
+     "mistake": "Shrugged shoulders / too deep",
+     "visual": "shoulders shoved toward ears or elbows past 100 deg",
+     "fix": "shoulders down, stop at 90 deg"
+    }
+   ],
+   "safety": "Shoulder-stressful at depth; do not go below 90 deg elbow; stop with front-shoulder pain.",
+   "regression": "Knees bent, feet closer to hips.",
+   "progression": "Feet on a bench, weighted, single leg raise.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "parallel_bar_dip",
+   "app_names": [
+    "Weighted Dips"
+   ],
+   "names": {
+    "tr": "Paralel Bar Dips (Ağırlıklı)",
+    "en": "Parallel Bar Dip (Weighted)",
+    "es": "Fondos en paralelas (con lastre)"
+   },
+   "category": "strength_push",
+   "equipment": [
+    "parallel bars",
+    "dip belt with plate"
+   ],
+   "equipment_setup": "Dip station, bars shoulder width (~1.2x). Plate hangs from belt. Jump or step to the support position.",
+   "body_orientation": "hanging",
+   "primary_muscles": [
+    "pectoralis major (lower)",
+    "triceps brachii",
+    "anterior deltoid"
+   ],
+   "secondary_muscles": [
+    "serratus anterior",
+    "lats"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the forward torso lean, elbow bend and depth; front shows elbows tracking"
+   },
+   "start_pose": {
+    "description": "Support position, arms locked, shoulders depressed, torso leaning ~20 deg forward (chest bias), legs bent behind, plate hanging.",
+    "angles": {
+     "trunk_from_vertical": 20,
+     "hip_flexion": 20,
+     "knee_flexion": 60,
+     "shoulder_flexion": 0,
+     "shoulder_extension_trunk_frame": 10,
+     "elbow_flexion": 0,
+     "grip_width": 1.2
+    },
+    "contacts": [
+     "both hands on parallel bars, neutral grip, supported at full arm extension",
+     "feet crossed behind, off the floor (hanging legs)"
+    ],
+    "implement": "plate hangs from belt between the legs"
+   },
+   "phases": [
+    {
+     "name": "descent",
+     "description": "Lean slightly forward, bend elbows, lower until the upper arms are parallel to the floor or the shoulders are just below elbows (elbows ~80-90 deg).",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 30,
+      "shoulder_extension_trunk_frame": 35,
+      "elbow_flexion": 90,
+      "elbow_flare_from_torso": 30
+     },
+     "contacts": [
+      "both hands on parallel bars, neutral grip, supported at full arm extension",
+      "feet crossed behind, off the floor (hanging legs)"
+     ],
+     "implement_path": "plate hangs, remains still",
+     "notes": "depth until upper arms parallel; avoid deep stretch"
+    },
+    {
+     "name": "ascent",
+     "description": "Press up powerfully, elbows extend, shoulders stay depressed.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 20,
+      "shoulder_extension_trunk_frame": 10,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both hands on parallel bars, neutral grip, supported at full arm extension",
+      "feet crossed behind, off the floor (hanging legs)"
+     ],
+     "implement_path": "plate hangs, no swinging",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "descent -> ascent (repeat)",
+   "tempo_default": "2-0-1.5",
+   "cues": [
+    "Chest up, slight forward lean",
+    "Shoulders down",
+    "Elbows slightly out",
+    "Do not swing"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Dropping too deep",
+     "visual": "shoulders sink well below elbows, shoulders roll forward",
+     "fix": "stop at upper arm parallel"
+    },
+    {
+     "mistake": "Swinging",
+     "visual": "body and plate swing front-back",
+     "fix": "control, pause at the top"
+    },
+    {
+     "mistake": "Shrugging",
+     "visual": "shoulders reach ears at the top",
+     "fix": "depress scapulae"
+    }
+   ],
+   "safety": "High shoulder stress; build up weight gradually, avoid maximum depth, stop with shoulder pain.",
+   "regression": "Assisted dips, bench dips.",
+   "progression": "More weight, slow tempo.",
+   "variants": [
+    {
+     "app_name": "Weighted Dips",
+     "difference": "belt + plate; same movement with forward lean"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "side_plank",
+   "app_names": [
+    "Side Plank"
+   ],
+   "names": {
+    "tr": "Yan Plank",
+    "en": "Side Plank",
+    "es": "Plancha lateral"
+   },
+   "category": "core",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "equipment_setup": "On a mat, lying on the side, elbow directly under the shoulder, forearm perpendicular to body, legs straight, feet stacked.",
+   "body_orientation": "side_lying",
+   "primary_muscles": [
+    "quadratus lumborum",
+    "obliques",
+    "gluteus medius"
+   ],
+   "secondary_muscles": [
+    "transverse abdominis",
+    "shoulder stabilizers"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "top",
+    "why": "front shows the straight lateral line and hip height; top shows the stacked shoulders/hips"
+   },
+   "start_pose": {
+    "description": "Lying on the right side, elbow at 90 deg under the shoulder, hips lifted so ears-shoulder-hip-knee-ankle are a straight line in the frontal plane, free arm on the hip or up.",
+    "angles": {
+     "trunk_from_vertical": 78,
+     "spine_lateral_flexion": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_abduction": 90,
+     "elbow_flexion": 90,
+     "neck": "neutral",
+     "feet": "stacked"
+    },
+    "contacts": [
+     "lower forearm on floor, elbow under shoulder",
+     "outside edge of bottom foot (feet stacked or one in front of the other) on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "lift_to_hold",
+     "description": "Lift the hips off the floor until the body forms a straight line, free arm on the hip or overhead.",
+     "duration_s": 1.5,
+     "breathing": "normal",
+     "end_angles": {
+      "spine_lateral_flexion": 0,
+      "trunk_from_vertical": 78,
+      "hip_adduction": 0
+     },
+     "contacts": [
+      "lower forearm on floor, elbow under shoulder",
+      "outside edge of bottom foot (feet stacked or one in front of the other) on floor"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "hold",
+     "description": "Hold position steady 20-40 s, breathe; lower hips slowly to finish.",
+     "duration_s": 25,
+     "breathing": "slow, steady breathing",
+     "end_angles": {
+      "spine_lateral_flexion": 0
+     },
+     "contacts": [
+      "lower forearm on floor, elbow under shoulder",
+      "outside edge of bottom foot (feet stacked or one in front of the other) on floor"
+     ],
+     "implement_path": "none",
+     "notes": "hips do not sag or rotate"
+    }
+   ],
+   "rep_loop": "lift_to_hold -> hold -> lower (repeat on opposite side)",
+   "tempo_default": "1.5-hold-1.5",
+   "cues": [
+    "Straight line ears to ankles",
+    "Elbow under shoulder",
+    "Hips high, glutes tight",
+    "Stack hips"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips sag toward floor",
+     "visual": "bottom hip drops, body forms a banana",
+     "fix": "press the forearm into the floor, lift"
+    },
+    {
+     "mistake": "Hips rotate forward/back",
+     "visual": "top hip leans forward/back",
+     "fix": "stack hips and shoulders"
+    },
+    {
+     "mistake": "Elbow too far from the shoulder",
+     "visual": "elbow ahead/behind the shoulder",
+     "fix": "place under the shoulder"
+    }
+   ],
+   "safety": "Stop if shoulder pain; keep neck neutral.",
+   "regression": "Bent-knee side plank.",
+   "progression": "Leg lift, hip dip, top-leg raise.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "bird_dog",
+   "app_names": [
+    "Bird Dog"
+   ],
+   "names": {
+    "tr": "Bird Dog",
+    "en": "Bird Dog",
+    "es": "Perro de caza (bird dog)"
+   },
+   "category": "core",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "equipment_setup": "On a mat in quadruped: hands under shoulders, knees under hips, spine neutral, gaze at the floor.",
+   "body_orientation": "quadruped",
+   "primary_muscles": [
+    "erector spinae",
+    "gluteus maximus",
+    "multifidus"
+   ],
+   "secondary_muscles": [
+    "transverse abdominis",
+    "rear deltoid",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "back_3q",
+    "why": "side shows the straight line from hand to heel and neutral spine; back_3q shows the pelvis staying square"
+   },
+   "start_pose": {
+    "description": "Quadruped, trunk horizontal, thighs vertical, arms vertical, neutral spine and neck.",
+    "angles": {
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "neck": "neutral",
+     "spine": "neutral"
+    },
+    "contacts": [
+     "both hands on floor",
+     "both knees on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "extend",
+     "description": "Simultaneously reach the right arm forward (biceps by the ear) and extend the left leg back until in line with the trunk; hips stay level.",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 90,
+      "shoulder_flexion_trunk_frame": 170,
+      "elbow_flexion": 0,
+      "hip_flexion_working_leg": -5,
+      "knee_flexion_working_leg": 0,
+      "pelvis_rotation": 0,
+      "neck": "neutral"
+     },
+     "contacts": [
+      "left hand on floor",
+      "right knee on floor"
+     ],
+     "implement_path": "none",
+     "notes": "extended limbs are horizontal, parallel to the floor; hold ~2 s"
+    },
+    {
+     "name": "hold",
+     "description": "Hold the extension steadily, no sway.",
+     "duration_s": 2.0,
+     "breathing": "hold",
+     "end_angles": {
+      "pelvis_rotation": 0
+     },
+     "contacts": [
+      "left hand on floor",
+      "right knee on floor"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Return limbs to the starting position under control, then repeat on the other side.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion_trunk_frame": 90,
+      "hip_flexion": 90,
+      "knee_flexion": 90
+     },
+     "contacts": [
+      "both hands on floor",
+      "both knees on floor"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "extend -> hold -> return -> (switch sides) repeat",
+   "tempo_default": "2-2-2",
+   "cues": [
+    "Back table-flat",
+    "Reach long, not high",
+    "Hips square to the floor",
+    "Slow and controlled"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Lower back arches / leg too high",
+     "visual": "leg rises above hip height, lumbar sags",
+     "fix": "raise to hip line only"
+    },
+    {
+     "mistake": "Hips rotate open",
+     "visual": "pelvis tilts sideways as the leg lifts",
+     "fix": "square the hips"
+    },
+    {
+     "mistake": "Trunk sways side-to-side",
+     "visual": "body shifts toward the support side",
+     "fix": "slow down, brace"
+    }
+   ],
+   "safety": "Neutral neck and spine; stop with back pain.",
+   "regression": "Move only the arm or leg.",
+   "progression": "Hold longer, add elbow-to-knee crunch, ankle weights.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "dead_bug",
+   "app_names": [
+    "Dead Bug"
+   ],
+   "names": {
+    "tr": "Dead Bug",
+    "en": "Dead Bug",
+    "es": "Bicho muerto (dead bug)"
+   },
+   "category": "core",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "equipment_setup": "Lie on the back, arms straight up over the shoulders, hips and knees at 90 deg (tabletop). Press the lower back into the floor.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "transverse abdominis",
+    "rectus abdominis"
+   ],
+   "secondary_muscles": [
+    "obliques",
+    "hip flexors",
+    "deep spinal stabilizers"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows lumbar contact and the extended limbs hovering; front_3q shows the contralateral pairing"
+   },
+   "start_pose": {
+    "description": "Supine, ribs down, lumbar pressed to floor, arms vertical over shoulders, hips 90 deg, knees 90 deg, shins parallel to floor.",
+    "angles": {
+     "trunk_from_vertical": 90,
+     "hip_flexion": 90,
+     "knee_flexion": 90,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "lumbar": "neutral to slightly flat",
+     "neck": "neutral"
+    },
+    "contacts": [
+     "lower back and sacrum in contact with the floor, head on floor"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "extend",
+     "description": "Lower the right arm overhead (toward the floor behind the head) and extend the left leg straight until both hover ~5-10 cm above the floor.",
+     "duration_s": 2.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "hip_flexion_working_leg": 15,
+      "knee_flexion_working_leg": 5,
+      "shoulder_flexion_working_arm": 170,
+      "elbow_flexion": 0,
+      "lumbar": "pressed flat, no arching"
+     },
+     "contacts": [
+      "lower back and sacrum in contact with the floor, head on floor"
+     ],
+     "implement_path": "none",
+     "notes": "opposite arm and leg; other limbs stay in tabletop"
+    },
+    {
+     "name": "return",
+     "description": "Bring both limbs back to the starting tabletop.",
+     "duration_s": 2.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 90,
+      "knee_flexion": 90,
+      "shoulder_flexion_trunk_frame": 90
+     },
+     "contacts": [
+      "lower back and sacrum in contact with the floor, head on floor"
+     ],
+     "implement_path": "none",
+     "notes": "alternate sides"
+    }
+   ],
+   "rep_loop": "extend -> return -> (switch sides) repeat",
+   "tempo_default": "2-0-2",
+   "cues": [
+    "Press the lower back into the floor",
+    "Opposite arm and leg",
+    "Slow",
+    "Ribs down"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Lower back arches",
+     "visual": "gap appears between the lumbar spine and the floor",
+     "fix": "reduce the range, brace"
+    },
+    {
+     "mistake": "Limbs move too fast",
+     "visual": "legs swing, ribs flare",
+     "fix": "slow down"
+    },
+    {
+     "mistake": "Same-side arm and leg",
+     "visual": "right arm moves with right leg",
+     "fix": "opposite pairing"
+    }
+   ],
+   "safety": "Keep the neck neutral; shorter range if low back lifts.",
+   "regression": "Move only legs, heel taps.",
+   "progression": "Straight leg, hold weights, bands.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "pallof_press",
+   "app_names": [
+    "Pallof Press"
+   ],
+   "names": {
+    "tr": "Pallof Press",
+    "en": "Pallof Press",
+    "es": "Press Pallof"
+   },
+   "category": "core",
+   "equipment": [
+    "cable machine or band",
+    "D-handle"
+   ],
+   "equipment_setup": "Cable at sternum height, side-on to the stack, standing ~1 m away; hold the handle at the chest with both hands, stance hip-width.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "obliques",
+    "transverse abdominis"
+   ],
+   "secondary_muscles": [
+    "glutes",
+    "deltoids",
+    "serratus anterior"
+   ],
+   "camera": {
+    "primary_view": "front",
+    "secondary_view": "side",
+    "why": "front shows the anti-rotation (shoulders squared to the front); side shows the arm line"
+   },
+   "start_pose": {
+    "description": "Standing tall, side-on to the cable, handle held at the sternum with elbows bent ~90 deg, elbows tucked, shoulders and hips squared forward, cable pulling toward the stack side.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 15,
+     "shoulder_flexion": 35,
+     "elbow_flexion": 100,
+     "spine_rotation": 0,
+     "stance_width": 1.0
+    },
+    "contacts": [
+     "both feet flat, hip width or split stance, knees soft",
+     "both hands clasped at the chest holding handle"
+    ],
+    "implement": "handle at sternum height, cable perpendicular to the body"
+   },
+   "phases": [
+    {
+     "name": "press_out",
+     "description": "Extend arms straight forward from the chest at shoulder height, resisting rotation toward the stack.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_flexion": 90,
+      "elbow_flexion": 0,
+      "spine_rotation": 0,
+      "trunk_from_vertical": 0
+     },
+     "contacts": [
+      "both feet flat, hip width or split stance, knees soft",
+      "both hands clasped at the chest holding handle"
+     ],
+     "implement_path": "handle moves ~50 cm forward on a straight horizontal line from the sternum, cable tension pulling sideways",
+     "notes": ""
+    },
+    {
+     "name": "hold",
+     "description": "Hold with arms fully extended for 2 s without rotating.",
+     "duration_s": 2.0,
+     "breathing": "hold",
+     "end_angles": {
+      "spine_rotation": 0
+     },
+     "contacts": [
+      "both feet flat, hip width or split stance, knees soft",
+      "both hands clasped at the chest holding handle"
+     ],
+     "implement_path": "arms fully extended",
+     "notes": ""
+    },
+    {
+     "name": "return",
+     "description": "Bring the handle slowly back to the chest.",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 35,
+      "elbow_flexion": 100,
+      "spine_rotation": 0
+     },
+     "contacts": [
+      "both feet flat, hip width or split stance, knees soft",
+      "both hands clasped at the chest holding handle"
+     ],
+     "implement_path": "reverse path",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "press_out -> hold -> return (repeat), then switch sides",
+   "tempo_default": "1.5-2-1.5",
+   "cues": [
+    "Shoulders and hips square",
+    "Press straight out",
+    "Resist the pull",
+    "Tall posture, ribs down"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Body rotates toward the stack",
+     "visual": "shoulders and trunk turn toward the weight",
+     "fix": "lighter weight, brace"
+    },
+    {
+     "mistake": "Handle drifts sideways",
+     "visual": "arms angle toward the stack",
+     "fix": "press in a straight line"
+    },
+    {
+     "mistake": "Leaning away",
+     "visual": "trunk tilts away from the weight",
+     "fix": "stay upright"
+    }
+   ],
+   "safety": "Light-to-moderate load; no spinal rotation.",
+   "regression": "Half-kneeling, lighter band.",
+   "progression": "Split stance, overhead press-out, heavier.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "hanging_leg_raise",
+   "app_names": [
+    "Hanging Leg Raise"
+   ],
+   "names": {
+    "tr": "Asılı Bacak Kaldırma",
+    "en": "Hanging Leg Raise",
+    "es": "Elevación de piernas colgado"
+   },
+   "category": "core",
+   "equipment": [
+    "pull-up bar"
+   ],
+   "equipment_setup": "Hang from a bar with an overhand grip, shoulders packed (slightly depressed), legs straight together, no swing.",
+   "body_orientation": "hanging",
+   "primary_muscles": [
+    "rectus abdominis (lower)",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "obliques",
+    "forearm grip",
+    "lats"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the pelvis tuck and leg arc; front shows symmetry"
+   },
+   "start_pose": {
+    "description": "Dead hang with active shoulders, body straight and still, legs together and straight.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 175,
+     "elbow_flexion": 0,
+     "grip_width": 1.0,
+     "ankle_dorsiflexion": -30
+    },
+    "contacts": [
+     "both hands hanging from bar (overhand shoulder width), shoulders active"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "raise",
+     "description": "Raise straight legs up in front by flexing the hips and tilting the pelvis posteriorly (curl) until the legs are ~90 deg (parallel to the floor) or higher.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -5,
+      "hip_flexion": 95,
+      "knee_flexion": 5,
+      "pelvis_tilt": "posterior",
+      "shoulder_flexion": 175
+     },
+     "contacts": [
+      "both hands hanging from bar (overhand shoulder width), shoulders active"
+     ],
+     "implement_path": "none",
+     "notes": "legs rise in an arc, trunk leans back slightly; no swing"
+    },
+    {
+     "name": "lower",
+     "description": "Lower the legs slowly back down without swinging.",
+     "duration_s": 2.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "hip_flexion": 0,
+      "knee_flexion": 0
+     },
+     "contacts": [
+      "both hands hanging from bar (overhand shoulder width), shoulders active"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "raise -> lower (repeat)",
+   "tempo_default": "1.5-0-2.5",
+   "cues": [
+    "Shoulders active",
+    "Tilt the pelvis at the top",
+    "No swing",
+    "Legs together"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Swinging",
+     "visual": "body swings front-back, legs momentum-driven",
+     "fix": "control, pause at the bottom"
+    },
+    {
+     "mistake": "Hips not curling",
+     "visual": "legs rise with a flat pelvis, only the hip flexors work",
+     "fix": "curl the pelvis"
+    },
+    {
+     "mistake": "Shoulders shrug",
+     "visual": "shoulders rise to ears",
+     "fix": "depress shoulders"
+    }
+   ],
+   "safety": "Grip/shoulder stress; avoid when there is shoulder or low back pain.",
+   "regression": "Bent-knee raise.",
+   "progression": "Toes to bar, weighted.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "toes_to_bar",
+   "app_names": [
+    "Toes to Bar x10"
+   ],
+   "names": {
+    "tr": "Toes to Bar",
+    "en": "Toes to Bar",
+    "es": "Dedos a la barra (toes to bar)"
+   },
+   "category": "core",
+   "equipment": [
+    "pull-up bar"
+   ],
+   "equipment_setup": "Hang from a bar with a slightly wider than shoulder grip (1.2x), active shoulders; strict or kipping.",
+   "body_orientation": "hanging",
+   "primary_muscles": [
+    "rectus abdominis",
+    "hip flexors"
+   ],
+   "secondary_muscles": [
+    "lats",
+    "grip",
+    "obliques"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the pike and the toes reaching the bar"
+   },
+   "start_pose": {
+    "description": "Dead hang with active shoulders, legs straight together, slight hollow.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 175,
+     "elbow_flexion": 0,
+     "grip_width": 1.2,
+     "ankle_dorsiflexion": -30
+    },
+    "contacts": [
+     "both hands hanging from bar (overhand shoulder width), shoulders active"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "raise",
+     "description": "Press down on the bar, lean the torso slightly back, and pike the straight legs up until the toes touch the bar (hip flexion ~150-165).",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -10,
+      "hip_flexion": 155,
+      "knee_flexion": 5,
+      "shoulder_flexion": 160,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both hands hanging from bar (overhand shoulder width), shoulders active"
+     ],
+     "implement_path": "none",
+     "notes": "legs travel in a near-vertical arc; toes touch the bar; hold briefly"
+    },
+    {
+     "name": "lower",
+     "description": "Lower the legs under control to the hanging position.",
+     "duration_s": 1.8,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion": 175
+     },
+     "contacts": [
+      "both hands hanging from bar (overhand shoulder width), shoulders active"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "raise -> lower (repeat)",
+   "tempo_default": "1.2-0-1.8",
+   "cues": [
+    "Press down on the bar",
+    "Straight legs",
+    "Pike up to touch the toes",
+    "Control the descent"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Bent knees",
+     "visual": "knees tuck, toes never reach the bar in a line",
+     "fix": "keep legs straight"
+    },
+    {
+     "mistake": "Uncontrolled swinging",
+     "visual": "body swings under the bar",
+     "fix": "tighten the hollow"
+    },
+    {
+     "mistake": "Short range",
+     "visual": "toes stop at hip height",
+     "fix": "lean back, pike higher"
+    }
+   ],
+   "safety": "Advanced; strong grip and shoulder control; gymnastics-style kipping adds stress.",
+   "regression": "Hanging leg raise, knee raises.",
+   "progression": "Strict toes to bar, kipping, weighted.",
+   "variants": [
+    {
+     "app_name": "Toes to Bar x10",
+     "difference": "10 reps"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "hamstring_walkout",
+   "app_names": [
+    "Hamstring Walkout"
+   ],
+   "names": {
+    "tr": "Hamstring Walkout",
+    "en": "Hamstring Walkout (Bridge Walkout)",
+    "es": "Caminata de isquios (walkout)"
+   },
+   "category": "core",
+   "equipment": [
+    "bodyweight",
+    "mat"
+   ],
+   "equipment_setup": "Supine, knees bent, feet flat hip width ~30 cm from the glutes; lift hips into a bridge and walk the feet out.",
+   "body_orientation": "supine",
+   "primary_muscles": [
+    "hamstrings",
+    "gluteus maximus"
+   ],
+   "secondary_muscles": [
+    "core",
+    "spinal erectors",
+    "calves"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the bridge line and knee extension"
+   },
+   "start_pose": {
+    "description": "Glute bridge top: hips lifted, shoulder-hip-knee in a straight line, knees ~90 deg, heels flat on floor, arms by the sides.",
+    "angles": {
+     "body_orientation": "supine",
+     "trunk_from_vertical": 65,
+     "hip_flexion": 0,
+     "knee_flexion": 90,
+     "ankle_dorsiflexion": 10,
+     "shoulder_extension": 0,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "upper back/shoulder blades on floor, arms along the sides palms down",
+     "both heels on floor (feet flexed or neutral), hip width"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "walk_out",
+     "description": "Alternately step each foot away from the glutes in small steps (each ~15-20 cm) keeping the hips high until the knees are almost straight (~20 deg).",
+     "duration_s": 3.5,
+     "breathing": "normal",
+     "end_angles": {
+      "trunk_from_vertical": 75,
+      "hip_flexion": 0,
+      "knee_flexion": 20,
+      "ankle_dorsiflexion": 0,
+      "pelvis": "level, no rotation"
+     },
+     "contacts": [
+      "upper back/shoulder blades on floor, arms along the sides palms down",
+      "both heels on floor (feet flexed or neutral), hip width"
+     ],
+     "implement_path": "none",
+     "notes": "body line from shoulders to heels is a straight incline"
+    },
+    {
+     "name": "walk_in",
+     "description": "Walk the feet back in alternately keeping the hips elevated.",
+     "duration_s": 3.5,
+     "breathing": "normal",
+     "end_angles": {
+      "trunk_from_vertical": 65,
+      "hip_flexion": 0,
+      "knee_flexion": 90
+     },
+     "contacts": [
+      "upper back/shoulder blades on floor, arms along the sides palms down",
+      "both heels on floor (feet flexed or neutral), hip width"
+     ],
+     "implement_path": "none",
+     "notes": "control; no hip drop"
+    }
+   ],
+   "rep_loop": "walk_out -> walk_in (repeat)",
+   "tempo_default": "3.5-0-3.5",
+   "cues": [
+    "Hips stay high",
+    "Heels on the ground",
+    "Small steps",
+    "No pelvic rotation"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips drop as the feet walk out",
+     "visual": "pelvis sags toward the floor",
+     "fix": "brace glutes, shorter range"
+    },
+    {
+     "mistake": "Pelvis rotates",
+     "visual": "hips tilt side-to-side with each step",
+     "fix": "slow the steps"
+    },
+    {
+     "mistake": "Lumbar over-arching",
+     "visual": "ribs flare, low back arches",
+     "fix": "tuck pelvis"
+    }
+   ],
+   "safety": "Avoid fully straightening the knees too aggressively; avoid cramping.",
+   "regression": "Static glute bridge.",
+   "progression": "Single-leg bridge walkout, slider curl.",
+   "variants": [],
+   "sources": [
+    "https://catalystathletics.com/exercise/731/Glute-Ham-Bridge-Walkout",
+    "https://us.physitrack.com/home-exercise-video/hamstring-walkout"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "burpee",
+   "app_names": [
+    "Burpee x8"
+   ],
+   "names": {
+    "tr": "Burpee",
+    "en": "Burpee",
+    "es": "Burpee"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "bodyweight"
+   ],
+   "equipment_setup": "Floor space. Stand tall, feet shoulder width.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "pectoralis",
+    "triceps",
+    "deltoids"
+   ],
+   "secondary_muscles": [
+    "core",
+    "glutes",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the squat-plank-push-up-jump sequence"
+   },
+   "start_pose": {
+    "description": "Standing tall, feet shoulder width, arms at the sides.",
+    "angles": {
+     "trunk_from_vertical": 0,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion": 0,
+     "elbow_flexion": 0
+    },
+    "contacts": [
+     "both feet flat on floor, shoulder width",
+     "hands free"
+    ],
+    "implement": "none"
+   },
+   "phases": [
+    {
+     "name": "squat_down",
+     "description": "Drop into a deep squat and place palms on the floor in front of and just outside the feet.",
+     "duration_s": 0.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 55,
+      "hip_flexion": 115,
+      "knee_flexion": 120,
+      "ankle_dorsiflexion": 30,
+      "shoulder_flexion": 90,
+      "elbow_flexion": 10
+     },
+     "contacts": [
+      "both hands flat on floor",
+      "both feet flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "jump_back",
+     "description": "Jump or step both feet back to a high plank (hips level).",
+     "duration_s": 0.4,
+     "breathing": "hold",
+     "end_angles": {
+      "trunk_from_vertical": 82,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion_trunk_frame": 90,
+      "elbow_flexion": 0,
+      "ankle_dorsiflexion": -60
+     },
+     "contacts": [
+      "both palms on floor",
+      "both toes on floor"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "push_up",
+     "description": "Lower the chest to the floor (elbows ~45 deg from torso) and press back to a high plank.",
+     "duration_s": 1.0,
+     "breathing": "inhale-down, exhale-up",
+     "end_angles": {
+      "elbow_flexion": 95,
+      "trunk_from_vertical": 84,
+      "shoulder_flexion_trunk_frame": 40
+     },
+     "contacts": [
+      "both palms on floor",
+      "both toes on floor"
+     ],
+     "implement_path": "none",
+     "notes": "chest touches or ~3 cm from floor"
+    },
+    {
+     "name": "jump_in",
+     "description": "Jump both feet forward to land outside the hands in a deep squat.",
+     "duration_s": 0.4,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 55,
+      "hip_flexion": 115,
+      "knee_flexion": 120,
+      "ankle_dorsiflexion": 30
+     },
+     "contacts": [
+      "both hands on floor",
+      "both feet flat"
+     ],
+     "implement_path": "none",
+     "notes": ""
+    },
+    {
+     "name": "jump_up",
+     "description": "Explode upward, extending hips/knees, reach arms overhead, jump ~15-25 cm off the floor, land softly with bent knees.",
+     "duration_s": 0.6,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion": 175,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "feet leave the floor ~0.2 s, land flat softly"
+     ],
+     "implement_path": "none",
+     "notes": "soft landing, knees flex ~30 deg then reset"
+    }
+   ],
+   "rep_loop": "squat_down -> jump_back -> push_up -> jump_in -> jump_up (repeat)",
+   "tempo_default": "0.5-0.4-1.0-0.4-0.6",
+   "cues": [
+    "Chest to the floor",
+    "Hips level in the plank",
+    "Land softly",
+    "Keep the pace smooth"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Sagging hips in the plank",
+     "visual": "pelvis drops, lumbar arches",
+     "fix": "brace abs and glutes"
+    },
+    {
+     "mistake": "Skipping the chest-to-floor push-up",
+     "visual": "only a half drop at the bottom",
+     "fix": "chest to floor"
+    },
+    {
+     "mistake": "Heavy landing",
+     "visual": "knees lock, feet slam",
+     "fix": "land on the balls of the feet, soft knees"
+    }
+   ],
+   "safety": "High-impact; pace yourself; drop jump or push-up if pain.",
+   "regression": "Step-back burpee without push-up or jump.",
+   "progression": "Burpee with tuck jump, over-bar burpee.",
+   "variants": [
+    {
+     "app_name": "Burpee x8",
+     "difference": "8 reps, same movement"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "battle_ropes",
+   "app_names": [
+    "Battle Ropes (Tabata)"
+   ],
+   "names": {
+    "tr": "Battle Ropes (Tabata)",
+    "en": "Battle Ropes (Alternating Waves)",
+    "es": "Cuerdas de batalla (Tabata)"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "battle ropes 9-15 m, 38-50 mm, anchor"
+   ],
+   "equipment_setup": "Rope anchored at the midpoint 5-8 m away (rope folded). Hold the two ends, slight quarter squat, athletic stance, ~2 m of slack.",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "deltoids",
+    "forearms",
+    "core"
+   ],
+   "secondary_muscles": [
+    "lats",
+    "quadriceps",
+    "glutes",
+    "pectoralis"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the wave amplitude and squat posture; front shows alternation"
+   },
+   "start_pose": {
+    "description": "Quarter squat, trunk leaning ~25 deg forward, hips back, neutral spine, arms hanging forward with elbows slightly bent holding rope ends at hip height.",
+    "angles": {
+     "trunk_from_vertical": 25,
+     "hip_flexion": 55,
+     "knee_flexion": 50,
+     "ankle_dorsiflexion": 20,
+     "shoulder_flexion": 30,
+     "elbow_flexion": 30,
+     "stance_width": 1.3,
+     "neck": "neutral, looking at the anchor"
+    },
+    "contacts": [
+     "both feet flat shoulder+ width, quarter squat",
+     "hands gripping rope ends (neutral grip)"
+    ],
+    "implement": "rope ends at hip height; rope has a slight sag toward the anchor 5-8 m away"
+   },
+   "phases": [
+    {
+     "name": "wave_work",
+     "description": "Alternate arms rapidly: one hand up to ~chest/shoulder height while the other drops to hip level, generating waves along the rope toward the anchor; cycle frequency ~2 Hz per arm.",
+     "duration_s": 20,
+     "breathing": "short rhythmic breaths",
+     "end_angles": {
+      "shoulder_flexion_up_arm": 75,
+      "shoulder_flexion_down_arm": 20,
+      "elbow_flexion": 35,
+      "trunk_from_vertical": 25,
+      "knee_flexion": 50
+     },
+     "contacts": [
+      "both feet flat shoulder+ width, quarter squat",
+      "hands gripping rope ends (neutral grip)"
+     ],
+     "implement_path": "hands move vertically ~35 cm amplitude, alternating; rope waves propagate to the anchor",
+     "notes": "Tabata: 20 s work"
+    },
+    {
+     "name": "rest",
+     "description": "Stand upright, rope slack, rest.",
+     "duration_s": 10,
+     "breathing": "recover",
+     "end_angles": {
+      "trunk_from_vertical": 10,
+      "knee_flexion": 15,
+      "shoulder_flexion": 10,
+      "elbow_flexion": 10
+     },
+     "contacts": [
+      "both feet flat"
+     ],
+     "implement_path": "rope rests on the floor",
+     "notes": "Tabata: 10 s rest x 8 rounds"
+    }
+   ],
+   "rep_loop": "wave_work (20 s) -> rest (10 s) x8",
+   "tempo_default": "20s on / 10s off (Tabata) x8",
+   "cues": [
+    "Stay low in the squat",
+    "Waves come from the shoulders",
+    "Core tight",
+    "Keep the waves equal"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Standing upright",
+     "visual": "knees straight, only the arms are moving",
+     "fix": "stay in the quarter squat"
+    },
+    {
+     "mistake": "Arm-only waves",
+     "visual": "trunk static and hips fixed, waves small",
+     "fix": "use the hips and legs in rhythm"
+    },
+    {
+     "mistake": "Rounding the back",
+     "visual": "spine flexes toward the rope",
+     "fix": "chest up, neutral spine"
+    }
+   ],
+   "safety": "Keep back neutral; stop if shoulder pain; ensure the anchor is secure.",
+   "regression": "Shorter intervals, lighter rope.",
+   "progression": "Double waves, slams, jacks.",
+   "variants": [
+    {
+     "app_name": "Battle Ropes (Tabata)",
+     "difference": "20 s on / 10 s off x 8 rounds"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "assault_bike_sprint",
+   "app_names": [
+    "Assault Bike Sprint"
+   ],
+   "names": {
+    "tr": "Assault Bike Sprint",
+    "en": "Assault Bike (Air Bike) Sprint",
+    "es": "Sprint en bicicleta Assault (air bike)"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "air bike (fan bike, moving handles)"
+   ],
+   "equipment_setup": "Seat height set so the leg is nearly straight at the bottom of the pedal stroke (knee ~15-25 deg bent), seat fore-aft with the knee over the pedal at 3 o'clock. Moving handle pivots at the front (bar travels ~25 deg each side, arc length ~35 cm).",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "deltoids",
+    "lats"
+   ],
+   "secondary_muscles": [
+    "triceps",
+    "biceps",
+    "core",
+    "hamstrings"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows seat height, crank circle and the handle arc; front shows alternate arm movement"
+   },
+   "start_pose": {
+    "description": "Seated upright ~10-15 deg forward lean, hands on handles, shoulders relaxed, one foot at the bottom of the crank (leg ~160 deg), the other at the top.",
+    "angles": {
+     "trunk_from_vertical": 15,
+     "hip_flexion": 90,
+     "knee_flexion_bottom_leg": 20,
+     "knee_flexion_top_leg": 105,
+     "ankle_dorsiflexion": 0,
+     "shoulder_flexion": 35,
+     "elbow_flexion": 90
+    },
+    "contacts": [
+     "both feet on pedals (ball of foot), straps/cages optional",
+     "both hands on the moving handles"
+    ],
+    "implement": "pedal crank radius ~17 cm, crank at 6 o'clock for one foot; handle arc roughly +-25 deg around a point ~60 cm in front of the hip"
+   },
+   "phases": [
+    {
+     "name": "pedal_cycle_sprint",
+     "description": "Full-body push/pull: legs pedal with a smooth circle at ~85-100 rpm (1.4 Hz per leg cycle), the arms alternately push and pull the handles in sync with the opposite leg; the torso stays tall, slight rocking.",
+     "duration_s": 25,
+     "breathing": "fast, rhythmic",
+     "end_angles": {
+      "trunk_from_vertical": 15,
+      "hip_flexion": 90,
+      "knee_flexion_range": "20-105",
+      "shoulder_flexion_range": "10-60",
+      "elbow_flexion_range": "60-130",
+      "handle_swing_deg": 50
+     },
+     "contacts": [
+      "both feet on pedals (ball of foot), straps/cages optional",
+      "both hands on the moving handles"
+     ],
+     "implement_path": "one handle pushed forward when the other is pulled back; pedals rotate clockwise from the side view",
+     "notes": "sprint intervals e.g. 20-30 s all-out"
+    },
+    {
+     "name": "recover",
+     "description": "Reduce effort to slow spin.",
+     "duration_s": 30,
+     "breathing": "deep breaths",
+     "end_angles": {
+      "trunk_from_vertical": 10
+     },
+     "contacts": [
+      "both feet on pedals (ball of foot), straps/cages optional",
+      "both hands on the moving handles"
+     ],
+     "implement_path": "slow spin",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pedal_cycle_sprint -> recover (repeat)",
+   "tempo_default": "e.g. 20 s sprint / 40 s easy x8",
+   "cues": [
+    "Push AND pull the handles",
+    "Stay tall",
+    "Breathe",
+    "Smooth leg circle"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Only using the legs",
+     "visual": "hands lightly rest, arms static",
+     "fix": "push and pull actively"
+    },
+    {
+     "mistake": "Seat too low",
+     "visual": "knees bend >60 deg at the bottom, hips rock",
+     "fix": "raise the seat until nearly straight leg"
+    },
+    {
+     "mistake": "Bouncing in the seat",
+     "visual": "hips jump/bounce",
+     "fix": "smoother circle, shorter effort"
+    }
+   ],
+   "safety": "Very intense; build up; avoid breath holding; stop if dizzy.",
+   "regression": "Easier air bike, steady state.",
+   "progression": "Longer or shorter intervals, higher effort.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "rowing_sprint",
+   "app_names": [
+    "Rowing Sprint"
+   ],
+   "names": {
+    "tr": "Kürek Sprint (Rowing)",
+    "en": "Rowing Machine Sprint",
+    "es": "Sprint en remo (ergómetro)"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "Concept2 rowing ergometer (flywheel, monorail slide ~1.2 m)"
+   ],
+   "equipment_setup": "Seat on the sliding seat; feet strapped on stretchers (damper 5-7; heel straps over the instep). Handle held with the fingers, thumbs under.",
+   "body_orientation": "seated",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "latissimus dorsi",
+    "erector spinae"
+   ],
+   "secondary_muscles": [
+    "biceps",
+    "rhomboids",
+    "hamstrings",
+    "core"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front",
+    "why": "side shows the sequence (legs, trunk, arms); front shows the hand path"
+   },
+   "start_pose": {
+    "description": "Catch: shins vertical, knees fully flexed (~125-135 deg), torso leaning forward ~30 deg from vertical, arms straight forward, shoulders in front of the hips.",
+    "angles": {
+     "trunk_from_vertical": 30,
+     "hip_flexion": 120,
+     "knee_flexion": 130,
+     "ankle_dorsiflexion": 35,
+     "shoulder_flexion": 85,
+     "elbow_flexion": 0,
+     "neck": "neutral",
+     "seat_position_pct": 100
+    },
+    "contacts": [
+     "both feet strapped to the foot stretchers (balls of feet), heels slightly raised in the drive",
+     "both hands gripping the handle (overhand, shoulder width)"
+    ],
+    "implement": "handle at the flywheel end, ~15 cm above the seat; chain straight toward the flywheel"
+   },
+   "phases": [
+    {
+     "name": "drive",
+     "description": "Drive with the legs first (push the legs flat), then open the trunk to ~11 o'clock (lean back ~15 deg), then pull the handle to the lower ribs with the elbows past the body.",
+     "duration_s": 0.7,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -15,
+      "hip_flexion": 100,
+      "knee_flexion": 5,
+      "ankle_dorsiflexion": -10,
+      "shoulder_flexion": -20,
+      "elbow_flexion": 100,
+      "seat_position_pct": 0
+     },
+     "contacts": [
+      "both feet strapped to the foot stretchers (balls of feet), heels slightly raised in the drive",
+      "both hands gripping the handle (overhand, shoulder width)"
+     ],
+     "implement_path": "handle moves horizontally ~1.2 m in a straight line from the flywheel to the lower ribs (~10 cm above the seat height)",
+     "notes": "legs-trunk-arms sequence; 60-65 percent of the power from the legs"
+    },
+    {
+     "name": "recovery",
+     "description": "Extend the arms, then lean the trunk forward from the hips, then bend the knees to slide the seat forward to the catch (reverse sequence).",
+     "duration_s": 1.1,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 30,
+      "hip_flexion": 120,
+      "knee_flexion": 130,
+      "shoulder_flexion": 85,
+      "elbow_flexion": 0,
+      "seat_position_pct": 100
+     },
+     "contacts": [
+      "both feet strapped to the foot stretchers (balls of feet), heels slightly raised in the drive",
+      "both hands gripping the handle (overhand, shoulder width)"
+     ],
+     "implement_path": "handle travels forward in a straight line, passing over the knees",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "drive -> recovery (repeat)",
+   "tempo_default": "drive 0.7 s : recovery 1.1 s (~33 spm in sprint)",
+   "cues": [
+    "Legs, then back, then arms",
+    "Arms, back, legs on recovery",
+    "Do not rush the slide",
+    "Handle in a straight line"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Pulling with the arms first",
+     "visual": "elbows bend and trunk collapses at the catch",
+     "fix": "push with the legs first"
+    },
+    {
+     "mistake": "Rounding the back at the catch",
+     "visual": "spine bent forward, shoulders hunch",
+     "fix": "hinge at the hips, chest up"
+    },
+    {
+     "mistake": "Shooting the slide",
+     "visual": "hips rush back while the shoulders stay forward",
+     "fix": "drive legs and trunk together, arms last"
+    }
+   ],
+   "safety": "Keep a neutral spine; avoid overextending at the finish; sprints are very demanding.",
+   "regression": "Lower damper, steady state.",
+   "progression": "Higher stroke rate, longer sprints, power strokes.",
+   "variants": [],
+   "sources": [
+    "https://www.concept2.co.nz/Training/Training+Advice/rowingtechnique.html",
+    "https://concept2.co.uk/node/95"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "devil_press",
+   "app_names": [
+    "Devil Press x5"
+   ],
+   "names": {
+    "tr": "Devil Press",
+    "en": "Devil Press",
+    "es": "Devil press"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "2 dumbbells"
+   ],
+   "equipment_setup": "Two dumbbells parallel on the floor, handles aligned front-to-back, slightly in front of the toes (5-10 cm).",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "glutes",
+    "deltoids",
+    "pectoralis",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "core",
+    "hamstrings",
+    "lats"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows burpee, swing and press sequence"
+   },
+   "start_pose": {
+    "description": "Standing behind the dumbbells, feet shoulder width, hinged at the hips (trunk ~45 deg), hands gripping the handles.",
+    "angles": {
+     "trunk_from_vertical": 45,
+     "hip_flexion": 80,
+     "knee_flexion": 50,
+     "shoulder_flexion": 60,
+     "elbow_flexion": 0,
+     "ankle_dorsiflexion": 20
+    },
+    "contacts": [
+     "feet flat",
+     "both hands gripping dumbbells on the floor"
+    ],
+    "implement": "dumbbells on the floor beside the toes"
+   },
+   "phases": [
+    {
+     "name": "burpee_down",
+     "description": "Hands on the dumbbells, jump the feet back to a plank on the dumbbells, lower the chest to the floor between/over the dumbbells (push-up).",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 82,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "elbow_flexion": 95
+     },
+     "contacts": [
+      "both hands on the dumbbells",
+      "both toes on floor"
+     ],
+     "implement_path": "dumbbells on the floor, hands holding the handles",
+     "notes": "dumbbells on floor shoulders-width"
+    },
+    {
+     "name": "jump_in",
+     "description": "Press up and jump the feet back to the dumbbells (squat position).",
+     "duration_s": 0.8,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 50,
+      "hip_flexion": 110,
+      "knee_flexion": 100
+     },
+     "contacts": [
+      "feet flat",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "dumbbells on floor",
+     "notes": ""
+    },
+    {
+     "name": "swing_and_press",
+     "description": "Hinge back and swing both dumbbells between the legs, snap the hips forward and swing the dumbbells overhead in a single motion; lock out the arms.",
+     "duration_s": 1.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion": 175,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "feet flat shoulder width"
+     ],
+     "implement_path": "dumbbells travel from between the knees (trunk ~45 deg) up the front of the body to overhead",
+     "notes": "hips extend explosively; arms follow"
+    },
+    {
+     "name": "lower",
+     "description": "Lower the dumbbells under control back between the legs to the floor.",
+     "duration_s": 1.0,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 45,
+      "hip_flexion": 80,
+      "knee_flexion": 50,
+      "shoulder_flexion": 60
+     },
+     "contacts": [
+      "feet flat",
+      "both hands on dumbbells"
+     ],
+     "implement_path": "dumbbells return to the floor in front of the toes",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "burpee_down -> jump_in -> swing_and_press -> lower (repeat)",
+   "tempo_default": "1.5-0.8-1.0-1.0",
+   "cues": [
+    "Stay in control in the burpee",
+    "Hips drive the swing",
+    "Lock out overhead",
+    "Light dumbbells"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Rounded back on the swing",
+     "visual": "spine flexed as dumbbells go between the legs",
+     "fix": "hinge with a neutral spine"
+    },
+    {
+     "mistake": "Pressing with the arms only",
+     "visual": "dumbbells pulled up by the arms, hips not extended",
+     "fix": "drive the hips"
+    },
+    {
+     "mistake": "Dumbbells too heavy",
+     "visual": "form breakdown, dumbbells swing wide",
+     "fix": "lighter weights"
+    }
+   ],
+   "safety": "Start light; high skill and high stress; avoid fatigue form breakdown.",
+   "regression": "Dumbbell burpee, swing, thruster.",
+   "progression": "Heavier weights, single-arm.",
+   "variants": [
+    {
+     "app_name": "Devil Press x5",
+     "difference": "5 reps"
+    }
+   ],
+   "sources": [
+    "https://www.strengthlog.com/devils-press",
+    "https://www.garagegymreviews.com/devil-press-exercise"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "clean_and_press",
+   "app_names": [
+    "Clean & Press x5"
+   ],
+   "names": {
+    "tr": "Clean & Press",
+    "en": "Barbell Clean and Press",
+    "es": "Cargada y press"
+   },
+   "category": "conditioning",
+   "equipment": [
+    "barbell with plates"
+   ],
+   "equipment_setup": "Bar over mid-foot on the floor, shins close to the bar, grip just outside the knees (~1.2x shoulder width).",
+   "body_orientation": "standing",
+   "primary_muscles": [
+    "quadriceps",
+    "gluteus maximus",
+    "trapezius",
+    "deltoids",
+    "triceps"
+   ],
+   "secondary_muscles": [
+    "hamstrings",
+    "erector spinae",
+    "core",
+    "forearms"
+   ],
+   "camera": {
+    "primary_view": "side",
+    "secondary_view": "front_3q",
+    "why": "side shows the bar path close to the body in the pull and rack"
+   },
+   "start_pose": {
+    "description": "Deadlift setup: hips ~ above knees, back neutral, shoulders slightly over the bar, arms straight and vertical, bar over mid-foot.",
+    "angles": {
+     "trunk_from_vertical": 45,
+     "hip_flexion": 85,
+     "knee_flexion": 105,
+     "ankle_dorsiflexion": 25,
+     "shoulder_flexion": 10,
+     "elbow_flexion": 0,
+     "stance_width": 1.0,
+     "grip_width": 1.2
+    },
+    "contacts": [
+     "both feet flat on floor, hip width (slightly turned out), heels in contact in the pull",
+     "both hands gripping the bar (overhand shoulder width)"
+    ],
+    "implement": "bar on the floor over mid-foot, plate edges 10 cm above the floor"
+   },
+   "phases": [
+    {
+     "name": "pull_to_rack",
+     "description": "Extend the knees and hips powerfully (first pull to knees, then explosive hip extension and shrug), pull under the bar and catch it on the front delts in a front-rack with elbows high.",
+     "duration_s": 1.0,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": 0,
+      "hip_flexion": 0,
+      "knee_flexion": 0,
+      "shoulder_flexion": 80,
+      "elbow_flexion": 140,
+      "ankle_dorsiflexion": -30
+     },
+     "contacts": [
+      "feet flat on floor",
+      "bar on the front delts"
+     ],
+     "implement_path": "bar travels close to the shins and thighs, hips snap, bar ends at the clavicle height",
+     "notes": "catch the bar on the collarbone/shoulders with a quarter squat"
+    },
+    {
+     "name": "press",
+     "description": "Press the bar overhead past the face until lockout, head through at the top.",
+     "duration_s": 1.5,
+     "breathing": "exhale",
+     "end_angles": {
+      "trunk_from_vertical": -3,
+      "shoulder_flexion": 170,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "feet flat on floor"
+     ],
+     "implement_path": "bar rises vertically close to the face to overhead",
+     "notes": ""
+    },
+    {
+     "name": "lower_to_rack",
+     "description": "Lower the bar to the shoulders in a controlled way.",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_flexion": 80,
+      "elbow_flexion": 140
+     },
+     "contacts": [
+      "feet flat on floor"
+     ],
+     "implement_path": "bar returns to the clavicle",
+     "notes": ""
+    },
+    {
+     "name": "lower_to_floor",
+     "description": "Hinge and lower the bar to the floor with a neutral spine.",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "trunk_from_vertical": 45,
+      "hip_flexion": 85,
+      "knee_flexion": 105,
+      "shoulder_flexion": 10,
+      "elbow_flexion": 0
+     },
+     "contacts": [
+      "both feet flat on floor, hip width (slightly turned out), heels in contact in the pull",
+      "both hands gripping the bar (overhand shoulder width)"
+     ],
+     "implement_path": "bar returns to the floor",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "pull_to_rack -> press -> lower_to_rack -> lower_to_floor (repeat x5)",
+   "tempo_default": "1.0-1.5-1.5-1.5",
+   "cues": [
+    "Neutral spine",
+    "Explode with the hips",
+    "Bar close to the body",
+    "Lock out overhead"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Rounded back in the pull",
+     "visual": "spine flexes from the floor",
+     "fix": "brace and keep the chest up"
+    },
+    {
+     "mistake": "Pulling with the arms",
+     "visual": "bar swings away from the body",
+     "fix": "extend hips first"
+    },
+    {
+     "mistake": "Bar loops out front",
+     "visual": "bar path arcs forward",
+     "fix": "keep bar close"
+    }
+   ],
+   "safety": "Technical lift; use bumper plates; start light.",
+   "regression": "Deadlift + overhead press separately.",
+   "progression": "Heavier, hang clean and press, push press.",
+   "variants": [
+    {
+     "app_name": "Clean & Press x5",
+     "difference": "5 reps"
+    }
+   ],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "renegade_row",
+   "app_names": [
+    "Renegade Row"
+   ],
+   "names": {
+    "tr": "Renegade Row",
+    "en": "Renegade Row",
+    "es": "Remo renegado"
+   },
+   "category": "strength_pull",
+   "equipment": [
+    "2 hex dumbbells"
+   ],
+   "equipment_setup": "High plank with hands on two hex dumbbells (or fixed), feet wide ~1.5x hip width for stability.",
+   "body_orientation": "prone",
+   "primary_muscles": [
+    "latissimus dorsi",
+    "rhomboids",
+    "biceps"
+   ],
+   "secondary_muscles": [
+    "obliques",
+    "transverse abdominis",
+    "triceps",
+    "deltoids"
+   ],
+   "camera": {
+    "primary_view": "front_3q",
+    "secondary_view": "side",
+    "why": "front_3q shows the hip rotation resistance; side shows the straight line"
+   },
+   "start_pose": {
+    "description": "High plank on dumbbells, body in one straight line, feet wide, hips level, neck neutral.",
+    "angles": {
+     "trunk_from_vertical": 82,
+     "hip_flexion": 0,
+     "knee_flexion": 0,
+     "shoulder_flexion_trunk_frame": 90,
+     "elbow_flexion": 0,
+     "stance_width": 1.5,
+     "pelvis_rotation": 0
+    },
+    "contacts": [
+     "both hands on dumbbells (hex), shoulder width",
+     "both feet wide (1.5x hip width)"
+    ],
+    "implement": "dumbbells on floor under shoulders"
+   },
+   "phases": [
+    {
+     "name": "row",
+     "description": "Brace and row one dumbbell to the lower ribs, elbow ~45 deg from torso, hips level, support arm stays straight.",
+     "duration_s": 1.2,
+     "breathing": "exhale",
+     "end_angles": {
+      "shoulder_extension_working_arm": 30,
+      "elbow_flexion_working_arm": 100,
+      "pelvis_rotation": 5,
+      "trunk_from_vertical": 82
+     },
+     "contacts": [
+      "support hand on dumbbell",
+      "both feet on floor"
+     ],
+     "implement_path": "dumbbell travels ~25 cm from the floor to the ribs",
+     "notes": "do not rotate"
+    },
+    {
+     "name": "lower",
+     "description": "Lower dumbbell back to the floor with control, then row the other side.",
+     "duration_s": 1.5,
+     "breathing": "inhale",
+     "end_angles": {
+      "shoulder_extension_working_arm": 0,
+      "elbow_flexion": 0,
+      "pelvis_rotation": 0
+     },
+     "contacts": [
+      "both hands on dumbbells (hex), shoulder width",
+      "both feet wide (1.5x hip width)"
+     ],
+     "implement_path": "dumbbell returns to the floor",
+     "notes": ""
+    }
+   ],
+   "rep_loop": "row -> lower -> (switch arm) repeat",
+   "tempo_default": "1.2-0-1.5",
+   "cues": [
+    "Feet wide",
+    "Hips level",
+    "Elbow to the hip",
+    "No twisting"
+   ],
+   "mistakes": [
+    {
+     "mistake": "Hips rotate",
+     "visual": "pelvis and shoulders open to the side as the dumbbell rises",
+     "fix": "widen the feet, lighter weight"
+    },
+    {
+     "mistake": "Hips pike up",
+     "visual": "butt rises above the plank line",
+     "fix": "brace abs"
+    },
+    {
+     "mistake": "Using momentum",
+     "visual": "body sways to throw the dumbbell up",
+     "fix": "slow down"
+    }
+   ],
+   "safety": "Use hex dumbbells to prevent rolling; wrist neutral.",
+   "regression": "Row from knees, push-up position.",
+   "progression": "Add push-up between rows.",
+   "variants": [],
+   "sources": [
+    "https://www.acefitness.org/resources/everyone/exercise-library/"
+   ],
+   "confidence": "medium"
+  }
+ ],
+ "non_demo": [
+  {
+   "app_name": "100 Push-Up Challenge (min sürede)",
+   "reason": "Rep/time challenge, not a distinct movement; demo is push_up",
+   "components": [
+    "push_up"
+   ]
+  },
+  {
+   "app_name": "Push-Up Variations",
+   "reason": "Generic list of many push-up variants, not one movement",
+   "components": [
+    "push_up",
+    "knee_push_up",
+    "incline_push_up",
+    "pike_push_up"
+   ]
+  }
+ ],
+ "unmapped": []
+}

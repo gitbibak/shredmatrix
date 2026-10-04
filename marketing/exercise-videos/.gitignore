@@ -1,0 +1,12 @@
+# Only the approved pipeline (studio3d) and the research specs are versioned.
+# Rendered videos live in studio3d/out/ locally and in Cloudflare R2 (media.fullbalance.app).
+/*
+!/.gitignore
+!/README.md
+!/package.json
+!/package-lock.json
+!/research/
+!/studio3d/
+/studio3d/out/
+**/.DS_Store
+**/*.mp4

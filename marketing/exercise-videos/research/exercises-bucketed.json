@@ -1,0 +1,1905 @@
+{
+ "skip": [
+  "Tam Dinlenme",
+  "Serbest Gün",
+  "↻ Turlar arası dinlenme: 90s",
+  "⚠️ Deload Notu: 4. haftada ağırlıkları %60'a düşür",
+  "⚠️ Deload Notu: 4. haftada toplam seti %50 azalt",
+  "⚠️ Deload Notu: Her 4. haftada ağırlıkları %60'a düşür, seti %50 azalt",
+  "⚠️ Deload Notu: 4. haftada squat ağırlığı max %65",
+  "⚠️ Deload Notu: 4. haftada toplam hacmi %50 azalt"
+ ],
+ "cardio_mobility": [
+  "20-30 dk rahat yürüyüş (opsiyonel)",
+  "Tempolu Yürüyüş veya Bisiklet",
+  "Mobilite Akışı",
+  "Tempolu Yürüyüş",
+  "Düşük Etkili Interval Yürüyüş",
+  "Tüm Vücut Mobilite Akışı",
+  "Hafif Yürüyüş",
+  "Foam Rolling",
+  "Hafif Tempo Yürüyüş",
+  "Yoga / Esneme",
+  "Hafif Yüzme veya Bisiklet",
+  "Stretching Routine",
+  "Hafif Yüzme",
+  "Mobilite Çalışması",
+  "Soğuk / Sıcak Kontrast"
+ ],
+ "strength": [
+  {
+   "name": "Seated Cable Row",
+   "from": "Seated Cable Row",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lat Pulldown",
+   "from": "Lat Pulldown",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Shoulder Press",
+   "from": "Dumbbell Shoulder Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lateral Raise",
+   "from": "Lateral Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Glute Bridge",
+   "from": "Glute Bridge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Kalça",
+    "Arka Bacak"
+   ]
+  },
+  {
+   "name": "Leg Curl",
+   "from": "Leg Curl",
+   "goals": [
+    "muscle",
+    "fat_loss",
+    "reformer"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Hip Thrust",
+   "from": "Hip Thrust",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Leg Press",
+   "from": "Leg Press",
+   "goals": [
+    "muscle",
+    "fat_loss",
+    "reformer"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Bench Press",
+   "from": "Bench Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Incline Dumbbell Press",
+   "from": "Incline Dumbbell Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Romanian Deadlift",
+   "from": "Romanian Deadlift",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Resistance Band Row",
+   "from": "Resistance Band Row",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "resistance_band",
+   "muscles": [
+    "Sırt",
+    "Biceps"
+   ]
+  },
+  {
+   "name": "Standing Calf Raise",
+   "from": "Standing Calf Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Yüzüstü Lat Çekiş",
+   "from": "Yüzüstü Lat Çekiş",
+   "goals": [
+    "muscle",
+    "fat_loss",
+    "pilates"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Sırt",
+    "Arka Omuz"
+   ]
+  },
+  {
+   "name": "Dumbbell Romanian Deadlift",
+   "from": "Dumbbell Romanian Deadlift",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Arka Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Dumbbell Row",
+   "from": "Dumbbell Row",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Goblet Squat",
+   "from": "Goblet Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Glute Bridge",
+   "from": "Dumbbell Glute Bridge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Kalça",
+    "Arka Bacak"
+   ]
+  },
+  {
+   "name": "Resistance Band Pull-Apart",
+   "from": "Resistance Band Pull-Apart",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "resistance_band",
+   "muscles": [
+    "Üst Sırt",
+    "Arka Omuz"
+   ]
+  },
+  {
+   "name": "Hammer Curl",
+   "from": "Hammer Curl",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Tek Bacak Calf Raise",
+   "from": "Tek Bacak Calf Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Baldır"
+   ]
+  },
+  {
+   "name": "Goblet Squat / Chair Squat",
+   "from": "Goblet Squat / Chair Squat",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Incline Push-Up",
+   "from": "Incline Push-Up",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Suitcase March",
+   "from": "Suitcase March",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Core"
+   ]
+  },
+  {
+   "name": "Dead Bug",
+   "from": "Dead Bug",
+   "goals": [
+    "muscle",
+    "fat_loss",
+    "yoga",
+    "pilates"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Core"
+   ]
+  },
+  {
+   "name": "Face Pull",
+   "from": "Face Pull",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Prone Y-T-W",
+   "from": "Prone Y-T-W",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Üst Sırt",
+    "Arka Omuz"
+   ]
+  },
+  {
+   "name": "Tek Bacak Glute Bridge",
+   "from": "Tek Bacak Glute Bridge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Kalça",
+    "Arka Bacak"
+   ]
+  },
+  {
+   "name": "Tek Kol Dumbbell Row",
+   "from": "Tek Kol Dumbbell Row",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Sırt",
+    "Biceps"
+   ]
+  },
+  {
+   "name": "Reverse Snow Angel",
+   "from": "Reverse Snow Angel",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Sırt",
+    "Arka Omuz"
+   ]
+  },
+  {
+   "name": "Lying Leg Curl",
+   "from": "Lying Leg Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Cable Crossover",
+   "from": "Cable Crossover",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Side Plank",
+   "from": "Side Plank",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Core"
+   ]
+  },
+  {
+   "name": "Calf Raise",
+   "from": "Calf Raise",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Incline Barbell Press",
+   "from": "Incline Barbell Press",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Curl",
+   "from": "Dumbbell Curl",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Biceps"
+   ]
+  },
+  {
+   "name": "Barbell Row",
+   "from": "Barbell Row",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Leg Extension",
+   "from": "Leg Extension",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Weighted Pull-Up",
+   "from": "Weighted Pull-Up",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Leg Press (hafif)",
+   "from": "Leg Press (hafif)",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Pallof Press",
+   "from": "Pallof Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "gym",
+   "muscles": [
+    "Core"
+   ]
+  },
+  {
+   "name": "Barbell Curl",
+   "from": "Barbell Curl",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Split Squat",
+   "from": "Split Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Pike Şınav",
+   "from": "Pike Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Omuz",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Dumbbell Floor Press",
+   "from": "Dumbbell Floor Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Dumbbell Reverse Lunge",
+   "from": "Dumbbell Reverse Lunge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Bulgarian Split Squat",
+   "from": "Bulgarian Split Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Split Squat",
+   "from": "Dumbbell Split Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Squat",
+   "from": "Squat",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Seated Calf Raise",
+   "from": "Seated Calf Raise",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Arnold Press",
+   "from": "Arnold Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Incline Dumbbell Curl",
+   "from": "Incline Dumbbell Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Hanging Leg Raise",
+   "from": "Hanging Leg Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "gym",
+   "muscles": [
+    "Core"
+   ]
+  },
+  {
+   "name": "Triceps Pushdown",
+   "from": "Triceps Pushdown",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Weighted Dips",
+   "from": "Weighted Dips",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Triceps Dip",
+   "from": "Triceps Dip",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Reverse Lunge",
+   "from": "Reverse Lunge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Yüzüstü W İzometrik",
+   "from": "Yüzüstü W İzometrik",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Üst Sırt",
+    "Arka Omuz"
+   ]
+  },
+  {
+   "name": "Tempo Squat (3 sn iniş)",
+   "from": "Tempo Squat (3 sn iniş)",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Geri Lunge",
+   "from": "Geri Lunge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Hamstring Walkout",
+   "from": "Hamstring Walkout",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Arka Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Dar Tutuş Dumbbell Floor Press",
+   "from": "Dar Tutuş Dumbbell Floor Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Triceps",
+    "Göğüs"
+   ]
+  },
+  {
+   "name": "Dumbbell Reverse Fly",
+   "from": "Dumbbell Reverse Fly",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Arka Omuz",
+    "Üst Sırt"
+   ]
+  },
+  {
+   "name": "Overhead Triceps Extension",
+   "from": "Overhead Triceps Extension",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Rope Pushdown",
+   "from": "Rope Pushdown",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Şınav",
+   "from": "Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Landmine Press",
+   "from": "Landmine Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Self-Resisted Biceps Curl",
+   "from": "Self-Resisted Biceps Curl",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Biceps"
+   ]
+  },
+  {
+   "name": "Glute Bridge March",
+   "from": "Glute Bridge March",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Kalça",
+    "Core"
+   ]
+  },
+  {
+   "name": "Dar Tutuş Diz Üstü Şınav",
+   "from": "Dar Tutuş Diz Üstü Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Triceps",
+    "Göğüs"
+   ]
+  },
+  {
+   "name": "Bent-Knee Calf Raise",
+   "from": "Bent-Knee Calf Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Baldır"
+   ]
+  },
+  {
+   "name": "Resistance Band Hamstring Curl",
+   "from": "Resistance Band Hamstring Curl",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "resistance_band",
+   "muscles": [
+    "Arka Bacak"
+   ]
+  },
+  {
+   "name": "Cable Flyes",
+   "from": "Cable Flyes",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "gym",
+   "muscles": [
+    "Göğüs"
+   ]
+  },
+  {
+   "name": "Dumbbell Bench Press",
+   "from": "Dumbbell Bench Press",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Chest-Supported Row",
+   "from": "Chest-Supported Row",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Lateral Raise",
+   "from": "Dumbbell Lateral Raise",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Yan Omuz"
+   ]
+  },
+  {
+   "name": "Standart Şınav",
+   "from": "Standart Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Machine Chest Press",
+   "from": "Machine Chest Press",
+   "goals": [
+    "muscle",
+    "fat_loss",
+    "pilates"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Hack Squat",
+   "from": "Hack Squat",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "OHP",
+   "from": "OHP",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Straight Arm Pulldown",
+   "from": "Straight Arm Pulldown",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Deadlift",
+   "from": "Deadlift",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Overhead Triceps Extension",
+   "from": "Dumbbell Overhead Triceps Extension",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Pull-Ups",
+   "from": "Pull-Ups",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Skull Crushers",
+   "from": "Skull Crushers",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lateral Raise (21s Method)",
+   "from": "Lateral Raise (21s Method)",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Overhead Cable Extension",
+   "from": "Overhead Cable Extension",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Renegade Row",
+   "from": "Renegade Row",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Battle Ropes (Tabata)",
+   "from": "Battle Ropes (Tabata)",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Row",
+   "from": "Devre — Dumbbell Row",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Shoulder Press",
+   "from": "Devre — Shoulder Press",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Bicep Curl",
+   "from": "Devre — Bicep Curl",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Triceps Dip",
+   "from": "Devre — Triceps Dip",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Step-Up",
+   "from": "Dumbbell Step-Up",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Destekli Tek Bacak Squat",
+   "from": "Destekli Tek Bacak Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Tek Bacak Hip Hinge",
+   "from": "Tek Bacak Hip Hinge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Arka Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Paused Bench Press (3s)",
+   "from": "Paused Bench Press (3s)",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Close Grip Bench Press",
+   "from": "Close Grip Bench Press",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Bayesian Curl",
+   "from": "Bayesian Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Standing Single Leg Calf Raise",
+   "from": "Standing Single Leg Calf Raise",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "JM Press",
+   "from": "JM Press",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Reverse Pec Deck",
+   "from": "Reverse Pec Deck",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Tempo Şınav (3 sn iniş)",
+   "from": "Tempo Şınav (3 sn iniş)",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Ayakları Yükseltilmiş Pike Şınav",
+   "from": "Ayakları Yükseltilmiş Pike Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Omuz",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "T-Bar Row",
+   "from": "T-Bar Row",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Preacher Curl",
+   "from": "Preacher Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Bird Dog",
+   "from": "Bird Dog",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Core",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Push-Up + Plyo Push-Up Combo",
+   "from": "Push-Up + Plyo Push-Up Combo",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Push-Up",
+   "from": "Devre (3 tur) — Push-Up",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Front Squat",
+   "from": "Front Squat",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Kontrollü Vücut Ağırlığı Squat",
+   "from": "Kontrollü Vücut Ağırlığı Squat",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Destekli Geri Lunge",
+   "from": "Destekli Geri Lunge",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Ön Bacak",
+    "Kalça"
+   ]
+  },
+  {
+   "name": "Step-Ups",
+   "from": "Step-Ups",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Eğimli Şınav",
+   "from": "Eğimli Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "stable_surface",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Diz Üstü veya Standart Şınav",
+   "from": "Diz Üstü veya Standart Şınav",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "none",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Deadlift (Orta Ağırlık)",
+   "from": "Deadlift (Orta Ağırlık)",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Plank to Push-Up",
+   "from": "Plank to Push-Up",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Deficit Deadlift",
+   "from": "Deficit Deadlift",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Pendlay Row",
+   "from": "Pendlay Row",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Back Squat (RPE 9)",
+   "from": "Back Squat (RPE 9)",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Spider Curl",
+   "from": "Spider Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Cable Curl",
+   "from": "Cable Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lateral Raise",
+   "from": "Süperset: Lateral Raise + Cable Crossover",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Cable Crossover",
+   "from": "Süperset: Lateral Raise + Cable Crossover",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Skull Crushers",
+   "from": "Süperset: Skull Crushers + Rope Pushdown",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Rope Pushdown",
+   "from": "Süperset: Skull Crushers + Rope Pushdown",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Seal Row",
+   "from": "Süperset: Seal Row + Face Pull",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Face Pull",
+   "from": "Süperset: Seal Row + Face Pull",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Cable Crossover (Dropset)",
+   "from": "Cable Crossover (Dropset)",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Overhead Cable Extension",
+   "from": "Süperset: Overhead Cable Extension + Triceps Dip",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Triceps Dip",
+   "from": "Süperset: Overhead Cable Extension + Triceps Dip",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Push-Up Variations",
+   "from": "Push-Up Variations",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Shoulder Press",
+   "from": "Shoulder Press",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Assault Bike Sprint",
+   "from": "→ ardından Assault Bike Sprint",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Rowing Sprint",
+   "from": "→ ardından Rowing Sprint",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Leg Extension",
+   "from": "Süperset: Leg Extension + Lying Leg Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lying Leg Curl",
+   "from": "Süperset: Leg Extension + Lying Leg Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Dumbbell Floor Press (nötr tutuş)",
+   "from": "Dumbbell Floor Press (nötr tutuş)",
+   "goals": [
+    "muscle",
+    "fat_loss"
+   ],
+   "equipment": "dumbbell",
+   "muscles": [
+    "Göğüs",
+    "Triceps"
+   ]
+  },
+  {
+   "name": "Barbell Curl",
+   "from": "Süperset: Barbell Curl + Hammer Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Hammer Curl",
+   "from": "Süperset: Barbell Curl + Hammer Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Arnold Press",
+   "from": "Süperset: Arnold Press + Lateral Raise",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lateral Raise",
+   "from": "Süperset: Arnold Press + Lateral Raise",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Meadows Row",
+   "from": "Süperset: Meadows Row + Reverse Pec Deck",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Reverse Pec Deck",
+   "from": "Süperset: Meadows Row + Reverse Pec Deck",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Preacher Curl",
+   "from": "Süperset: Preacher Curl + Cable Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Cable Curl",
+   "from": "Süperset: Preacher Curl + Cable Curl",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "OHP",
+   "from": "Süperset: OHP + Lateral Raise",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Lateral Raise",
+   "from": "Süperset: OHP + Lateral Raise",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "100 Push-Up Challenge (min sürede)",
+   "from": "Finisher: 100 Push-Up Challenge (min sürede)",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Clean & Press x5",
+   "from": "EMOM 16dk (4 tur) — Clean & Press x5",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Devil Press x5",
+   "from": "EMOM — Devil Press x5",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Burpee x8",
+   "from": "EMOM — Burpee x8",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Toes to Bar x10",
+   "from": "EMOM — Toes to Bar x10",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Back Squat",
+   "from": "Back Squat",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Step-Up (low box)",
+   "from": "Step-Up (low box)",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Kettlebell Swing",
+   "from": "→ ardından Kettlebell Swing",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Sled Push",
+   "from": "Finisher: Sled Push + Farmer Walk",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Farmer Walk",
+   "from": "Finisher: Sled Push + Farmer Walk",
+   "goals": [
+    "fat_loss"
+   ],
+   "equipment": null,
+   "muscles": null
+  },
+  {
+   "name": "Rear Delt Fly",
+   "from": "Rear Delt Fly",
+   "goals": [
+    "muscle"
+   ],
+   "equipment": "gym",
+   "muscles": [
+    "Arka Omuz"
+   ]
+  }
+ ],
+ "yoga": [
+  "Dolphin Pose Prep",
+  "Wall Shoulder Opener",
+  "Supported Bridge",
+  "Legs Up The Wall",
+  "Yoga Nidra",
+  "Crow Pose (Bakasana)",
+  "Side Crow Prep",
+  "Firefly Pose Prep",
+  "Eight Angle Pose Prep",
+  "Yin Yoga — Dragon Pose",
+  "Yin Yoga — Butterfly",
+  "Yin Yoga — Seal",
+  "Yin Yoga — Twisted Root",
+  "Dolphin Pose",
+  "Wheel Pose (Urdhva Dhanurasana)",
+  "King Pigeon (Eka Pada)",
+  "Camel Pose (Ustrasana)",
+  "Bow Pose (Dhanurasana)",
+  "Yin — Saddle",
+  "Yin — Caterpillar",
+  "Yin — Sphinx",
+  "Surya Namaskar A",
+  "Warrior I (Virabhadrasana I)",
+  "Warrior II",
+  "Tree Pose (Vrksasana)",
+  "Downward Dog",
+  "Savasana",
+  "Cat-Cow Stretch",
+  "Pigeon Pose",
+  "Seated Forward Fold",
+  "Supine Twist",
+  "Happy Baby",
+  "Child Pose (Balasana)",
+  "Reclining Butterfly",
+  "Sun Salutation C",
+  "Extended Side Angle",
+  "Revolved Triangle",
+  "Dancer Pose (Natarajasana)",
+  "Eagle Pose",
+  "Flying Crow",
+  "Astavakrasana (Eight Angle)",
+  "Firefly (Tittibhasana)",
+  "Side Crow",
+  "Kişisel Vinyasa Akışı",
+  "Yin Yoga Derin Seri",
+  "Chair Pose (Utkatasana)",
+  "Chaturanga",
+  "Boat Pose (Navasana)",
+  "Crow Pose Prep",
+  "Surya Bhedana",
+  "Meditasyon Oturumu",
+  "Plank Pose",
+  "Nadi Shodhana",
+  "Seated Meditation",
+  "Ashtanga Primary Series (Kısa)",
+  "Surya Namaskar B",
+  "Warrior III",
+  "Half Moon",
+  "Triangle Pose",
+  "Standing Split",
+  "Serbest Vinyasa Flow"
+ ],
+ "pilates": [
+  "Chest Lift",
+  "Single Leg Stretch Prep",
+  "Side Kick Front-Back",
+  "Neutral Pelvis Breathing",
+  "Knee Fold",
+  "Teaser (Full)",
+  "Hip Circles",
+  "Corkscrew",
+  "Side Bend",
+  "Twist (Spine Twist Supine)",
+  "Thread the Needle",
+  "Magic Circle — Inner Thigh",
+  "Magic Circle — Chest Press",
+  "Resistance Band Roll Up",
+  "Ball Between Knees Bridge",
+  "Hundred → Roll Up → Rollover",
+  "Leg Circle → Rolling → Series of 5",
+  "Spine Stretch → Open Leg Rocker",
+  "Corkscrew → Saw → Swan Dive",
+  "Swan Dive (Full)",
+  "Swimming (İleri)",
+  "Rocking",
+  "Shoulder Bridge",
+  "Wall Roll Down",
+  "Constructive Rest",
+  "Full Body Stretch Serisi",
+  "The Hundred",
+  "Single Leg Circle",
+  "Single Leg Stretch",
+  "Pelvic Curl",
+  "Side Leg Lift Series",
+  "Clam Shell",
+  "Inner Thigh Lift",
+  "Bridge Variations",
+  "Swimming",
+  "Swan Dive Prep",
+  "Arm Circles (Hafif Ağırlık)",
+  "Seal",
+  "Rocker with Open Legs",
+  "Side Kick Up-Down",
+  "Side Kick Circles",
+  "Inner Thigh Presses",
+  "Hot Potato",
+  "Joseph Pilates Orijinal 34 Hareket",
+  "Magic Circle Full Body Serisi",
+  "Resistance Band Complex",
+  "Foam Roller Challenge",
+  "Star",
+  "Twist",
+  "Snake/Twist",
+  "Back Extension",
+  "Side Plank Pilates",
+  "Push-Up (Pilates)",
+  "Spine Stretch Forward",
+  "Saw",
+  "Toe Tap Prep",
+  "Mat Koreografi (Müzikli)",
+  "Serbest Hareket Çalışması",
+  "Roll Down (Standing)",
+  "Figure 4 Stretch",
+  "Thoracic Spine Rotation",
+  "Neck & Shoulder Release",
+  "Scissors (Üst Pozisyon)",
+  "Bicycle (Üst Pozisyon)",
+  "Jackknife",
+  "Teaser 1-2-3",
+  "Mermaid Stretch",
+  "Spine Twist",
+  "Foam Roller Sırt",
+  "Hip Flexor Stretch",
+  "Push-Up → Pike → Teaser Geçiş",
+  "Pilates + Yoga Fusion",
+  "Body Awareness Meditasyon"
+ ],
+ "reformer": [
+  "Advanced Footwork Flow",
+  "Long Box Pulling Straps",
+  "Side Split Control",
+  "Semi Circle Prep",
+  "Footwork (Paralel, hafif yay)",
+  "Single Leg Footwork",
+  "Running on Reformer",
+  "Leg Circles (Ağır Yay)",
+  "Frog",
+  "Pulling Straps II",
+  "Backstroke",
+  "Rowing — Shaving",
+  "Rowing — Hug a Tree",
+  "Reverse Chest Expansion",
+  "Short Box — Round Back",
+  "Short Box — Flat Back",
+  "Short Box — Side Reach",
+  "Short Box — Twist",
+  "Long Box — Pulling Straps",
+  "Basic Jumps (Paralel)",
+  "Jumps (First Position)",
+  "Alternating Jumps",
+  "Scissors Jumps",
+  "Single Leg Jumps",
+  "Long Stretch Series",
+  "Up Stretch",
+  "Arabesque",
+  "Balance Control Front",
+  "Footwork (Paralel)",
+  "Footwork (V Pozisyon)",
+  "Leg Circles (Kayışlı)",
+  "Coordination",
+  "Arms Pulling Straps",
+  "Arms T-Shape",
+  "Bicep Curls (Reformer)",
+  "Chest Expansion",
+  "Rowing Series",
+  "Leg Press (Single Leg)",
+  "Side Splits",
+  "Scooter",
+  "Front Splits",
+  "Mermaid (İleri)",
+  "Leg Spring Series",
+  "Arm Spring Series",
+  "Stretch Serisi",
+  "Full Classical Repertoire",
+  "Plyometric Jumps",
+  "Tuck Jumps",
+  "Split Jumps",
+  "Lateral Jumps",
+  "Single Leg Plyos",
+  "Standing Lunge",
+  "Eve's Lunge",
+  "Long Stretch",
+  "Elephant",
+  "Stomach Massage Series",
+  "Pelvic Curl on Reformer",
+  "Pike on Chair",
+  "Teaser on Chair",
+  "Going Up Front",
+  "Swan on Chair",
+  "Stomach Massage — Round",
+  "Stomach Massage — Hands Back",
+  "Stomach Massage — Reach",
+  "Full Reformer Flow (45 dk)",
+  "Hip Stretch Series",
+  "Knee Stretch Series",
+  "Hamstring Stretch",
+  "Mermaid (Reformer)",
+  "Reformer + Mat Fusion",
+  "Nefes & Meditasyon"
+ ],
+ "meditation": [
+  "Açık Farkındalık",
+  "Farkındalık Yürüyüşü",
+  "Sevgi-Şefkat Meditasyonu",
+  "Şefkat Meditasyonu",
+  "Nefes Farkındalığı",
+  "Nefes Sayımı",
+  "Sessiz Farkındalık Oturumu",
+  "Vücut Taraması",
+  "Uzun Vücut Taraması",
+  "Kısa Vücut Taraması",
+  "Yürüyüş Meditasyonu",
+  "Duygu Gözlemi",
+  "Rehberli Görselleştirme",
+  "Öz-Sorgulama"
+ ]
+}
