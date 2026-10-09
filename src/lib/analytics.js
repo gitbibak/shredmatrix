@@ -206,7 +206,16 @@ export function initAnalytics(language) {
     ad_personalization: 'denied',
     wait_for_update: 500,
   });
-  if (getAnalyticsConsent() === 'granted') configureGoogleAnalytics();
+  if (getAnalyticsConsent() === 'granted') {
+    // Consent mode does not persist the choice across page loads.
+    window.gtag('consent', 'update', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    });
+    configureGoogleAnalytics();
+  }
   recordLocalEvent('session_start');
   const today = new Date().toISOString().split('T')[0];
   try {

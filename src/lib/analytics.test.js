@@ -25,6 +25,41 @@ describe('privacy-safe analytics', () => {
     expect(document.head.querySelector('script[data-fullbalance-ga]')).toBeNull();
   });
 
+  it('does not load GA or send events when a saved consent choice is denied', async () => {
+    localStorage.setItem('fullbalance_analytics_consent', 'denied');
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.trackPageView('Full Balance', '/en');
+
+    expect(window.dataLayer).toHaveLength(1);
+    expect(window.dataLayer[0][2].analytics_storage).toBe('denied');
+    expect(document.head.querySelector('script[data-fullbalance-ga]')).toBeNull();
+  });
+
+  it('restores saved analytics consent before GA configuration without adding a page view', async () => {
+    localStorage.setItem('fullbalance_analytics_consent', 'granted');
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+
+    const commands = window.dataLayer.map((entry) => Array.from(entry));
+    const updateIndex = commands.findIndex(([command, action]) => command === 'consent' && action === 'update');
+    const configIndex = commands.findIndex(([command]) => command === 'config');
+    expect(updateIndex).toBeGreaterThan(0);
+    expect(configIndex).toBeGreaterThan(updateIndex);
+    expect(commands[updateIndex][2]).toEqual({
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    });
+    expect(commands[configIndex][2].send_page_view).toBe(false);
+    expect(commands.filter(([command, event]) => command === 'event' && event === 'page_view')).toHaveLength(0);
+    expect(document.head.querySelectorAll('script[data-fullbalance-ga="G-TEST123"]')).toHaveLength(1);
+
+    analytics.trackPageView('Full Balance', '/en');
+    expect(window.dataLayer.filter((entry) => entry[0] === 'event' && entry[1] === 'page_view')).toHaveLength(1);
+  });
+
   it('records the registration funnel locally without sensitive values', async () => {
     const analytics = await loadAnalytics();
     analytics.initAnalytics();

@@ -1,10 +1,61 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { captureAcquisitionContext, getFirstTouchAttribution, recordAcquisitionContent } from './acquisition';
 
 describe('first-party acquisition attribution', () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     localStorage.clear();
     window.history.replaceState({}, '', '/en?utm_source=google&utm_medium=cpc&utm_campaign=free_fitness');
+  });
+
+  it('keeps a direct arrival direct after returning from Google sign-in', () => {
+    window.history.replaceState({}, '', '/en');
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue('');
+    captureAcquisitionContext('en');
+
+    window.history.replaceState({}, '', '/auth');
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue('https://accounts.google.com/');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'direct',
+      acquisition_medium: 'none',
+      first_source: 'direct',
+      first_landing_page: '/en',
+    });
+  });
+
+  it('does not credit Google sign-in when no acquisition context was retained', () => {
+    window.history.replaceState({}, '', '/auth');
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue('https://accounts.google.com/');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'direct',
+      acquisition_medium: 'none',
+      first_source: 'direct',
+    });
+  });
+
+  it.each(['www.google.com', 'www.google.co.uk'])('preserves a genuine search referrer from %s', (host) => {
+    window.history.replaceState({}, '', '/en');
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue(`https://${host}/search?q=fitness`);
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'google',
+      acquisition_medium: 'referral',
+    });
+  });
+
+  it('preserves tagged campaign attribution through a Google sign-in return', () => {
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue('https://accounts.google.com/');
+    expect(captureAcquisitionContext('en').acquisition_source).toBe('google');
+    window.history.replaceState({}, '', '/auth');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'google',
+      acquisition_medium: 'cpc',
+      acquisition_campaign: 'free_fitness',
+      landing_path: '/en',
+    });
   });
 
   it('captures campaign and language without storing the full query string', () => {

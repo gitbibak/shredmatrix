@@ -26,6 +26,8 @@ function externalReferrer() {
   try {
     if (!document.referrer) return null;
     const referrer = new URL(document.referrer);
+    // A Google sign-in return is part of authentication, not acquisition.
+    if (referrer.hostname === 'accounts.google.com') return null;
     return referrer.origin === window.location.origin ? null : normalizeSource(referrer.hostname);
   } catch {
     return null;
