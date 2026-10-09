@@ -357,6 +357,7 @@ export const turkishSeoPages = {
     heroCopy: 'Uygulama indirmeden, üyelik olmadan, tarayıcıda çalışır ve kullanım sınırı yoktur. Tabağın fotoğrafını çek; yiyecekler, tahmini gramlar, kalori ve makrolar otomatik gelsin. Türk mutfağı dahil 200+ yiyecekli veritabanı; gizli yağ ve sos önerilerini tek dokunuşla ekle, porsiyonu düzelt.',
     sections: [
       { title: 'Nasıl çalışır?', body: 'Görüntü modeli tabaktaki her yiyeceği ayrı tanır ve gram tahmin eder; kalori ve makrolar 200+ yiyecekli beslenme veritabanından hesaplanır, modelin uydurduğu sayılar kullanılmaz.' },
+      { title: 'Temsili kullanım örneği', body: 'Bu örnek gerçek bir kullanıcı sonucu veya model çıktısı değildir: Pilav, tavuk ve salata içeren bir öğünün fotoğrafını çektiğini düşün. Listelenen yiyecekleri ve tahmini gramları kontrol edip düzelt; fotoğrafta görünmeyen pişirme yağını veya sosu ekle. İstersen ardından hesap açarak kişisel beslenme planına geçebilirsin.' },
       { title: 'Neden tek sayı değil, aralık?', body: 'Tek fotoğraf porsiyon hacmini, emilen pişirme yağını ve sosu kesin gösteremez. Araç model güvenine göre alt-üst sınır verir; gizli içerikleri sen onaylarsın.' },
       { title: 'Fotoğraf saklanmaz', body: 'Görsel cihazında küçültülür, yalnızca analiz için işlenir; hesabına veya sunucuya kaydedilmez. Üyelik gerekmez.' },
     ],
