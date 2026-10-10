@@ -32,4 +32,8 @@ marketing/content-distribution-pack-2026-10-10.md: EN/TR/ESvideo metinleri, Inst
 
 Mevcut günlük denetim kayıt/dil/kaynak takibine devam edebilir; bu koşuda yeni otomasyon oluşturulmadı. İlk3tamgünde teknik hata,7/14günde dağıtım sinyali incelenmeli; SEO sonucu anlamlı gösterim/indekslenme olmadan başarısız ilan edilmemeli. Araç ücretsiz ve kayıtsız olduğundan meal_photo_analyzed ile signup_completed ayrı amaçlardır. GA consent nüfusu ve kimlik sonrası growth olaylarını profil sayısına bölerek sahte dönüşüm oranı üretme. Sosyal paylaşım ve pilot iletişimi için gerçek hesap/alıcı ve açık iletişim yetkisi gerekir.
 
-Canlı yayın sonucu bu raporun takip bölümüne kaydedilecektir.
+## Yayın ve canlı doğrulama — 11 Ekim İstanbul
+
+Uygulama commit'i1f6a8a3 gitbibak/main dalına gönderildi. İlk Cloudflare yüklemesi geçici bağlantı hatasıyla durdu; API erişimi tekrar sağlandıktan sonraki tek tekrar başarılı oldu. Canlı Cloudflare sürümü01658141-c0d9-4839-93e6-9acd7f61cdd9,fullbalance.app/* üzerinde yayımlandı.
+
+Altı yeni makalenin başlığı ve dili canlı tarayıcıda okundu; EN/ESfoto ve TRyük rehberlerinde canonical doğru. ENfoto araç sayfasında iki yeni rehbere bağlantı görünür. Canlı ENrehber ekran görüntüsü output/live-content-release-2026-10-11.png. IndexNow'a yalnızca6makale+3blogindeksi bildirildi,HTTP200 alındı;Google indekslenmesi veya arama sırası doğrulanmış değildir. Sosyal paylaşım ve dış mesaj gönderilmedi. Test sonuçları415test/65dosya,90SEO sayfası/100sitemapURL olarak geçerlidir.
