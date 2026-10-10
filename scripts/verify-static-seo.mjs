@@ -3,6 +3,7 @@ import { access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
+import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { BASE_URL, publicPages } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
@@ -35,19 +36,39 @@ for (const lang of ['tr', 'en', 'es']) {
 }
 
 for (const article of blogArticles) {
-  const file = join(distDir, 'blog', article.slug, 'index.html');
+  const path = getArticlePath(article);
+  const lang = getArticleLanguage(article);
+  const file = join(distDir, path.slice(1), 'index.html');
   const html = await readFile(file, 'utf8');
-  const canonical = `${BASE_URL}/blog/${article.slug}`;
+  const canonical = `${BASE_URL}${path}`;
 
   assert(html.includes(`<title>${article.title} | Full Balance</title>`), `${article.slug} title is missing`);
+  assert(html.includes(`<html lang="${lang}">`), `${path} document language is missing`);
+  assert(html.includes(`property="og:locale" content="${lang === 'tr' ? 'tr_TR' : lang === 'en' ? 'en_US' : 'es_ES'}"`), `${path} Open Graph locale is incorrect`);
   assert(html.includes(`rel="canonical" href="${canonical}"`), `${article.slug} canonical is missing`);
   assert(html.includes(`content="${article.description.replaceAll('&', '&amp;').replaceAll('"', '&quot;')}"`), `${article.slug} description is missing`);
   assert(html.includes(`<h1>${article.title}</h1>`), `${article.slug} visible H1 is missing`);
-  assertSingleLocalizedH1(html, `blog/${article.slug}`);
+  assertSingleLocalizedH1(html, path, lang);
   assert(html.includes('"@type":"BlogPosting"'), `${article.slug} BlogPosting schema is missing`);
+  assert(html.includes(`"inLanguage":"${getBlogCopy(lang).locale}"`), `${path} schema language is incorrect`);
+  assert(html.includes(`"item":"${BASE_URL}${getBlogPath(lang)}"`), `${path} breadcrumb blog URL is incorrect`);
   assert(html.includes(`${BASE_URL}${article.image}`), `${article.slug} image metadata is missing`);
   assert(html.includes('id="seo-static"'), `${article.slug} static article content is missing`);
-  assert(!html.includes('rel="alternate"'), `${article.slug} has an incorrect language alternate`);
+  const translations = article.translationKey ? blogArticles.filter((item) => item.translationKey === article.translationKey) : [];
+  if (translations.length > 1) {
+    for (const translated of translations) {
+      assert(html.includes(`hreflang="${getArticleLanguage(translated)}" href="${BASE_URL}${getArticlePath(translated)}"`), `${path} translation alternate is missing`);
+    }
+  } else {
+    assert(!html.includes('rel="alternate"'), `${path} has an incorrect language alternate`);
+  }
+  if (article.cta) {
+    assert(html.includes(`href="${article.cta.href}"`), `${path} article CTA link is missing`);
+    assert(html.includes(article.cta.label), `${path} article CTA label is missing`);
+  }
+  for (const other of blogArticles.filter((item) => getArticleLanguage(item) !== lang)) {
+    assert(!html.includes(`<a href="${getArticlePath(other)}">${other.title}</a>`), `${path} links a different-language related guide`);
+  }
   assert(occurrences(html, 'type="application/ld+json"') === 1, `${article.slug} has conflicting structured data blocks`);
   await access(join(rootDir, 'public', article.image));
 }
@@ -67,10 +88,22 @@ for (const page of seoLandingPages) {
   }
 }
 
-const blogHtml = await readFile(join(distDir, 'blog', 'index.html'), 'utf8');
-assert(blogHtml.includes('<h1>Sağlıklı yaşamı karmaşıklaştırmadan anlayın</h1>'), 'blog index H1 is missing');
-assertSingleLocalizedH1(blogHtml, 'blog');
-assert(blogHtml.includes('"@type":"Blog"'), 'blog index schema is missing');
+for (const lang of ['tr', 'en', 'es']) {
+  const path = getBlogPath(lang);
+  const copy = getBlogCopy(lang);
+  const html = await readFile(join(distDir, path.slice(1), 'index.html'), 'utf8');
+  assert(html.includes(`<html lang="${lang}">`), `${path} language is missing`);
+  assert(html.includes(`<h1>${copy.heading}</h1>`), `${path} H1 is missing`);
+  assertSingleLocalizedH1(html, path, lang);
+  assert(html.includes(`rel="canonical" href="${BASE_URL}${path}"`), `${path} canonical is missing`);
+  assert(html.includes(`property="og:locale" content="${lang === 'tr' ? 'tr_TR' : lang === 'en' ? 'en_US' : 'es_ES'}"`), `${path} Open Graph locale is incorrect`);
+  assert(html.includes(`"@type":"Blog"`), `${path} Blog schema is missing`);
+  assert(html.includes(`"inLanguage":"${copy.locale}"`), `${path} Blog schema language is incorrect`);
+  for (const alt of ['tr', 'en', 'es']) assert(html.includes(`hreflang="${alt}" href="${BASE_URL}${getBlogPath(alt)}"`), `${path} ${alt} alternate is missing`);
+  for (const article of blogArticles.filter((item) => getArticleLanguage(item) === lang)) {
+    assert(html.includes(`href="${getArticlePath(article)}"`), `${path} article link is missing`);
+  }
+}
 
 const editorialHtml = await readFile(join(distDir, 'editorial-policy', 'index.html'), 'utf8');
 assert(editorialHtml.includes('<h1>Yayın ilkelerimiz</h1>'), 'editorial policy H1 is missing');
@@ -137,4 +170,4 @@ for (const [path] of publicPages) {
   assert(sitemap.includes(`<loc>${BASE_URL}${path}</loc>`), `${path} is missing from sitemap.xml`);
 }
 
-console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderRoutes.length + 2} static SEO pages and ${publicPages.length} sitemap URLs.`);
+console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderRoutes.length + 4} static SEO pages and ${publicPages.length} sitemap URLs.`);

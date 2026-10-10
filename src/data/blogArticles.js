@@ -1,4 +1,7 @@
+import { growthBlogArticles } from './growthBlogArticles.js';
+
 export const blogArticles = [
+  ...growthBlogArticles,
   {
     slug: 'antrenman-oncesi-sonrasi-ne-yenir',
     title: 'Antrenman Öncesi ve Sonrası Ne Yenir? Pratik Beslenme Rehberi',

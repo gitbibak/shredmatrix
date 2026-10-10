@@ -1,4 +1,5 @@
 import { blogArticles } from '../src/data/blogArticles.js';
+import { getArticlePath } from '../src/data/blogLocale.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { internationalSeoPages } from '../src/data/internationalSeoPages.js';
 import { turkishSeoPages } from '../src/data/turkishSeoPages.js';
@@ -29,8 +30,11 @@ export const publicPages = [
   ['/kurucu-tolga-deveci', '2026-08-24'],
   ['/en/founder-tolga-deveci', '2026-08-24'],
   ['/es/fundador-tolga-deveci', '2026-08-24'],
+  ['/blog', '2026-10-10'],
+  ['/en/blog', '2026-10-10'],
+  ['/es/blog', '2026-10-10'],
   ...Object.keys(turkishSeoPages).map((slug) => [`/${slug}`, turkishPageLastmod[slug] || '2026-09-02']),
-  ...blogArticles.map((article) => [`/blog/${article.slug}`, article.updatedAt]),
+  ...blogArticles.map((article) => [getArticlePath(article), article.updatedAt]),
   ...internationalSeoPages.map((page) => [
     page.path,
     ['photoCalories', 'calories', 'resistanceBand', 'fourWeekHome', 'womenHome', 'over40'].includes(page.topic)

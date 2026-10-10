@@ -5,6 +5,7 @@ import { writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
+import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
 import { internationalSeoPages } from '../src/data/internationalSeoPages.js';
 import { turkishSeoPages } from '../src/data/turkishSeoPages.js';
 import { pricingPages } from '../src/data/pricingPages.js';
@@ -45,14 +46,19 @@ const sections = [
   ...reviewPages.map((page) => line(page.path, page.title, page.description)),
   '',
   '## English guides',
+  line(getBlogPath('en'), getBlogCopy('en').indexTitle, getBlogCopy('en').indexDescription),
+  ...blogArticles.filter((article) => getArticleLanguage(article) === 'en').map((article) => line(getArticlePath(article), article.title, article.description)),
   ...internationalSeoPages.filter((page) => page.lang === 'en').map((page) => line(page.path, page.metaTitle || page.title, page.description)),
   '',
   '## Guías en español',
+  line(getBlogPath('es'), getBlogCopy('es').indexTitle, getBlogCopy('es').indexDescription),
+  ...blogArticles.filter((article) => getArticleLanguage(article) === 'es').map((article) => line(getArticlePath(article), article.title, article.description)),
   ...internationalSeoPages.filter((page) => page.lang === 'es').map((page) => line(page.path, page.metaTitle || page.title, page.description)),
   '',
   '## Türkçe rehberler',
+  line(getBlogPath('tr'), getBlogCopy('tr').indexTitle, getBlogCopy('tr').indexDescription),
   ...Object.entries(turkishSeoPages).map(([slug, page]) => line(`/${slug}`, page.metaTitle || page.title, page.description || '')),
-  ...blogArticles.map((article) => line(`/blog/${article.slug}`, article.title, article.description)),
+  ...blogArticles.filter((article) => getArticleLanguage(article) === 'tr').map((article) => line(getArticlePath(article), article.title, article.description)),
   '',
   '## About',
   line('/kurucu-tolga-deveci', 'Tolga Deveci (founder)', 'Founder and developer profile in Turkish; English at /en/founder-tolga-deveci, Spanish at /es/fundador-tolga-deveci.'),

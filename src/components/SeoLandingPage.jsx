@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { SEO_LAST_REVIEWED, formatReviewedDate, getAlternatesForTurkishPath } from '../data/internationalSeoPages';
+import { getArticlePath } from '../data/blogLocale';
+import { getLandingBlogArticles } from '../data/blogRelated';
 import { trackLandingCta } from '../lib/analytics';
 import {
   Activity,
@@ -201,6 +203,7 @@ export default function SeoLandingPage({ slug }) {
   useSeo(page, canonicalSlug);
   if (!pageExists) return <Navigate to="/" replace />;
   const Icon = page.icon;
+  const blogGuides = getLandingBlogArticles(`/${canonicalSlug}`, 'tr');
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -349,6 +352,17 @@ export default function SeoLandingPage({ slug }) {
           </div>
         </div>
       </section>
+
+      {blogGuides.length > 0 && (
+        <section className="border-t border-slate-800/60 px-4 py-14">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="font-outfit text-2xl font-extrabold text-white">İlgili rehberler</h2>
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {blogGuides.map((article) => <Link key={article.slug} to={getArticlePath(article)} className="rounded-2xl border border-slate-800 bg-slate-900/55 p-5 hover:border-orange-500/45"><span className="font-outfit font-bold text-white">{article.title}</span><p className="mt-2 text-sm text-slate-400">{article.description}</p></Link>)}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="px-4 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl">

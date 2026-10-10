@@ -3,6 +3,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
+import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
+import { getLandingBlogArticles } from '../src/data/blogRelated.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
 import { BASE_URL } from './seo-routes.mjs';
@@ -63,7 +65,7 @@ function replaceMeta(html, attribute, key, content) {
     : html.replace('</head>', `    <meta ${attribute}="${key}" content="${escapeHtml(content)}" />\n  </head>`);
 }
 
-function buildDocument({ title, description, canonical, image, type = 'website', schema, body, lang = 'tr', alternates = null }) {
+function buildDocument({ title, description, canonical, image, type = 'website', schema, body, lang = 'tr', alternates = null, ogAlternates = null }) {
   let html = template
     .replace(/<title>[^<]*<\/title>/i, `<title>${escapeHtml(title)}</title>`)
     .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/i, `<link rel="canonical" href="${escapeHtml(canonical)}" />`)
@@ -81,7 +83,7 @@ function buildDocument({ title, description, canonical, image, type = 'website',
   if (alternates) {
     const alternateTags = Object.entries(alternates)
       .map(([alternateLang, path]) => `<link rel="alternate" hreflang="${escapeHtml(alternateLang)}" href="${BASE_URL}${escapeHtml(path)}" />`)
-      .concat(`<link rel="alternate" hreflang="x-default" href="${BASE_URL}${escapeHtml(alternates.en)}" />`)
+      .concat(`<link rel="alternate" hreflang="x-default" href="${BASE_URL}${escapeHtml(alternates.en || alternates.tr || Object.values(alternates)[0])}" />`)
       .join('\n    ');
     html = html.replace('</head>', `    ${alternateTags}\n  </head>`);
   }
@@ -100,7 +102,7 @@ function buildDocument({ title, description, canonical, image, type = 'website',
   const ogLocaleTags = [
     `<meta property="og:locale" content="${ogLocale}" />`,
     ...Object.entries(OG_LOCALES)
-      .filter(([alternateLang]) => alternateLang !== lang)
+      .filter(([alternateLang]) => alternateLang !== lang && (!ogAlternates || ogAlternates[alternateLang]))
       .map(([, locale]) => `<meta property="og:locale:alternate" content="${locale}" />`),
   ].join('\n    ');
   html = html.replace('</head>', `    ${ogLocaleTags}\n  </head>`);
@@ -115,16 +117,42 @@ function buildDocument({ title, description, canonical, image, type = 'website',
   return html.replace('</head>', `    ${staticStyles}\n    <script type="application/ld+json" data-static-seo="true">${safeJson(schema)}</script>\n  </head>`);
 }
 
+const BLOG_STATIC_COPY = {
+  tr: { indexTitle: 'Sağlıklı yaşamı karmaşıklaştırmadan anlayın', indexDescription: 'Antrenman, beslenme, uyku, mobilite ve longevity hakkında uygulanabilir, kaynaklı ve ücretsiz Full Balance rehberleri.', indexMetaTitle: 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance', indexName: 'Full Balance Rehber', all: 'Tüm rehberler', related: 'İlgili rehberler', tools: 'İlgili araçlar ve programlar', published: 'Yayın', updated: 'Güncelleme', author: 'Full Balance Editör Ekibi', disclaimer: 'Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir.', editorial: 'Yayın ilkelerimizi incele', sources: 'Kaynaklar', start: "Full Balance'a ücretsiz başla" },
+  en: { indexTitle: 'Practical guides to healthier living', indexDescription: 'Evidence-informed Full Balance guides to fitness, nutrition, sleep, mobility and healthy aging.', indexMetaTitle: 'Fitness and Healthy Living Guides | Full Balance', indexName: 'Full Balance Guides', all: 'All guides', related: 'Related guides', tools: 'Related tools and plans', published: 'Published', updated: 'Updated', author: 'Full Balance Editorial Team', disclaimer: 'This article is for general information and does not provide medical diagnosis or treatment advice.', editorial: 'Editorial policy', sources: 'Sources', start: 'Start Full Balance for free' },
+  es: { indexTitle: 'Guías prácticas para una vida más saludable', indexDescription: 'Guías de Full Balance con fuentes sobre ejercicio, nutrición, sueño, movilidad y envejecimiento saludable.', indexMetaTitle: 'Guías de ejercicio y vida saludable | Full Balance', indexName: 'Guías de Full Balance', all: 'Todas las guías', related: 'Guías relacionadas', tools: 'Herramientas y planes relacionados', published: 'Publicado', updated: 'Actualizado', author: 'Equipo editorial de Full Balance', disclaimer: 'Este artículo ofrece información general y no sustituye el diagnóstico ni el tratamiento médico.', editorial: 'Política editorial', sources: 'Fuentes', start: 'Empieza gratis con Full Balance' },
+};
+const blogLang = getArticleLanguage;
+const blogCopy = (lang) => {
+  const c = getBlogCopy(lang);
+  return { ...BLOG_STATIC_COPY[lang], ...c, indexTitle: c.heading, indexMetaTitle: c.indexTitle, indexName: c.schemaName, all: c.allGuides, tools: c.relatedTools, editorial: c.editorialLink, start: c.ctaLabel };
+};
+const languageTag = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
+const blogArticlesFor = (lang) => blogArticles.filter((article) => blogLang(article) === lang);
+const articleAlternates = (article) => {
+  if (!article.translationKey) return null;
+  const translations = blogArticles.filter((item) => item.translationKey === article.translationKey);
+  return translations.length > 1 ? Object.fromEntries(translations.map((item) => [blogLang(item), getArticlePath(item)])) : null;
+};
+
 function articleBody(article) {
+  const lang = blogLang(article);
+  const copy = blogCopy(lang);
   const sections = article.sections.map((section) => `<section><h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`).join('');
   const sources = article.sources.map(([label, href]) => `<li><a href="${escapeHtml(href)}" rel="noreferrer">${escapeHtml(label)}</a></li>`).join('');
-  const internalLinks = article.internalLinks?.length ? `<nav aria-label="İlgili Full Balance araçları"><h2>İlgili araçlar ve programlar</h2><ul>${article.internalLinks.map(([href, label]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join('')}</ul></nav>` : '';
-  const related = blogArticles.filter((item) => item.slug !== article.slug).slice(0, 3).map((item) => `<li><a href="/blog/${escapeHtml(item.slug)}">${escapeHtml(item.title)}</a></li>`).join('');
-  return `<main class="static-seo"><a href="/blog">Tüm rehberler</a><article><header><p>${escapeHtml(article.category)} · ${escapeHtml(article.readTime)}</p><h1>${escapeHtml(article.title)}</h1><p>${escapeHtml(article.intro)}</p><p>Yayın: <time datetime="${article.publishedAt}">${escapeHtml(article.publishedAt)}</time> · Güncelleme: <time datetime="${article.updatedAt}">${escapeHtml(article.updatedAt)}</time> · <a href="/editorial-policy">Full Balance Editör Ekibi</a></p></header><img src="${escapeHtml(article.image)}" alt="${escapeHtml(article.imageAlt)}" width="1600" height="900">${sections}${internalLinks}<aside><p>Bu içerik genel bilgilendirme amaçlıdır; tıbbi tanı veya tedavi önerisi değildir.</p><a href="/editorial-policy">Yayın ilkelerimizi incele</a></aside><section><h2>Kaynaklar</h2><ul>${sources}</ul></section></article><nav aria-label="İlgili rehberler"><h2>İlgili rehberler</h2><ul>${related}</ul></nav><footer><a href="/auth?mode=register">Full Balance'a ücretsiz başla</a></footer></main>`;
+  const localLinks = article.internalLinks?.filter(([href]) => lang === 'tr' || href.startsWith(`/${lang}/`)) || [];
+  const internalLinks = localLinks.length ? `<nav aria-label="${escapeHtml(copy.tools)}"><h2>${escapeHtml(copy.tools)}</h2><ul>${localLinks.map(([href, label]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join('')}</ul></nav>` : '';
+  const related = blogArticlesFor(lang).filter((item) => item !== article).slice(0, 3).map((item) => `<li><a href="${escapeHtml(getArticlePath(item))}">${escapeHtml(item.title)}</a></li>`).join('');
+  const author = lang === 'tr' ? `<a href="/editorial-policy">${escapeHtml(copy.author)}</a>` : escapeHtml(copy.author);
+  const editorial = lang === 'tr' ? `<a href="/editorial-policy">${escapeHtml(copy.editorial)}</a>` : '';
+  const cta = article.cta || { href: `/auth?mode=register${lang === 'tr' ? '' : `&lang=${lang}`}`, label: copy.start };
+  return `<main class="static-seo"><a href="${getBlogPath(lang)}">${escapeHtml(copy.all)}</a><article><header><p>${escapeHtml(article.category)} · ${escapeHtml(article.readTime)}</p><h1>${escapeHtml(article.title)}</h1><p>${escapeHtml(article.intro)}</p><p>${escapeHtml(copy.published)}: <time datetime="${article.publishedAt}">${escapeHtml(article.publishedAt)}</time> · ${escapeHtml(copy.updated)}: <time datetime="${article.updatedAt}">${escapeHtml(article.updatedAt)}</time> · ${author}</p></header><img src="${escapeHtml(article.image)}" alt="${escapeHtml(article.imageAlt)}" width="1600" height="900">${sections}${internalLinks}<aside><p>${escapeHtml(copy.disclaimer)}</p>${editorial}</aside><section><h2>${escapeHtml(copy.sources)}</h2><ul>${sources}</ul></section></article>${related ? `<nav aria-label="${escapeHtml(copy.related)}"><h2>${escapeHtml(copy.related)}</h2><ul>${related}</ul></nav>` : ''}<footer>${cta.title ? `<h2>${escapeHtml(cta.title)}</h2>` : ''}${cta.description ? `<p>${escapeHtml(cta.description)}</p>` : ''}<a href="${escapeHtml(cta.href)}">${escapeHtml(cta.label)}</a></footer></main>`;
 }
 
 function articleSchema(article) {
-  const url = `${BASE_URL}/blog/${article.slug}`;
+  const lang = blogLang(article);
+  const copy = blogCopy(lang);
+  const url = `${BASE_URL}${getArticlePath(article)}`;
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -136,20 +164,27 @@ function articleSchema(article) {
         datePublished: `${article.publishedAt}T09:00:00+03:00`,
         dateModified: `${article.updatedAt}T09:00:00+03:00`,
         mainEntityOfPage: url,
-        inLanguage: 'tr-TR',
-        author: { '@type': 'Organization', name: 'Full Balance Editör Ekibi', url: `${BASE_URL}/editorial-policy` },
+        inLanguage: languageTag[lang],
+        author: { '@type': 'Organization', name: copy.author, ...(lang === 'tr' ? { url: `${BASE_URL}/editorial-policy` } : {}) },
         publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL, logo: { '@type': 'ImageObject', url: `${BASE_URL}/icon-512.png` } },
       },
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: BASE_URL },
-          { '@type': 'ListItem', position: 2, name: 'Rehber', item: `${BASE_URL}/blog` },
+          { '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}${lang === 'tr' ? '' : `/${lang}`}` },
+          { '@type': 'ListItem', position: 2, name: copy.all, item: `${BASE_URL}${getBlogPath(lang)}` },
           { '@type': 'ListItem', position: 3, name: article.title, item: url },
         ],
       },
     ],
   };
+}
+
+function landingBlogLinks(path, lang) {
+  const articles = getLandingBlogArticles(path, lang);
+  if (!articles.length) return '';
+  const heading = lang === 'tr' ? 'İlgili rehberler' : getBlogCopy(lang).related;
+  return `<nav aria-label="${escapeHtml(heading)}"><h2>${escapeHtml(heading)}</h2><ul>${articles.map((article) => `<li><a href="${escapeHtml(getArticlePath(article))}">${escapeHtml(article.title)}</a></li>`).join('')}</ul></nav>`;
 }
 
 async function writeRoute(route, html) {
@@ -158,15 +193,20 @@ async function writeRoute(route, html) {
   await writeFile(file, html);
 }
 
-const blogDescription = 'Antrenman, beslenme, uyku, mobilite ve longevity hakkında uygulanabilir, kaynaklı ve ücretsiz Full Balance rehberleri.';
-const blogBody = `<main class="static-seo"><header><a href="/">Full Balance</a><h1>Sağlıklı yaşamı karmaşıklaştırmadan anlayın</h1><p>${escapeHtml(blogDescription)}</p></header><section><h2>Tüm rehberler</h2>${blogArticles.map((article) => `<article><h2><a href="/blog/${escapeHtml(article.slug)}">${escapeHtml(article.title)}</a></h2><p>${escapeHtml(article.description)}</p></article>`).join('')}</section><footer><a href="/auth?mode=register">Full Balance'a ücretsiz başla</a> · <a href="/editorial-policy">Yayın ilkeleri</a></footer></main>`;
-const blogSchema = { '@context': 'https://schema.org', '@type': 'Blog', name: 'Full Balance Rehber', url: `${BASE_URL}/blog`, description: blogDescription, publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL }, blogPost: blogArticles.map((article) => ({ '@type': 'BlogPosting', headline: article.title, image: `${BASE_URL}${article.image}`, url: `${BASE_URL}/blog/${article.slug}`, datePublished: article.publishedAt, dateModified: article.updatedAt })) };
+function blogIndex(lang) {
+  const copy = blogCopy(lang);
+  const path = getBlogPath(lang);
+  const articles = blogArticlesFor(lang);
+  const body = `<main class="static-seo"><header><a href="${lang === 'tr' ? '/' : `/${lang}`}">Full Balance</a><h1>${escapeHtml(copy.indexTitle)}</h1><p>${escapeHtml(copy.indexDescription)}</p></header><section><h2>${escapeHtml(copy.all)}</h2>${articles.map((article) => `<article><h2><a href="${escapeHtml(getArticlePath(article))}">${escapeHtml(article.title)}</a></h2><p>${escapeHtml(article.description)}</p></article>`).join('')}</section><footer><a href="/auth?mode=register${lang === 'tr' ? '' : `&lang=${lang}`}">${escapeHtml(copy.start)}</a>${lang === 'tr' ? ` · <a href="/editorial-policy">${escapeHtml(copy.editorial)}</a>` : ''}</footer></main>`;
+  const schema = { '@context': 'https://schema.org', '@type': 'Blog', name: copy.indexName, url: `${BASE_URL}${path}`, description: copy.indexDescription, inLanguage: languageTag[lang], publisher: { '@type': 'Organization', name: 'Full Balance', url: BASE_URL }, blogPost: articles.map((article) => ({ '@type': 'BlogPosting', headline: article.title, image: `${BASE_URL}${article.image}`, url: `${BASE_URL}${getArticlePath(article)}`, datePublished: article.publishedAt, dateModified: article.updatedAt, inLanguage: languageTag[lang] })) };
+  return { title: copy.indexMetaTitle, description: copy.indexDescription, canonical: `${BASE_URL}${path}`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema, body, lang, alternates: Object.fromEntries(['tr', 'en', 'es'].map((language) => [language, getBlogPath(language)])) };
+}
 
 for (const page of seoLandingPages) {
   const canonical = `${BASE_URL}/${page.slug}`;
   const alternates = getAlternatesForTurkishPath(`/${page.slug}`);
   const faqBody = page.faqs.length ? `<section><h2>Sık sorulan sorular</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section>` : '';
-  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header>${leadAnswerBlock(page.faqs, 'tr')}${sampleWeekHtml(`/${page.slug}`, 'tr')}<section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav><footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
+  const body = `<main class="static-seo"><a href="/">Full Balance</a><article><header><p>Tamamen ücretsiz · Kredi kartı gerekmez</p><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></header>${leadAnswerBlock(page.faqs, 'tr')}${sampleWeekHtml(`/${page.slug}`, 'tr')}<section><h2>Neler sunar?</h2><ul>${page.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join('')}</ul></section><section><h2>Full Balance ile kişisel plan</h2><p>Hedef, deneyim ve günlük bilgilere göre oluşturulan plan; antrenman, beslenme, su, uyku ve ilerleme takibini aynı mobil deneyimde birleştirir.</p></section>${faqBody}</article><nav aria-label="İlgili programlar"><a href="/evde-spor-programi">Ekipmansız evde spor</a> · <a href="/evde-dambil-antrenman-programi">Evde dambıl programı</a> · <a href="/evde-kas-gelistirme-hareketleri">Evde kas geliştirme</a> · <a href="/baslangic-pilates-programi">Başlangıç pilatesi</a> · <a href="/kalori-makro-takibi">Kalori hesabı</a> · <a href="/yoga-uygulamasi">Yoga</a> · <a href="/meditasyon-uygulamasi">Meditasyon</a></nav>${landingBlogLinks(`/${page.slug}`, 'tr')}<footer><a href="/auth?mode=register">Ücretsiz hesabını oluştur</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -181,16 +221,21 @@ for (const page of seoLandingPages) {
   await writeRoute(`/${page.slug}`, buildDocument({ title: page.metaTitle || `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body, alternates }));
 }
 
-await writeRoute('/blog', buildDocument({ title: 'Sağlıklı Yaşam ve Longevity Rehberleri | Full Balance', description: blogDescription, canonical: `${BASE_URL}/blog`, image: `${BASE_URL}/images/blog/longevity-habits.jpg`, schema: blogSchema, body: blogBody }));
+for (const lang of ['tr', 'en', 'es']) {
+  await writeRoute(getBlogPath(lang), buildDocument(blogIndex(lang)));
+}
 
 for (const article of blogArticles) {
-  let document = buildDocument({ title: `${article.title} | Full Balance`, description: article.description, canonical: `${BASE_URL}/blog/${article.slug}`, image: `${BASE_URL}${article.image}`, type: 'article', schema: articleSchema(article), body: articleBody(article) });
-  document = replaceMeta(document, 'name', 'author', 'Full Balance Editör Ekibi');
+  const lang = blogLang(article);
+  const path = getArticlePath(article);
+  const alternates = articleAlternates(article);
+  let document = buildDocument({ title: `${article.title} | Full Balance`, description: article.description, canonical: `${BASE_URL}${path}`, image: `${BASE_URL}${article.image}`, type: 'article', schema: articleSchema(article), body: articleBody(article), lang, alternates, ogAlternates: alternates || {} });
+  document = replaceMeta(document, 'name', 'author', blogCopy(lang).author);
   document = replaceMeta(document, 'property', 'og:image:alt', article.imageAlt);
   document = replaceMeta(document, 'name', 'twitter:image:alt', article.imageAlt);
   document = replaceMeta(document, 'property', 'article:published_time', `${article.publishedAt}T09:00:00+03:00`);
   document = replaceMeta(document, 'property', 'article:modified_time', `${article.updatedAt}T09:00:00+03:00`);
-  await writeRoute(`/blog/${article.slug}`, document);
+  await writeRoute(path, document);
 }
 
 const editorialDescription = 'Full Balance sağlık ve wellness rehberlerinin kaynak seçimi, hazırlama, güncelleme ve düzeltme ilkeleri.';
@@ -287,7 +332,7 @@ for (const page of internationalSeoPages) {
   const canonical = `${BASE_URL}${page.path}`;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const relatedLabel = page.lang === 'es' ? 'Explora más objetivos y herramientas' : 'Explore more goals and tools';
-  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${page.path === "/"+page.lang ? coachMarketingHtml(page.lang) : ""}${leadAnswerBlock(page.faqs, page.lang)}${sampleWeekHtml(page.path, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${page.path === "/"+page.lang ? coachMarketingHtml(page.lang) + `<p><a href="${getBlogPath(page.lang)}">${escapeHtml(getBlogCopy(page.lang).allGuides)}</a></p>` : ""}${leadAnswerBlock(page.faqs, page.lang)}${sampleWeekHtml(page.path, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav>${landingBlogLinks(page.path, page.lang)}<footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [

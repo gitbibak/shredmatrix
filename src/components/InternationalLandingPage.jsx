@@ -4,6 +4,8 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Activity, Brain, CheckCircle2, ChevronRight, Dumbbell, Globe2, Sparkles, Target, UtensilsCrossed } from 'lucide-react';
 import { SEO_LAST_REVIEWED, findInternationalSeoPage, formatReviewedDate, getInternationalRelatedPages } from '../data/internationalSeoPages';
+import { getArticlePath, getBlogPath, getBlogCopy } from '../data/blogLocale';
+import { getLandingBlogArticles } from '../data/blogRelated';
 
 const REVIEW_LABEL = { en: 'Last reviewed', es: 'Última revisión' };
 const SHORT_ANSWER_LABEL = { en: 'Short answer', es: 'Respuesta breve' };
@@ -59,6 +61,7 @@ export default function InternationalLandingPage({ pathname }) {
   if (!page) return <Navigate to="/" replace />;
   const Icon = icons[page.category] || Globe2;
   const related = getInternationalRelatedPages(page).slice(0, 8);
+  const blogGuides = getLandingBlogArticles(page.path, page.lang);
   const registerUrl = `/auth?mode=register&lang=${page.lang}`;
   const startRegistration = (placement) => {
     const content = `seo_${page.lang}_${page.topic}_${placement}`;
@@ -72,6 +75,7 @@ export default function InternationalLandingPage({ pathname }) {
       {page.path === "/"+page.lang && <a href="#for-trainers" className="mt-6 inline-flex min-h-11 items-center text-sm font-bold text-emerald-300">{coachMarketing[page.lang].nav}<ChevronRight size={17} /></a>}
     </div></section>
     {page.path === "/"+page.lang && <CoachFeatureSection lang={page.lang} />}
+    {page.path === "/"+page.lang && <section className="px-4 py-8"><div className="mx-auto max-w-6xl"><Link to={getBlogPath(page.lang)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 px-5 py-3 text-sm font-bold text-emerald-300 hover:bg-emerald-500/10">{getBlogCopy(page.lang).allGuides}<ChevronRight size={16} /></Link></div></section>}
     {page.faqs?.[0] && <section className="px-4 pb-4"><div className="mx-auto max-w-6xl"><div className="max-w-2xl rounded-2xl border border-slate-800 bg-slate-900/60 p-5"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400">{SHORT_ANSWER_LABEL[page.lang] || SHORT_ANSWER_LABEL.en}</p><h2 className="mt-2 font-outfit text-lg font-bold text-white">{page.faqs[0][0]}</h2><p className="mt-2 text-sm leading-relaxed text-slate-300">{page.faqs[0][1]}</p><p className="mt-3 text-[11px] text-slate-500">{REVIEW_LABEL[page.lang] || REVIEW_LABEL.en}: <time dateTime={SEO_LAST_REVIEWED}>{formatReviewedDate(page.lang)}</time></p></div></div></section>}
     {page.calculator && <PublicHealthCalculator type={page.calculator} lang={page.lang} />}
     {page.mealTool && <section className="border-b border-slate-800 bg-slate-950 px-4 py-14"><div className="mx-auto max-w-4xl"><div className="mb-7 text-center"><p className="text-xs font-bold uppercase text-cyan-300">{page.lang === 'es' ? 'Herramienta gratuita para comidas' : 'Free meal tool'}</p><h2 className="mt-3 font-outfit text-3xl font-extrabold">{page.lang === 'es' ? 'Estima las calorías de una comida con una foto' : 'Estimate meal calories with a photo'}</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">{page.lang === 'es' ? 'Añade los alimentos visibles, confirma las porciones y no olvides aceites, salsas ni bebidas. Recibirás un rango útil, no una cifra falsamente exacta.' : 'Add the visible foods, confirm portions and include oils, sauces and drinks. You get a practical range instead of a falsely exact number.'}</p></div><Suspense fallback={<div className="h-72 animate-pulse rounded-2xl bg-slate-900" />}><CalorieCalc language={page.lang} /></Suspense></div></section>}
@@ -80,6 +84,7 @@ export default function InternationalLandingPage({ pathname }) {
     <section className="border-b border-slate-800 bg-orange-500 px-4 py-10 text-slate-950"><div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between"><div className="max-w-2xl"><h2 className="font-outfit text-2xl font-extrabold sm:text-3xl">{page.conversionTitle}</h2><p className="mt-2 text-sm font-semibold leading-relaxed text-slate-900/80 sm:text-base">{page.conversionText}</p></div><Link to={registerUrl} onClick={() => startRegistration('mid')} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-950 px-6 py-3 text-sm font-extrabold text-white">{page.startLabel}<ChevronRight size={17} /></Link></div></section>
     <ApprovedTestimonials language={page.lang} />
     <section className="px-4 py-14"><div className="mx-auto max-w-6xl"><p className="text-xs font-bold uppercase text-orange-400">{page.relatedEyebrow}</p><h2 className="mt-2 font-outfit text-3xl font-extrabold">{page.relatedTitle}</h2><div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{related.map((item) => <Link key={item.path} to={item.path} className="rounded-xl border border-slate-800 bg-slate-900/55 p-4 text-sm font-bold text-slate-200 hover:border-cyan-500/40"><span>{item.title}</span><ChevronRight size={15} className="mt-3 text-cyan-300" /></Link>)}</div></div></section>
+    {blogGuides.length > 0 && <section className="px-4 pb-14"><div className="mx-auto max-w-6xl"><h2 className="font-outfit text-2xl font-extrabold">{getBlogCopy(page.lang).related}</h2><div className="mt-5 grid gap-3 md:grid-cols-2">{blogGuides.map((article) => <Link key={article.slug} to={getArticlePath(article)} className="rounded-xl border border-slate-800 bg-slate-900/55 p-5 hover:border-cyan-500/40"><span className="font-outfit font-bold text-white">{article.title}</span><p className="mt-2 text-sm text-slate-400">{article.description}</p></Link>)}</div></div></section>}
     <section className="px-4 pb-20 pt-8"><div className="mx-auto max-w-4xl"><h2 className="text-center font-outfit text-3xl font-extrabold">{page.faqLabel}</h2><div className="mt-8 space-y-3">{page.faqs.map(([question, answer]) => <article key={question} className="rounded-xl border border-slate-800 bg-slate-900/65 p-5"><h2 className="font-outfit text-base font-extrabold">{question}</h2><p className="mt-2 text-sm leading-relaxed text-slate-400">{answer}</p></article>)}</div><p className="mt-8 rounded-xl border border-orange-500/20 bg-orange-500/10 p-5 text-xs leading-relaxed text-orange-100">{page.disclaimer}</p></div></section>
   </main>;
 }

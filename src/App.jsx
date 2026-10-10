@@ -55,8 +55,9 @@ const SEO_PAGE_SLUGS = TURKISH_SEO_SLUGS;
 
 function isPublicContentPath(pathname) {
   if (pathname === '/coach') return true;
-  return ['/privacy', '/terms', '/contact', '/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones', '/fiyatlandirma'].includes(pathname)
+  return ['/privacy', '/terms', '/contact', '/blog', '/en/blog', '/es/blog', '/editorial-policy', '/reviews', '/en/reviews', '/es/opiniones', '/fiyatlandirma'].includes(pathname)
     || pathname.startsWith('/blog/')
+    || pathname.startsWith('/en/blog/') || pathname.startsWith('/es/blog/')
     || pathname === '/en' || pathname.startsWith('/en/')
     || pathname === '/es' || pathname.startsWith('/es/')
     || SEO_PAGE_SLUGS.some((slug) => pathname === `/${slug}`);
@@ -756,17 +757,17 @@ function AppContent() {
               </motion.div>
             } />
 
-            <Route path="/blog" element={
+            {['/blog', '/en/blog', '/es/blog'].map((path) => <Route key={path} path={path} element={
               <motion.div key="blog" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                 <BlogIndex />
               </motion.div>
-            } />
+            } />)}
 
-            <Route path="/blog/:slug" element={
+            {['/blog/:slug', '/en/blog/:slug', '/es/blog/:slug'].map((path) => <Route key={path} path={path} element={
               <motion.div key="blog-article" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
                 <BlogArticle />
               </motion.div>
-            } />
+            } />)}
 
             <Route path="/editorial-policy" element={
               <motion.div key="editorial-policy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
