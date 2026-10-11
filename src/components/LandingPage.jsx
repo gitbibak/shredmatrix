@@ -13,6 +13,8 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { trackLandingCta, trackShare } from '../lib/analytics';
 import { MODULE_IMAGES } from '../data/moduleAssets';
 import { pricingAlternates, pricingPages } from '../data/pricingPages';
+import { blogArticles } from '../data/blogArticles';
+import { getArticleLanguage, getArticlePath, getBlogPath } from '../data/blogLocale';
 import OptimizedImage from './OptimizedImage';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import ApprovedTestimonials from './ApprovedTestimonials';
@@ -80,11 +82,10 @@ const copy = {
     ],
     guidesEyebrow: 'Kaynaklı rehberler',
     guidesTitle: 'Neyi neden yaptığını da öğren',
-    guidesDesc: 'Longevity, kuvvet, uyku ve mobilite konularını sade, uygulanabilir ve kaynaklı içeriklerle açıklıyoruz.',
+    guidesDesc: 'Antrenman, beslenme ve sağlıklı yaşam konularını sade, uygulanabilir ve kaynaklı içeriklerle açıklıyoruz.',
     readGuide: 'Rehberi oku',
     allGuides: 'Tüm rehberler',
     stats: ['hedef', 'program', 'ücretsiz'],
-    guideTitles: ['Longevity Nedir? Sağlıklı Yaşamı Destekleyen 5 Temel Alışkanlık', 'Kuvvet Antrenmanı ve Sağlıklı Yaş Alma', 'Uyku, Toparlanma ve Longevity'],
     finalTitle: 'Sağlıklı rutinini bugün ücretsiz kur',
     finalDesc: 'Tek hedef seç, kısa bilgilerini gir ve kişisel planını kullanmaya başla.',
     footerMedical: 'Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık durumuna uygun kararlar için sağlık uzmanına danış.',
@@ -112,9 +113,8 @@ const copy = {
     freeTitle: 'What does truly free mean?', freeDesc: 'We do not ask for payment to reveal essential features. Personal plans and tracking tools are free to use.',
     freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
     stepsEyebrow: 'Simple start', stepsTitle: 'Your personal plan in three steps', steps: [['Choose your goal', 'Select one of six goals and your experience level.'], ['Add the essentials', 'Complete the short profile, health and allergy preferences.'], ['Start today', 'See your workout and nutrition plan; recommendations adapt as you progress.']],
-    guidesEyebrow: 'Sourced guides', guidesTitle: 'Understand why each habit matters', guidesDesc: 'Clear, practical and sourced guides on longevity, strength, sleep and mobility.', readGuide: 'Read guide',
+    guidesEyebrow: 'Sourced guides', guidesTitle: 'Understand why each habit matters', guidesDesc: 'Clear, practical and sourced guides on training and nutrition.', readGuide: 'Read guide',
     allGuides: 'All guides', stats: ['goals', 'programs', 'free'],
-    guideTitles: ['What Is Longevity? 5 Habits That Support Healthy Living', 'Strength Training for Healthy Aging', 'Sleep, Recovery and Longevity'],
     finalTitle: 'Build your healthy routine for free today', finalDesc: 'Choose one goal, add the essentials and start using your personal plan.', footerMedical: 'Full Balance is not a medical diagnosis or treatment tool. Consult a health professional for decisions related to your condition.',
     founderLink: 'Founder & developer', founderCredit: 'Full Balance is an independent product founded and developed by Tolga Deveci.',
   },
@@ -140,9 +140,8 @@ const copy = {
     freeTitle: '¿Qué significa realmente gratis?', freeDesc: 'No pedimos pagos para mostrar funciones esenciales. Los planes y herramientas de seguimiento son gratuitos.',
     freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
     stepsEyebrow: 'Inicio sencillo', stepsTitle: 'Tu plan personal en tres pasos', steps: [['Elige tu objetivo', 'Selecciona uno de seis objetivos y tu nivel.'], ['Añade lo esencial', 'Completa el perfil breve y tus preferencias de salud y alergias.'], ['Empieza hoy', 'Consulta entrenamiento y nutrición; las recomendaciones se adaptan a tu progreso.']],
-    guidesEyebrow: 'Guías con fuentes', guidesTitle: 'Comprende por qué importa cada hábito', guidesDesc: 'Guías claras y prácticas sobre longevidad, fuerza, sueño y movilidad.', readGuide: 'Leer guía',
+    guidesEyebrow: 'Guías con fuentes', guidesTitle: 'Comprende por qué importa cada hábito', guidesDesc: 'Guías claras y prácticas sobre nutrición y hábitos saludables.', readGuide: 'Leer guía',
     allGuides: 'Todas las guías', stats: ['objetivos', 'programas', 'gratis'],
-    guideTitles: ['¿Qué es la longevidad? 5 hábitos para una vida saludable', 'Entrenamiento de fuerza para un envejecimiento saludable', 'Sueño, recuperación y longevidad'],
     finalTitle: 'Crea hoy tu rutina saludable gratis', finalDesc: 'Elige un objetivo, añade lo esencial y empieza tu plan personal.', footerMedical: 'Full Balance no es una herramienta de diagnóstico ni tratamiento. Consulta a un profesional de salud.',
     founderLink: 'Fundador y desarrollador', founderCredit: 'Full Balance es un producto independiente fundado y desarrollado por Tolga Deveci.',
   },
@@ -194,11 +193,9 @@ export default function LandingPage({ onStart }) {
     { key: 'pilates', icon: CircleDot, color: '#06b6d4', fallback: 'Pilates' },
   ];
 
-  const guides = [
-    { slug: 'longevity-nedir-saglikli-yasam-aliskanliklari', image: '/images/blog/longevity-habits.jpg', title: c.guideTitles[0] },
-    { slug: 'kuvvet-antrenmani-ve-saglikli-yaslanma', image: '/images/blog/strength-healthy-aging.jpg', title: c.guideTitles[1] },
-    { slug: 'uyku-toparlanma-ve-longevity', image: '/images/blog/sleep-recovery.jpg', title: c.guideTitles[2] },
-  ];
+  const blogLanguage = lang === 'en' || lang === 'es' ? lang : 'tr';
+  const guides = blogArticles.filter((article) => getArticleLanguage(article) === blogLanguage).slice(0, 3);
+  const longevityGuide = blogArticles.find((article) => article.slug === 'longevity-nedir-saglikli-yasam-aliskanliklari');
   const photoMealPath = lang === 'es'
     ? '/es/calculadora-calorias-macros'
     : lang === 'en'
@@ -382,7 +379,7 @@ export default function LandingPage({ onStart }) {
           </Link>
           <div className="mt-5 flex items-start gap-3 border-l-2 border-emerald-500 bg-emerald-500/5 p-4 text-sm leading-6 text-slate-400">
             <Activity size={19} className="mt-0.5 shrink-0 text-emerald-400" />
-            <p>{c.longevityNote} <Link to="/blog/longevity-nedir-saglikli-yasam-aliskanliklari" className="font-semibold text-emerald-400 underline underline-offset-4">{c.readGuide}</Link></p>
+            <p>{c.longevityNote} <Link to={blogLanguage === 'tr' ? getArticlePath(longevityGuide) : getBlogPath(blogLanguage)} className="font-semibold text-emerald-400 underline underline-offset-4">{blogLanguage === 'tr' ? c.readGuide : c.allGuides}</Link></p>
           </div>
         </div>
       </section>
@@ -424,11 +421,11 @@ export default function LandingPage({ onStart }) {
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <SectionTitle eyebrow={c.guidesEyebrow} title={c.guidesTitle} desc={c.guidesDesc} />
-            <Link to="/blog" className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">{c.allGuides}<ArrowRight size={16} /></Link>
+            <Link to={getBlogPath(blogLanguage)} className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-emerald-400">{c.allGuides}<ArrowRight size={16} /></Link>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {guides.map((guide) => (
-              <Link key={guide.slug} to={`/blog/${guide.slug}`} className="group overflow-hidden border border-slate-800 bg-slate-900/50">
+              <Link key={guide.slug} to={getArticlePath(guide)} className="group overflow-hidden border border-slate-800 bg-slate-900/50">
                 <OptimizedImage src={guide.image} alt="" sizes="(min-width: 768px) 33vw, 100vw" width="1600" height="900" loading="lazy" className="aspect-video w-full object-cover opacity-80 transition-opacity group-hover:opacity-100" />
                 <div className="p-5"><BookOpen size={18} className="text-emerald-400" /><h3 className="mt-3 font-outfit text-lg font-bold leading-snug text-white">{guide.title}</h3><span className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-emerald-400">{c.readGuide}<ArrowRight size={14} /></span></div>
               </Link>
