@@ -1,5 +1,5 @@
 import { ChevronDown, ExternalLink, ShoppingBag } from 'lucide-react';
-import { AFFILIATE_COPY, getAffiliateProducts } from '../data/affiliateProducts';
+import { AFFILIATE_COPY, AMAZON_DISCLOSURE, getAffiliateProducts, isAmazonUrl } from '../data/affiliateProducts';
 import { trackEvent } from '../lib/analytics';
 
 // Ortaklık ürün kutusu. Linki girilmiş ürün yoksa hiçbir şey render etmez.
@@ -35,7 +35,13 @@ export default function AffiliateGear({ placement, set, lang, compact = false })
     </ul>
   );
 
-  const disclosure = <p className="mt-4 text-[11px] leading-relaxed text-slate-500">{copy.disclosure}</p>;
+  const hasAmazon = products.some((product) => isAmazonUrl(product.url));
+  const disclosure = (
+    <p className="mt-4 text-[11px] leading-relaxed text-slate-500">
+      {copy.disclosure}
+      {hasAmazon && <span className="mt-1 block">{AMAZON_DISCLOSURE}</span>}
+    </p>
+  );
 
   if (compact) {
     return (

@@ -1,6 +1,6 @@
 # Ortaklık (affiliate) linkleri — kurulum rehberi
 
-**Durum (15 Ekim 2026):** Altyapı hazır ve test edildi; **linkler boş**. Link girilene kadar sitede hiçbir şey görünmez.
+**Durum (15 Ekim 2026):** Altyapı hazır ve test edildi. Varsayılan ağ **Amazon global**; **etiket boş**. Etiket girilene kadar sitede hiçbir şey görünmez.
 
 ## Nerede gösteriliyor
 
@@ -17,44 +17,56 @@
 
 Takviye ürünleri bilinçli olarak yok; bir test bunları engelliyor.
 
-## Senin yapacakların
+## Senin yapacakların (Amazon global)
 
-### 1. Programlara katıl (hesap açma ve ödeme bilgisi senin işin)
-1. **Hepsiburada Link Gelir:** TR sayfaları için, en kolay başlangıç.
-2. **Trendyol Affiliate:** TR sayfaları için. Sosyal medya hesabı şartı olabilir.
-3. **Amazon.es Afiliados:** ES bant sayfası için.
-4. (İsteğe bağlı) **Amazon.com Associates:** uygulama içindeki İngilizce kullanıcılar için.
+Tek bir Amazon etiketi tüm sayfa ve dillerde çalışır. Etiketi girdiğin an 6 ürünün linki otomatik üretilir; ürün ürün link toplaman gerekmez.
 
-### 2. Her ürün için linkini üret
-Panelde ürünü seç ve "link oluştur" ile kendi ortaklık linkini al. Ürün seçerken:
-- Yorum sayısı ve puanı yüksek, iade koşulları net ürünleri seç.
-- Aynı ürünü iki sette (ör. egzersiz matı) kullanabilirsin; link bir kez girilir, iki sayfada da görünür.
+### 1. Amazon.com (ABD) ortaklık programına katıl
+- https://affiliate-program.amazon.com → hesap aç (hesap, vergi ve ödeme bilgileri senin işin).
+- Site olarak `https://fullbalance.app` ekle.
+- Onaydan sonra **takip etiketini** al (ör. `fullbalance-20`).
 
-### 3. Linki dosyaya yapıştır
-Dosya: `src/data/affiliateProducts.js` → `AFFILIATE_CATALOG`
+### 2. OneLink'i aç (yurt dışı ziyaretçi kendi ülkesinin Amazon'una gitsin)
+- Associates Central → Tools → **OneLink**.
+- İspanya (ES sayfası için), İngiltere ve Almanya (EN trafiğinin büyük kısmı için) programlarına katılıp hesapları bağla. İstersen Fransa, İtalya ve Kanada'yı da ekle.
+- OneLink yalnızca ABD hesabıyla çalışır. Bağlanan ülkeler: Kanada, İngiltere, İspanya, Almanya, Fransa, İtalya, Japonya, Singapur, Hollanda, Suudi Arabistan, Polonya, İsveç, Avustralya. Bu ülkelerin komşularından gelenler en yakın mağazaya yönlenir.
+- Ürün yerel mağazada yoksa ziyaretçi o mağazanın aramasına düşer ("close match" varsayılanı).
 
-Önce:
+### 3. Etiketi dosyaya yapıştır
+Dosya: `src/data/affiliateProducts.js`
 ```js
-'exercise-mat': item('Egzersiz matı', 'Yer hareketleri ve core çalışması için kaymayan zemin.'),
+export const AMAZON_ASSOCIATE_TAG = 'fullbalance-20'; // kendi etiketin
 ```
-Sonra (sadece sonuna `store` ve `url` eklenir):
+Bu kadar. Üç sayfa ve uygulama içi kutu Amazon linkleriyle açılır.
+
+### 4. (İsteğe bağlı) Belirli ürün seç
+Varsayılan olarak her ürün amazon.com aramasına gider (ör. "adjustable dumbbell set"). Belirli bir ürünü önermek istersen amazon.com'da ürün sayfasını aç ve 10 karakterlik **ASIN** kodunu `AMAZON_GLOBAL_PRODUCTS` içine yaz:
 ```js
-'exercise-mat': { ...item('Egzersiz matı', 'Yer hareketleri ve core çalışması için kaymayan zemin.'), store: 'Trendyol', url: 'https://...senin-linkin...' },
+'exercise-mat': { asin: 'B0XXXXXXXX', query: 'non slip exercise mat' },
 ```
-- `tr` bölümüne TR linkleri, `es` bölümüne Amazon.es linkleri, `en` bölümüne Amazon.com linkleri girilir.
-- Link **https** ile başlamalı, yoksa gösterilmez.
-- Linki girilmemiş ürün gizli kalır; tek ürün girmen bile kutuyu açar.
 
-İstersen linkleri bana gönder, ben girip test ederim.
+### 5. (İsteğe bağlı) Türkiye için yerel mağaza
+Amazon.com.tr ortaklık programı **sadece davetle** çalışıyor ve OneLink'te Türkiye yok. Türkiye'den gelen ziyaretçi amazon.com'a ya da en yakın mağazaya gider; kargo ve fiyat yüzünden satın alma ihtimali düşüktür. TR sayfaları için Hepsiburada Link Gelir linki girersen o ürün **TR'de Amazon yerine** bu linkle gösterilir:
+```js
+// AFFILIATE_CATALOG.tr içinde
+'exercise-mat': { ...item('Egzersiz matı', '...'), store: 'Hepsiburada', url: 'https://...' },
+```
 
-### 4. Canlıya al
+### Bilmen gereken riskler
+- **Yeni hesap satış şartı:** Amazon'un yeni ortaklık hesaplarını ilk 180 günde 3 uygun satış yapmazlarsa kapattığı yaygın olarak bildiriliyor. Bu şart, okuduğum Operating Agreement metninde geçmiyor; başvururken Associates Central'da teyit et. Bugünkü trafikle (dambıl sayfası ayda ~23 Google ziyareti) bu eşik zor. Hesap kapanırsa sonra yeniden başvurulabiliyor.
+- **Yönlendirme yasak:** Linkler doğrudan amazon.com'a gider. Kendi alan adımızdan yönlendirmek veya üçüncü taraf kısaltıcı kullanmak hem Amazon kuralına aykırı hem de OneLink'i bozar.
+- **Zorunlu cümle:** Amazon linki olan her kutuda "As an Amazon Associate I earn from qualifying purchases." otomatik gösterilir. Bu cümleyi kaldırma.
+
+İstersen etiketini (ve varsa ASIN'leri) bana gönder, ben girip test ederim.
+
+### Canlıya al
 ```bash
 cd /Users/tolgadeveci/Projects/full-stack && npm test && npm run build && npx wrangler deploy
 ```
 > Not: `npm run build`, `public/llms.txt` dosyasını yeniden üretir. Bu dosyada commit edilmemiş kendi değişikliğin varsa build'den önce yedeğini al.
 
 ## Otomatik olanlar
-- Kutuda 3 dilde açık bildirim: "Bunlar ortaklık bağlantılarıdır… fiyat senin için değişmez. Uygulama ücretsiz kalır."
+- Kutuda 3 dilde açık bildirim: "Bunlar ortaklık bağlantılarıdır… fiyat senin için değişmez. Uygulama ücretsiz kalır." Amazon linki varsa Amazon'un zorunlu İngilizce cümlesi de eklenir.
 - Linkler `rel="sponsored nofollow noopener noreferrer"` ile yeni sekmede açılır. Google ücretli linklerde bunu istiyor.
 - Her tıklama anonim `affiliate_link_click` olayı olarak kaydedilir (yerleşim, ürün kimliği, dil, mağaza). Kişisel veri gönderilmez.
 

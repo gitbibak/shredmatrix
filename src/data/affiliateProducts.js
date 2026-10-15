@@ -1,13 +1,15 @@
 // Ortaklık (affiliate) ekipman önerileri.
 //
-// Linkler kurucu tarafından ortaklık panellerinden (Hepsiburada Link Gelir,
-// Trendyol Affiliate, Amazon.es Afiliados) üretilip ilgili ürünün `url`
-// alanına yapıştırılır; `store` alanına mağaza adı yazılır. Adım adım rehber:
-// docs/ortaklik-linkleri.md
+// Varsayılan: Amazon global. AMAZON_ASSOCIATE_TAG girilince her ürün için
+// amazon.com linki otomatik üretilir ve tüm sayfa/dillerde gösterilir.
+// OneLink açıksa yurt dışı ziyaretçi kendi ülkesinin Amazon'una yönlenir.
 //
-// `url` boş veya https değilse ürün gösterilmez. Bir yerleşimde gösterilecek
-// ürün kalmazsa kutu hiç render edilmez: link girilene kadar sitede görünür
-// bir değişiklik olmaz.
+// İsteğe bağlı yerel geçersiz kılma: bir dilin ürününe `url` (+ `store`)
+// girilirse o dilde Amazon yerine bu link gösterilir (ör. TR için Hepsiburada).
+// Adım adım rehber: docs/ortaklik-linkleri.md
+//
+// Ne etiket ne de yerel link varsa ürün gösterilmez; gösterilecek ürün
+// kalmazsa kutu hiç render edilmez.
 //
 // Takviye ürünleri bilinçli olarak yok; sağlık içeriğinde güveni ve arama
 // görünürlüğünü riske atar.
@@ -96,10 +98,70 @@ export function isValidAffiliateUrl(url) {
   }
 }
 
-/** Gösterilmeye hazır (https linki girilmiş) ürünler; hiçbiri yoksa boş dizi. */
-export function getAffiliateProducts(set, lang, catalog = AFFILIATE_CATALOG) {
+// ── Amazon global ──────────────────────────────────────────────
+// Amazon.com (ABD) ortaklık etiketi, ör. 'fullbalance-20'. Boşken Amazon linki üretilmez.
+// OneLink yalnızca ABD hesabında çalışır: Associates Central'da diğer ülke
+// hesaplarını bağlayınca amazon.com linki ziyaretçinin ülkesindeki mağazaya gider.
+// Linkler doğrudan amazon.com'a verilir; kendi sunucumuzdan yönlendirmek Amazon
+// kurallarına aykırıdır.
+export const AMAZON_ASSOCIATE_TAG = '';
+
+// `asin` (10 karakter) girilirse ürün sayfasına, girilmezse amazon.com aramasına gider.
+export const AMAZON_GLOBAL_PRODUCTS = {
+  'adjustable-dumbbell': { asin: '', query: 'adjustable dumbbell set' },
+  'dumbbell-pair-light': { asin: '', query: 'neoprene dumbbells pair' },
+  'resistance-band-set': { asin: '', query: 'resistance bands set' },
+  'tube-band-door-anchor': { asin: '', query: 'resistance tube bands with door anchor' },
+  'mini-band': { asin: '', query: 'mini loop resistance bands' },
+  'exercise-mat': { asin: '', query: 'non slip exercise mat' },
+};
+
+// Amazon Associates Operating Agreement'ın istediği cümle; birebir korunmalı.
+export const AMAZON_DISCLOSURE = 'As an Amazon Associate I earn from qualifying purchases.';
+
+const ASIN_PATTERN = /^[A-Z0-9]{10}$/;
+
+export function isValidAmazonTag(tag) {
+  return /^[A-Za-z0-9-]{2,64}$/.test(tag || '');
+}
+
+const AMAZON_DOMAINS = [
+  'amazon.com', 'amazon.co.uk', 'amazon.de', 'amazon.es', 'amazon.fr', 'amazon.it', 'amazon.nl',
+  'amazon.pl', 'amazon.se', 'amazon.ca', 'amazon.com.mx', 'amazon.com.br', 'amazon.co.jp',
+  'amazon.com.au', 'amazon.sg', 'amazon.sa', 'amazon.ae', 'amazon.in', 'amazon.com.tr',
+  'amazon.com.be', 'amazon.eg', 'amzn.to',
+];
+
+export function isAmazonUrl(url) {
+  try {
+    const host = new URL(url).hostname;
+    return AMAZON_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
+export function buildAmazonUrl(productId, tag = AMAZON_ASSOCIATE_TAG, products = AMAZON_GLOBAL_PRODUCTS) {
+  const product = products[productId];
+  if (!product || !isValidAmazonTag(tag)) return '';
+  const encodedTag = encodeURIComponent(tag);
+  if (ASIN_PATTERN.test(product.asin || '')) return `https://www.amazon.com/dp/${product.asin}?tag=${encodedTag}`;
+  return `https://www.amazon.com/s?k=${encodeURIComponent(product.query)}&tag=${encodedTag}`;
+}
+
+/**
+ * Gösterilmeye hazır ürünler: önce dilin yerel linki, yoksa Amazon global linki.
+ * İkisi de yoksa ürün atlanır; hiçbiri yoksa boş dizi.
+ */
+export function getAffiliateProducts(set, lang, catalog = AFFILIATE_CATALOG, amazon = {}) {
+  const tag = amazon.tag ?? AMAZON_ASSOCIATE_TAG;
+  const amazonProducts = amazon.products ?? AMAZON_GLOBAL_PRODUCTS;
   const items = catalog[lang] || {};
-  return (AFFILIATE_SETS[set] || [])
-    .filter((id) => items[id] && isValidAffiliateUrl(items[id].url))
-    .map((id) => ({ id, ...items[id] }));
+  return (AFFILIATE_SETS[set] || []).flatMap((id) => {
+    const product = items[id];
+    if (!product) return [];
+    if (isValidAffiliateUrl(product.url)) return [{ id, ...product }];
+    const amazonUrl = buildAmazonUrl(id, tag, amazonProducts);
+    return amazonUrl ? [{ id, ...product, store: 'Amazon', url: amazonUrl }] : [];
+  });
 }
