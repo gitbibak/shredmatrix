@@ -91,9 +91,10 @@ function DisclosureSection({ title, description, icon: Icon, open, onToggle, chi
 }
 
 // ═════════════════════════════════════════════════════════
-export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }) {
+export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, onShowGuide }) {
   const { t, lang } = useTranslation();
   const [activeTab, setActiveTab] = useState('today');
+  const [workoutSelection, setWorkoutSelection] = useState(null);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
   const [progressView, setProgressView] = useState('measurements');
@@ -114,6 +115,17 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
     { id: 'progress', label: t('dashboard.tabs.progress'), icon: TrendingUp },
     { id: 'profile', label: t('dashboard.tabs.profile'), icon: User },
   ];
+
+  const navigateFromToday = (tab, dayIndex) => {
+    if (tab === 'workout' && Number.isInteger(dayIndex)) {
+      setWorkoutSelection((previous) => ({ id: (previous?.id || 0) + 1, index: dayIndex }));
+    }
+    setActiveTab(tab);
+  };
+
+  useEffect(() => {
+    if (activeTab !== 'workout') setWorkoutSelection(null);
+  }, [activeTab]);
 
   // Record the first login for achievement calculations.
   useEffect(() => {
@@ -333,8 +345,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <Suspense fallback={<div className="flex items-center justify-center py-12"><div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" /></div>}>
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
-                  <TodayFocusPanel plan={plan} onNavigate={(tab) => setActiveTab(tab)} />
-                  <Link to="/coach" className="flex min-h-12 items-center justify-between gap-3 border-b border-slate-800 py-3 text-sm font-semibold text-cyan-200"><span className="flex min-w-0 items-center gap-2"><User size={18} className="shrink-0" />{coachText(lang)("title")}</span><span aria-hidden="true">→</span></Link>
+                  <TodayFocusPanel plan={plan} onNavigate={navigateFromToday} />
                   <BalanceScoreCard plan={plan} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />
@@ -406,7 +417,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <div className="mx-auto max-w-5xl space-y-5">
                   <motion.div variants={columnVariants}>
-                    <WorkoutPanel plan={plan} onPlanUpdate={onPlanUpdate} />
+                    <WorkoutPanel plan={plan} onPlanUpdate={onPlanUpdate} selectionRequest={workoutSelection} />
                   </motion.div>
                   <motion.div variants={columnVariants}>
                     <DisclosureSection
@@ -501,6 +512,10 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate }
                 onUpdatePlan={onBack}
                 onPlanUpdate={onPlanUpdate}
               />
+              <div className="mx-auto mt-4 flex max-w-5xl flex-wrap gap-4 px-4 text-xs text-slate-400 sm:px-0">
+                {onShowGuide && <button type="button" onClick={onShowGuide} className="hover:text-slate-200">{lang === 'tr' ? 'Uygulama rehberi' : lang === 'es' ? 'Guía de la aplicación' : 'App guide'}</button>}
+                <Link to="/coach" className="hover:text-slate-200">{coachText(lang)('title')}</Link>
+              </div>
               <div className="mt-6 space-y-6">
                 <StravaConnectCard />
                 <DataExport />

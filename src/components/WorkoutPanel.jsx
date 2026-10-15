@@ -61,9 +61,10 @@ const exerciseRowVariants = {
 };
 
 function isRestDay(day) {
-  const focus = day.focus?.toLowerCase() ?? '';
+  const focus = `${day?.day || ''} ${day?.focus || ''}`.toLowerCase();
   return (
-    focus.includes('dinlenme') ||
+    Boolean(day?.isRest) ||
+    focus.includes('dinlen') ||
     focus.includes('rest') ||
     focus.includes('off') ||
     focus.includes('descanso')
@@ -457,7 +458,7 @@ function DayCard({ day, index, isOpen, onToggle, t, onShowDemo, onShowVideo, goa
   );
 }
 
-export default function WorkoutPanel({ plan, onPlanUpdate }) {
+export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   const { t, lang } = useTranslation();
   const [openIndex, setOpenIndex] = useState(() => {
     // Map JS getDay() (0=Sun) to plan array index (0=Mon)
@@ -478,10 +479,17 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
   const [videoExercise, setVideoExercise] = useState(null);
   const toast = useToast();
 
+  useEffect(() => {
+    const index = selectionRequest?.index;
+    if (Number.isInteger(index) && index >= 0 && index < (plan?.workoutSplit?.length || 0)) {
+      setOpenIndex(index);
+    }
+  }, [selectionRequest?.id, selectionRequest?.index, plan?.workoutSplit?.length]);
+
   // Load completed workouts from dataService
   useEffect(() => {
     getWorkoutLogs().then((saved) => {
-      const today = new Date().toISOString().split('T')[0];
+      const today = toDateStr(new Date());
       const todayMap = {};
       saved.forEach((entry) => {
         if (entry.date === today) {
@@ -529,7 +537,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate }) {
   };
 
   const handleCompleteWorkout = async (day) => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = toDateStr(new Date());
     const focus = day.focus;
 
     // Check if already completed today

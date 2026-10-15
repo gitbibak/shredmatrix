@@ -108,10 +108,10 @@ export const turkishSeoPages = {
   'baslangic-pilates-programi': {
     icon: 'Waves',
     accent: '#a78bfa',
-    title: 'Başlangıç Seviyesi',
+    title: 'Evde Ücretsiz',
     titleAccent: 'Pilates Programı',
-    metaTitle: '30 Günlük Başlangıç Pilates Programı: Evde, Ücretsiz | Full Balance',
-    description: 'Evde başlangıç pilates programı ile nefes, core stabilitesi, postür, mobilite ve kontrollü ilerlemeyi kısa mat seanslarında ücretsiz takip et.',
+    metaTitle: 'Evde Ücretsiz Pilates Programı: Yeni Başlayanlar | Full Balance',
+    description: 'Evde mat üzerinde başlangıç pilates planını incele. Seanslarını seviyene ve ayırabildiğin günlere göre planla, ilerlemeni ücretsiz kaydet.',
     keywords: 'başlangıç pilates programı, evde pilates, yeni başlayanlar için pilates, ücretsiz pilates programı',
     heroCopy: 'Hız yerine nefes, hizalanma ve kontrolü öğreten kısa mat seanslarıyla güvenli bir temel oluştur.',
     sections: [

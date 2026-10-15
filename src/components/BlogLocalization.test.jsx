@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import BlogArticle from './BlogArticle';
 import BlogIndex from './BlogIndex';
@@ -55,5 +55,33 @@ describe('localized blog navigation', () => {
     open('/blog/how-accurate-photo-calorie-counter');
     await waitFor(() => expect(screen.getByRole('heading', { level: 1 }).textContent).toContain('Sağlıklı yaşamı'));
     expect(screen.queryByRole('heading', { name: /How Accurate Is a Photo/ })).toBeNull();
+  });
+
+  it('records a curated article CTA as assisted intent without replacing first acquisition', () => {
+    localStorage.clear();
+    localStorage.setItem('fb_acquisition', JSON.stringify({
+      first_source: 'google', first_landing_page: '/en', acquisition_content: 'campaign_hero',
+    }));
+    open('/en/blog/how-accurate-photo-calorie-counter');
+    fireEvent.click(screen.getByRole('link', { name: 'Try the free photo tool' }));
+
+    const acquisition = JSON.parse(localStorage.getItem('fb_acquisition'));
+    expect(acquisition).toMatchObject({ first_source: 'google', first_landing_page: '/en', acquisition_content: 'campaign_hero' });
+    const events = JSON.parse(localStorage.getItem('fb_growth_event_queue') || '[]');
+    expect(events.at(-1)).toMatchObject({
+      event_name: 'article_cta_click',
+      properties: {
+        articleSlug: 'how-accurate-photo-calorie-counter', language: 'en', destination: '/en/photo-calorie-counter',
+      },
+    });
+    expect(document.querySelector('script[data-fullbalance-ga]')).toBeNull();
+  });
+
+  it('sets first internal content to a published article CTA when it is empty', () => {
+    localStorage.clear();
+    open('/es/blog/precision-calorias-foto-porciones-aceite');
+    fireEvent.click(screen.getByRole('link', { name: 'Probar la herramienta gratis' }));
+    expect(JSON.parse(localStorage.getItem('fb_acquisition')).acquisition_content)
+      .toBe('blog_es_precision-calorias-foto-porciones-aceite_cta');
   });
 });

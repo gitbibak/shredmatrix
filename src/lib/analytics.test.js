@@ -108,6 +108,20 @@ describe('privacy-safe analytics', () => {
     expect(summary[today]?.challenge_joined).toBeUndefined();
   });
 
+  it('accepts only published article CTA identities and their curated destinations', async () => {
+    const analytics = await loadAnalytics();
+    const valid = { articleSlug: 'how-accurate-photo-calorie-counter', language: 'en', destination: '/en/photo-calorie-counter' };
+    analytics.trackEvent('article_cta_click', { ...valid, email: 'private@example.com' });
+    analytics.trackEvent('article_cta_click', { ...valid, destination: '/auth?email=private@example.com' });
+    analytics.trackEvent('article_cta_click', { ...valid, language: 'tr' });
+    analytics.trackEvent('article_cta_click', { ...valid, articleSlug: 'not-published' });
+
+    const events = JSON.parse(localStorage.getItem('fb_growth_event_queue') || '[]')
+      .filter((event) => event.event_name === 'article_cta_click');
+    expect(events).toHaveLength(1);
+    expect(events[0].properties).toEqual(valid);
+  });
+
   it('completes a pending OAuth signup after the redirect returns', async () => {
     const analytics = await loadAnalytics();
     analytics.trackSignUpStart('google');

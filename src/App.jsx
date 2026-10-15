@@ -595,12 +595,7 @@ function AppContent() {
         setPendingFormData(null);
         navigate('/dashboard', { replace: true });
 
-        // Show tour for first-time users
-        const tourKey = `shredmatrix_tour_seen_${user?.email || 'guest'}`;
-        if (!localStorage.getItem(tourKey)) {
-          setShowTour(true);
-          localStorage.setItem(tourKey, '1');
-        }
+        // The guide is available on demand from Profile; keep the first plan visible.
       }, 250);
 
       return () => clearTimeout(timer);
@@ -734,7 +729,7 @@ function AppContent() {
             <Route path="/dashboard" element={
               <ProtectedRoute user={user} plan={plan} requirePlan>
                 <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={pageTransition}>
-                  <Dashboard plan={plan} user={user} onBack={handleBack} onLogout={handleLogout} onPlanUpdate={handlePlanUpdate} />
+                  <Dashboard plan={plan} user={user} onBack={handleBack} onLogout={handleLogout} onPlanUpdate={handlePlanUpdate} onShowGuide={() => setShowTour(true)} />
                 </motion.div>
               </ProtectedRoute>
             } />

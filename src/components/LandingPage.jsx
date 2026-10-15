@@ -1,5 +1,5 @@
 import PricingComparison from './PricingComparison';
-import CoachFeatureSection from './CoachFeatureSection';
+import { coachMarketing } from '../data/coachMarketing';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -268,7 +268,6 @@ export default function LandingPage({ onStart }) {
         </div>
       </header>
 
-      <CoachFeatureSection lang={lang} />
       <ApprovedTestimonials language={lang} />
 
       <section className="border-b border-white/10 py-16 sm:py-20">
@@ -442,13 +441,14 @@ export default function LandingPage({ onStart }) {
         <p className="mt-4 text-xs text-emerald-400">{c.freeNote}</p>
       </section>
 
-      <footer className="border-t border-slate-800 px-5 py-8">
+      <footer id="for-trainers" className="border-t border-slate-800 px-5 py-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2"><Sparkles size={16} className="text-orange-500" /><span className="font-outfit text-sm font-bold">FULL BALANCE</span></div>
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
               <Link to="/privacy" className="hover:text-white">{t('auth.privacyLink') || 'Gizlilik'}</Link>
               <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>
+              <Link to="/coach" className="hover:text-white">{coachMarketing[lang].nav}</Link>
               <Link to="/contact" className="hover:text-white">{t('contact.link') || 'İletişim'}</Link>
               <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : lang === 'es' ? 'Política editorial' : 'Editorial policy'}</Link>
               <Link to={pricingAlternates[lang] || pricingAlternates.tr} className="hover:text-white">{pricing.eyebrow}</Link>

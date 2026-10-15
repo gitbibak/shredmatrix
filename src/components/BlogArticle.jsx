@@ -4,6 +4,8 @@ import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import { blogArticles, getBlogArticle } from '../data/blogArticles';
 import { BLOG_LANGUAGES, getArticleLanguage, getArticlePath, getBlogCopy, getBlogLanguage, getBlogPath } from '../data/blogLocale';
 import { useTranslation } from '../i18n/LanguageContext';
+import { trackEvent } from '../lib/analytics';
+import { recordAcquisitionContent } from '../lib/acquisition';
 
 const BASE_URL = 'https://fullbalance.app';
 
@@ -128,6 +130,10 @@ export default function BlogArticle() {
   const publishedLabel = new Intl.DateTimeFormat(copy.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${article.publishedAt}T12:00:00`));
   const updatedLabel = new Intl.DateTimeFormat(copy.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${article.updatedAt}T12:00:00`));
   const cta = article.cta || { href: `/auth?mode=register${language === 'tr' ? '' : `&lang=${language}`}`, label: copy.ctaLabel, title: copy.ctaTitle, description: copy.ctaDescription };
+  const trackArticleCta = () => {
+    recordAcquisitionContent(`blog_${language}_${article.slug}_cta`);
+    trackEvent('article_cta_click', { articleSlug: article.slug, language, destination: cta.href });
+  };
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -236,7 +242,7 @@ export default function BlogArticle() {
             <p className="text-xs font-bold uppercase text-orange-400">Full Balance</p>
             <h2 className="mt-2 font-outfit text-xl font-bold">{cta.title}</h2>
             <p className="mt-3 text-sm leading-6 text-slate-400">{cta.description}</p>
-            {/^https?:\/\//.test(cta.href) ? <a href={cta.href} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-orange-500 px-4 text-sm font-bold text-white hover:bg-orange-400">{cta.label} <ArrowRight size={16} /></a> : <Link to={cta.href} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-orange-500 px-4 text-sm font-bold text-white hover:bg-orange-400">{cta.label} <ArrowRight size={16} /></Link>}
+            {/^https?:\/\//.test(cta.href) ? <a href={cta.href} onClick={trackArticleCta} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-orange-500 px-4 text-sm font-bold text-white hover:bg-orange-400">{cta.label} <ArrowRight size={16} /></a> : <Link to={cta.href} onClick={trackArticleCta} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-orange-500 px-4 text-sm font-bold text-white hover:bg-orange-400">{cta.label} <ArrowRight size={16} /></Link>}
           </aside>
         </div>
       </article>

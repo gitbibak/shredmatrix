@@ -1,3 +1,6 @@
+import { getBlogArticle } from '../data/blogArticles';
+import { getArticleLanguage } from '../data/blogLocale';
+
 const COMMON = ['source', 'language', 'goalType', 'module'];
 const SIGNUP = ['method', 'acquisitionSource', 'referralCode', 'creatorCode', 'campaign'];
 const CHALLENGE = ['challengeId', 'challengeType', 'source', 'referralCode'];
@@ -5,6 +8,7 @@ const SHARE = ['cardType', 'destination', 'source'];
 
 export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   visitor_started: { allowed: ['source', 'language'] },
+  article_cta_click: { allowed: ['articleSlug', 'language', 'destination'], required: ['articleSlug', 'language', 'destination'] },
   signup_started: { allowed: SIGNUP },
   signup_completed: { allowed: SIGNUP },
   login_completed: { allowed: ['method'] },
@@ -44,9 +48,18 @@ export function validateGrowthEvent(eventName, properties = {}) {
   if (!schema) return { valid: true, properties };
   const filtered = Object.fromEntries(Object.entries(properties)
     .filter(([key]) => schema.allowed.includes(key)));
-  const valid = (schema.required || []).every((key) => (
+  let valid = (schema.required || []).every((key) => (
     filtered[key] !== undefined && filtered[key] !== null && filtered[key] !== ''
   ));
+  if (eventName === 'article_cta_click' && valid) {
+    const article = getBlogArticle(filtered.articleSlug);
+    const language = getArticleLanguage(article);
+    const destination = article?.cta?.href || `/auth?mode=register${language === 'tr' ? '' : `&lang=${language}`}`;
+    valid = Boolean(article)
+      && article.publishedAt <= new Date().toISOString().slice(0, 10)
+      && filtered.language === language
+      && filtered.destination === destination;
+  }
   return { valid, properties: filtered };
 }
 

@@ -63,3 +63,35 @@ describe('WorkoutPanel feedback flow', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });
+
+describe('WorkoutPanel selected day', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    getWorkoutLogs.mockResolvedValue([]);
+  });
+
+  it('reopens a requested day on a repeated navigation without completing it', async () => {
+    const { rerender } = render(<WorkoutPanel plan={plan} selectionRequest={{ id: 1, index: 1 }} />);
+    const tuesday = screen.getByRole('button', { name: /Tuesday Pull/i });
+    await waitFor(() => expect(tuesday).toHaveAttribute('aria-expanded', 'true'));
+
+    fireEvent.click(tuesday);
+    expect(tuesday).toHaveAttribute('aria-expanded', 'false');
+    rerender(<WorkoutPanel plan={plan} selectionRequest={{ id: 2, index: 1 }} />);
+
+    await waitFor(() => expect(tuesday).toHaveAttribute('aria-expanded', 'true'));
+    expect(saveWorkoutLog).not.toHaveBeenCalled();
+  });
+
+  it('accepts a rest-day request without offering workout completion', async () => {
+    const restPlan = {
+      ...plan,
+      workoutSplit: [...plan.workoutSplit, { day: 'Wednesday', focus: 'Recovery', isRest: true }],
+    };
+    render(<WorkoutPanel plan={restPlan} selectionRequest={{ id: 1, index: 2 }} />);
+
+    await waitFor(() => expect(screen.getByRole('button', { name: /Wednesday Recovery/i })).toHaveAttribute('aria-expanded', 'true'));
+    expect(screen.queryByText('workout.completeBtn')).not.toBeInTheDocument();
+    expect(saveWorkoutLog).not.toHaveBeenCalled();
+  });
+});

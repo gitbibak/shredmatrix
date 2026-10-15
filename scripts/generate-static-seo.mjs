@@ -37,12 +37,12 @@ function leadAnswerBlock(faqs, lang) {
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const distDir = join(rootDir, 'dist');
-const template = (await readFile(join(distDir, 'index.html'), 'utf8')).replace('<section data-coach-placeholder></section>', coachMarketingHtml('tr'));
+const template = (await readFile(join(distDir, 'index.html'), 'utf8')).replace('<footer data-coach-placeholder></footer>', coachMarketingHtml('tr'));
 await writeFile(join(distDir, 'index.html'), template);
 
 function coachMarketingHtml(lang) {
   const c = coachMarketing[lang];
-  return '<section id="for-trainers"><h2>'+escapeHtml(c.title)+'</h2><p>'+escapeHtml(c.intro)+'</p>'+c.items.map(([title, body])=>'<h3>'+escapeHtml(title)+'</h3><p>'+escapeHtml(body)+'</p>').join('')+'<h3>'+escapeHtml(c.offerTitle)+'</h3><p>'+escapeHtml(c.offer)+'</p><p>'+escapeHtml(c.note)+'</p><a href="/coach">'+escapeHtml(c.cta)+'</a></section>';
+  return '<footer id="for-trainers"><a href="/coach">'+escapeHtml(c.nav)+'</a></footer>';
 }
 
 function escapeHtml(value) {
@@ -332,7 +332,7 @@ for (const page of internationalSeoPages) {
   const canonical = `${BASE_URL}${page.path}`;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const relatedLabel = page.lang === 'es' ? 'Explora más objetivos y herramientas' : 'Explore more goals and tools';
-  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${page.path === "/"+page.lang ? coachMarketingHtml(page.lang) + `<p><a href="${getBlogPath(page.lang)}">${escapeHtml(getBlogCopy(page.lang).allGuides)}</a></p>` : ""}${leadAnswerBlock(page.faqs, page.lang)}${sampleWeekHtml(page.path, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav>${landingBlogLinks(page.path, page.lang)}<footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang}">Full Balance</a><p>${escapeHtml(page.freeLabel)}</p><h1>${escapeHtml(page.title)} ${escapeHtml(page.accent)}</h1><p>${escapeHtml(page.hero)}</p></header>${page.path === "/"+page.lang ? `<p><a href="${getBlogPath(page.lang)}">${escapeHtml(getBlogCopy(page.lang).allGuides)}</a></p>` : ""}${leadAnswerBlock(page.faqs, page.lang)}${sampleWeekHtml(page.path, page.lang)}<article><section><h2>${escapeHtml(page.featuresLabel)}</h2>${page.sections.map(([title, text]) => `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(text)}</p>`).join('')}</section><section><h2>${escapeHtml(page.faqLabel)}</h2>${page.faqs.map(([question, answer]) => `<h2>${escapeHtml(question)}</h2><p>${escapeHtml(answer)}</p>`).join('')}</section><p>${escapeHtml(page.disclaimer)}</p></article><nav aria-label="${escapeHtml(relatedLabel)}"><h2>${escapeHtml(relatedLabel)}</h2><ul>${related.map((item) => `<li><a href="${escapeHtml(item.path)}">${escapeHtml(item.title)}</a></li>`).join('')}</ul></nav>${landingBlogLinks(page.path, page.lang)}<footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.startLabel)}</a></footer>${page.path === "/"+page.lang ? coachMarketingHtml(page.lang) : ""}</main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [

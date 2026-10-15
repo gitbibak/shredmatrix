@@ -25,7 +25,7 @@ const DAY_NAMES = {
 };
 
 function todayISO() {
-  return new Date().toISOString().split('T')[0];
+  return toISO(new Date());
 }
 
 function getMonday(date = new Date()) {
@@ -38,7 +38,10 @@ function getMonday(date = new Date()) {
 }
 
 function toISO(date) {
-  return date.toISOString().split('T')[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function isRestDay(day) {
@@ -120,7 +123,8 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
   const goalKey = plan?.primaryGoal || 'muscle';
   const supportedGoals = ['muscle', 'fat_loss', 'yoga', 'pilates', 'reformer', 'meditation'];
   const moduleKey = supportedGoals.includes(goalKey) ? goalKey : 'muscle';
-  const nextTraining = weekRows.find((row) => row.index > todayRow.index && !row.rest)
+  const remainingThisWeek = weekRows.slice(todayRow.index + 1);
+  const nextTraining = remainingThisWeek.find((row) => !row.rest && !row.completed)
     || weekRows.find((row) => !row.rest);
   const latestFeedback = useMemo(() => {
     return logs
@@ -170,8 +174,13 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
     : t('todayFocus.workoutSubtitle', {
       focus: todayRow?.dayPlan?.focus || t('todayFocus.training'),
     });
-  const ctaLabel = restToday ? t('todayFocus.restCta') : t('todayFocus.workoutCta');
+  const ctaLabel = restToday
+    ? t('todayFocus.restCta')
+    : todayCompleted && nextTraining
+      ? t('todayFocus.nextPreview', { focus: nextTraining.dayPlan?.focus || t('todayFocus.training') })
+      : todayCompleted ? t('todayFocus.completedCta') : t('todayFocus.workoutCta');
   const ctaTarget = restToday ? 'nutrition' : 'workout';
+  const ctaDayIndex = todayCompleted && nextTraining ? nextTraining.index : todayRow.index;
 
   const statusClass = {
     done: 'border-emerald-400/50 bg-emerald-400/15 text-emerald-300',
@@ -221,11 +230,11 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         type="button"
         onClick={() => {
           trackEvent('primary_action_click', { destination: ctaTarget, module: moduleKey, completed: todayCompleted });
-          onNavigate?.(ctaTarget);
+          onNavigate?.(ctaTarget, ctaTarget === 'workout' ? ctaDayIndex : undefined);
         }}
         className="w-full flex items-center justify-center gap-2 rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm font-outfit font-bold text-orange-300 hover:bg-orange-500/15 transition-colors"
       >
-        {todayCompleted ? t('todayFocus.completedCta') : ctaLabel}
+        {ctaLabel}
         <ArrowRight size={16} />
       </button>
 
@@ -273,13 +282,6 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
       )}
 
       <ReminderSettings />
-
-      {todayCompleted && nextTraining?.dayPlan?.focus && (
-        <p className="mt-3 text-xs leading-relaxed text-emerald-300/80">
-          <CheckCircle2 size={13} className="mr-1.5 inline" />
-          {t('todayFocus.nextPreview', { focus: nextTraining.dayPlan.focus })}
-        </p>
-      )}
 
       {recoveryNotice && (
         <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2.5 text-xs leading-relaxed text-amber-100/90">

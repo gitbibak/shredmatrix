@@ -29,10 +29,10 @@ function assertSingleLocalizedH1(html, route, lang = 'tr') {
 
 for (const lang of ['tr', 'en', 'es']) {
   const html = await readFile(join(distDir, lang === 'tr' ? '' : lang, 'index.html'), 'utf8');
-  assert(html.includes(coachMarketing[lang].title), lang + ' coach section missing');
+  assert(html.includes(coachMarketing[lang].nav.replaceAll('&', '&amp;')), lang + ' coach footer link missing');
   assert(html.includes('id="for-trainers"'), lang + ' coach anchor missing');
   assert(html.includes('href="/coach"'), lang + ' coach CTA missing');
-  assert(html.includes(coachMarketing[lang].note), lang + ' coach service boundary missing');
+  assert(!html.includes('<h2>'+coachMarketing[lang].title+'</h2>'), lang + ' still promotes coach before personal use');
 }
 
 for (const article of blogArticles) {
