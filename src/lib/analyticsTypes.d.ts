@@ -7,6 +7,7 @@ export type ShareDestination = 'copy' | 'whatsapp' | 'native' | 'download' | 'ot
 export interface GrowthEventMap {
   visitor_started: { source?: string; language?: string };
   article_cta_click: { articleSlug: string; language: 'tr' | 'en' | 'es'; destination: string };
+  affiliate_link_click: { placement: string; productId: string; language?: 'tr' | 'en' | 'es'; store?: string };
   signup_started: SignupProperties;
   signup_completed: SignupProperties;
   login_completed: { method?: string };

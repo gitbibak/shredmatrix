@@ -4,6 +4,8 @@ import { SEO_LAST_REVIEWED, formatReviewedDate, getAlternatesForTurkishPath } fr
 import { getArticlePath } from '../data/blogLocale';
 import { getLandingBlogArticles } from '../data/blogRelated';
 import { trackLandingCta } from '../lib/analytics';
+import AffiliateGear from './AffiliateGear';
+import { AFFILIATE_PAGE_PLACEMENTS, AFFILIATE_PLACEMENTS } from '../data/affiliateProducts';
 import {
   Activity,
   Award,
@@ -204,6 +206,7 @@ export default function SeoLandingPage({ slug }) {
   if (!pageExists) return <Navigate to="/" replace />;
   const Icon = page.icon;
   const blogGuides = getLandingBlogArticles(`/${canonicalSlug}`, 'tr');
+  const affiliatePlacement = AFFILIATE_PAGE_PLACEMENTS[`/${canonicalSlug}`];
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -319,6 +322,10 @@ export default function SeoLandingPage({ slug }) {
           ))}
         </div>
       </section>
+
+      {affiliatePlacement && (
+        <AffiliateGear placement={affiliatePlacement} set={AFFILIATE_PLACEMENTS[affiliatePlacement].set} lang="tr" />
+      )}
 
       <Suspense fallback={null}>
         <SampleHomeWeek path={`/${canonicalSlug}`} lang="tr" ctaId={`seo_${canonicalSlug}_sample_week`} />

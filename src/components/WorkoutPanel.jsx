@@ -10,6 +10,7 @@ import { useToast } from './ToastProvider';
 import ExerciseDemo from './ExerciseDemo';
 import ExerciseVideoModal from './ExerciseVideoModal';
 import { getExerciseVideo, hasExerciseVideos } from '../data/exerciseVideos';
+import AffiliateGear from './AffiliateGear';
 const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
@@ -711,6 +712,10 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
             {plan.planQuality.medicalNotice}
           </p>
         </div>
+      )}
+
+      {plan.trainingEnvironment === 'home_basic' && (
+        <AffiliateGear placement="app_home_basic" set="dumbbell" lang={lang} compact />
       )}
 
       {/* ─── Program age warning ─── */}

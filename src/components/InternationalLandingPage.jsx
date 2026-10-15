@@ -11,6 +11,8 @@ const SHORT_ANSWER_LABEL = { en: 'Short answer', es: 'Respuesta breve' };
 import PublicHealthCalculator from './PublicHealthCalculator';
 import ApprovedTestimonials from './ApprovedTestimonials';
 import { trackLandingCta } from '../lib/analytics';
+import AffiliateGear from './AffiliateGear';
+import { AFFILIATE_PAGE_PLACEMENTS, AFFILIATE_PLACEMENTS } from '../data/affiliateProducts';
 import { recordAcquisitionContent } from '../lib/acquisition';
 
 const CalorieCalc = lazy(() => import('./CalorieCalc'));
@@ -61,6 +63,7 @@ export default function InternationalLandingPage({ pathname }) {
   const Icon = icons[page.category] || Globe2;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const blogGuides = getLandingBlogArticles(page.path, page.lang);
+  const affiliatePlacement = AFFILIATE_PAGE_PLACEMENTS[page.path];
   const registerUrl = `/auth?mode=register&lang=${page.lang}`;
   const startRegistration = (placement) => {
     const content = `seo_${page.lang}_${page.topic}_${placement}`;
@@ -77,6 +80,7 @@ export default function InternationalLandingPage({ pathname }) {
     {page.calculator && <PublicHealthCalculator type={page.calculator} lang={page.lang} />}
     {page.mealTool && <section className="border-b border-slate-800 bg-slate-950 px-4 py-14"><div className="mx-auto max-w-4xl"><div className="mb-7 text-center"><p className="text-xs font-bold uppercase text-cyan-300">{page.lang === 'es' ? 'Herramienta gratuita para comidas' : 'Free meal tool'}</p><h2 className="mt-3 font-outfit text-3xl font-extrabold">{page.lang === 'es' ? 'Estima las calorías de una comida con una foto' : 'Estimate meal calories with a photo'}</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">{page.lang === 'es' ? 'Añade los alimentos visibles, confirma las porciones y no olvides aceites, salsas ni bebidas. Recibirás un rango útil, no una cifra falsamente exacta.' : 'Add the visible foods, confirm portions and include oils, sauces and drinks. You get a practical range instead of a falsely exact number.'}</p></div><Suspense fallback={<div className="h-72 animate-pulse rounded-2xl bg-slate-900" />}><CalorieCalc language={page.lang} /></Suspense></div></section>}
     <section className="border-y border-slate-800 bg-slate-900/35 px-4 py-14"><div className="mx-auto max-w-6xl"><h2 className="mb-7 font-outfit text-3xl font-extrabold">{page.featuresLabel}</h2><div className="grid gap-4 md:grid-cols-3">{page.sections.map(([title, body]) => <article key={title} className="rounded-xl border border-slate-800 bg-slate-950/65 p-6"><Icon size={22} className="mb-4 text-cyan-300" /><h3 className="font-outfit text-lg font-extrabold">{title}</h3><p className="mt-3 text-sm leading-relaxed text-slate-400">{body}</p></article>)}</div></div></section>
+    {affiliatePlacement && <AffiliateGear placement={affiliatePlacement} set={AFFILIATE_PLACEMENTS[affiliatePlacement].set} lang={page.lang} />}
     <Suspense fallback={null}><SampleHomeWeek path={page.path} lang={page.lang} registerUrl={registerUrl} ctaId={`seo_${page.lang}_${page.topic}_sample_week`} /></Suspense>
     <section className="border-b border-slate-800 bg-orange-500 px-4 py-10 text-slate-950"><div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between"><div className="max-w-2xl"><h2 className="font-outfit text-2xl font-extrabold sm:text-3xl">{page.conversionTitle}</h2><p className="mt-2 text-sm font-semibold leading-relaxed text-slate-900/80 sm:text-base">{page.conversionText}</p></div><Link to={registerUrl} onClick={() => startRegistration('mid')} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-950 px-6 py-3 text-sm font-extrabold text-white">{page.startLabel}<ChevronRight size={17} /></Link></div></section>
     <ApprovedTestimonials language={page.lang} />
