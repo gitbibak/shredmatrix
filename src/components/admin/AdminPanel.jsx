@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, Users, PieChart, Activity, Search,
@@ -7,7 +7,9 @@ import {
   Dumbbell, Droplets, Scale, Ruler, MessageSquare, Mail, CheckCircle2, AlertCircle,
   ClipboardCheck, Star
 } from 'lucide-react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import AdminDialog from './AdminDialog';
+import AdminOverview from './AdminOverview';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   AreaChart, Area, BarChart, Bar, PieChart as RechartPie, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -69,10 +71,10 @@ function StatCard({ icon: Icon, label, value, sub, color = '#ff6d00', delay = 0 
         <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
           <Icon size={16} style={{ color }} />
         </div>
-        <span className="text-[10px] text-slate-500 font-outfit uppercase tracking-wider leading-tight">{label}</span>
+        <span className="text-xs text-slate-500 font-outfit uppercase tracking-wider leading-tight">{label}</span>
       </div>
       <p className="text-2xl sm:text-3xl font-extrabold font-outfit text-white">{value}</p>
-      {sub && <p className="text-[10px] text-slate-500 mt-1 font-inter">{sub}</p>}
+      {sub && <p className="text-xs text-slate-500 mt-1 font-inter">{sub}</p>}
     </motion.div>
   );
 }
@@ -92,7 +94,7 @@ function ChartTooltip({ active, payload, label }) {
 function MiniDonut({ data, colorMap, title }) {
   if (!data || data.length === 0) return (
     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex items-center justify-center h-80">
-      <p className="text-slate-600 text-sm font-inter">Veri yok</p>
+      <div className="text-center"><h3 className="mb-2 text-sm font-bold text-white">{title}</h3><p className="text-slate-400 text-sm">Henüz dağılım verisi yok.</p></div>
     </div>
   );
   const total = data.reduce((s, d) => s + d.value, 0);
@@ -115,7 +117,7 @@ function MiniDonut({ data, colorMap, title }) {
         {data.map((entry, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: colorMap?.[entry.name] || COLORS[i % COLORS.length] }} />
-            <span className="text-[10px] text-slate-400 font-inter">{entry.name} ({entry.value} — %{total > 0 ? Math.round(entry.value / total * 100) : 0})</span>
+            <span className="text-xs text-slate-400 font-inter">{entry.name} ({entry.value} — %{total > 0 ? Math.round(entry.value / total * 100) : 0})</span>
           </div>
         ))}
       </div>
@@ -128,29 +130,18 @@ function UserDetailModal({ userId, onClose }) {
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState('');
   useEffect(() => {
-    getUserPlanDetails(userId).then(p => { setPlan(p); setLoading(false); });
+    let active = true;
+    getUserPlanDetails(userId, { strict: true }).then((value) => {
+      if (active) { setPlan(value); setLoading(false); }
+    }).catch(() => { if (active) { setError('Kullanıcı detayları alınamadı. Pencereyi kapatıp yeniden deneyin.'); setLoading(false); } });
+    return () => { active = false; };
   }, [userId]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-        onClick={e => e.stopPropagation()}
-        className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto"
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold font-outfit text-white">Kullanıcı Detayları</h3>
-          <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors cursor-pointer">
-            <X size={20} />
-          </button>
-        </div>
-
-        {loading ? (
+    <AdminDialog title="Kullanıcı Detayları" onClose={onClose}>
+        {error ? <p role="alert" className="text-sm text-red-300">{error}</p> : loading ? (
           <div className="text-center py-8 text-slate-500">Yükleniyor...</div>
         ) : plan ? (
           <div className="space-y-2">
@@ -180,22 +171,29 @@ function UserDetailModal({ userId, onClose }) {
         ) : (
           <div className="text-center py-8 text-slate-500">Plan bulunamadı</div>
         )}
-      </motion.div>
-    </motion.div>
+    </AdminDialog>
   );
 }
 
 // ── Time Ago Helper ──────────────────────────────
+function safeSupportUrl(value) {
+  try {
+    const url = new URL(value);
+    return ['https:', 'http:'].includes(url.protocol) ? url.href : null;
+  } catch { return null; }
+}
+
 function timeAgo(dateStr) {
   if (!dateStr) return '-';
   const now = new Date();
   const d = new Date(dateStr);
-  const diff = Math.floor((now - d) / 1000);
+  if (Number.isNaN(d.getTime())) return 'Tarih bilinmiyor';
+  const diff = Math.max(0, Math.floor((now - d) / 1000));
   if (diff < 60) return 'Az önce';
   if (diff < 3600) return `${Math.floor(diff / 60)} dk önce`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} saat önce`;
   if (diff < 604800) return `${Math.floor(diff / 86400)} gün önce`;
-  return d.toLocaleDateString('tr-TR');
+  return d.toLocaleDateString('tr-TR', { timeZone: 'Europe/Istanbul' });
 }
 
 // ═════════════════════════════════════════════════
@@ -204,7 +202,10 @@ function timeAgo(dateStr) {
 export default function AdminPanel({ user }) {
   const navigate = useNavigate();
   const [accessState, setAccessState] = useState('checking');
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get('tab');
+  const activeTab = ['dashboard', 'users', 'analytics', 'activity', 'support', 'quality'].includes(requestedTab) ? requestedTab : 'dashboard';
+  const setActiveTab = (tab) => setSearchParams((current) => { const next = new URLSearchParams(current); next.set('tab', tab); return next; });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Data
@@ -216,7 +217,7 @@ export default function AdminPanel({ user }) {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [distribution, setDistribution] = useState({
     goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [], campaigns: [], contents: [],
-    international: { registrations: 0, activated: 0, activationRate: 0, english: 0, spanish: 0, attributed: 0, direct: 0 },
+    international: null,
   });
   const [trend, setTrend] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
@@ -227,12 +228,22 @@ export default function AdminPanel({ user }) {
   const [activationFunnel, setActivationFunnel] = useState(null);
   const [workoutTrend, setWorkoutTrend] = useState([]);
   const [supportTickets, setSupportTickets] = useState([]);
-  const [supportStats, setSupportStats] = useState({ open: 0, reviewing: 0, resolved: 0, total: 0 });
+  const [supportStats, setSupportStats] = useState(null);
   const [supportFilter, setSupportFilter] = useState('open');
   const [supportSearch, setSupportSearch] = useState('');
   const [updatingTicketId, setUpdatingTicketId] = useState(null);
   const [supportNotes, setSupportNotes] = useState({});
-  const [loadError, setLoadError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState({ overview: true, users: true, support: true, quality: true });
+  const [notice, setNotice] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const requests = useRef({ overview: 0, users: 0, support: 0, quality: 0 });
+  const writeLock = useRef(false);
+  const dirtyReviews = useRef(new Set());
+  const dirtyNotes = useRef(new Set());
+  const setLoadError = (message) => setErrors((current) => ({ ...current, action: message }));
   const [lastUpdated, setLastUpdated] = useState(null);
   const [contentReviews, setContentReviews] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
@@ -261,62 +272,115 @@ export default function AdminPanel({ user }) {
   }, [searchQuery]);
 
   const loadData = useCallback(async () => {
-    if (!isAllowed) return;
-    try {
-      const [s, d, t, r, a, w, support, retention, funnel] = await Promise.all([
-        getAdminStats(),
-        getPlanDistribution(),
-        getRegistrationTrend(),
-        getRecentUsers(),
-        getActivityStats(),
-        getWorkoutTrend(),
-        getSupportStats(),
-        getRetentionStats(),
-        getActivationFunnelStats(),
-      ]);
-      if (!s || !a) throw new Error('Bazı yönetim verileri alınamadı.');
-      setStats(s);
-      setDistribution(d);
-      setTrend(t);
-      setRecentUsers(r);
-      setActivityStats(a);
-      setWorkoutTrend(w);
-      setSupportStats(support);
-      setRetentionStats(retention);
-      setActivationFunnel(funnel);
-      setLoadError('');
-      setLastUpdated(new Date());
-    } catch (err) {
-      setLoadError(err.message || 'Yönetim verileri yüklenemedi.');
-    }
+    if (!isAllowed) return false;
+    const id = ++requests.current.overview;
+    setLoading((current) => ({ ...current, overview: true }));
+    const tasks = [
+      ['İstatistikler', getAdminStats, setStats],
+      ['Dağılımlar', () => getPlanDistribution({ strict: true }), setDistribution],
+      ['Kayıt eğilimi', () => getRegistrationTrend({ strict: true }), setTrend],
+      ['Son kayıtlar', () => getRecentUsers({ strict: true }), setRecentUsers],
+      ['Aktivite', getActivityStats, setActivityStats],
+      ['Antrenman eğilimi', () => getWorkoutTrend({ strict: true }), setWorkoutTrend],
+      ['Destek sayıları', () => getSupportStats({ strict: true }), setSupportStats],
+      ['Geri dönüş', getRetentionStats, setRetentionStats],
+      ['Aktivasyon', getActivationFunnelStats, setActivationFunnel],
+    ];
+    const results = await Promise.allSettled(tasks.map(async ([, read]) => {
+      const value = await read();
+      if (value == null) throw new Error('Veri alınamadı');
+      return value;
+    }));
+    if (id !== requests.current.overview) return false;
+    const failed = [];
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') tasks[index][2](result.value);
+      else failed.push(tasks[index][0]);
+    });
+    setErrors((current) => ({ ...current, overview: failed.length ? `${failed.join(', ')} alınamadı. Görünen önceki veriler güncel olmayabilir.` : '' }));
+    setLoading((current) => ({ ...current, overview: false }));
+    if (!failed.length) setLastUpdated(new Date());
+    return !failed.length;
   }, [isAllowed]);
 
   const loadUsers = useCallback(async () => {
-    if (!isAllowed) return;
-    const result = await getAdminUsers(usersPage, PAGE_SIZE, debouncedSearch);
-    if (result.error) setLoadError('Kullanıcı listesi yüklenemedi. Lütfen yeniden deneyin.');
-    setUsers(result.users);
-    setUsersTotal(result.total);
+    if (!isAllowed) return false;
+    const id = ++requests.current.users;
+    setLoading((current) => ({ ...current, users: true }));
+    try {
+      const result = await getAdminUsers(usersPage, PAGE_SIZE, debouncedSearch);
+      if (id !== requests.current.users) return false;
+      if (result.error) throw result.error;
+      const lastPage = Math.max(0, Math.ceil(result.total / PAGE_SIZE) - 1);
+      if (usersPage > lastPage) { setUsersPage(lastPage); return false; }
+      setUsers(result.users);
+      setUsersTotal(result.total);
+      setErrors((current) => ({ ...current, users: '' }));
+      return true;
+    } catch {
+      if (id === requests.current.users) setErrors((current) => ({ ...current, users: 'Kullanıcı listesi alınamadı. Önceki sonuçlar gösteriliyor; yeniden deneyin.' }));
+      return false;
+    } finally {
+      if (id === requests.current.users) setLoading((current) => ({ ...current, users: false }));
+    }
   }, [isAllowed, usersPage, debouncedSearch]);
 
-  useEffect(() => { loadData(); }, [loadData]);
-  useEffect(() => { loadUsers(); }, [loadUsers]);
-  useEffect(() => {
-    if (!isAllowed) return;
-    getSupportTickets(supportFilter)
-      .then(setSupportTickets)
-      .catch(() => setLoadError('Destek kayıtları yüklenemedi. Lütfen yeniden deneyin.'));
+  const loadSupport = useCallback(async () => {
+    if (!isAllowed) return false;
+    const id = ++requests.current.support;
+    setLoading((current) => ({ ...current, support: true }));
+    setSupportTickets([]);
+    try {
+      const tickets = await getSupportTickets(supportFilter);
+      if (id !== requests.current.support) return false;
+      setSupportTickets(tickets);
+      setErrors((current) => ({ ...current, support: '' }));
+      return true;
+    } catch {
+      if (id === requests.current.support) setErrors((current) => ({ ...current, support: 'Destek kayıtları alınamadı. Yeniden deneyin.' }));
+      return false;
+    } finally {
+      if (id === requests.current.support) setLoading((current) => ({ ...current, support: false }));
+    }
   }, [isAllowed, supportFilter]);
-  useEffect(() => {
-    if (!isAllowed) return;
-    Promise.all([getContentReviews(), getAdminTestimonials('pending')])
-      .then(([reviews, stories]) => {
-        setContentReviews(reviews);
-        setTestimonials(stories);
-        setQualityDrafts(Object.fromEntries(reviews.map((review) => [review.id, review])));
-      })
-      .catch(() => setLoadError('Kalite inceleme kayıtları yüklenemedi.'));
+
+  const loadQuality = useCallback(async () => {
+    if (!isAllowed) return false;
+    const id = ++requests.current.quality;
+    setLoading((current) => ({ ...current, quality: true }));
+    try {
+      const [reviews, stories] = await Promise.all([getContentReviews(), getAdminTestimonials('pending')]);
+      if (id !== requests.current.quality) return false;
+      setContentReviews(reviews);
+      setTestimonials(stories);
+      setQualityDrafts((previous) => Object.fromEntries(reviews.map((review) => [review.id, dirtyReviews.current.has(review.id) ? previous[review.id] || review : review])));
+      setErrors((current) => ({ ...current, quality: '' }));
+      return true;
+    } catch {
+      if (id === requests.current.quality) setErrors((current) => ({ ...current, quality: 'Kalite kayıtları alınamadı. Yazdığınız taslaklar korundu.' }));
+      return false;
+    } finally {
+      if (id === requests.current.quality) setLoading((current) => ({ ...current, quality: false }));
+    }
   }, [isAllowed]);
+
+  useEffect(() => { loadData(); return () => { requests.current.overview++; }; }, [loadData]);
+  useEffect(() => { loadUsers(); return () => { requests.current.users++; }; }, [loadUsers]);
+  useEffect(() => { loadSupport(); return () => { requests.current.support++; }; }, [loadSupport]);
+  useEffect(() => { loadQuality(); return () => { requests.current.quality++; }; }, [loadQuality]);
+  const hasDrafts = Object.values(supportNotes).length > 0 && dirtyNotes.current.size > 0 || dirtyReviews.current.size > 0;
+  useEffect(() => {
+    if (!hasDrafts) return;
+    const warn = (event) => { event.preventDefault(); event.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [hasDrafts]);
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const close = (event) => { if (event.key === 'Escape') setSidebarOpen(false); };
+    window.addEventListener('keydown', close);
+    return () => window.removeEventListener('keydown', close);
+  }, [sidebarOpen]);
 
   const visibleSupportTickets = useMemo(() => {
     const query = supportSearch.trim().toLocaleLowerCase('tr-TR');
@@ -329,21 +393,12 @@ export default function AdminPanel({ user }) {
   }, [supportTickets, supportSearch]);
 
   const handleRefresh = async () => {
+    if (refreshing || writeLock.current) return;
     setRefreshing(true);
-    try {
-      await Promise.all([loadData(), loadUsers()]);
-      setSupportTickets(await getSupportTickets(supportFilter));
-      const [reviews, stories] = await Promise.all([getContentReviews(), getAdminTestimonials('pending')]);
-      setContentReviews(reviews);
-      setTestimonials(stories);
-      setQualityDrafts(Object.fromEntries(reviews.map((review) => [review.id, review])));
-      setLastUpdated(new Date());
-    } catch (error) {
-      console.error('[Admin] Refresh error:', error);
-      setLoadError('Yonetim verileri yenilenemedi. Baglantiyi kontrol edip tekrar deneyin.');
-    } finally {
-      setRefreshing(false);
-    }
+    setNotice('');
+    const results = await Promise.all([loadData(), loadUsers(), loadSupport(), loadQuality()]);
+    if (results.every(Boolean)) setNotice('Tüm bölümler yenilendi. Kaydedilmemiş taslaklar korundu.');
+    setRefreshing(false);
   };
 
   if (accessState === 'checking') {
@@ -358,15 +413,20 @@ export default function AdminPanel({ user }) {
   }
   if (!isAllowed) return <Navigate to="/dashboard" replace />;
 
-  const handleDeleteUser = async (userId, name) => {
-    if (!confirm(`"${name}" hesabı ve tüm uygulama verileri kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam edilsin mi?`)) return;
+  const handleDeleteUser = async () => {
+    if (!deleteTarget || deleteConfirmation !== 'SİL' || writeLock.current) return;
+    writeLock.current = true;
+    setDeleting(true);
     try {
-      await deleteUser(userId);
-      await loadUsers();
-      await loadData();
-    } catch (err) {
-      alert('Silme başarısız: ' + err.message);
-    }
+      await deleteUser(deleteTarget.id);
+      setDeleteTarget(null);
+      setDeleteConfirmation('');
+      setErrors((current) => ({ ...current, action: '' }));
+      setNotice('Kullanıcı hesabı silindi.');
+      await Promise.all([loadUsers(), loadData()]);
+    } catch {
+      setLoadError('Hesap silinemedi. Veriler yenilenerek yeniden kontrol edilmeli.');
+    } finally { writeLock.current = false; setDeleting(false); }
   };
 
   const tabs = [
@@ -379,21 +439,29 @@ export default function AdminPanel({ user }) {
   ];
 
   const totalPages = Math.ceil(usersTotal / PAGE_SIZE);
+  const loadError = Object.values(errors).filter(Boolean).join(' ');
+  const writing = deleting || updatingTicketId != null || qualityUpdatingId != null;
   const adminName = user?.name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Admin';
 
   const handleTicketUpdate = async (ticketId, updates) => {
+    if (writeLock.current) return;
+    writeLock.current = true;
     setUpdatingTicketId(ticketId);
     try {
       const updated = await updateSupportTicket(ticketId, updates);
       setSupportTickets((tickets) => tickets.map((ticket) => ticket.id === ticketId ? updated : ticket));
       setSupportNotes((notes) => ({ ...notes, [ticketId]: updated.admin_note || '' }));
-      setSupportStats(await getSupportStats());
+      setErrors((current) => ({ ...current, action: '' }));
+      dirtyNotes.current.delete(ticketId);
+      setNotice(updates.status === 'resolved' ? 'Yanıt kaydedildi; destek kaydı çözüldü.' : 'Destek kaydı güncellendi.');
+      setSupportStats(await getSupportStats({ strict: true }));
       if (updates.status && supportFilter !== 'all' && updates.status !== supportFilter) {
         setSupportTickets((tickets) => tickets.filter((ticket) => ticket.id !== ticketId));
       }
     } catch (err) {
-      alert('Destek kaydı güncellenemedi: ' + err.message);
+      setLoadError('Destek işlemi tamamlanamadı. Son durumu yenileyerek kontrol edin.');
     } finally {
+      writeLock.current = false;
       setUpdatingTicketId(null);
     }
   };
@@ -401,39 +469,52 @@ export default function AdminPanel({ user }) {
   const handleResolveTicket = async (ticket) => {
     const adminNote = (supportNotes[ticket.id] ?? ticket.admin_note ?? '').trim();
     if (!adminNote) {
-      alert('Kullanıcının çözümü anlayabilmesi için kısa bir yanıt yaz.');
+      setLoadError('Kaydı çözmeden önce kullanıcıya kısa bir yanıt yazın.');
       return;
     }
     await handleTicketUpdate(ticket.id, { status: 'resolved', admin_note: adminNote });
   };
 
   const handleReviewSave = async (reviewId, reviewStatus) => {
+    if (writeLock.current) return;
+    writeLock.current = true;
     setQualityUpdatingId(reviewId);
     try {
       const updated = await updateContentReview(reviewId, { ...qualityDrafts[reviewId], review_status: reviewStatus });
       setContentReviews((items) => items.map((item) => item.id === reviewId ? updated : item));
+      setErrors((current) => ({ ...current, action: '' }));
+      dirtyReviews.current.delete(reviewId);
+      setNotice('İçerik incelemesi kaydedildi.');
       setQualityDrafts((drafts) => ({ ...drafts, [reviewId]: updated }));
     } catch (err) {
-      alert(err.message || 'İnceleme kaydedilemedi.');
+      setLoadError(err.message || 'İnceleme kaydedilemedi.');
     } finally {
+      writeLock.current = false;
       setQualityUpdatingId(null);
     }
   };
 
   const handleTestimonialStatus = async (id, status) => {
+    if (writeLock.current) return;
+    writeLock.current = true;
     setQualityUpdatingId(id);
     try {
       await updateTestimonialStatus(id, status);
+      setErrors((current) => ({ ...current, action: '' }));
+      setNotice('Kullanıcı deneyiminin durumu güncellendi.');
       setTestimonials((items) => items.filter((item) => item.id !== id));
     } catch (err) {
-      alert(err.message || 'Yorum güncellenemedi.');
+      setLoadError(err.message || 'Yorum güncellenemedi.');
     } finally {
+      writeLock.current = false;
       setQualityUpdatingId(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex">
+    <div className="admin-panel min-h-screen bg-slate-950 text-white flex">
+      <style>{`.admin-panel :is(button,a,input,textarea):focus-visible { outline: 2px solid #fb923c; outline-offset: 3px; } .admin-panel .text-slate-500 { color: #94a3b8; } .admin-panel .text-slate-600 { color: #94a3b8; } .admin-panel button { touch-action: manipulation; min-height: 40px; }`}</style>
+      <a href="#admin-content" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:rounded-lg focus:bg-orange-500 focus:p-3 focus:text-black">İçeriğe geç</a>
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -443,24 +524,26 @@ export default function AdminPanel({ user }) {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col
+      <aside id="admin-navigation" className={`fixed lg:sticky lg:top-0 h-dvh shrink-0 inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col
         transform transition-transform duration-300 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className="p-5 border-b border-slate-800">
+        <div className="p-5 border-b border-slate-800 relative">
+          <button type="button" aria-label="Yönetim menüsünü kapat" onClick={() => setSidebarOpen(false)} className="absolute right-2 top-3 grid min-h-11 min-w-11 place-items-center text-slate-300 lg:hidden"><X size={20} /></button>
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center">
               <Shield size={18} className="text-white" />
             </div>
             <div>
               <h1 className="text-sm font-bold font-outfit text-white">Admin Panel</h1>
-              <p className="text-[10px] text-slate-500 font-inter">FullBalance</p>
+              <p className="text-xs text-slate-500 font-inter">FullBalance</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 py-4 px-3 space-y-1">
+        <nav aria-label="Yönetim bölümleri" className="flex-1 py-4 px-3 space-y-1">
           {tabs.map(tab => (
             <button key={tab.id}
-              onClick={() => { setActiveTab(tab.id); setSidebarOpen(false); }}
+              aria-current={activeTab === tab.id ? 'page' : undefined}
+              onClick={() => { setActiveTab(tab.id); setSidebarOpen(false); setNotice(''); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-outfit transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
@@ -468,9 +551,9 @@ export default function AdminPanel({ user }) {
               }`}>
               <tab.icon size={18} />
               <span className="flex-1 text-left">{tab.label}</span>
-              {tab.id === 'support' && supportStats.open > 0 && (
-                <span className="min-w-5 rounded-full bg-red-500/15 px-1.5 py-0.5 text-[10px] font-bold text-red-300">
-                  {supportStats.open}
+              {tab.id === 'support' && supportStats?.open > 0 && (
+                <span className="min-w-5 rounded-full bg-red-500/15 px-1.5 py-0.5 text-xs font-bold text-red-300">
+                  {supportStats?.open}
                 </span>
               )}
             </button>
@@ -485,7 +568,7 @@ export default function AdminPanel({ user }) {
             </div>
             <div className="min-w-0">
               <p className="text-xs font-semibold text-white font-outfit truncate">{adminName}</p>
-              <p className="text-[9px] text-orange-400 font-inter">Admin</p>
+              <p className="text-xs text-orange-400 font-inter">Admin</p>
             </div>
           </div>
           <button onClick={() => navigate('/dashboard')}
@@ -497,34 +580,37 @@ export default function AdminPanel({ user }) {
       </aside>
 
       {/* Main */}
-      <main className="flex-1 min-h-screen overflow-y-auto">
+      <main id="admin-content" tabIndex={-1} className="flex-1 min-w-0 min-h-screen overflow-y-auto">
         <header className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50 px-4 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-white cursor-pointer">
+              <button aria-label="Yönetim menüsünü aç" aria-expanded={sidebarOpen} aria-controls="admin-navigation" onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-white cursor-pointer">
                 <Menu size={20} />
               </button>
               <h2 className="text-lg font-bold font-outfit text-white">{tabs.find(t => t.id === activeTab)?.label}</h2>
             </div>
             <div className="flex items-center gap-3">
-              {lastUpdated && <span className="hidden sm:block text-[10px] text-slate-600">{lastUpdated.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>}
-              <button onClick={handleRefresh} disabled={refreshing}
+              {lastUpdated && <span className="hidden sm:block text-xs text-slate-600">Son tam yenileme: {lastUpdated.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })}</span>}
+              <button onClick={handleRefresh} disabled={refreshing || writing}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 hover:text-white transition-all cursor-pointer font-inter disabled:opacity-50">
                 <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
-                Yenile
+                {refreshing ? 'Yenileniyor…' : 'Yenile'}
               </button>
             </div>
           </div>
         </header>
 
         <div className="p-4 lg:p-8">
+          {notice && <div role="status" className="mb-4 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4 text-sm text-emerald-200">{notice}</div>}
+          {hasDrafts && <p className="mb-4 text-xs text-amber-200">Kaydedilmemiş taslaklarınız var. Bölümler arasında geçebilir veya verileri yenileyebilirsiniz; sayfadan ayrılmadan önce kaydedin.</p>}
+          {loading[activeTab === 'dashboard' || activeTab === 'analytics' || activeTab === 'activity' ? 'overview' : activeTab] && <p role="status" className="mb-4 flex items-center gap-2 text-sm text-slate-300"><RefreshCw size={16} className="animate-spin" /> Veriler yükleniyor…</p>}
           {loadError && (
-            <div className="mb-5 flex flex-col gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div role="alert" className="mb-5 flex flex-col gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-2 text-sm text-red-200">
                 <AlertCircle className="mt-0.5 shrink-0" size={16} />
                 <span>{loadError}</span>
               </div>
-              <button onClick={handleRefresh} className="self-start rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-bold text-red-200 sm:self-auto">Tekrar dene</button>
+              <button onClick={() => { setErrors((current) => ({ ...current, action: '' })); handleRefresh(); }} disabled={refreshing || writing} className="self-start rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-bold text-red-200 sm:self-auto">Tekrar dene</button>
             </div>
           )}
           <AnimatePresence mode="wait">
@@ -532,24 +618,24 @@ export default function AdminPanel({ user }) {
             {/* ═══ DASHBOARD ═══ */}
             {activeTab === 'dashboard' && (
               <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                <AdminOverview stats={stats} supportStats={supportStats} retentionStats={retentionStats} loading={loading.overview} onNavigate={setActiveTab} />
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                  <StatCard icon={Users} label="Toplam Üye" value={stats?.totalUsers ?? '—'} sub="Yönetici hesabı hariç" color="#ff6d00" delay={0} />
+                  <StatCard icon={Users} label="Antrenman Yapan (7 gün)" value={activityStats?.activeUsers ?? '—'} sub="Tekil kullanıcı · bugün dahil" color="#ff6d00" delay={0} />
                   <StatCard icon={UserPlus} label="Bugün (İstanbul)" value={stats?.todayRegistrations ?? '—'} sub="Devam eden gün" color="#00b0ff" delay={0.05} />
                   <StatCard icon={Calendar} label="Son 7 Tam Gün" value={stats?.weekRegistrations ?? '—'} sub="Bugün hariç" color="#00e676" delay={0.1} />
                   <StatCard icon={TrendingUp} label="Son 30 Tam Gün" value={stats?.monthRegistrations ?? '—'} sub={stats ? `Önceki 30 gün: ${stats.previousMonthRegistrations} · fark ${stats.registrationDelta >= 0 ? '+' : ''}${stats.registrationDelta}` : ''} color="#ff4081" delay={0.15} />
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                  <StatCard icon={Target} label="Plan Aktivasyonu (60 gün)" value={retentionStats ? `%${retentionStats.activationRate}` : '—'} sub={`${retentionStats?.activated ?? 0}/${retentionStats?.registrations ?? 0} üye plan oluşturdu`} color="#ffab00" delay={0.16} />
-                  <StatCard icon={Calendar} label="D1 Geri Dönüş" value={retentionStats?.d1Rate == null ? '—' : `%${retentionStats.d1Rate}`} sub={`${retentionStats?.d1Returned ?? 0}/${retentionStats?.d1Eligible ?? 0} ölçülebilen üye`} color="#38bdf8" delay={0.18} />
-                  <StatCard icon={TrendingUp} label="D7 Geri Dönüş" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} ölçülebilen üye`} color="#a78bfa" delay={0.2} />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                  <StatCard icon={Calendar} label="D1 Geri Dönüş (UTC)" value={retentionStats?.d1Rate == null ? '—' : `%${retentionStats.d1Rate}`} sub={`${retentionStats?.d1Returned ?? 0}/${retentionStats?.d1Eligible ?? 0} ölçülebilen üye`} color="#38bdf8" delay={0.18} />
+                  <StatCard icon={TrendingUp} label="D7 Geri Dönüş (UTC)" value={retentionStats?.d7Rate == null ? '—' : `%${retentionStats.d7Rate}`} sub={`${retentionStats?.d7Returned ?? 0}/${retentionStats?.d7Eligible ?? 0} ölçülebilen üye`} color="#a78bfa" delay={0.2} />
                   <StatCard icon={Users} label="Geri Dönüş Ölçümü" value={retentionStats ? `${retentionStats.measurementDays} tam gün` : '—'} sub={retentionStats?.trackingStartedAt ? `${retentionStats.trackingStartedAt} tarihinden beri` : 'Henüz ölçüm yok'} color="#34d399" delay={0.22} />
                 </div>
 
                 <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4 sm:p-5">
                   <div className="mb-4">
-                    <h3 className="font-outfit text-sm font-bold text-white">Son 7 gün aktivasyon hunisi</h3>
-                    <p className="mt-1 text-[10px] leading-5 text-slate-500">Kullanıcı hiçbir kayıt yapmasa bile uygulamayı açtığında aktif sayılır. Aşağıdaki adımlar bu sürümden itibaren birikir.</p>
+                    <h3 className="font-outfit text-sm font-bold text-white">Son 7 gün kullanım adımları</h3>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">Kullanıcı hiçbir kayıt yapmasa bile uygulamayı açtığında aktif sayılır. Adımlar bağımsız tekil kullanıcı sayılarıdır; sıralı bir dönüşüm oranı değildir.</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                     {[
@@ -560,8 +646,8 @@ export default function AdminPanel({ user }) {
                       { icon: CheckCircle2, label: 'Antrenmanı tamamladı', value: activationFunnel?.workoutCompleted, color: '#34d399' },
                     ].map((item, index) => {
                       const active = activationFunnel?.activeUsers || 0;
-                      const value = item.value ?? 0;
-                      return <StatCard key={item.label} icon={item.icon} label={item.label} value={value} sub={index === 0 ? 'Tekil kullanıcı' : active > 0 ? `Aktiflerin %${Math.round((value / active) * 100)}` : 'Henüz veri yok'} color={item.color} delay={0.24 + index * 0.03} />;
+                      const value = item.value ?? '—';
+                      return <StatCard key={item.label} icon={item.icon} label={item.label} value={value} sub={!activationFunnel ? 'Ölçüm bekleniyor' : index === 0 ? 'Tekil kullanıcı' : active > 0 ? `Aktiflerin %${Math.round((value / active) * 100)}` : 'Henüz veri yok'} color={item.color} delay={0.24 + index * 0.03} />;
                     })}
                   </div>
                 </section>
@@ -569,7 +655,7 @@ export default function AdminPanel({ user }) {
                 {/* Trend */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                   className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                  <h3 className="text-sm font-bold font-outfit text-white mb-4">📈 Son 30 Gün — Kayıt Trendi</h3>
+                  <h3 className="text-sm font-bold font-outfit text-white mb-4">📈 Son 30 Gün — Kayıt Trendi (bugün dahil)</h3>
                   <div className="h-56 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={trend}>
@@ -589,14 +675,6 @@ export default function AdminPanel({ user }) {
                   </div>
                 </motion.div>
 
-                {/* Quick stats */}
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                  <StatCard icon={Target} label="Plan Oluşturanlar" value={stats?.usersWithPlans ?? '—'}
-                    sub={stats ? `%${stats.totalUsers > 0 ? Math.round((stats.usersWithPlans / stats.totalUsers) * 100) : 0} dönüşüm` : ''} color="#7c4dff" delay={0.25} />
-                  <StatCard icon={Zap} label="Aktif Kullanan (7 gün)" value={activityStats?.activeUsers ?? '—'} sub="Son 7 günde antrenman yapan" color="#00e676" delay={0.3} />
-                  <StatCard icon={MessageSquare} label="Açık Destek" value={stats?.openSupportTickets ?? '—'} sub="Kullanıcı mesajları" color="#ff4081" delay={0.35} />
-                </div>
-
                 {/* Recent Users */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
                   className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
@@ -608,15 +686,15 @@ export default function AdminPanel({ user }) {
                     {recentUsers.slice(0, 5).map(u => (
                       <div key={u.id} className="flex items-center justify-between py-2 border-b border-slate-800/30 last:border-0">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center text-[10px] font-bold text-white font-outfit">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center text-xs font-bold text-white font-outfit">
                             {(u.name || u.email || '?')[0].toUpperCase()}
                           </div>
                           <div>
                             <p className="text-xs text-white font-outfit font-medium">{u.name || 'İsimsiz'}</p>
-                            <p className="text-[10px] text-slate-500 font-inter">{u.email || '-'}</p>
+                            <p className="text-xs text-slate-500 font-inter">{u.email || '-'}</p>
                           </div>
                         </div>
-                        <span className="text-[10px] text-slate-500 font-inter">{timeAgo(u.created_at)}</span>
+                        <span className="text-xs text-slate-500 font-inter">{timeAgo(u.created_at)}</span>
                       </div>
                     ))}
                     {recentUsers.length === 0 && (
@@ -633,14 +711,18 @@ export default function AdminPanel({ user }) {
                 <div className="relative">
                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input type="text" value={searchQuery}
-                    onChange={e => { setSearchQuery(e.target.value); setUsersPage(0); }}
+                    aria-label="Kullanıcı ara" onChange={e => { setSearchQuery(e.target.value); setUsersPage(0); }}
                     placeholder="İsim veya email ile ara..."
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-orange-500/50 font-inter transition-colors" />
                 </div>
 
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400" aria-live="polite">
+                  <p>{loading.users || searchQuery !== debouncedSearch ? 'Aranıyor…' : `${usersTotal} kullanıcı${usersTotal ? ` · ${usersPage * PAGE_SIZE + 1}–${Math.min((usersPage + 1) * PAGE_SIZE, usersTotal)} arası gösteriliyor` : ''}`}</p>
+                  {searchQuery && <button onClick={() => { setSearchQuery(''); setUsersPage(0); }} className="rounded-lg border border-slate-700 px-3 py-2">Aramayı temizle</button>}
+                </div>
                 {/* User Cards */}
                 <div className="space-y-2">
-                  {users.map(u => (
+                  {!loading.users && searchQuery === debouncedSearch && users.map(u => (
                     <motion.div key={u.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                       className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-slate-700 transition-colors">
                       <div className="flex items-center justify-between">
@@ -650,23 +732,23 @@ export default function AdminPanel({ user }) {
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm text-white font-outfit font-medium truncate">{u.name || 'İsimsiz'}</p>
-                            <p className="text-[11px] text-slate-500 font-inter truncate">{u.email || '-'}</p>
+                            <p className="text-xs text-slate-500 font-inter truncate">{u.email || '-'}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                          <button onClick={() => setDetailUserId(u.id)}
-                            className="p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer" title="Detay">
+                          <button aria-label={`${u.name || 'İsimsiz kullanıcı'} detaylarını aç`} onClick={() => setDetailUserId(u.id)}
+                            className="min-h-11 min-w-11 grid place-items-center p-2 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer" title="Detay">
                             <Eye size={16} />
                           </button>
-                          <button onClick={() => handleDeleteUser(u.id, u.name || u.email)}
-                            disabled={u.id === user?.id || u.role === 'admin'}
-                            className="p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-20" title={u.id === user?.id || u.role === 'admin' ? 'Yönetici hesabı buradan silinemez' : 'Hesabı kalıcı sil'}>
+                          <button onClick={() => { setDeleteTarget(u); setDeleteConfirmation(''); }}
+                            disabled={writing || refreshing || u.id === user?.id || u.role === 'admin'}
+                            className="min-h-11 min-w-11 grid place-items-center p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-20" title={u.id === user?.id || u.role === 'admin' ? 'Yönetici hesabı buradan silinemez' : 'Hesabı kalıcı sil'}>
                             <Trash2 size={16} />
                           </button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 mt-2.5 text-[10px] text-slate-500 font-inter flex-wrap">
-                        <span>{u.created_at ? new Date(u.created_at).toLocaleDateString('tr-TR') : '-'}</span>
+                      <div className="flex items-center gap-3 mt-2.5 text-xs text-slate-500 font-inter flex-wrap">
+                        <span>{u.created_at ? new Date(u.created_at).toLocaleDateString('tr-TR', { timeZone: 'Europe/Istanbul' }) : '-'}</span>
                         <span>•</span>
                         {u.plan_created_at ? (
                           <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">Plan Aktif</span>
@@ -686,7 +768,7 @@ export default function AdminPanel({ user }) {
                       </div>
                     </motion.div>
                   ))}
-                  {users.length === 0 && (
+                  {users.length === 0 && searchQuery === debouncedSearch && !loading.users && !errors.users && (
                     <div className="text-center py-16 text-slate-500 text-sm font-inter">
                       {searchQuery ? 'Sonuç bulunamadı' : 'Henüz kullanıcı yok'}
                     </div>
@@ -698,12 +780,12 @@ export default function AdminPanel({ user }) {
                   <div className="flex items-center justify-between px-2 py-3">
                     <p className="text-xs text-slate-500 font-inter">{usersTotal} kullanıcı</p>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => setUsersPage(p => Math.max(0, p - 1))} disabled={usersPage === 0}
+                      <button aria-label="Önceki kullanıcı sayfası" onClick={() => setUsersPage(p => Math.max(0, p - 1))} disabled={loading.users || usersPage === 0}
                         className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer transition-colors">
                         <ChevronLeft size={16} />
                       </button>
                       <span className="text-xs text-slate-400 font-inter">{usersPage + 1} / {totalPages}</span>
-                      <button onClick={() => setUsersPage(p => Math.min(totalPages - 1, p + 1))} disabled={usersPage >= totalPages - 1}
+                      <button aria-label="Sonraki kullanıcı sayfası" onClick={() => setUsersPage(p => Math.min(totalPages - 1, p + 1))} disabled={loading.users || usersPage >= totalPages - 1}
                         className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer transition-colors">
                         <ChevronRight size={16} />
                       </button>
@@ -723,30 +805,30 @@ export default function AdminPanel({ user }) {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   <StatCard
                     icon={Users}
-                    label="Yurtdışı Kayıt (30 gün)"
-                    value={distribution.international?.registrations ?? 0}
-                    sub={`EN ${distribution.international?.english ?? 0} · ES ${distribution.international?.spanish ?? 0}`}
+                    label="EN + ES Kayıt (30 gün)"
+                    value={distribution.international?.registrations ?? '—'}
+                    sub={distribution.international ? `EN ${distribution.international.english} · ES ${distribution.international.spanish}` : 'Veri bekleniyor'}
                     color="#00b0ff"
                   />
                   <StatCard
                     icon={Target}
                     label="Plan Oluşturan"
-                    value={distribution.international?.activated ?? 0}
-                    sub="Yurtdışı kayıtlar"
+                    value={distribution.international?.activated ?? '—'}
+                    sub="EN / ES arayüz dili"
                     color="#00e676"
                   />
                   <StatCard
                     icon={TrendingUp}
-                    label="Yurtdışı Aktivasyon"
-                    value={`%${distribution.international?.activationRate ?? 0}`}
+                    label="EN + ES Plan Oranı"
+                    value={distribution.international ? `%${distribution.international.activationRate}` : '—'}
                     sub="Kayıttan kişisel plana"
                     color="#7c4dff"
                   />
                   <StatCard
                     icon={BarChart3}
                     label="Kaynağı Belirlenen"
-                    value={distribution.international?.attributed ?? 0}
-                    sub={`${distribution.international?.direct ?? 0} doğrudan geliş`}
+                    value={distribution.international?.attributed ?? '—'}
+                    sub={distribution.international ? `${distribution.international.direct} doğrudan geliş` : 'Veri bekleniyor'}
                     color="#ffab00"
                   />
                 </div>
@@ -787,10 +869,10 @@ export default function AdminPanel({ user }) {
             {activeTab === 'support' && (
               <motion.div key="support" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                  <StatCard icon={AlertCircle} label="Açık" value={supportStats.open} color="#ff4081" delay={0} />
-                  <StatCard icon={Clock} label="İnceleniyor" value={supportStats.reviewing} color="#ffab00" delay={0.05} />
-                  <StatCard icon={CheckCircle2} label="Çözüldü" value={supportStats.resolved} color="#00e676" delay={0.1} />
-                  <StatCard icon={MessageSquare} label="Toplam" value={supportStats.total} color="#00b0ff" delay={0.15} />
+                  <StatCard icon={AlertCircle} label="Açık" value={supportStats?.open ?? '—'} color="#ff4081" delay={0} />
+                  <StatCard icon={Clock} label="İnceleniyor" value={supportStats?.reviewing ?? '—'} color="#ffab00" delay={0.05} />
+                  <StatCard icon={CheckCircle2} label="Çözüldü" value={supportStats?.resolved ?? '—'} color="#00e676" delay={0.1} />
+                  <StatCard icon={MessageSquare} label="Toplam" value={supportStats?.total ?? '—'} color="#00b0ff" delay={0.15} />
                 </div>
 
                 <div className="flex gap-2 overflow-x-auto pb-1">
@@ -802,7 +884,7 @@ export default function AdminPanel({ user }) {
                   ].map(([value, label]) => (
                     <button
                       key={value}
-                      onClick={() => setSupportFilter(value)}
+                      aria-pressed={supportFilter === value} disabled={writing || refreshing} onClick={() => setSupportFilter(value)}
                       className={`px-3 py-2 rounded-xl border text-xs font-bold whitespace-nowrap transition-colors ${
                         supportFilter === value
                           ? 'border-orange-500/50 bg-orange-500/15 text-orange-300'
@@ -820,11 +902,12 @@ export default function AdminPanel({ user }) {
                     type="search"
                     value={supportSearch}
                     onChange={(event) => setSupportSearch(event.target.value)}
-                    placeholder="Konu, mesaj, isim veya e-posta ara..."
+                    aria-label="Destek kaydı ara" placeholder="Konu, mesaj, isim veya e-posta ara..."
                     className="w-full rounded-xl border border-slate-800 bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-orange-500/50"
                   />
                 </div>
 
+                <p className="text-xs text-slate-400">Seçilen durumdaki {supportTickets.length} kayıtta {visibleSupportTickets.length} sonuç. Öncelikli talepler önce gösterilir.</p>
                 <div className="space-y-3">
                   {visibleSupportTickets.map((ticket) => (
                     <motion.div
@@ -836,14 +919,14 @@ export default function AdminPanel({ user }) {
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <span className={`px-2 py-1 rounded-lg border text-[10px] font-bold ${SUPPORT_STATUS_COLORS[ticket.status] || SUPPORT_STATUS_COLORS.open}`}>
+                            <span className={`px-2 py-1 rounded-lg border text-xs font-bold ${SUPPORT_STATUS_COLORS[ticket.status] || SUPPORT_STATUS_COLORS.open}`}>
                               {SUPPORT_STATUS_LABELS[ticket.status] || ticket.status}
                             </span>
-                            <span className="px-2 py-1 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-300 text-[10px] font-bold">
+                            <span className="px-2 py-1 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-300 text-xs font-bold">
                               {SUPPORT_CATEGORY_LABELS[ticket.category] || ticket.category}
                             </span>
                             {ticket.priority === 'high' && (
-                              <span className="px-2 py-1 rounded-lg border border-red-500/20 bg-red-500/10 text-red-300 text-[10px] font-bold">
+                              <span className="px-2 py-1 rounded-lg border border-red-500/20 bg-red-500/10 text-red-300 text-xs font-bold">
                                 Öncelikli
                               </span>
                             )}
@@ -856,8 +939,8 @@ export default function AdminPanel({ user }) {
                             <button
                               key={status}
                               onClick={() => handleTicketUpdate(ticket.id, { status })}
-                              disabled={updatingTicketId === ticket.id || ticket.status === status}
-                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 text-[10px] text-slate-300 hover:text-white disabled:opacity-40 transition-colors"
+                              disabled={writing || refreshing || ticket.status === status}
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-300 hover:text-white disabled:opacity-40 transition-colors"
                             >
                               {SUPPORT_STATUS_LABELS[status]}
                             </button>
@@ -870,12 +953,13 @@ export default function AdminPanel({ user }) {
                       </div>
 
                       <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/70 p-3">
-                        <label className="mb-2 block text-[10px] font-bold uppercase text-slate-500">
+                        <label htmlFor={`support-reply-${ticket.id}`} className="mb-2 block text-xs font-bold uppercase text-slate-500">
                           Kullanıcıya çözüm yanıtı
                         </label>
                         <textarea
+                          id={`support-reply-${ticket.id}`} disabled={writing}
                           value={supportNotes[ticket.id] ?? ticket.admin_note ?? ''}
-                          onChange={(event) => setSupportNotes((notes) => ({ ...notes, [ticket.id]: event.target.value }))}
+                          onChange={(event) => { dirtyNotes.current.add(ticket.id); setSupportNotes((notes) => ({ ...notes, [ticket.id]: event.target.value })); }}
                           rows={3}
                           maxLength={2000}
                           placeholder="Neyin düzeldiğini ve kullanıcının ne yapması gerektiğini kısa ve net yaz."
@@ -885,16 +969,16 @@ export default function AdminPanel({ user }) {
                           <button
                             type="button"
                             onClick={() => handleTicketUpdate(ticket.id, { admin_note: (supportNotes[ticket.id] ?? ticket.admin_note ?? '').trim() || null })}
-                            disabled={updatingTicketId === ticket.id}
-                            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-[10px] font-bold text-slate-300 transition-colors hover:text-white disabled:opacity-40"
+                            disabled={writing || refreshing}
+                            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-bold text-slate-300 transition-colors hover:text-white disabled:opacity-40"
                           >
                             Yanıtı Kaydet
                           </button>
                           <button
                             type="button"
                             onClick={() => handleResolveTicket(ticket)}
-                            disabled={updatingTicketId === ticket.id || ticket.status === 'resolved'}
-                            className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[10px] font-bold text-emerald-300 transition-colors hover:bg-emerald-500/15 disabled:opacity-40"
+                            disabled={writing || refreshing || ticket.status === 'resolved'}
+                            className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-bold text-emerald-300 transition-colors hover:bg-emerald-500/15 disabled:opacity-40"
                           >
                             Yanıtı Gönder ve Çöz
                           </button>
@@ -912,13 +996,13 @@ export default function AdminPanel({ user }) {
                         </div>
                       </div>
 
-                      {ticket.page_url && (
-                        <a href={ticket.page_url} target="_blank" rel="noreferrer" className="mt-2 block truncate text-[10px] text-slate-600 hover:text-blue-300">{ticket.page_url}</a>
+                      {safeSupportUrl(ticket.page_url) && (
+                        <a href={safeSupportUrl(ticket.page_url)} target="_blank" rel="noopener noreferrer" className="mt-2 block truncate text-xs text-slate-600 hover:text-blue-300">{ticket.page_url}</a>
                       )}
                     </motion.div>
                   ))}
 
-                  {visibleSupportTickets.length === 0 && (
+                  {visibleSupportTickets.length === 0 && !loading.support && !errors.support && (
                     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-10 text-center">
                       <MessageSquare size={28} className="mx-auto text-slate-600 mb-3" />
                       <p className="text-sm text-slate-500">{supportSearch ? 'Aramayla eşleşen destek kaydı yok.' : 'Bu filtrede destek kaydı yok.'}</p>
@@ -939,23 +1023,24 @@ export default function AdminPanel({ user }) {
                       <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">Bu alan bir uzman varmış gibi görünmek için değildir. Yalnızca gerçek ve nitelikli bir dış uzman içeriği fiilen incelediğinde adı, mesleki yeterliliği ve doğrulanabilir kanıtı kaydedilir. Bekleyen kayıtlar kullanıcıya onaylanmış olarak gösterilmez.</p>
                     </div>
                   </div>
+                  {!loading.quality && !errors.quality && contentReviews.length === 0 && <p className="py-6 text-sm text-slate-400">İncelenecek içerik kaydı bulunmuyor.</p>}
                   <div className="grid gap-3 lg:grid-cols-2">
                     {contentReviews.map((review) => {
                       const draft = qualityDrafts[review.id] || review;
-                      const setField = (field, value) => setQualityDrafts((items) => ({ ...items, [review.id]: { ...draft, [field]: value } }));
+                      const setField = (field, value) => { dirtyReviews.current.add(review.id); setQualityDrafts((items) => ({ ...items, [review.id]: { ...items[review.id], [field]: value } })); };
                       return (
                         <article key={review.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-                          <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-sm font-bold">{CONTENT_LABELS[review.content_area] || review.content_area}</h3><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${review.review_status === 'approved' ? 'bg-emerald-500/10 text-emerald-300' : review.review_status === 'changes_requested' ? 'bg-red-500/10 text-red-300' : 'bg-amber-500/10 text-amber-300'}`}>{CONTENT_REVIEW_STATUS_LABELS[review.review_status] || review.review_status}</span></div>
+                          <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-sm font-bold">{CONTENT_LABELS[review.content_area] || review.content_area}</h3><span className={`rounded-full px-2 py-1 text-xs font-bold ${review.review_status === 'approved' ? 'bg-emerald-500/10 text-emerald-300' : review.review_status === 'changes_requested' ? 'bg-red-500/10 text-red-300' : 'bg-amber-500/10 text-amber-300'}`}>{CONTENT_REVIEW_STATUS_LABELS[review.review_status] || review.review_status}</span></div>
                           <div className="space-y-2">
-                            <input value={draft.reviewer_name || ''} onChange={(event) => setField('reviewer_name', event.target.value)} placeholder="Uzman adı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
-                            <input value={draft.reviewer_credential || ''} onChange={(event) => setField('reviewer_credential', event.target.value)} placeholder="Uzmanlık / sertifika" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
-                            <input value={draft.evidence_url || ''} onChange={(event) => setField('evidence_url', event.target.value)} placeholder="https:// doğrulama veya belge bağlantısı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
-                            <textarea value={draft.notes || ''} onChange={(event) => setField('notes', event.target.value)} placeholder="İnceleme notu" rows={2} className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <input disabled={writing} value={draft.reviewer_name || ''} onChange={(event) => setField('reviewer_name', event.target.value)} aria-label={`Uzman adı: ${CONTENT_LABELS[review.content_area] || review.content_area}`} placeholder="Uzman adı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <input disabled={writing} value={draft.reviewer_credential || ''} onChange={(event) => setField('reviewer_credential', event.target.value)} aria-label={`Uzmanlık veya sertifika: ${CONTENT_LABELS[review.content_area] || review.content_area}`} placeholder="Uzmanlık / sertifika" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <input disabled={writing} value={draft.evidence_url || ''} onChange={(event) => setField('evidence_url', event.target.value)} aria-label={`Doğrulama bağlantısı: ${CONTENT_LABELS[review.content_area] || review.content_area}`} placeholder="https:// doğrulama veya belge bağlantısı" className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
+                            <textarea disabled={writing} value={draft.notes || ''} onChange={(event) => setField('notes', event.target.value)} aria-label={`İnceleme notu: ${CONTENT_LABELS[review.content_area] || review.content_area}`} placeholder="İnceleme notu" rows={2} className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs outline-none focus:border-emerald-500" />
                           </div>
                           <div className="mt-3 grid grid-cols-3 gap-2">
-                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'in_review')} className="min-h-9 rounded-lg border border-blue-500/30 text-[10px] font-bold text-blue-300">İncelemede</button>
-                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'changes_requested')} className="min-h-9 rounded-lg border border-red-500/30 text-[10px] font-bold text-red-300">Düzeltme</button>
-                            <button disabled={qualityUpdatingId === review.id} onClick={() => handleReviewSave(review.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-[10px] font-bold text-white">Doğrula</button>
+                            <button disabled={writing || refreshing} onClick={() => handleReviewSave(review.id, 'in_review')} className="min-h-9 rounded-lg border border-blue-500/30 text-xs font-bold text-blue-300">İncelemede</button>
+                            <button disabled={writing || refreshing} onClick={() => handleReviewSave(review.id, 'changes_requested')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">Düzeltme</button>
+                            <button disabled={writing || refreshing} onClick={() => handleReviewSave(review.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Doğrula</button>
                           </div>
                         </article>
                       );
@@ -968,13 +1053,13 @@ export default function AdminPanel({ user }) {
                   <div className="space-y-3">
                     {testimonials.map((story) => (
                       <article key={story.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-                        <div className="flex items-center justify-between"><span className="text-sm text-amber-400">{'★'.repeat(story.rating)}</span><span className="flex items-center gap-2 text-[9px] uppercase text-slate-600">{!story.consent_public && <span className="rounded-full border border-slate-600 px-2 py-0.5 text-slate-300">Gizli geri bildirim</span>}{story.language}</span></div>
+                        <div className="flex items-center justify-between"><span className="text-sm text-amber-400">{'★'.repeat(story.rating)}</span><span className="flex items-center gap-2 text-xs uppercase text-slate-600">{!story.consent_public && <span className="rounded-full border border-slate-600 px-2 py-0.5 text-slate-300">Gizli geri bildirim</span>}{story.language}</span></div>
                         {story.result_summary && <p className="mt-3 text-xs font-bold text-cyan-300">{story.result_summary}</p>}
                         <p className="mt-2 text-xs leading-5 text-slate-300">{story.body}</p>
-                        <div className="mt-3 grid grid-cols-2 gap-2"><button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'rejected')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">{story.consent_public ? 'Reddet' : 'Okundu, arşivle'}</button>{story.consent_public ? <button disabled={qualityUpdatingId === story.id} onClick={() => handleTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Anonim yayınla</button> : <span className="grid min-h-9 place-items-center rounded-lg border border-slate-700 text-[10px] text-slate-500">Yayınlanamaz</span>}</div>
+                        <div className="mt-3 grid grid-cols-2 gap-2"><button disabled={writing || refreshing} onClick={() => handleTestimonialStatus(story.id, 'rejected')} className="min-h-9 rounded-lg border border-red-500/30 text-xs font-bold text-red-300">{story.consent_public ? 'Reddet' : 'Okundu, arşivle'}</button>{story.consent_public ? <button disabled={writing || refreshing} onClick={() => handleTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white">Anonim yayınla</button> : <span className="grid min-h-9 place-items-center rounded-lg border border-slate-700 text-xs text-slate-500">Yayınlanamaz</span>}</div>
                       </article>
                     ))}
-                    {testimonials.length === 0 && <p className="py-8 text-center text-sm text-slate-600">Bekleyen yorum yok.</p>}
+                    {testimonials.length === 0 && !loading.quality && !errors.quality && <p className="py-8 text-center text-sm text-slate-600">Bekleyen yorum yok.</p>}
                   </div>
                 </div>
               </motion.div>
@@ -1054,6 +1139,13 @@ export default function AdminPanel({ user }) {
           </AnimatePresence>
         </div>
       </main>
+      {deleteTarget && <AdminDialog title="Hesabı kalıcı olarak sil" busy={deleting} onClose={() => setDeleteTarget(null)}>
+        <p className="text-sm leading-6 text-slate-300"><strong className="text-white">{deleteTarget.name || deleteTarget.email}</strong> hesabı ve uygulama verileri kalıcı olarak silinecek. Bu işlem geri alınamaz.</p>
+        <label className="mt-5 block text-sm" htmlFor="admin-delete-confirm">Onaylamak için SİL yazın</label>
+        <input id="admin-delete-confirm" value={deleteConfirmation} disabled={deleting} onChange={(event) => setDeleteConfirmation(event.target.value)} autoComplete="off" className="mt-2 w-full rounded-xl border border-red-500/40 bg-slate-950 p-3" />
+        <div className="mt-5 flex justify-end gap-3"><button disabled={deleting} onClick={() => setDeleteTarget(null)} className="rounded-xl bg-slate-800 px-4 py-3">Vazgeç</button><button disabled={writing || deleteConfirmation !== 'SİL'} onClick={handleDeleteUser} className="rounded-xl bg-red-600 px-4 py-3 font-bold disabled:opacity-40">{deleting ? 'Siliniyor…' : 'Kalıcı olarak sil'}</button></div>
+      </AdminDialog>}
+
     </div>
   );
 }

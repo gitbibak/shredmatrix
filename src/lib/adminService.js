@@ -98,6 +98,39 @@ function dateKeyInTimeZone(value, timeZone = 'Europe/Istanbul') {
   return `${values.year}-${values.month}-${values.day}`;
 }
 
+// Read every page in a stable primary-key order instead of silently accepting
+// the API's row limit. A changing count or overlapping page requires a refresh.
+async function readAllAdminRows(table, columns, configure = (query) => query, keys = ['id']) {
+  const pageSize = 500;
+  const selected = columns.trim() === '*' ? '*' : [...new Set([...keys, ...columns.split(',').map((column) => column.trim())])].join(', ');
+  const rows = [];
+  const seen = new Set();
+  let expectedCount;
+  while (true) {
+    let query = configure(supabase.from(table).select(selected, { count: 'exact' }));
+    keys.forEach((key) => { query = query.order(key, { ascending: true }); });
+    const { data, count, error } = await query.range(rows.length, rows.length + pageSize - 1);
+    if (error) throw error;
+    if (!Number.isInteger(count) || count < 0 || (expectedCount !== undefined && count !== expectedCount)) {
+      throw new Error('Yönetim verileri yükleme sırasında değişti. Lütfen yeniden deneyin.');
+    }
+    expectedCount = count;
+    const page = data || [];
+    for (const row of page) {
+      const identity = JSON.stringify(keys.map((key) => row[key]));
+      if (keys.some((key) => row[key] == null) || seen.has(identity)) {
+        throw new Error('Yönetim verileri tutarlı biçimde alınamadı. Lütfen yeniden deneyin.');
+      }
+      seen.add(identity);
+      rows.push(row);
+    }
+    if (rows.length === expectedCount) return { data: rows };
+    if (!page.length || rows.length > expectedCount) {
+      throw new Error('Yönetim verileri eksik alındı. Lütfen yeniden deneyin.');
+    }
+  }
+}
+
 export function summarizeAdminStats(profiles = [], planUserIds = [], openSupportTickets = 0, now = new Date()) {
   const today = dateKeyInTimeZone(now);
   const last7Start = addUtcDays(today, -7);
@@ -181,14 +214,14 @@ export function summarizeRetention(profiles = [], activityDays = [], planUserIds
 }
 
 export async function getRetentionStats() {
-  if (!isSupabaseReady()) return summarizeRetention();
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
   const since = new Date();
   since.setUTCDate(since.getUTCDate() - 60);
   const sinceKey = utcDateKey(since);
   const [profilesResult, activityResult, plansResult] = await Promise.all([
-    supabase.from('profiles').select('id, created_at, role').gte('created_at', since.toISOString()).neq('role', 'admin'),
-    supabase.from('user_activity_days').select('user_id, activity_date').gte('activity_date', sinceKey),
-    supabase.from('plans').select('user_id'),
+    readAllAdminRows('profiles', 'id, created_at, role', (query) => query.gte('created_at', since.toISOString()).neq('role', 'admin')),
+    readAllAdminRows('user_activity_days', 'user_id, activity_date', (query) => query.gte('activity_date', sinceKey), ['user_id', 'activity_date']),
+    readAllAdminRows('plans', 'user_id'),
   ]);
   const failed = [profilesResult, activityResult, plansResult].find(({ error }) => error);
   if (failed?.error) throw failed.error;
@@ -211,14 +244,12 @@ export function summarizeActivationFunnel(activityRows = []) {
 }
 
 export async function getActivationFunnelStats() {
-  if (!isSupabaseReady()) return summarizeActivationFunnel();
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
   const since = new Date();
   since.setUTCDate(since.getUTCDate() - 6);
-  const { data, error } = await supabase
-    .from('user_activity_days')
-    .select('user_id, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed')
-    .gte('activity_date', utcDateKey(since));
-  if (error) throw error;
+  const { data } = await readAllAdminRows('user_activity_days',
+    'user_id, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed',
+    (query) => query.gte('activity_date', utcDateKey(since)), ['user_id', 'activity_date']);
   return summarizeActivationFunnel(data || []);
 }
 
@@ -228,8 +259,8 @@ export async function getAdminStats() {
 
   try {
     const [profilesResult, plansResult, supportResult] = await Promise.all([
-      supabase.from('profiles').select('id, created_at, role'),
-      supabase.from('plans').select('user_id'),
+      readAllAdminRows('profiles', 'id, created_at, role'),
+      readAllAdminRows('plans', 'user_id'),
       supabase.from('support_tickets').select('*', { count: 'exact', head: true }).neq('status', 'resolved'),
     ]);
     const failed = [profilesResult, plansResult, supportResult].find(({ error }) => error);
@@ -273,37 +304,47 @@ export async function getAdminUsers(page = 0, pageSize = 20, search = '') {
 }
 
 // ── User Plan Details ───────────────────────────
-export async function getUserPlanDetails(userId) {
-  if (!isSupabaseReady()) return null;
+export async function getUserPlanDetails(userId, { strict = false } = {}) {
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return null;
+  }
 
   try {
     const { data, error } = await supabase
       .from('plans')
       .select('plan_data')
       .eq('user_id', userId)
-      .single();
-    if (error) return null;
+      .maybeSingle();
+    if (error) throw error;
     return data?.plan_data || null;
-  } catch {
+  } catch (error) {
+    if (strict) throw error;
     return null;
   }
 }
 
 // ── Plan Distribution (with normalization) ──────
-export async function getPlanDistribution() {
+export async function getPlanDistribution({ strict = false } = {}) {
   const empty = {
     goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [], campaigns: [], contents: [],
     international: summarizeInternationalAcquisition(),
   };
-  if (!isSupabaseReady()) return empty;
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return empty;
+  }
 
   try {
     const [planResult, profileResult] = await Promise.all([
-      supabase.from('plans').select('user_id, plan_data'),
-      supabase.from('profiles').select('id, created_at, app_language, acquisition_source, acquisition_campaign, acquisition_content'),
+      readAllAdminRows('plans', 'user_id, plan_data'),
+      readAllAdminRows('profiles', 'id, role, created_at, app_language, acquisition_source, acquisition_campaign, acquisition_content'),
     ]);
     if (planResult.error) throw planResult.error;
     if (profileResult.error) throw profileResult.error;
+    const adminIds = new Set((profileResult.data || []).filter(({ role }) => role === 'admin').map(({ id }) => id));
+    const memberProfiles = (profileResult.data || []).filter(({ role }) => role !== 'admin');
+    const memberPlans = (planResult.data || []).filter(({ user_id: userId }) => !adminIds.has(userId));
 
     const goalCounts = {};
     const genderCounts = {};
@@ -314,7 +355,7 @@ export async function getPlanDistribution() {
     const contentCounts = {};
     const ageBuckets = { '16-20': 0, '21-25': 0, '26-30': 0, '31-35': 0, '36-40': 0, '41-50': 0, '50+': 0 };
 
-    (planResult.data || []).forEach(({ plan_data }) => {
+    memberPlans.forEach(({ plan_data }) => {
       if (!plan_data) return;
 
       // Goal distribution (normalized)
@@ -330,7 +371,8 @@ export async function getPlanDistribution() {
       experienceCounts[exp] = (experienceCounts[exp] || 0) + 1;
 
       // Age distribution
-      const age = parseInt(plan_data.userAge) || 0;
+      const age = Number(plan_data.userAge);
+      if (!Number.isInteger(age) || age < 16 || age > 120) return;
       if (age <= 20) ageBuckets['16-20']++;
       else if (age <= 25) ageBuckets['21-25']++;
       else if (age <= 30) ageBuckets['26-30']++;
@@ -341,7 +383,7 @@ export async function getPlanDistribution() {
     });
 
     const languageLabels = { tr: 'Türkçe', en: 'English', es: 'Español' };
-    (profileResult.data || []).forEach((profile) => {
+    memberProfiles.forEach((profile) => {
       const language = languageLabels[profile.app_language] || 'Bilinmiyor';
       const source = String(profile.acquisition_source || 'Bilinmiyor').toLowerCase();
       languageCounts[language] = (languageCounts[language] || 0) + 1;
@@ -362,43 +404,39 @@ export async function getPlanDistribution() {
       campaigns: Object.entries(campaignCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       contents: Object.entries(contentCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
       international: summarizeInternationalAcquisition(
-        profileResult.data || [],
-        (planResult.data || []).map((plan) => plan.user_id),
+        memberProfiles,
+        memberPlans.map((plan) => plan.user_id),
       ),
     };
   } catch (err) {
     console.error('[Admin] Distribution error:', err);
+    if (strict) throw err;
     return empty;
   }
 }
 
 // ── Registration Trend (last 30 days) ───────────
-export async function getRegistrationTrend() {
-  if (!isSupabaseReady()) return [];
+export async function getRegistrationTrend({ strict = false } = {}) {
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return [];
+  }
 
   try {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('created_at')
-      .gte('created_at', thirtyDaysAgo.toISOString())
-      .order('created_at', { ascending: true });
-
-    if (error) throw error;
+    const today = dateKeyInTimeZone(new Date());
+    const startDate = addUtcDays(today, -29);
+    const { data } = await readAllAdminRows('profiles', 'created_at, role',
+      (query) => query.gte('created_at', `${startDate}T00:00:00+03:00`));
 
     // Group by date
     const grouped = {};
     for (let i = 0; i < 30; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - (29 - i));
-      const key = d.toISOString().slice(0, 10);
+      const key = addUtcDays(startDate, i);
       grouped[key] = 0;
     }
 
-    (data || []).forEach(({ created_at }) => {
-      const key = created_at?.slice(0, 10);
+    (data || []).filter(({ role }) => role !== 'admin').forEach(({ created_at }) => {
+      const key = dateKeyInTimeZone(created_at);
       if (key && grouped[key] !== undefined) grouped[key]++;
     });
 
@@ -408,13 +446,17 @@ export async function getRegistrationTrend() {
     }));
   } catch (err) {
     console.error('[Admin] Trend error:', err);
+    if (strict) throw err;
     return [];
   }
 }
 
 // ── Recent Users (last 10 registrations) ────────
-export async function getRecentUsers() {
-  if (!isSupabaseReady()) return [];
+export async function getRecentUsers({ strict = false } = {}) {
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return [];
+  }
 
   try {
     const { data, error } = await supabase
@@ -426,6 +468,7 @@ export async function getRecentUsers() {
     return data || [];
   } catch (err) {
     console.error('[Admin] Recent users error:', err);
+    if (strict) throw err;
     return [];
   }
 }
@@ -444,21 +487,12 @@ export async function deleteUser(userId) {
 
 // ── Support Inbox ───────────────────────────────
 export async function getSupportTickets(status = 'open') {
-  if (!isSupabaseReady()) return [];
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
 
   try {
-    let query = supabase
-      .from('support_tickets')
-      .select('id, user_id, name, email, category, subject, message, status, priority, source, page_url, admin_note, resolved_at, created_at, updated_at')
-      .order('created_at', { ascending: false })
-      .limit(60);
-
-    if (status !== 'all') {
-      query = query.eq('status', status);
-    }
-
-    const { data, error } = await query;
-    if (error) throw error;
+    const { data } = await readAllAdminRows('support_tickets',
+      'id, user_id, name, email, category, subject, message, status, priority, source, page_url, admin_note, resolved_at, created_at, updated_at',
+      (query) => status === 'all' ? query : query.eq('status', status));
     return data || [];
   } catch (err) {
     console.error('[Admin] Support tickets error:', err);
@@ -466,8 +500,11 @@ export async function getSupportTickets(status = 'open') {
   }
 }
 
-export async function getSupportStats() {
-  if (!isSupabaseReady()) return { open: 0, reviewing: 0, resolved: 0, total: 0 };
+export async function getSupportStats({ strict = false } = {}) {
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return { open: 0, reviewing: 0, resolved: 0, total: 0 };
+  }
 
   try {
     const statuses = ['open', 'reviewing', 'resolved'];
@@ -490,6 +527,7 @@ export async function getSupportStats() {
     return { open: counts.open || 0, reviewing: counts.reviewing || 0, resolved: counts.resolved || 0, total };
   } catch (err) {
     console.error('[Admin] Support stats error:', err);
+    if (strict) throw err;
     return { open: 0, reviewing: 0, resolved: 0, total: 0 };
   }
 }
@@ -521,7 +559,7 @@ export async function updateSupportTicket(ticketId, updates) {
 
 // ── Quality & editorial review ──────────────────
 export async function getContentReviews() {
-  if (!isSupabaseReady()) return [];
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
   const { data, error } = await supabase
     .from('content_reviews')
     .select('*')
@@ -534,9 +572,11 @@ export async function updateContentReview(reviewId, updates) {
   if (!isSupabaseReady()) throw new Error('Supabase not ready');
   const payload = { ...updates, updated_at: new Date().toISOString() };
   if (payload.review_status === 'approved') {
+    let evidence;
+    try { evidence = new URL(String(payload.evidence_url || '').trim()); } catch { /* Rejected below. */ }
     if (!String(payload.reviewer_name || '').trim()
       || !String(payload.reviewer_credential || '').trim()
-      || !/^https:\/\//i.test(String(payload.evidence_url || '').trim())) {
+      || evidence?.protocol !== 'https:' || !evidence?.hostname || evidence.username || evidence.password) {
       throw new Error('Onay için uzman adı, uzmanlığı ve HTTPS kanıt bağlantısı zorunlu.');
     }
     payload.reviewed_at = new Date().toISOString();
@@ -554,12 +594,10 @@ export async function updateContentReview(reviewId, updates) {
 }
 
 export async function getAdminTestimonials(status = 'pending') {
-  if (!isSupabaseReady()) return [];
-  let query = supabase.from('testimonials').select('*').order('created_at', { ascending: false }).limit(60);
-  if (status !== 'all') query = query.eq('status', status);
-  const { data, error } = await query;
-  if (error) throw error;
-  return data || [];
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
+  const { data } = await readAllAdminRows('testimonials', '*',
+    (query) => status === 'all' ? query : query.eq('status', status));
+  return (data || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 }
 
 export async function updateTestimonialStatus(testimonialId, status) {
@@ -590,14 +628,13 @@ export async function getActivityStats() {
   if (!isSupabaseReady()) return null;
 
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const weekAgo = new Date(Date.now() - 7 * 86400000);
+    const today = dateKeyInTimeZone(new Date());
+    const weekStart = addUtcDays(today, -6);
     const results = await Promise.all([
       supabase.from('workout_logs').select('*', { count: 'exact', head: true }),
-      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', today.toISOString().split('T')[0]),
-      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', weekAgo.toISOString().split('T')[0]),
-      supabase.from('workout_logs').select('user_id').gte('date', weekAgo.toISOString().split('T')[0]),
+      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', today),
+      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', weekStart),
+      readAllAdminRows('workout_logs', 'user_id', (query) => query.gte('date', weekStart)),
       supabase.from('water_logs').select('*', { count: 'exact', head: true }),
       supabase.from('progress_entries').select('*', { count: 'exact', head: true }),
       supabase.from('measurements').select('*', { count: 'exact', head: true }),
@@ -633,27 +670,18 @@ export async function getActivityStats() {
 }
 
 // ── Workout Trend (last 14 days) ────────────────
-export async function getWorkoutTrend() {
-  if (!isSupabaseReady()) return [];
+export async function getWorkoutTrend({ strict = false } = {}) {
+  if (!isSupabaseReady()) {
+    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
+    return [];
+  }
 
   try {
-    const fourteenDaysAgo = new Date();
-    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-
-    const { data, error } = await supabase
-      .from('workout_logs')
-      .select('date')
-      .gte('date', fourteenDaysAgo.toISOString().split('T')[0])
-      .order('date', { ascending: true });
-
-    if (error) throw error;
-
+    const today = dateKeyInTimeZone(new Date());
+    const start = addUtcDays(today, -13);
+    const { data } = await readAllAdminRows('workout_logs', 'date', (query) => query.gte('date', start));
     const grouped = {};
-    for (let i = 0; i < 14; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - (13 - i));
-      grouped[d.toISOString().slice(0, 10)] = 0;
-    }
+    for (let i = 0; i < 14; i++) grouped[addUtcDays(start, i)] = 0;
 
     (data || []).forEach(({ date }) => {
       const key = date?.slice(0, 10);
@@ -666,6 +694,7 @@ export async function getWorkoutTrend() {
     }));
   } catch (err) {
     console.error('[Admin] Workout trend error:', err);
+    if (strict) throw err;
     return [];
   }
 }
