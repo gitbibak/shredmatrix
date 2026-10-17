@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import CalorieCalc from './CalorieCalc';
 import { LanguageProvider } from '../i18n/LanguageContext';
-import { analyzeMealPhoto } from '../lib/mealPhotoAnalysis';
+import { analyzeMealPhoto, analysisItemsToMealItems } from '../lib/mealPhotoAnalysis';
 import { trackEvent } from '../lib/analytics';
 
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
@@ -112,7 +112,7 @@ describe('meal photo controls', () => {
     expect(screen.getByText('150g')).toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Yiyecek ara...')).not.toBeInTheDocument();
     expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
-    expect(screen.getByText('Başka bir işlem yapman gerekmiyor.', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('Özellikle içecek türünü', { exact: false })).toBeInTheDocument();
 
     // Portions stay editable after the automatic estimate.
     fireEvent.click(screen.getByLabelText('Porsiyonu artır'));
@@ -122,5 +122,37 @@ describe('meal photo controls', () => {
     // Manual search can be reopened to add a missed food.
     fireEvent.click(screen.getByText('Eksik yiyecek ekle'));
     expect(screen.getByPlaceholderText('Yiyecek ara...')).toBeInTheDocument();
+  });
+});
+
+describe('drink corrections and recipe context', () => {
+  it('replaces lemonade with Churchill and recalculates the existing portion immediately', async () => {
+    analysisItemsToMealItems.mockReturnValueOnce([{
+      id: 'drink', source: 'photo', grams: 400, cal: 160, p: 0, c: 40, f: 0,
+      food: { name: { tr: 'Limonata', en: 'Lemonade', es: 'Limonada' }, cal: 40, p: 0, c: 10, f: 0, cat: 'drink' },
+    }]);
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), { target: { files: [new File(['photo'], 'drink.jpg', { type: 'image/jpeg' })] } });
+    const selector = await screen.findByRole('combobox', { name: 'İçecek türünü doğrula / düzelt' });
+    expect(screen.getByText('160 kcal')).toBeInTheDocument();
+    fireEvent.change(selector, { target: { value: 'Churchill' } });
+    expect(screen.getByText('12 kcal')).toBeInTheDocument();
+    expect(screen.getByText('400g')).toBeInTheDocument();
+    expect(screen.queryByText('160 kcal')).not.toBeInTheDocument();
+    expect(screen.getByText('Şekersiz soda, limon ve tuz için yaklaşık', { exact: false })).toBeInTheDocument();
+  });
+  it('updates a photo using recipe context and keeps the old result if that request fails', async () => {
+    renderCalculator();
+    fireEvent.change(screen.getByLabelText('Galeriden seç'), { target: { files: [new File(['photo'], 'meal.jpg', { type: 'image/jpeg' })] } });
+    await screen.findByText('Otomatik tahmin hazır');
+    fireEvent.click(screen.getByText('Yanlış tanıdı veya tarif farklı mı?'));
+    const button = screen.getByRole('button', { name: 'Bu bilgiyle analizi güncelle' });
+    expect(button).toBeDisabled();
+    fireEvent.change(screen.getByLabelText('Yiyecek / içecek ve tarif bilgisi'), { target: { value: 'Tavuk, yağ eklenmedi' } });
+    analyzeMealPhoto.mockRejectedValueOnce(new Error('offline'));
+    fireEvent.click(button);
+    await waitFor(() => expect(analyzeMealPhoto).toHaveBeenLastCalledWith(expect.any(String), 'tr', expect.any(Function), expect.any(Array), 'Tavuk, yağ eklenmedi'));
+    await waitFor(() => expect(screen.getByText('240 kcal')).toBeInTheDocument());
+    expect(screen.getByText('Tavuk')).toBeInTheDocument();
   });
 });

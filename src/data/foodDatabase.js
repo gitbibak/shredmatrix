@@ -144,6 +144,8 @@ export const FOODS = [
   { name: { tr: 'Enerji İçeceği', en: 'Energy Drink', es: 'Bebida Energética' }, cal: 45, p: 0, c: 11, f: 0, cat: 'drink' },
   { name: { tr: 'Soda', en: 'Sparkling Water', es: 'Agua con Gas' }, cal: 0, p: 0, c: 0, f: 0, cat: 'drink' },
   { name: { tr: 'Limonata', en: 'Lemonade', es: 'Limonada' }, cal: 40, p: 0, c: 10, f: 0, cat: 'drink' },
+  // Unsweetened recipe estimate: mostly mineral water, roughly 10% lemon; recipes vary.
+  { name: { tr: 'Churchill (Şekersiz Soda, Limon, Tuz)', en: 'Churchill', es: 'Churchill (Agua con Gas, Limón y Sal)' }, cal: 3, p: 0, c: 0.7, f: 0, cat: 'drink' },
   { name: { tr: 'Smoothie (Meyve)', en: 'Fruit Smoothie', es: 'Smoothie de Frutas' }, cal: 65, p: 1, c: 15, f: 0.3, cat: 'drink' },
   { name: { tr: 'Protein Shake', en: 'Protein Shake', es: 'Batido de Proteína' }, cal: 120, p: 24, c: 5, f: 1.5, cat: 'drink' },
   { name: { tr: 'Bira', en: 'Beer', es: 'Cerveza' }, cal: 43, p: 0.5, c: 3.6, f: 0, cat: 'drink' },

@@ -1,4 +1,4 @@
-import { MEAL_JSON_SCHEMA, buildMealPrompt, normalizeMealAnalysis, sanitizeVocabulary } from './mealAnalysis.js';
+import { MEAL_JSON_SCHEMA, buildMealPrompt, normalizeMealAnalysis, sanitizeMealContext, sanitizeVocabulary } from './mealAnalysis.js';
 
 const MAX_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_IMAGE_CHARS = 3.6 * 1024 * 1024;
@@ -129,7 +129,7 @@ async function analyzeMeal(request, env) {
   const model = typeof env.MEAL_MODEL === 'string' && env.MEAL_MODEL.startsWith('@cf/') ? env.MEAL_MODEL : DEFAULT_MEAL_MODEL;
 
   try {
-    const modelOutput = await runVisionModel(env, { image, prompt: buildMealPrompt(language, vocabulary), model });
+    const modelOutput = await runVisionModel(env, { image, prompt: buildMealPrompt(language, vocabulary, sanitizeMealContext(body.context)), model });
     const analysis = normalizeMealAnalysis(modelOutput);
     return json({ ...analysis, model });
   } catch (error) {

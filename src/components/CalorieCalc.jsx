@@ -9,6 +9,9 @@ import {
   analyzeMealPhoto,
   buildFoodVocabulary,
   getPhotoEstimateRange,
+  getDrinkReviewOptions,
+  replacePhotoFood,
+  filterHiddenSuggestions,
   prepareMealPhoto,
   rescaleMealItem,
   suggestHiddenIngredients,
@@ -73,6 +76,7 @@ export default function CalorieCalc({ language, embedded = false }) {
   const [completedItems, setCompletedItems] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [photoError, setPhotoError] = useState('');
+  const [photoContext, setPhotoContext] = useState('');
   const [photoLoading, setPhotoLoading] = useState(false);
   const [photoAnalyzing, setPhotoAnalyzing] = useState(false);
   const [analysisMeta, setAnalysisMeta] = useState(null);
@@ -163,14 +167,19 @@ export default function CalorieCalc({ language, embedded = false }) {
       return;
     }
 
+    const revising = event.revising === true;
+    const context = revising ? photoContext.trim() : '';
+    if (!revising) setPhotoContext('');
     const requestId = ++photoRequestRef.current;
     photoFileRef.current = file;
     setPhotoError('');
     setPhotoLoading(true);
-    setAnalysisMeta(null);
-    setHiddenSuggestions([]);
-    setShowManualAdd(false);
-    setMealItems((items) => items.filter((item) => item.source !== 'photo' && item.source !== 'hidden'));
+    if (!revising) {
+      setAnalysisMeta(null);
+      setHiddenSuggestions([]);
+      setShowManualAdd(false);
+      setMealItems((items) => items.filter((item) => item.source !== 'photo' && item.source !== 'hidden'));
+    }
     try {
       const image = await prepareMealPhoto(file);
       if (requestId !== photoRequestRef.current) return;
@@ -178,7 +187,7 @@ export default function CalorieCalc({ language, embedded = false }) {
       setPhotoLoading(false);
       setPhotoAnalyzing(true);
       trackEvent('meal_photo_started', { surface: language ? 'public_tool' : 'dashboard', language: activeLang });
-      const analysis = await analyzeMealPhoto(image, activeLang, fetch, FOOD_VOCABULARY);
+      const analysis = await analyzeMealPhoto(image, activeLang, fetch, FOOD_VOCABULARY, context);
       if (requestId !== photoRequestRef.current) return;
       if (!analysis.isFood || !Array.isArray(analysis.items) || analysis.items.length === 0) {
         setPhotoError(tt('calorieCalc.photoErrorNoFood'));
@@ -187,9 +196,8 @@ export default function CalorieCalc({ language, embedded = false }) {
       }
       const analyzedItems = analysisItemsToMealItems(analysis.items, activeLang, FOODS);
       if (analyzedItems.length === 0) throw new Error('invalid_analysis');
-      const suggestions = suggestHiddenIngredients(analysis.hiddenIngredients, FOODS)
-        .filter((entry) => !analyzedItems.some((item) => item.food.name.en === entry.food?.name.en));
-      setMealItems((items) => [...items.filter((item) => item.source !== 'photo'), ...analyzedItems]);
+      const suggestions = filterHiddenSuggestions(suggestHiddenIngredients(analysis.hiddenIngredients, FOODS), analyzedItems);
+      setMealItems((items) => [...items.filter((item) => item.source !== 'photo' && item.source !== 'hidden'), ...analyzedItems]);
       setAnalysisMeta({ confidence: Number(analysis.confidence) || 0.5, model: analysis.model || '' });
       setHiddenSuggestions(suggestions);
       trackEvent('meal_photo_analyzed', {
@@ -218,6 +226,7 @@ export default function CalorieCalc({ language, embedded = false }) {
     setPhotoLoading(false);
     setPhotoAnalyzing(false);
     setPhoto(null);
+    setPhotoContext('');
     setPhotoError('');
     setAnalysisMeta(null);
     setHiddenSuggestions([]);
@@ -269,6 +278,7 @@ export default function CalorieCalc({ language, embedded = false }) {
               className="h-full w-full object-contain"
               onError={() => {
                 setPhoto(null);
+                setPhotoContext('');
                 setPhotoError(tt('calorieCalc.photoErrorRead'));
               }}
             />
@@ -330,6 +340,16 @@ export default function CalorieCalc({ language, embedded = false }) {
             <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{tt('calorieCalc.photoAnalysisReadyHelper')}</p>
           </div>
         </div>
+      )}
+
+      {photo && !photoAnalyzing && analysisMeta && (
+        <details className="mb-4 rounded-xl border border-cyan-500/25 bg-cyan-500/5 p-3">
+          <summary className="cursor-pointer text-xs font-bold text-cyan-100">{tt('calorieCalc.refineTitle')}</summary>
+          <p className="mt-2 text-xs leading-relaxed text-slate-400">{tt('calorieCalc.refineHelper')}</p>
+          <label htmlFor={embedded ? 'meal-context-dashboard' : 'meal-context-public'} className="mt-3 block text-xs text-slate-300">{tt('calorieCalc.refineLabel')}</label>
+          <input id={embedded ? 'meal-context-dashboard' : 'meal-context-public'} type="text" value={photoContext} maxLength={240} onChange={(event) => setPhotoContext(event.target.value)} placeholder={tt('calorieCalc.refinePlaceholder')} className="mt-2 min-h-11 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white outline-none focus:border-cyan-400" />
+          <button type="button" disabled={!photoContext.trim() || photoLoading || photoAnalyzing} onClick={() => selectPhoto({ revising: true, target: { files: [photoFileRef.current], value: '' } })} className="mt-3 min-h-11 w-full rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3 text-xs font-bold text-cyan-100 disabled:opacity-40">{tt('calorieCalc.refineAction')}</button>
+        </details>
       )}
 
       {photo && !photoAnalyzing && hiddenSuggestions.length > 0 && (
@@ -485,9 +505,11 @@ export default function CalorieCalc({ language, embedded = false }) {
           </div>
           <div className="mb-3 space-y-1.5">
             {mealItems.map(item => (
-              <div key={item.id} className="flex items-center gap-2 rounded-lg bg-slate-950/70 px-3 py-2">
+              <div key={item.id} className="rounded-xl bg-slate-950/70 px-3 py-3">
+                <div className="flex items-center gap-2">
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-xs text-slate-300">{item.food.name[activeLang] || item.food.name.tr}</span>
+                  {item.source === 'photo' && (item.needsConfirmation || (!item.reviewed && getDrinkReviewOptions(item, FOODS).length > 0)) && <span className="mt-1 block text-xs text-amber-200">{tt('calorieCalc.reviewNeeded')}</span>}
                   {item.source === 'photo' && item.portion && <span className="mt-0.5 block truncate text-[9px] text-cyan-200/55">{item.portion}</span>}
                   {item.source === 'photo' && item.matched === false && <span className="mt-0.5 block truncate text-[9px] text-amber-200/60">{tt('calorieCalc.unmatchedHint')}</span>}
                 </span>
@@ -504,6 +526,23 @@ export default function CalorieCalc({ language, embedded = false }) {
                 <button type="button" aria-label={tt('calorieCalc.remove')} onClick={() => setMealItems(items => items.filter(entry => entry.id !== item.id))} className="text-slate-600 hover:text-red-400">
                   <Trash2 size={13} />
                 </button>
+                </div>
+                {item.source === 'photo' && getDrinkReviewOptions(item, FOODS).length > 0 && (
+                  <div className="mt-3 border-t border-slate-800 pt-3">
+                    <label htmlFor={`drink-review-${item.id}`} className="mb-2 block text-xs text-cyan-100">{tt('calorieCalc.drinkReview')}</label>
+                    <select id={`drink-review-${item.id}`} disabled={photoLoading || photoAnalyzing} value={getDrinkReviewOptions(item, FOODS).some((food) => food.name.en === item.food.name.en) ? item.food.name.en : ''} onChange={(event) => {
+                      const food = FOODS.find((entry) => entry.name.en === event.target.value);
+                      if (!food) return;
+                      const updated = mealItems.map((entry) => entry.id === item.id ? replacePhotoFood(entry, food) : entry);
+                      setMealItems(updated);
+                      setHiddenSuggestions((entries) => filterHiddenSuggestions(entries, updated));
+                    }} className="min-h-11 w-full max-w-full rounded-xl border border-slate-700 bg-slate-900 px-2 text-xs text-white">
+                      {!getDrinkReviewOptions(item, FOODS).some((food) => food.name.en === item.food.name.en) && <option value="">{tt('calorieCalc.selectDrink')}</option>}
+                      {getDrinkReviewOptions(item, FOODS).map((food) => <option key={food.name.en} value={food.name.en}>{food.name[activeLang] || food.name.en}</option>)}
+                    </select>
+                    <p className="mt-2 text-xs leading-5 text-slate-400">{tt(item.food.name.en === 'Churchill' ? 'calorieCalc.churchillHelper' : 'calorieCalc.drinkReviewHelper')}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

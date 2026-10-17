@@ -5,6 +5,9 @@ import {
   buildFoodVocabulary,
   findKnownFood,
   getPhotoEstimateRange,
+  getDrinkReviewOptions,
+  replacePhotoFood,
+  filterHiddenSuggestions,
   rescaleMealItem,
   suggestHiddenIngredients,
 } from './mealPhotoAnalysis';
@@ -92,7 +95,7 @@ describe('analysis item conversion', () => {
     expect(item.grams).toBe(60);
   });
 
-  it('removes duplicate detections and zero-nutrition artifacts', () => {
+  it('removes duplicate detections while retaining zero-calorie drinks', () => {
     const result = analysisItemsToMealItems([
       { name: 'Olive Oil', grams: 14, calories: 124, confidence: 0.8 },
       { name: 'Olive Oil', grams: 8, calories: 71, confidence: 0.9 },
@@ -100,13 +103,13 @@ describe('analysis item conversion', () => {
       { name: 'Water', grams: 1, calories: 0, protein: 0, carbs: 0, fat: 0 },
     ], 'en', FOODS);
 
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(3);
     expect(result.find((item) => item.food.name.en === 'Olive Oil')).toMatchObject({ grams: 14, confidence: 0.9 });
     expect(result.find((item) => item.food.name.en === 'Lettuce')).toMatchObject({ grams: 50 });
   });
 
   it('preserves a small garnish amount instead of inventing more food', () => {
-    const [item] = analysisItemsToMealItems([{ name: 'Lemon Juice', grams: 1, calories: 0 }], 'en', FOODS);
+    const [item] = analysisItemsToMealItems([{ name: 'Lemon', grams: 1, calories: 0 }], 'en', FOODS);
     expect(item.grams).toBe(1);
   });
 
@@ -137,5 +140,41 @@ describe('hidden ingredients and ranges', () => {
     expect(uncertain.low).toBeLessThan(395);
     expect(uncertain.high).toBeGreaterThan(605);
     expect(getPhotoEstimateRange(0)).toEqual({ low: 0, high: 0 });
+  });
+});
+
+describe('drink identity and recipe review', () => {
+  it('keeps Churchill separate from lemonade even if the model canonical name contradicts its display name', () => {
+    expect(findKnownFood('Churchill', FOODS, 'Lemonade')).toBe(byEn('Churchill'));
+    expect(findKnownFood('Soda limon tuz', FOODS)).toBe(byEn('Churchill'));
+    expect(findKnownFood('Cola Zero', FOODS, 'Coca-Cola')).toBe(byEn('Diet Coke'));
+    expect(findKnownFood('Lemon juice', FOODS)).not.toBe(byEn('Lemon'));
+  });
+  it('changes the recipe density without changing the user portion', () => {
+    const [lemonade] = analysisItemsToMealItems([{ name: 'Limonata', canonical: 'Lemonade', grams: 400, calories: 160 }], 'tr', FOODS);
+    expect(getDrinkReviewOptions(lemonade, FOODS).map((food) => food.name.en)).toEqual(['Churchill', 'Lemonade', 'Sparkling Water']);
+    const corrected = replacePhotoFood(lemonade, byEn('Churchill'));
+    expect(corrected).toMatchObject({ grams: 400, cal: 12, reviewed: true, needsConfirmation: false });
+    expect(corrected.c).toBeCloseTo(2.8);
+    expect(corrected.food.name.en).toBe('Churchill');
+  });
+  it('retains valid zero-calorie drinks instead of discarding the result', () => {
+    const [drink] = analysisItemsToMealItems([{ name: 'Cola Zero', canonical: 'Diet Coke', grams: 250, calories: 0 }], 'tr', FOODS);
+    expect(drink).toMatchObject({ grams: 250, cal: 0, c: 0 });
+    expect(replacePhotoFood(drink, byEn('Coca-Cola')).cal).toBe(105);
+  });
+  it('does not suggest a second sugar portion on a sweet drink or an unsweetened Churchill', () => {
+    const suggestions = suggestHiddenIngredients(['Sugar', 'Olive Oil'], FOODS);
+    for (const name of ['Lemonade', 'Churchill']) {
+      expect(filterHiddenSuggestions(suggestions, [{ food: byEn(name) }]).some((entry) => entry.food?.name.en === 'Sugar')).toBe(false);
+    }
+    expect(filterHiddenSuggestions(suggestions, [{ food: byEn('Chicken Breast') }]).length).toBe(2);
+  });
+  it('passes bounded recipe context only when provided', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ isFood: true, items: [] }) });
+    await analyzeMealPhoto('image', 'tr', fetchImpl, [], '  Churchill, şekersiz  ');
+    expect(JSON.parse(fetchImpl.mock.calls[0][1].body).context).toBe('Churchill, şekersiz');
+    await analyzeMealPhoto('image', 'en', fetchImpl, [], 'a'.repeat(500));
+    expect(JSON.parse(fetchImpl.mock.calls[1][1].body).context).toHaveLength(240);
   });
 });

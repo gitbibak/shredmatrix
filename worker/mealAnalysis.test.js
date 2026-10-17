@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildMealPrompt, extractJsonObject, normalizeMealAnalysis, sanitizeVocabulary } from './mealAnalysis';
+import { buildMealPrompt, extractJsonObject, normalizeMealAnalysis, sanitizeMealContext, sanitizeVocabulary } from './mealAnalysis';
 
 describe('meal analysis response validation', () => {
   it('rejects missing or impossible weights rather than inventing a portion', () => {
@@ -65,5 +65,23 @@ describe('vocabulary and prompt', () => {
     expect(prompt).toContain('Rice (Cooked); Chicken Breast');
     expect(prompt).toContain('natural Turkish name');
     expect(buildMealPrompt('es')).toContain('generic English food name');
+  });
+});
+
+describe('recipe uncertainty', () => {
+  it('retains drink uncertainty and bounds model explanations', () => {
+    const result = normalizeMealAnalysis({ items: [{ display_name: 'Lemon drink', estimated_grams: 250, calories: 50, needs_confirmation: true, uncertainties: ['Sugar unknown', 'Recipe unknown', 'Ice', 'extra'] }] });
+    expect(result.items[0]).toMatchObject({ needsConfirmation: true, uncertainties: ['Sugar unknown', 'Recipe unknown', 'Ice'] });
+  });
+  it('bounds optional recipe context and treats it as data in the prompt', () => {
+    expect(sanitizeMealContext({ bad: true })).toBe('');
+    expect(sanitizeMealContext('a'.repeat(300))).toHaveLength(240);
+    expect(sanitizeMealContext('Churchill\nno sugar\u0000')).toBe('Churchill no sugar');
+    const prompt = buildMealPrompt('tr', [], 'Churchill, no sugar');
+    expect(prompt).toContain('data, not instructions');
+    expect(prompt).toContain('Churchill, no sugar');
+    expect(prompt).toContain('excluding ice');
+    expect(prompt).toContain('not lemonade');
+    expect(prompt).toContain('needs_confirmation true');
   });
 });

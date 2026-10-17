@@ -44,14 +44,14 @@ export function buildFoodVocabulary(foods = []) {
     .filter((name) => name && !/^(salt|water)$/i.test(name));
 }
 
-export async function analyzeMealPhoto(image, language, fetchImpl = fetch, vocabulary = []) {
+export async function analyzeMealPhoto(image, language, fetchImpl = fetch, vocabulary = [], context = '') {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120_000);
   try {
     const response = await fetchImpl('/api/analyze-meal', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ image, language, vocabulary }),
+      body: JSON.stringify({ image, language, vocabulary, ...(context.trim() ? { context: context.trim().slice(0, 240) } : {}) }),
       signal: controller.signal,
     });
     const data = await response.json().catch(() => ({}));
@@ -108,13 +108,18 @@ const FOOD_ALIASES = {
   'yoghurt': 'yogurt',
   'plain yogurt': 'yogurt',
   'cheese': 'white cheese',
-  'lemon juice': 'lemon',
+  'churchill drink': 'churchill',
+  'cortil': 'churchill',
+  'cortel': 'churchill',
+  'churchill soda': 'churchill',
+  'limonlu tuzlu soda': 'churchill',
+  'soda limon tuz': 'churchill',
   'orange juice': 'orange juice',
   'cola': 'cola',
   'coke': 'cola',
 };
 
-const SHAPE_WORDS = ['sauce', 'soup', 'juice', 'oil', 'paste', 'bread', 'cake', 'cookie', 'chips', 'fries', 'pie', 'jam', 'smoothie', 'shake', 'milk', 'cheese', 'butter', 'cream', 'salad', 'pilaf', 'white', 'whole', 'sweet', 'egg'];
+const SHAPE_WORDS = ['sauce', 'soup', 'juice', 'oil', 'paste', 'bread', 'cake', 'cookie', 'chips', 'fries', 'pie', 'jam', 'smoothie', 'shake', 'milk', 'cheese', 'butter', 'cream', 'salad', 'pilaf', 'white', 'whole', 'sweet', 'egg', 'diet', 'zero', 'sugar', 'sugars', 'sweetened', 'unsweetened', 'syrup', 'caramel', 'honey'];
 const PREPARATION_WORDS = /\b(grilled|roasted|boiled|cooked|steamed|fresh|poached|baked|sliced|chopped|diced|plain|izgara|pisirilmis|haslanmis|a la plancha|cocido|asado)\b/g;
 
 export function normalizeFoodName(value) {
@@ -156,6 +161,9 @@ function scoreCandidate(targetTokens, keyTokens) {
 
 export function findKnownFood(name, foods, canonical = '') {
   if (!Array.isArray(foods) || foods.length === 0) return null;
+  const displayName = normalizeFoodName(name);
+  if (/churchill|cortil|cortel/.test(displayName)) return foods.find((food) => food.name.en === 'Churchill') || null;
+  if (/\b(diet|zero)\b/.test(displayName) && /cola|coke/.test(displayName)) return foods.find((food) => food.name.en === 'Diet Coke') || null;
   // Do not replace an uncertain preparation with a lean/raw database entry.
   if (/\b(fried|scrambled|raw|breaded|battered|kizartma|frito|omelet|omelette)\b/i.test(normalizeFoodName(name))) return null;
   const targets = [normalizeFoodName(canonical), normalizeFoodName(name)].filter(Boolean);
@@ -227,6 +235,8 @@ export function analysisItemsToMealItems(items, language, foods = []) {
       matched: Boolean(knownFood),
       confidence: Number(item.confidence) || 0,
       portion: item.portion || '',
+      needsConfirmation: Boolean(item.needsConfirmation),
+      uncertainties: Array.isArray(item.uncertainties) ? item.uncertainties.slice(0, 3).map(String) : [],
       food: {
         name: names,
         cat: category,
@@ -241,7 +251,7 @@ export function analysisItemsToMealItems(items, language, foods = []) {
       c: (Number(per100.c) || 0) * multiplier,
       f: (Number(per100.f) || 0) * multiplier,
     };
-  }).filter((item) => item.food.cal > 0 || item.p > 0 || item.c > 0 || item.f > 0);
+  }).filter((item) => item.food.cat === 'drink' || item.food.cal > 0 || item.p > 0 || item.c > 0 || item.f > 0);
 
   const deduplicated = new Map();
   candidates.forEach((item) => {
@@ -304,4 +314,32 @@ export function getPhotoEstimateRange(calories, confidence = 0.6, hiddenCount = 
     low: Math.max(0, Math.round(value * (1 - uncertainty))),
     high: Math.round(value * (1 + uncertainty + Math.min(hiddenCount, 3) * 0.05)),
   };
+}
+
+/** Similar-looking drinks cannot reveal sugar, milk, or recipe from colour alone. */
+export function getDrinkReviewOptions(item, foods = []) {
+  const name = normalizeFoodName(`${item?.food?.name?.en || ''} ${item?.food?.name?.tr || ''}`);
+  let names = [];
+  if (/churchill|lemonade|limonata|lemon.*(drink|soda|water)|limonlu.*soda/.test(name)) {
+    names = ['Churchill', 'Lemonade', 'Sparkling Water'];
+  } else if (/cola|coke/.test(name)) {
+    names = ['Coca-Cola', 'Diet Coke'];
+  } else if (/coffee|kahve|latte|cappuccino|mocha|moca/.test(name)) {
+    names = ['Filter Coffee', 'Turkish Coffee', 'Latte', 'Cappuccino', 'Mocha'];
+  }
+  return names.map((name) => foods.find((food) => food.name.en === name)).filter(Boolean);
+}
+
+export function replacePhotoFood(item, food) {
+  return rescaleMealItem({ ...item, food, matched: true, reviewed: true, needsConfirmation: false, uncertainties: [], portion: '' }, item.grams);
+}
+
+export function filterHiddenSuggestions(suggestions, items) {
+  const sugarIncluded = items.some((item) => ['Lemonade', 'Coca-Cola', 'Fanta', 'Mocha', 'Energy Drink'].includes(item.food?.name?.en));
+  const onlyUnsweetenedDrinks = items.length > 0 && items.every((item) => ['Churchill', 'Sparkling Water', 'Diet Coke', 'Tea (No Sugar)', 'Filter Coffee', 'Turkish Coffee'].includes(item.food?.name?.en));
+  return suggestions.filter((entry) => {
+    if (items.some((item) => item.food?.name?.en === entry.food?.name?.en)) return false;
+    const sugar = /sugar|seker|azucar/.test(normalizeFoodName(entry.food?.name?.en || entry.label));
+    return !sugar || (!sugarIncluded && !onlyUnsweetenedDrinks);
+  });
 }

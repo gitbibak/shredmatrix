@@ -85,3 +85,11 @@ describe('meal analysis worker', () => {
     expect(await response.json()).toEqual({ error: 'analysis_unavailable' });
   });
 });
+
+it('sends sanitized recipe context to the model without exposing it in the response', async () => {
+  const run = vi.fn().mockResolvedValue({ response: JSON.stringify({ is_food: true, items: [{ name: 'Churchill', estimated_grams: 250, calories: 8 }] }) });
+  const response = await worker.fetch(mealRequest({ image: 'data:image/jpeg;base64,YQ==', language: 'tr', context: 'Churchill, no sugar' }), { AI: { run } });
+  expect(response.status).toBe(200);
+  expect(run.mock.calls[0][1].question).toContain('Churchill, no sugar');
+  expect(await response.text()).not.toContain('context');
+});
