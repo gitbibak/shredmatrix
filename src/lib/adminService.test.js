@@ -26,8 +26,7 @@ vi.mock('./supabase', () => ({
 }));
 
 import {
-  getAdminStats, getUserPlanDetails, updateContentReview, deleteUser, getActivityStats, getPlanDistribution, getRecentUsers, getRegistrationTrend,
-  getSupportStats, getWorkoutTrend, isAdmin, verifyAdminAccess,
+  ADMIN_EVENT_NAMES, deleteUser, getAdminSnapshot, getSupportStats, isAdmin, updateContentReview, verifyAdminAccess,
 } from './adminService';
 
 describe('adminService security boundaries', () => {
@@ -75,110 +74,70 @@ describe('adminService security boundaries', () => {
 
 function dataQuery(result) {
   const query = {};
-  for (const method of ['select', 'eq', 'gte', 'order', 'limit', 'range', 'neq', 'maybeSingle']) query[method] = vi.fn(() => query);
+  for (const method of ['select', 'eq', 'gte', 'order', 'limit', 'range', 'neq', 'in', 'maybeSingle']) query[method] = vi.fn(() => query);
   query.then = (resolve, reject) => Promise.resolve({ count: result.data?.length ?? 0, ...result }).then(resolve, reject);
   return query;
 }
 
-describe('admin dashboard data reliability', () => {
-  const strictReaders = [getPlanDistribution, getRegistrationTrend, getRecentUsers, getWorkoutTrend, getSupportStats];
-
-  beforeEach(() => {
-    mocks.ready.mockReturnValue(true);
-    mocks.from.mockReset();
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.useRealTimers();
-    mocks.ready.mockReturnValue(true);
-  });
-
-  it.each(strictReaders)('%s distinguishes a failed request from empty data in strict mode', async (reader) => {
-    const failure = new Error('Connection unavailable');
-    mocks.from.mockImplementation(() => dataQuery({ data: null, error: failure }));
-    await expect(reader({ strict: true })).rejects.toBe(failure);
-    await expect(reader()).resolves.toBeDefined();
-
-    mocks.from.mockImplementation(() => dataQuery({ data: [], count: 0, error: null }));
-    await expect(reader({ strict: true })).resolves.toBeDefined();
-  });
-
-  it.each(strictReaders)('%s surfaces an unavailable connection only when strict mode is requested', async (reader) => {
-    mocks.ready.mockReturnValue(false);
-    await expect(reader({ strict: true })).rejects.toThrow('Supabase bağlantısı hazır değil.');
-    await expect(reader()).resolves.toBeDefined();
-    expect(mocks.from).not.toHaveBeenCalled();
-  });
-
-  it('excludes administrator profiles and plans without treating unknown ages as teenagers', async () => {
-    const createdAt = new Date().toISOString();
-    mocks.from.mockImplementation((table) => dataQuery({
-      error: null,
-      data: table === 'profiles' ? [
-        { id: 'admin', role: 'admin', app_language: 'en', created_at: createdAt },
-        { id: 'member', role: 'user', app_language: 'es', created_at: createdAt },
-      ] : [
-        { id: 'plan-admin', user_id: 'admin', plan_data: { goal: 'yoga', userAge: 18 } },
-        { id: 'plan-member', user_id: 'member', plan_data: { goal: 'pilates', userAge: '25' } },
-        ...[undefined, '', 'unknown', '20 years', 0, -1, 15, 121].map((userAge, index) => ({
-          id: `plan-${index}`, user_id: `unknown-age-${index}`, plan_data: { goal: 'pilates', userAge },
-        })),
-      ],
-    }));
-    const result = await getPlanDistribution({ strict: true });
-    expect(result.ages).toEqual([{ name: '21-25', value: 1 }]);
-    expect(result.goals).toEqual([{ name: 'Pilates', value: 9 }]);
-    expect(result.languages).toEqual([{ name: 'Español', value: 1 }]);
-    expect(result.international).toMatchObject({ registrations: 1, activated: 1, english: 0, spanish: 1 });
-  });
-
-  it('counts today workouts using the Istanbul date across the UTC midnight boundary', async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-10-14T22:30:00.000Z'));
-    const queries = [];
-    mocks.from.mockImplementation(() => {
-      const query = dataQuery({ data: [], count: 0, error: null });
-      queries.push(query);
-      return query;
-    });
-    await getActivityStats();
-    expect(queries[1].gte).toHaveBeenCalledWith('date', '2026-10-15');
-  });
-});
-
-describe('complete admin reads', () => {
+describe('admin snapshot reads', () => {
   beforeEach(() => { mocks.ready.mockReturnValue(true); mocks.from.mockReset(); });
   afterEach(() => vi.restoreAllMocks());
-  it('reads beyond the API row cap and counts every member once', async () => {
+
+  it('reads beyond the API row cap and returns every member once', async () => {
     const profiles = Array.from({ length: 1201 }, (_, i) => ({ id: String(i).padStart(5, '0'), role: 'user', created_at: '2026-10-10T10:00:00Z' }));
     const ranges = [];
     mocks.from.mockImplementation((table) => {
       const rows = table === 'profiles' ? profiles : [];
       const q = dataQuery({ data: [], count: 0, error: null });
-      q.neq = () => q;
-      q.range = (start, end) => { ranges.push([start, end]); return Promise.resolve({ data: rows.slice(start, end + 1), count: rows.length, error: null }); };
+      q.range = (start, end) => { if (table === 'profiles') ranges.push([start, end]); return Promise.resolve({ data: rows.slice(start, end + 1), count: rows.length, error: null }); };
       return q;
     });
-    expect((await getAdminStats()).totalUsers).toBe(1201);
+    const snapshot = await getAdminSnapshot(new Date('2026-10-18T09:00:00Z'));
+    expect(snapshot.profiles).toHaveLength(1201);
     expect(ranges).toContainEqual([1000, 1499]);
   });
-  it('does not publish partial totals when a page fails', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    mocks.from.mockImplementation(() => {
+
+  it('does not publish a partial snapshot when any page fails', async () => {
+    mocks.from.mockImplementation((table) => {
       const q = dataQuery({ data: [], count: 0, error: null });
-      q.range = () => Promise.resolve({ error: new Error('offline') });
+      q.range = () => Promise.resolve(table === 'growth_events' ? { error: new Error('offline') } : { data: [], count: 0, error: null });
       return q;
     });
-    expect(await getAdminStats()).toBeNull();
+    await expect(getAdminSnapshot()).rejects.toThrow('offline');
   });
-  it('distinguishes a missing plan from a failed detail request', async () => {
-    mocks.from.mockImplementation(() => dataQuery({ data: null, error: null }));
-    expect(await getUserPlanDetails('member', { strict: true })).toBeNull();
-    mocks.from.mockImplementation(() => dataQuery({ data: null, error: new Error('offline') }));
-    await expect(getUserPlanDetails('member', { strict: true })).rejects.toThrow('offline');
+
+  it('reads only the plan fields it needs instead of whole plan documents', async () => {
+    const selects = {};
+    const filters = {};
+    mocks.from.mockImplementation((table) => {
+      const q = dataQuery({ data: [], count: 0, error: null });
+      q.select = vi.fn((columns) => { selects[table] = columns; return q; });
+      q.in = vi.fn((column, values) => { filters[table] = [column, values]; return q; });
+      q.gte = vi.fn((column, value) => { filters[`${table}:gte`] = [column, value]; return q; });
+      q.range = () => Promise.resolve({ data: [], count: 0, error: null });
+      return q;
+    });
+    await getAdminSnapshot(new Date('2026-10-18T09:00:00Z'));
+    expect(selects.plans).toContain('goal:plan_data->>goal');
+    expect(selects.plans).not.toMatch(/(^|, )plan_data(,|$)/);
+    expect(filters.growth_events).toEqual(['event_name', ADMIN_EVENT_NAMES]);
+    expect(filters['workout_logs:gte']).toEqual(['date', '2026-09-16']);
   });
+
+  it('refuses to read without a ready connection', async () => {
+    mocks.ready.mockReturnValue(false);
+    await expect(getAdminSnapshot()).rejects.toThrow('Supabase bağlantısı hazır değil.');
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('distinguishes failed support counts from empty ones in strict mode', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const failure = new Error('Connection unavailable');
+    mocks.from.mockImplementation(() => dataQuery({ data: null, error: failure }));
+    await expect(getSupportStats({ strict: true })).rejects.toBe(failure);
+    await expect(getSupportStats()).resolves.toEqual({ open: 0, reviewing: 0, resolved: 0, total: 0 });
+  });
+
   it.each(['https://', 'https://?', 'javascript:alert(1)', 'https://user:pass@example.com'])('rejects malformed or credential-bearing review proof %s', async (evidence_url) => {
     await expect(updateContentReview('review', { review_status: 'approved', reviewer_name: 'Reviewer', reviewer_credential: 'Credential', evidence_url })).rejects.toThrow('HTTPS');
   });

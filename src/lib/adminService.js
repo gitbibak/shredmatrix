@@ -1,4 +1,5 @@
 import { supabase, isSupabaseReady } from './supabase';
+import { utcDateKey } from './adminMetrics';
 
 // ══════════════════════════════════════════════
 // Admin Service — FullBalance Admin Panel
@@ -26,76 +27,6 @@ export async function verifyAdminAccess() {
     console.error('[Admin] Access verification error:', err);
     return false;
   }
-}
-
-// ── Normalization Maps ──────────────────────────
-const GOAL_MAP = {
-  'muscle': 'Kas Gelişimi', 'Muscle Growth': 'Kas Gelişimi', 'muscle_growth': 'Kas Gelişimi',
-  'fat_loss': 'Yağ Yakımı', 'Fat Loss': 'Yağ Yakımı', 'weight_loss': 'Yağ Yakımı',
-  'yoga': 'Yoga', 'pilates': 'Pilates', 'reformer': 'Reformer',
-  'meditation': 'Meditasyon', 'Meditation': 'Meditasyon',
-};
-const GENDER_MAP = {
-  'male': 'Erkek', 'Male': 'Erkek', 'erkek': 'Erkek',
-  'female': 'Kadın', 'Female': 'Kadın', 'kadın': 'Kadın', 'kadin': 'Kadın',
-};
-const EXPERIENCE_MAP = {
-  'beginner': 'Başlangıç', 'Beginner': 'Başlangıç', 'başlangıç': 'Başlangıç',
-  'intermediate': 'Orta', 'Intermediate': 'Orta', 'orta': 'Orta',
-  'advanced': 'İleri', 'Advanced': 'İleri', 'ileri': 'İleri',
-};
-
-function normalize(value, map) {
-  if (!value) return 'Bilinmiyor';
-  return map[value] || value;
-}
-
-export function summarizeInternationalAcquisition(profiles = [], planUserIds = [], now = new Date()) {
-  const cutoff = new Date(now);
-  cutoff.setDate(cutoff.getDate() - 30);
-  const activatedIds = new Set(planUserIds);
-  const international = profiles.filter((profile) => (
-    ['en', 'es'].includes(profile.app_language)
-    && new Date(profile.created_at) >= cutoff
-  ));
-  const activated = international.filter((profile) => activatedIds.has(profile.id)).length;
-  const attributed = international.filter((profile) => (
-    profile.acquisition_source && profile.acquisition_source !== 'direct'
-  )).length;
-
-  return {
-    registrations: international.length,
-    activated,
-    activationRate: international.length > 0 ? Math.round((activated / international.length) * 100) : 0,
-    english: international.filter((profile) => profile.app_language === 'en').length,
-    spanish: international.filter((profile) => profile.app_language === 'es').length,
-    attributed,
-    direct: international.filter((profile) => profile.acquisition_source === 'direct').length,
-  };
-}
-
-function utcDateKey(value) {
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
-}
-
-function addUtcDays(dateKey, days) {
-  const date = new Date(`${dateKey}T00:00:00.000Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return utcDateKey(date);
-}
-
-function dateKeyInTimeZone(value, timeZone = 'Europe/Istanbul') {
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date);
-  const values = Object.fromEntries(parts.map(({ type, value: partValue }) => [type, partValue]));
-  return `${values.year}-${values.month}-${values.day}`;
 }
 
 // Read every page in a stable primary-key order instead of silently accepting
@@ -131,346 +62,45 @@ async function readAllAdminRows(table, columns, configure = (query) => query, ke
   }
 }
 
-export function summarizeAdminStats(profiles = [], planUserIds = [], openSupportTickets = 0, now = new Date()) {
-  const today = dateKeyInTimeZone(now);
-  const last7Start = addUtcDays(today, -7);
-  const last30Start = addUtcDays(today, -30);
-  const previous30Start = addUtcDays(today, -60);
-  const members = profiles.filter(({ role }) => role !== 'admin');
-  const memberIds = new Set(members.map(({ id }) => id));
-  const registrationDate = ({ created_at: createdAt }) => dateKeyInTimeZone(createdAt);
-  const countBetween = (start, end) => members.filter((profile) => {
-    const date = registrationDate(profile);
-    return date && date >= start && date < end;
-  }).length;
-  const monthRegistrations = countBetween(last30Start, today);
-  const previousMonthRegistrations = countBetween(previous30Start, last30Start);
 
-  return {
-    totalUsers: members.length,
-    completedProfiles: members.length,
-    todayRegistrations: members.filter((profile) => registrationDate(profile) === today).length,
-    weekRegistrations: countBetween(last7Start, today),
-    monthRegistrations,
-    previousMonthRegistrations,
-    registrationDelta: monthRegistrations - previousMonthRegistrations,
-    usersWithPlans: new Set(planUserIds.filter((userId) => memberIds.has(userId))).size,
-    openSupportTickets: Number(openSupportTickets) || 0,
-  };
-}
+// ── Panel anlık görüntüsü ────────────────────────────────────
+// Panelin bütün özetleri tek bir tutarlı okumadan hesaplanır (src/lib/adminMetrics.js).
+// Plan JSON'unun tamamı yerine yalnızca gereken alanlar okunur; büyük plan
+// belgelerini indirmek paneli yavaşlatıyordu.
+export const ADMIN_EVENT_NAMES = Object.freeze([
+  'meal_photo_analyzed', 'meal_photo_analysis_failed', 'sign_up_error', 'login_error',
+  'affiliate_link_click', 'water_logged', 'sleep_logged', 'nutrition_logged',
+  'meditation_completed', 'invite_sent',
+]);
 
-export function summarizeRetention(profiles = [], activityDays = [], planUserIds = [], now = new Date()) {
-  const today = utcDateKey(now);
-  const coverageDates = activityDays
-    .map(({ activity_date: activityDate }) => String(activityDate || '').slice(0, 10))
-    .filter(Boolean)
-    .sort();
-  const trackingStartedAt = coverageDates[0] || null;
-  const lastCompleteDate = today ? addUtcDays(today, -1) : null;
-  const activeDates = new Map();
-  activityDays.forEach(({ user_id: userId, activity_date: activityDate }) => {
-    if (!userId || !activityDate) return;
-    if (!activeDates.has(userId)) activeDates.set(userId, new Set());
-    activeDates.get(userId).add(String(activityDate).slice(0, 10));
-  });
+const PROFILE_COLUMNS = 'id, name, email, created_at, role, app_language, acquisition_source, acquisition_campaign, acquisition_content, landing_path, plan_created_at';
+const PLAN_COLUMNS = 'user_id, goal:plan_data->>goal, primary_goal:plan_data->>primaryGoal, experience:plan_data->>userExperience, environment:plan_data->>trainingEnvironment, gender:plan_data->>userGender, age:plan_data->>userAge';
 
-  const activatedIds = new Set(planUserIds);
-  const result = {
-    registrations: profiles.length,
-    activated: profiles.filter(({ id }) => activatedIds.has(id)).length,
-    d1Eligible: 0,
-    d1Returned: 0,
-    d7Eligible: 0,
-    d7Returned: 0,
-  };
-
-  profiles.forEach((profile) => {
-    const signupDate = utcDateKey(profile.created_at);
-    if (!signupDate) return;
-    const dates = activeDates.get(profile.id) || new Set();
-    const d1Date = addUtcDays(signupDate, 1);
-    const d7Date = addUtcDays(signupDate, 7);
-    if (trackingStartedAt && d1Date >= trackingStartedAt && d1Date < today) {
-      result.d1Eligible += 1;
-      if (dates.has(d1Date)) result.d1Returned += 1;
-    }
-    if (trackingStartedAt && d7Date >= trackingStartedAt && d7Date < today) {
-      result.d7Eligible += 1;
-      if (dates.has(d7Date)) result.d7Returned += 1;
-    }
-  });
-
-  return {
-    ...result,
-    activationRate: result.registrations > 0 ? Math.round((result.activated / result.registrations) * 100) : 0,
-    d1Rate: result.d1Eligible > 0 ? Math.round((result.d1Returned / result.d1Eligible) * 100) : null,
-    d7Rate: result.d7Eligible > 0 ? Math.round((result.d7Returned / result.d7Eligible) * 100) : null,
-    trackingStartedAt,
-    lastCompleteDate,
-    measurementDays: trackingStartedAt && lastCompleteDate
-      ? Math.max(0, Math.round((new Date(`${lastCompleteDate}T00:00:00.000Z`) - new Date(`${trackingStartedAt}T00:00:00.000Z`)) / 86400000) + 1)
-      : 0,
-  };
-}
-
-export async function getRetentionStats() {
+export async function getAdminSnapshot(now = new Date()) {
   if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
-  const since = new Date();
-  since.setUTCDate(since.getUTCDate() - 60);
-  const sinceKey = utcDateKey(since);
-  const [profilesResult, activityResult, plansResult] = await Promise.all([
-    readAllAdminRows('profiles', 'id, created_at, role', (query) => query.gte('created_at', since.toISOString()).neq('role', 'admin')),
-    readAllAdminRows('user_activity_days', 'user_id, activity_date', (query) => query.gte('activity_date', sinceKey), ['user_id', 'activity_date']),
-    readAllAdminRows('plans', 'user_id'),
+  const daysAgo = (days) => {
+    const date = new Date(now);
+    date.setUTCDate(date.getUTCDate() - days);
+    return date;
+  };
+  const [profiles, plans, activity, workouts, events] = await Promise.all([
+    readAllAdminRows('profiles', PROFILE_COLUMNS),
+    readAllAdminRows('plans', PLAN_COLUMNS),
+    readAllAdminRows('user_activity_days',
+      'user_id, activity_date, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed',
+      (query) => query.gte('activity_date', utcDateKey(daysAgo(62))), ['user_id', 'activity_date']),
+    readAllAdminRows('workout_logs', 'user_id, date', (query) => query.gte('date', utcDateKey(daysAgo(32)))),
+    readAllAdminRows('growth_events', 'user_id, event_name, occurred_at, properties',
+      (query) => query.gte('occurred_at', daysAgo(32).toISOString()).in('event_name', ADMIN_EVENT_NAMES)),
   ]);
-  const failed = [profilesResult, activityResult, plansResult].find(({ error }) => error);
-  if (failed?.error) throw failed.error;
-  return summarizeRetention(
-    profilesResult.data || [],
-    activityResult.data || [],
-    (plansResult.data || []).map(({ user_id: userId }) => userId),
-  );
-}
-
-export function summarizeActivationFunnel(activityRows = []) {
-  const usersFor = (predicate) => new Set(activityRows.filter(predicate).map(({ user_id: userId }) => userId).filter(Boolean)).size;
   return {
-    activeUsers: usersFor(() => true),
-    todayViewed: usersFor((row) => row.today_viewed),
-    workoutPlanViewed: usersFor((row) => row.workout_plan_viewed),
-    workoutDayOpened: usersFor((row) => row.workout_day_opened),
-    workoutCompleted: usersFor((row) => row.workout_completed),
+    now: now.toISOString(),
+    profiles: profiles.data,
+    plans: plans.data,
+    activity: activity.data,
+    workouts: workouts.data,
+    events: events.data,
   };
-}
-
-export async function getActivationFunnelStats() {
-  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
-  const since = new Date();
-  since.setUTCDate(since.getUTCDate() - 6);
-  const { data } = await readAllAdminRows('user_activity_days',
-    'user_id, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed',
-    (query) => query.gte('activity_date', utcDateKey(since)), ['user_id', 'activity_date']);
-  return summarizeActivationFunnel(data || []);
-}
-
-// ── User Statistics ─────────────────────────────
-export async function getAdminStats() {
-  if (!isSupabaseReady()) return null;
-
-  try {
-    const [profilesResult, plansResult, supportResult] = await Promise.all([
-      readAllAdminRows('profiles', 'id, created_at, role'),
-      readAllAdminRows('plans', 'user_id'),
-      supabase.from('support_tickets').select('*', { count: 'exact', head: true }).neq('status', 'resolved'),
-    ]);
-    const failed = [profilesResult, plansResult, supportResult].find(({ error }) => error);
-    if (failed?.error) throw failed.error;
-
-    return summarizeAdminStats(
-      profilesResult.data || [],
-      (plansResult.data || []).map(({ user_id: userId }) => userId),
-      supportResult.count,
-    );
-  } catch (err) {
-    console.error('[Admin] Stats error:', err);
-    return null;
-  }
-}
-
-// ── User List ───────────────────────────────────
-export async function getAdminUsers(page = 0, pageSize = 20, search = '') {
-  if (!isSupabaseReady()) return { users: [], total: 0, error: new Error('Supabase bağlantısı hazır değil.') };
-
-  try {
-    let query = supabase
-      .from('profiles')
-      .select('id, email, name, created_at, plan_created_at, role, app_language, acquisition_source, acquisition_campaign, acquisition_content, landing_path', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(page * pageSize, (page + 1) * pageSize - 1);
-
-    if (search) {
-      const safeSearch = String(search).trim().replace(/[,%().]/g, ' ').slice(0, 80);
-      if (safeSearch) query = query.or(`email.ilike.%${safeSearch}%,name.ilike.%${safeSearch}%`);
-    }
-
-    const { data, count, error } = await query;
-    if (error) throw error;
-
-    return { users: data || [], total: count || 0, error: null };
-  } catch (err) {
-    console.error('[Admin] Users error:', err);
-    return { users: [], total: 0, error: err };
-  }
-}
-
-// ── User Plan Details ───────────────────────────
-export async function getUserPlanDetails(userId, { strict = false } = {}) {
-  if (!isSupabaseReady()) {
-    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
-    return null;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('plans')
-      .select('plan_data')
-      .eq('user_id', userId)
-      .maybeSingle();
-    if (error) throw error;
-    return data?.plan_data || null;
-  } catch (error) {
-    if (strict) throw error;
-    return null;
-  }
-}
-
-// ── Plan Distribution (with normalization) ──────
-export async function getPlanDistribution({ strict = false } = {}) {
-  const empty = {
-    goals: [], genders: [], ages: [], experiences: [], languages: [], sources: [], campaigns: [], contents: [],
-    international: summarizeInternationalAcquisition(),
-  };
-  if (!isSupabaseReady()) {
-    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
-    return empty;
-  }
-
-  try {
-    const [planResult, profileResult] = await Promise.all([
-      readAllAdminRows('plans', 'user_id, plan_data'),
-      readAllAdminRows('profiles', 'id, role, created_at, app_language, acquisition_source, acquisition_campaign, acquisition_content'),
-    ]);
-    if (planResult.error) throw planResult.error;
-    if (profileResult.error) throw profileResult.error;
-    const adminIds = new Set((profileResult.data || []).filter(({ role }) => role === 'admin').map(({ id }) => id));
-    const memberProfiles = (profileResult.data || []).filter(({ role }) => role !== 'admin');
-    const memberPlans = (planResult.data || []).filter(({ user_id: userId }) => !adminIds.has(userId));
-
-    const goalCounts = {};
-    const genderCounts = {};
-    const experienceCounts = {};
-    const languageCounts = {};
-    const sourceCounts = {};
-    const campaignCounts = {};
-    const contentCounts = {};
-    const ageBuckets = { '16-20': 0, '21-25': 0, '26-30': 0, '31-35': 0, '36-40': 0, '41-50': 0, '50+': 0 };
-
-    memberPlans.forEach(({ plan_data }) => {
-      if (!plan_data) return;
-
-      // Goal distribution (normalized)
-      const goal = normalize(plan_data.goal || plan_data.primaryGoal, GOAL_MAP);
-      goalCounts[goal] = (goalCounts[goal] || 0) + 1;
-
-      // Gender distribution (normalized)
-      const gender = normalize(plan_data.userGender, GENDER_MAP);
-      genderCounts[gender] = (genderCounts[gender] || 0) + 1;
-
-      // Experience distribution (normalized)
-      const exp = normalize(plan_data.userExperience, EXPERIENCE_MAP);
-      experienceCounts[exp] = (experienceCounts[exp] || 0) + 1;
-
-      // Age distribution
-      const age = Number(plan_data.userAge);
-      if (!Number.isInteger(age) || age < 16 || age > 120) return;
-      if (age <= 20) ageBuckets['16-20']++;
-      else if (age <= 25) ageBuckets['21-25']++;
-      else if (age <= 30) ageBuckets['26-30']++;
-      else if (age <= 35) ageBuckets['31-35']++;
-      else if (age <= 40) ageBuckets['36-40']++;
-      else if (age <= 50) ageBuckets['41-50']++;
-      else ageBuckets['50+']++;
-    });
-
-    const languageLabels = { tr: 'Türkçe', en: 'English', es: 'Español' };
-    memberProfiles.forEach((profile) => {
-      const language = languageLabels[profile.app_language] || 'Bilinmiyor';
-      const source = String(profile.acquisition_source || 'Bilinmiyor').toLowerCase();
-      languageCounts[language] = (languageCounts[language] || 0) + 1;
-      sourceCounts[source] = (sourceCounts[source] || 0) + 1;
-      const campaign = String(profile.acquisition_campaign || '').trim();
-      const content = String(profile.acquisition_content || '').trim();
-      if (campaign) campaignCounts[campaign] = (campaignCounts[campaign] || 0) + 1;
-      if (content) contentCounts[content] = (contentCounts[content] || 0) + 1;
-    });
-
-    return {
-      goals: Object.entries(goalCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      genders: Object.entries(genderCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      experiences: Object.entries(experienceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      ages: Object.entries(ageBuckets).filter(([, v]) => v > 0).map(([name, value]) => ({ name, value })),
-      languages: Object.entries(languageCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      sources: Object.entries(sourceCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      campaigns: Object.entries(campaignCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      contents: Object.entries(contentCounts).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
-      international: summarizeInternationalAcquisition(
-        memberProfiles,
-        memberPlans.map((plan) => plan.user_id),
-      ),
-    };
-  } catch (err) {
-    console.error('[Admin] Distribution error:', err);
-    if (strict) throw err;
-    return empty;
-  }
-}
-
-// ── Registration Trend (last 30 days) ───────────
-export async function getRegistrationTrend({ strict = false } = {}) {
-  if (!isSupabaseReady()) {
-    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
-    return [];
-  }
-
-  try {
-    const today = dateKeyInTimeZone(new Date());
-    const startDate = addUtcDays(today, -29);
-    const { data } = await readAllAdminRows('profiles', 'created_at, role',
-      (query) => query.gte('created_at', `${startDate}T00:00:00+03:00`));
-
-    // Group by date
-    const grouped = {};
-    for (let i = 0; i < 30; i++) {
-      const key = addUtcDays(startDate, i);
-      grouped[key] = 0;
-    }
-
-    (data || []).filter(({ role }) => role !== 'admin').forEach(({ created_at }) => {
-      const key = dateKeyInTimeZone(created_at);
-      if (key && grouped[key] !== undefined) grouped[key]++;
-    });
-
-    return Object.entries(grouped).map(([date, count]) => ({
-      date: date.slice(5), // "06-15" format
-      count,
-    }));
-  } catch (err) {
-    console.error('[Admin] Trend error:', err);
-    if (strict) throw err;
-    return [];
-  }
-}
-
-// ── Recent Users (last 10 registrations) ────────
-export async function getRecentUsers({ strict = false } = {}) {
-  if (!isSupabaseReady()) {
-    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
-    return [];
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, name, email, created_at')
-      .order('created_at', { ascending: false })
-      .limit(10);
-    if (error) throw error;
-    return data || [];
-  } catch (err) {
-    console.error('[Admin] Recent users error:', err);
-    if (strict) throw err;
-    return [];
-  }
 }
 
 // ── Delete User ─────────────────────────────────
@@ -623,78 +253,3 @@ export async function updateTestimonialStatus(testimonialId, status) {
   return data;
 }
 
-// ── Activity Stats ──────────────────────────────
-export async function getActivityStats() {
-  if (!isSupabaseReady()) return null;
-
-  try {
-    const today = dateKeyInTimeZone(new Date());
-    const weekStart = addUtcDays(today, -6);
-    const results = await Promise.all([
-      supabase.from('workout_logs').select('*', { count: 'exact', head: true }),
-      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', today),
-      supabase.from('workout_logs').select('*', { count: 'exact', head: true }).gte('date', weekStart),
-      readAllAdminRows('workout_logs', 'user_id', (query) => query.gte('date', weekStart)),
-      supabase.from('water_logs').select('*', { count: 'exact', head: true }),
-      supabase.from('progress_entries').select('*', { count: 'exact', head: true }),
-      supabase.from('measurements').select('*', { count: 'exact', head: true }),
-    ]);
-
-    const failed = results.find((result) => result.error);
-    if (failed?.error) throw failed.error;
-
-    const [
-      { count: totalWorkouts },
-      { count: todayWorkouts },
-      { count: weekWorkouts },
-      { data: activeData },
-      { count: totalWater },
-      { count: totalProgress },
-      { count: totalMeasurements },
-    ] = results;
-    const activeUsers = new Set((activeData || []).map(d => d.user_id)).size;
-
-    return {
-      totalWorkouts: totalWorkouts || 0,
-      todayWorkouts: todayWorkouts || 0,
-      weekWorkouts: weekWorkouts || 0,
-      activeUsers,
-      totalWater: totalWater || 0,
-      totalProgress: totalProgress || 0,
-      totalMeasurements: totalMeasurements || 0,
-    };
-  } catch (err) {
-    console.error('[Admin] Activity stats error:', err);
-    return null;
-  }
-}
-
-// ── Workout Trend (last 14 days) ────────────────
-export async function getWorkoutTrend({ strict = false } = {}) {
-  if (!isSupabaseReady()) {
-    if (strict) throw new Error('Supabase bağlantısı hazır değil.');
-    return [];
-  }
-
-  try {
-    const today = dateKeyInTimeZone(new Date());
-    const start = addUtcDays(today, -13);
-    const { data } = await readAllAdminRows('workout_logs', 'date', (query) => query.gte('date', start));
-    const grouped = {};
-    for (let i = 0; i < 14; i++) grouped[addUtcDays(start, i)] = 0;
-
-    (data || []).forEach(({ date }) => {
-      const key = date?.slice(0, 10);
-      if (key && grouped[key] !== undefined) grouped[key]++;
-    });
-
-    return Object.entries(grouped).map(([date, count]) => ({
-      date: date.slice(5),
-      count,
-    }));
-  } catch (err) {
-    console.error('[Admin] Workout trend error:', err);
-    if (strict) throw err;
-    return [];
-  }
-}
