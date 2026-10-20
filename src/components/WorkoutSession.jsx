@@ -258,13 +258,13 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
                   <Play size={11} fill="currentColor" /> {s('techniqueVideo')}
                 </button>
               )}
-              {!video && info?.formSteps?.length > 0 && (
+              {info?.formSteps?.length > 0 && (
                 <button
                   type="button"
                   onClick={() => onShowDemo?.({ name: exercise.name, ...info })}
                   className="inline-flex items-center gap-1 rounded-lg border border-orange-500/30 bg-orange-500/10 px-2 py-1 font-semibold text-orange-300"
                 >
-                  <BookOpen size={11} /> {s('techniqueVideo')}
+                  <BookOpen size={11} /> {s('demo')}
                 </button>
               )}
             </div>

@@ -36,6 +36,7 @@ export const workoutSessionCopy = {
     record: 'Yeni rekor: {name} {weight} kg',
     saving: 'Kaydediliyor…',
     techniqueVideo: 'Teknik',
+    demo: 'Anlatım',
     exitConfirm: 'Antrenman kaydedildi, istediğin zaman devam edebilirsin.',
   },
   en: {
@@ -75,6 +76,7 @@ export const workoutSessionCopy = {
     record: 'New record: {name} {weight} kg',
     saving: 'Saving…',
     techniqueVideo: 'Technique',
+    demo: 'How to',
     exitConfirm: 'Workout saved, you can continue any time.',
   },
   es: {
@@ -114,6 +116,7 @@ export const workoutSessionCopy = {
     record: 'Nuevo récord: {name} {weight} kg',
     saving: 'Guardando…',
     techniqueVideo: 'Técnica',
+    demo: 'Cómo se hace',
     exitConfirm: 'Entrenamiento guardado, puedes continuar cuando quieras.',
   },
 };
