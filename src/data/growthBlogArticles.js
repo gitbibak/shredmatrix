@@ -7,8 +7,104 @@ const trainingSources = [
   ['WHO: Physical activity', 'https://www.who.int/news-room/fact-sheets/detail/physical-activity'],
 ];
 const defaults = { publishedAt: '2026-10-10', updatedAt: '2026-10-10', accent: '#10b981' };
+const homeStrengthSources = [
+  ['ACSM resistance training guidance (2026)', 'https://acsm.org/resistance-training-guidelines-update-2026/'],
+  ['Elastic vs conventional resistance training: meta-analysis (2019)', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6383082/'],
+  ['Low- vs high-load resistance training: meta-analysis (2017)', 'https://pubmed.ncbi.nlm.nih.gov/28834797/'],
+];
+const homeDefaults = { publishedAt: '2026-10-20', updatedAt: '2026-10-20', accent: '#38bdf8' };
 
 export const growthBlogArticles = [
+  {
+    ...homeDefaults, language: 'tr', slug: 'tek-dambil-ile-evde-antrenman-programi',
+    title: 'Tek Dambılla Evde Antrenman Programı: Haftada 3 Gün Tüm Vücut',
+    description: 'Sadece bir dambılın varsa evde tüm vücut programını nasıl uygularsın? Hareket hareket tek dambıl karşılıkları, set ve tekrar düzeni ve ne zaman ağırlık artırılır.',
+    category: 'Antrenman', readTime: '6 dk', image: '/images/blog/dumbbell-log.svg',
+    imageAlt: 'Tek dambılla yapılan squat, row ve press hareketlerinin set ve tekrar kayıtlarını gösteren antrenman günlüğü',
+    intro: 'Tek bir dambıl, evde tüm vücut antrenmanı için sanıldığından çok daha fazlasını yapar. Goblet squat, tek kol row ve tek kol press zaten tek dambılla yapılan hareketlerdir; iki dambıl isteyen hareketleri ise iki tarafı sırayla çalıştırarak uyarlayabilirsin. Bu rehber, evde dambıl sayfasındaki gerçek başlangıç haftasını tek dambıla çevirir.',
+    sections: [
+      { heading: 'Örnek haftanın tek dambıllı hâli', paragraphs: [
+        'Pazartesi (Tam Vücut A): Goblet squat 2 × 10-14, tek kol dambıl floor press 2 × 10-14/taraf, tek kol dambıl row 2 × 8-12/taraf, dambılı iki elle uyluk önünde dikey tutarak Romanian deadlift 2 × 10-14, dead bug 2 × 8/taraf. Çarşamba (Tam Vücut B): goblet reverse lunge 2 × 8-12/taraf, şınav 2 × 10-17, direnç bandı row 2 × 12-17 (bant yoksa tek kol row), dambıl kalçada glute bridge 2 × 12-17, side plank 2 × 20-35 sn/taraf.',
+        'Cuma (Tam Vücut C): goblet split squat 2 × 8-12/taraf, tek kol omuz press 2 × 10-14/taraf, tek bacak Romanian deadlift (dambıl çalışan bacağın karşı elinde) 2 × 8-12/taraf, bant pull-apart 2 × 14-22, suitcase march 2 × 30-45 sn/taraf. Aradaki günler dinlenme veya 20-30 dakika rahat yürüyüştür.',
+      ] },
+      { heading: 'Tek dambılla neden işe yarar?', paragraphs: [
+        'Kasın gelişmesi için tek başına yükün büyüklüğü değil, setlerin yeterince zorlayıcı olması gerekir. Hafif ve ağır yüklerin karşılaştırıldığı bir meta-analizde, setler zorlanmaya yakın bitirildiğinde kas büyümesi benzer bulunmuştur; maksimum kuvvet ise ağır yükle daha fazla artmıştır. Yani tek ve görece hafif bir dambılla da kas gelişimi mümkündür; kuvvet hedefi için zamanla daha ağır yük gerekir.',
+        'Tek taraflı hareketlerin bir artısı da var: her taraf ayrı çalıştığı için güçlü taraf zayıf tarafı telafi edemez ve gövde dengeyi korumak için daha çok çalışır. Suitcase march ve tek kol row bu yüzden core için de iyi hareketlerdir.',
+      ] },
+      { heading: 'Ağırlık sabitken nasıl ilerlenir?', paragraphs: [
+        'Önce tekrarı artır: tüm setlerde aralığın üst sınırına kontrollü ulaştıysan bir sonraki haftada bir set ekle. Ardından tempoyu yavaşlat (3 saniyede in, 1 saniye bekle) veya hareketi tek taraflı hâle getir: squat yerine split squat, deadlift yerine tek bacak deadlift. Bu adımlar sabit ağırlıkla haftalarca ilerleme sağlar.',
+        'Hepsi kolay gelmeye başladığında daha ağır bir dambıl ya da ayarlanabilir dambıl düşünmenin zamanı gelmiştir. Bacak hareketleri genellikle üst vücuttan daha önce bu noktaya gelir.',
+      ] },
+      { heading: 'Hangi ağırlıkta tek dambıl almalı?', paragraphs: [
+        'Tek dambıl hem bacak hem üst vücut hareketlerinde kullanılacağı için orta bir ağırlık seç: tek kol row ve goblet squat için zorlayıcı, omuz press için hâlâ kontrollü olan yük. Yeni başlayanlar için bu genellikle 6-10 kg aralığıdır; ayarlanabilir dambıl farklı hareketlere farklı yük vermeyi kolaylaştırır. Ağırlık seçimi rehberindeki adımlarla kontrol et.',
+      ] },
+      { heading: 'Programı telefonda takip et', paragraphs: [
+        'Full Balance içinde ekipmanı "evde temel ekipman" seçerek kişisel planını oluşturabilirsin. Antrenman modunda her seti kullandığın kilo ve tekrarla işaretler, dinlenme sayacıyla ilerlersin; bir sonraki seansta önceki kilon hazır gelir. Ağrı veya hareketi kısıtlayan bir durum varsa yükü bir sağlık uzmanıyla değerlendir.',
+      ] },
+    ], sources: homeStrengthSources,
+    internalLinks: [['/evde-dambil-antrenman-programi', '30 günlük evde dambıl programı'], ['/blog/evde-dambil-agirligi-secimi-artirma', 'Dambıl ağırlığı seçimi'], ['/direnc-bandi-antrenman-programi', 'Direnç bandı programı']],
+    cta: { href: '/evde-dambil-antrenman-programi', label: 'Örnek haftayı incele', title: 'Tek dambılla başla', description: 'Gerçek başlangıç haftasını ve 30 günlük ilerleme tablosunu gör, ardından ücretsiz planını oluştur.' },
+  },
+  {
+    ...homeDefaults, language: 'tr', slug: 'direnc-bandi-mi-dambil-mi',
+    title: 'Direnç Bandı mı Dambıl mı? Evde Hangisi Daha İyi, Nasıl Seçilir',
+    description: 'Evde kuvvet ve kas için direnç bandı mı dambıl mı almalısın? Araştırmalar ne diyor, hangi hareketlerde hangisi daha iyi ve ikisi birlikte nasıl kullanılır.',
+    category: 'Antrenman', readTime: '6 dk', image: '/images/blog/dumbbell-log.svg',
+    imageAlt: 'Direnç bandı ve dambıl ile yapılan hareketlerin yük ve tekrar kayıtlarını karşılaştıran antrenman günlüğü',
+    intro: 'Kısa cevap: kuvvet kazanımı açısından ikisi de işe yarar. Asıl fark, hangi hareketlerde hangisinin daha kullanışlı olduğu, ilerlemenin nasıl ölçüleceği ve evdeki alan. Çoğu kişi için en iyi seçenek bir çift dambıl ve bir direnç bandıdır.',
+    sections: [
+      { heading: 'Araştırmalar ne diyor?', paragraphs: [
+        'Elastik bant ve tüp ile yapılan antrenmanı dambıl ve makinelerle karşılaştıran bir meta-analiz, üst ve alt vücut kuvvet artışında iki yöntem arasında anlamlı bir fark bulmamıştır. Yani doğru seviyede zorlayan bir bant programı, kuvvet için dambıl programına yakın sonuç verebilir.',
+        'Fark araçta değil uygulamada ortaya çıkar: setleri yeterince zorlayıcı yapmak ve haftadan haftaya biraz artırmak. Bunu ölçmek dambılla daha kolaydır, çünkü yük bir sayıdır; bantta ise direnç, bandın ne kadar gerildiğine bağlıdır.',
+      ] },
+      { heading: 'Dambılın üstün olduğu yerler', paragraphs: [
+        'Squat, Romanian deadlift, lunge, omuz press ve floor press gibi hareketlerde dambıl hareketin başından sonuna aynı yükü verir ve ilerlemeyi kilo olarak kaydetmeni sağlar. Bacak hareketlerinde bantla yeterli direnç oluşturmak zordur; burada dambıl belirgin şekilde daha pratiktir.',
+      ] },
+      { heading: 'Bandın üstün olduğu yerler', paragraphs: [
+        'Çekiş hareketleri (row, pull-apart, lat çekişi), omzun arka kısmı ve kalça yan kasları için bant çok kullanışlıdır; kapı ankrajıyla evde kablo makinesine yakın hareketler yapılabilir. Bant hafif, ucuz ve yolculukta taşınabilir; ısınma ve rehabilitasyon hareketlerinde de sık kullanılır.',
+        'Bantta direnç hareketin sonunda artar. Bu, hareketin en güçlü olduğun kısmında yükü artırdığı için bazı hareketlere uyar, bazılarında ise başlangıcı fazla hafif bırakır.',
+      ] },
+      { heading: 'Bütçeye göre öneri', paragraphs: [
+        'Sadece birini alacaksan ve bacak çalışmak istiyorsan dambıl (tercihen ayarlanabilir) al. Alanın ve bütçen çok kısıtlıysa veya çoğunlukla üst vücut ve postür çalışacaksan farklı dirençte bir bant seti yeterlidir. İkisi birlikte en esnek kombinasyondur: dambıl itiş ve bacak, bant çekiş ve omuz için.',
+        'Full Balance ev programları bu mantıkla kuruludur: dambıl temel hareketleri, bant ise row ve pull-apart gibi çekiş hareketlerini taşır.',
+      ] },
+      { heading: 'İlerlemeyi nasıl takip edersin?', paragraphs: [
+        'Dambılda kilo ve tekrarı yaz. Bantta bandın rengini veya direncini, ankraj noktasına uzaklığını ve tekrarı aynı biçimde kaydet; bu üçü değişmezse karşılaştırma yapabilirsin. Antrenman modunda her setin değerini girip bir sonraki seansta önceki değerini görebilirsin.',
+      ] },
+    ], sources: homeStrengthSources,
+    internalLinks: [['/evde-dambil-antrenman-programi', 'Evde dambıl programı'], ['/direnc-bandi-antrenman-programi', 'Direnç bandı programı'], ['/blog/tek-dambil-ile-evde-antrenman-programi', 'Tek dambılla program']],
+    cta: { href: '/direnc-bandi-antrenman-programi', label: 'Bant programını incele', title: 'Ekipmanına göre plan', description: 'Dambıl, bant ya da ikisi: seçtiğin ekipmanla ücretsiz kişisel planını oluştur.' },
+  },
+  {
+    ...homeDefaults, language: 'tr', slug: 'evde-kas-yapilir-mi',
+    title: 'Evde Kas Yapılır mı? 8 Haftada Ne Beklemeli, Nasıl Yapılır',
+    description: 'Evde kas geliştirmek mümkün mü? Kas gelişimi için gereken üç şart, ekipmansız ve dambıllı seçenekler, ilk 8 haftada gerçekçi beklentiler ve sık yapılan hatalar.',
+    category: 'Antrenman', readTime: '7 dk', image: '/images/blog/dumbbell-log.svg',
+    imageAlt: 'Evde yapılan şınav, squat ve dambıl hareketlerinin haftalık tekrar ve yük artışını gösteren antrenman günlüğü',
+    intro: 'Evet, evde kas yapılır. Kas, yükün nereden geldiğini değil, ne kadar zorlandığını ve bunun haftalar boyunca artıp artmadığını tanır. Evde bunu sağlamak salona göre biraz daha planlama ister; ama yeni başlayanlar için ilk aylarda fark sanıldığından küçüktür.',
+    sections: [
+      { heading: 'Kas gelişimi için üç şart', paragraphs: [
+        'Birincisi yeterli zorluk: setleri, bitirdiğinde birkaç tekrar daha yapabilecek kadar ama çok fazlası değil şekilde bitirmek. İkincisi haftalık hacim: her büyük kas grubuna haftada birkaç gün düzenli set. Üçüncüsü ilerleme: tekrar, set, tempo veya yükün haftadan haftaya biraz artması. Bunlara yeterli protein ve uyku eşlik etmeli.',
+        'Hafif ve ağır yükleri karşılaştıran bir meta-analizde, setler zorlanmaya yakın bitirildiğinde kas büyümesi benzer bulunmuştur. Evde ağır yük olmaması bu yüzden kas gelişimini engellemez; asıl risk setleri fazla kolay bitirmektir.',
+      ] },
+      { heading: 'Ekipmansız mı, dambıllı mı?', paragraphs: [
+        'Ekipmansız: şınav varyasyonları, squat ve split squat, kalça köprüsü, masa altı çekiş ve plank ile başlangıç için yeterli zorluk sağlanır. Sınır, bacak ve sırt hareketlerinde zamanla yeterli direnç bulmaktır; tek taraflı varyasyonlar ve yavaş tempo bunu uzatır.',
+        'Dambıllı: bir çift dambıl bacak, kalça ve sırt için ilerlemeyi çok kolaylaştırır, çünkü yükü kilo olarak artırabilirsin. Kas hedefin ciddiyse ve yerin varsa ayarlanabilir dambıl en verimli tek ekipmandır.',
+      ] },
+      { heading: 'İlk 8 haftada ne beklemeli?', paragraphs: [
+        'İlk 2-4 hafta: kuvvet hızlı artar, ama bunun çoğu sinir sisteminin hareketi öğrenmesidir. Aynı hareketlerde tekrar sayın belirgin şekilde artar. 4-8. haftalar: düzenli antrenman ve yeterli proteinle kas büyümesi başlar; aynada fark çoğu kişide 8-12 haftada belirginleşir. Değişim kişiden kişiye, beslenmeye ve başlangıç seviyesine göre değişir.',
+        'Ölçüm için aynada değil kayıtlarda bak: aynı hareketteki tekrar ve yük artıyorsa doğru yoldasın. Kilo ve bel çevresini haftada bir aynı koşullarda ölç.',
+      ] },
+      { heading: 'Sık yapılan hatalar', paragraphs: [
+        'Her gün aynı bölgeyi çalışmak (toparlanma olmadan gelişim olmaz), her antrenmanda farklı rastgele video izlemek (ilerleme ölçülemez), setleri çok kolay bitirmek ve proteini ihmal etmek en yaygın hatalardır. Düzenli bir program, kayıt tutmak ve haftada 3-4 antrenman bu hataların çoğunu çözer.',
+      ] },
+      { heading: 'Nereden başlamalı?', paragraphs: [
+        'Ekipmanın yoksa evde kas geliştirme hareketleri sayfasındaki 12 hareketle, dambılın varsa 30 günlük evde dambıl programıyla başla. Full Balance kişisel planında seviyene göre set ve tekrar verir, antrenman modunda her seti kaydeder ve protein ile kalori hedefini aynı yerde gösterir.',
+      ] },
+    ], sources: homeStrengthSources,
+    internalLinks: [['/evde-kas-gelistirme-hareketleri', 'Evde kas geliştirme hareketleri'], ['/evde-dambil-antrenman-programi', '30 günlük evde dambıl programı'], ['/blog/direnc-bandi-mi-dambil-mi', 'Direnç bandı mı dambıl mı']],
+    cta: { href: '/evde-kas-gelistirme-hareketleri', label: 'Hareketleri incele', title: 'Evde kas programına başla', description: 'Seviyene göre hareket, set ve tekrarları gör; ücretsiz kişisel planını oluştur.' },
+  },
   {
     ...defaults, language: 'en', translationKey: 'photo-accuracy', slug: 'how-accurate-photo-calorie-counter',
     title: 'How Accurate Is a Photo Calorie Counter? Portions, Oils and Corrections',
