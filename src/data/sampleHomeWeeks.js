@@ -2059,5 +2059,628 @@ export const sampleHomeWeeks = {
         ]
       }
     ]
+  },
+  "pilates_mat": {
+    "tr": [
+      {
+        "day": "Pazartesi",
+        "focus": "Pilates Temeli + Core Kontrolü",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "The Hundred",
+            "sets": 3,
+            "reps": "10 nefes",
+            "rest": "30s"
+          },
+          {
+            "name": "Single Leg Circle",
+            "sets": 2,
+            "reps": "8/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Single Leg Stretch",
+            "sets": 3,
+            "reps": "10/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 nefes",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/taraf",
+            "rest": "20s"
+          }
+        ]
+      },
+      {
+        "day": "Salı",
+        "focus": "Alt Vücut",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Pelvic Curl",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          },
+          {
+            "name": "Side Leg Lift Series",
+            "sets": 3,
+            "reps": "12/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Clam Shell",
+            "sets": 3,
+            "reps": "15/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Inner Thigh Lift",
+            "sets": 3,
+            "reps": "12/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Bridge Variations",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Çarşamba",
+        "focus": "Dinlenme",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Tam Dinlenme",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      },
+      {
+        "day": "Perşembe",
+        "focus": "Üst Vücut & Sırt",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Swimming",
+            "sets": 3,
+            "reps": "10 nefes",
+            "rest": "30s"
+          },
+          {
+            "name": "Swan Dive Prep",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Arm Circles (Hafif Ağırlık)",
+            "sets": 3,
+            "reps": "12",
+            "rest": "15s"
+          },
+          {
+            "name": "Push-Up (Pilates)",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Back Extension",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Cuma",
+        "focus": "Pilates Temeli + Core Kontrolü",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Spine Stretch Forward",
+            "sets": 3,
+            "reps": "8",
+            "rest": "15s"
+          },
+          {
+            "name": "Saw",
+            "sets": 3,
+            "reps": "8/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 nefes",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/taraf",
+            "rest": "20s"
+          },
+          {
+            "name": "Toe Tap Prep",
+            "sets": 3,
+            "reps": "8/taraf",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Cumartesi",
+        "focus": "Esneklik & Toparlanma",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Mermaid Stretch",
+            "sets": 2,
+            "reps": "30s/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Spine Twist",
+            "sets": 2,
+            "reps": "8/taraf",
+            "rest": "15s"
+          },
+          {
+            "name": "Foam Roller Sırt",
+            "sets": 1,
+            "reps": "5 dk",
+            "rest": "-"
+          },
+          {
+            "name": "Hip Flexor Stretch",
+            "sets": 2,
+            "reps": "30s/taraf",
+            "rest": "15s"
+          }
+        ]
+      },
+      {
+        "day": "Pazar",
+        "focus": "Dinlenme",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Tam Dinlenme",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      }
+    ],
+    "en": [
+      {
+        "day": "Monday",
+        "focus": "Pilates Basics + Core Control",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "The Hundred",
+            "sets": 3,
+            "reps": "10 breaths",
+            "rest": "30s"
+          },
+          {
+            "name": "Single Leg Circle",
+            "sets": 2,
+            "reps": "8/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Single Leg Stretch",
+            "sets": 3,
+            "reps": "10/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 breaths",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/side",
+            "rest": "20s"
+          }
+        ]
+      },
+      {
+        "day": "Tuesday",
+        "focus": "Lower Body",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Pelvic Curl",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          },
+          {
+            "name": "Side Leg Lift Series",
+            "sets": 3,
+            "reps": "12/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Clam Shell",
+            "sets": 3,
+            "reps": "15/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Inner Thigh Lift",
+            "sets": 3,
+            "reps": "12/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Bridge Variations",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Wednesday",
+        "focus": "Rest",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Full Rest",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      },
+      {
+        "day": "Thursday",
+        "focus": "Upper Body & Back",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Swimming",
+            "sets": 3,
+            "reps": "10 breaths",
+            "rest": "30s"
+          },
+          {
+            "name": "Swan Dive Prep",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Arm Circles (Light Weights)",
+            "sets": 3,
+            "reps": "12",
+            "rest": "15s"
+          },
+          {
+            "name": "Push-Up (Pilates)",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Back Extension",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Friday",
+        "focus": "Pilates Basics + Core Control",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Spine Stretch Forward",
+            "sets": 3,
+            "reps": "8",
+            "rest": "15s"
+          },
+          {
+            "name": "Saw",
+            "sets": 3,
+            "reps": "8/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 breaths",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/side",
+            "rest": "20s"
+          },
+          {
+            "name": "Toe Tap Prep",
+            "sets": 3,
+            "reps": "8/side",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Saturday",
+        "focus": "Flexibility & Recovery",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Mermaid Stretch",
+            "sets": 2,
+            "reps": "30s/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Spine Twist",
+            "sets": 2,
+            "reps": "8/side",
+            "rest": "15s"
+          },
+          {
+            "name": "Foam Roller Upper Back",
+            "sets": 1,
+            "reps": "5 min",
+            "rest": "-"
+          },
+          {
+            "name": "Hip Flexor Stretch",
+            "sets": 2,
+            "reps": "30s/side",
+            "rest": "15s"
+          }
+        ]
+      },
+      {
+        "day": "Sunday",
+        "focus": "Rest",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Full Rest",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      }
+    ],
+    "es": [
+      {
+        "day": "Lunes",
+        "focus": "Bases de Pilates + Control del Core",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "The Hundred",
+            "sets": 3,
+            "reps": "10 respiraciones",
+            "rest": "30s"
+          },
+          {
+            "name": "Single Leg Circle",
+            "sets": 2,
+            "reps": "8/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Single Leg Stretch",
+            "sets": 3,
+            "reps": "10/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 respiraciones",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/lado",
+            "rest": "20s"
+          }
+        ]
+      },
+      {
+        "day": "Martes",
+        "focus": "Tren Inferior",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Pelvic Curl",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          },
+          {
+            "name": "Side Leg Lift Series",
+            "sets": 3,
+            "reps": "12/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Clam Shell",
+            "sets": 3,
+            "reps": "15/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Inner Thigh Lift",
+            "sets": 3,
+            "reps": "12/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Bridge Variations",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Miércoles",
+        "focus": "Descanso",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Descanso Total",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      },
+      {
+        "day": "Jueves",
+        "focus": "Tren Superior & Espalda",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Swimming",
+            "sets": 3,
+            "reps": "10 respiraciones",
+            "rest": "30s"
+          },
+          {
+            "name": "Swan Dive Prep",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Círculos de Brazos (Peso Ligero)",
+            "sets": 3,
+            "reps": "12",
+            "rest": "15s"
+          },
+          {
+            "name": "Push-Up (Pilates)",
+            "sets": 3,
+            "reps": "8",
+            "rest": "30s"
+          },
+          {
+            "name": "Back Extension",
+            "sets": 3,
+            "reps": "10",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Viernes",
+        "focus": "Bases de Pilates + Control del Core",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Spine Stretch Forward",
+            "sets": 3,
+            "reps": "8",
+            "rest": "15s"
+          },
+          {
+            "name": "Saw",
+            "sets": 3,
+            "reps": "8/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Neutral Pelvis Breathing",
+            "sets": 2,
+            "reps": "6 respiraciones",
+            "rest": "20s"
+          },
+          {
+            "name": "Knee Fold",
+            "sets": 3,
+            "reps": "8/lado",
+            "rest": "20s"
+          },
+          {
+            "name": "Toe Tap Prep",
+            "sets": 3,
+            "reps": "8/lado",
+            "rest": "30s"
+          }
+        ]
+      },
+      {
+        "day": "Sábado",
+        "focus": "Flexibilidad & Recuperación",
+        "rest": false,
+        "exercises": [
+          {
+            "name": "Mermaid Stretch",
+            "sets": 2,
+            "reps": "30s/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Spine Twist",
+            "sets": 2,
+            "reps": "8/lado",
+            "rest": "15s"
+          },
+          {
+            "name": "Foam Roller Espalda",
+            "sets": 1,
+            "reps": "5 min",
+            "rest": "-"
+          },
+          {
+            "name": "Hip Flexor Stretch",
+            "sets": 2,
+            "reps": "30s/lado",
+            "rest": "15s"
+          }
+        ]
+      },
+      {
+        "day": "Domingo",
+        "focus": "Descanso",
+        "rest": true,
+        "exercises": [
+          {
+            "name": "Descanso Total",
+            "sets": "-",
+            "reps": "-",
+            "rest": "-"
+          }
+        ]
+      }
+    ]
   }
 };

@@ -25,6 +25,12 @@ const SAMPLE_WEEK_BY_PATH = {
   '/40-yas-ustu-evde-spor-programi': 'fat_loss_bodyweight',
   '/en/beginner-workout-plan-over-40': 'fat_loss_bodyweight',
   '/es/rutina-en-casa-mayores-40': 'fat_loss_bodyweight',
+  '/baslangic-pilates-programi': 'pilates_mat',
+  '/en/pilates-workout-at-home': 'pilates_mat',
+  '/es/pilates-en-casa-principiantes': 'pilates_mat',
+  '/pilates-programi': 'pilates_mat',
+  '/en/free-pilates-workout-plan': 'pilates_mat',
+  '/es/plan-pilates-gratis': 'pilates_mat',
 };
 
 // Pages that present the sample as a 30-day / 4-week program get the
@@ -34,7 +40,51 @@ const FOUR_WEEK_PATHS = new Set([
   '/direnc-bandi-antrenman-programi', '/en/resistance-band-workout-plan', '/es/rutina-con-bandas-elasticas',
   '/kadinlar-icin-evde-spor-programi', '/en/home-workout-plan-for-women', '/es/rutina-en-casa-mujeres',
   '/40-yas-ustu-evde-spor-programi', '/en/beginner-workout-plan-over-40', '/es/rutina-en-casa-mayores-40',
+  '/evde-dambil-antrenman-programi', '/en/home-dumbbell-workout-plan', '/es/entrenamiento-en-casa-con-mancuernas',
 ]);
+
+// Mat pilates progresses through control, breath and complexity rather than
+// load, so its 30-day pages get their own table.
+const PILATES_PATHS = new Set([
+  '/baslangic-pilates-programi', '/en/pilates-workout-at-home', '/es/pilates-en-casa-principiantes',
+  '/pilates-programi', '/en/free-pilates-workout-plan', '/es/plan-pilates-gratis',
+]);
+
+export const PILATES_FOUR_WEEK_PLAN = {
+  tr: {
+    title: '30 günlük evde pilates: 4 haftalık ilerleme',
+    intro: 'Hareketler örnek haftadaki gibi kalır; her hafta kontrol, süre ve zorluk biraz artar. Haftada 3-4 mat seansı ve bir esneme günü yeterlidir.',
+    columns: ['Hafta', 'Odak', 'Seans', 'Not'],
+    rows: [
+      ['1', 'Nefes ve nötr pelvis', '3 seans × 15-20 dk', 'Hareketleri yavaş öğren; tekrar sayısının alt ucunda kal.'],
+      ['2', 'Core kontrolü', '3 seans × 20-25 dk', 'Tekrarı hedefin üst ucuna çıkar; bel mattan kalkmasın.'],
+      ['3', 'Akış ve denge', '4 seans × 20-25 dk', 'Hareketler arası mola kısalır; tek bacak ve yan yatış serileri eklenir.'],
+      ['4', 'Dayanıklılık ve hafif bitiriş', '4 seans × 25-30 dk, son seans hafif', 'Ay sonunda uygulama bir sonraki fazı açar.'],
+    ],
+  },
+  en: {
+    title: '30-day home pilates: 4-week progression',
+    intro: 'The movements stay as in the sample week; each week adds a little control, time and difficulty. Three to four mat sessions plus one stretch day is enough.',
+    columns: ['Week', 'Focus', 'Sessions', 'Note'],
+    rows: [
+      ['1', 'Breath and neutral pelvis', '3 sessions × 15-20 min', 'Learn the movements slowly; stay at the low end of the reps.'],
+      ['2', 'Core control', '3 sessions × 20-25 min', 'Move to the top of the rep target; keep the lower back on the mat.'],
+      ['3', 'Flow and balance', '4 sessions × 20-25 min', 'Shorter breaks between movements; single-leg and side-lying series added.'],
+      ['4', 'Endurance and light finish', '4 sessions × 25-30 min, last one light', 'The app unlocks the next phase at the end of the month.'],
+    ],
+  },
+  es: {
+    title: 'Pilates en casa 30 días: progresión de 4 semanas',
+    intro: 'Los movimientos son los de la semana de ejemplo; cada semana suma un poco de control, tiempo y dificultad. Bastan 3-4 sesiones en esterilla y un día de estiramientos.',
+    columns: ['Semana', 'Enfoque', 'Sesiones', 'Nota'],
+    rows: [
+      ['1', 'Respiración y pelvis neutra', '3 sesiones × 15-20 min', 'Aprende los movimientos despacio; quédate en el mínimo de repeticiones.'],
+      ['2', 'Control del core', '3 sesiones × 20-25 min', 'Sube al máximo de repeticiones; la zona lumbar no se despega de la esterilla.'],
+      ['3', 'Fluidez y equilibrio', '4 sesiones × 20-25 min', 'Pausas más cortas; se añaden series a una pierna y de lado.'],
+      ['4', 'Resistencia y cierre suave', '4 sesiones × 25-30 min, la última suave', 'Al final del mes la app abre la siguiente fase.'],
+    ],
+  },
+};
 
 export const FOUR_WEEK_PLAN = {
   tr: {
@@ -85,6 +135,7 @@ export const FOUR_WEEK_PLAN = {
 };
 
 export function getFourWeekPlan(path, lang = 'tr') {
+  if (PILATES_PATHS.has(path)) return PILATES_FOUR_WEEK_PLAN[lang] || PILATES_FOUR_WEEK_PLAN.en;
   if (!FOUR_WEEK_PATHS.has(path)) return null;
   return FOUR_WEEK_PLAN[lang] || FOUR_WEEK_PLAN.en;
 }

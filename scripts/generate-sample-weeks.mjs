@@ -13,6 +13,7 @@ const VARIANTS = [
   { key: 'fat_loss_bodyweight', goal: 'fat_loss', environment: 'home_bodyweight' },
   { key: 'muscle_basic', goal: 'muscle', environment: 'home_basic' },
   { key: 'fat_loss_basic', goal: 'fat_loss', environment: 'home_basic' },
+  { key: 'pilates_mat', goal: 'pilates', environment: 'home_bodyweight' },
 ];
 
 const metrics = (goal, environment) => ({
