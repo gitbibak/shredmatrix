@@ -88,8 +88,8 @@ describe('TodayFocusPanel primary action', () => {
     const onNavigate = vi.fn();
     renderPanel(weeklyPlan, onNavigate);
 
-    fireEvent.click(screen.getByRole('button', { name: /Antrenmana git/i }));
-    expect(onNavigate).toHaveBeenCalledWith('workout', 0);
+    fireEvent.click(screen.getByRole('button', { name: /Antrenmanı Başlat/i }));
+    expect(onNavigate).toHaveBeenCalledWith('workout', 0, { start: true });
   });
 
   it('keeps rest-day navigation on recovery meals', () => {
@@ -98,7 +98,7 @@ describe('TodayFocusPanel primary action', () => {
     renderPanel(weeklyPlan, onNavigate);
 
     fireEvent.click(screen.getByRole('button', { name: /Bugünün öğünlerini gör/i }));
-    expect(onNavigate).toHaveBeenCalledWith('nutrition', undefined);
+    expect(onNavigate).toHaveBeenCalledWith('nutrition', undefined, { start: false });
   });
 
   it('opens the next scheduled training day after completion', async () => {
@@ -109,7 +109,7 @@ describe('TodayFocusPanel primary action', () => {
 
     const action = await screen.findByRole('button', { name: /Sıradaki odak: Çekiş/i });
     fireEvent.click(action);
-    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('workout', 2));
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('workout', 2, { start: false }));
   });
 
   it('wraps to Monday even when Monday was completed this week', async () => {
@@ -129,6 +129,6 @@ describe('TodayFocusPanel primary action', () => {
 
     const action = await screen.findByRole('button', { name: /Sıradaki odak: İtiş/i });
     fireEvent.click(action);
-    expect(onNavigate).toHaveBeenCalledWith('workout', 0);
+    expect(onNavigate).toHaveBeenCalledWith('workout', 0, { start: false });
   });
 });

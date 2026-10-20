@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import { getWorkoutLogs, recordProductStep, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
 
 const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
@@ -11,6 +11,16 @@ import ExerciseDemo from './ExerciseDemo';
 import ExerciseVideoModal from './ExerciseVideoModal';
 import { getExerciseVideo, hasExerciseVideos } from '../data/exerciseVideos';
 import AffiliateGear from './AffiliateGear';
+import WorkoutSession from './WorkoutSession';
+import { sessionText } from '../i18n/workoutSessionCopy';
+import {
+  buildPreviousPerformance,
+  buildSession,
+  clearSessionDraft,
+  findRecords,
+  loadSessionDraft,
+  sessionToLogEntry,
+} from '../lib/workoutSession';
 const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
@@ -33,6 +43,7 @@ import {
   HeartPulse,
   TriangleAlert,
   Zap,
+  RotateCcw,
 } from 'lucide-react';
 
 const containerVariants = {
@@ -80,6 +91,14 @@ function resolveGoalKey(goal) {
   if (value.includes('pilates')) return 'pilates';
   if (value.includes('reformer')) return 'reformer';
   return 'muscle';
+}
+
+function bucketMinutes(minutes) {
+  if (minutes < 15) return 'under_15';
+  if (minutes < 30) return '15_29';
+  if (minutes < 45) return '30_44';
+  if (minutes < 60) return '45_59';
+  return '60_plus';
 }
 
 function ExerciseRow({ exercise, index, t, onShowDemo, onShowVideo }) {
@@ -478,14 +497,21 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [demoExercise, setDemoExercise] = useState(null);
   const [videoExercise, setVideoExercise] = useState(null);
+  const [session, setSession] = useState(null);
+  const [sessionDraft, setSessionDraft] = useState(() => loadSessionDraft());
+  const [sessionSaving, setSessionSaving] = useState(false);
+  const [pendingStart, setPendingStart] = useState(null);
+  const startSessionRef = useRef(null);
   const toast = useToast();
+  const s = (key, values) => sessionText(lang, key, values);
 
   useEffect(() => {
     const index = selectionRequest?.index;
     if (Number.isInteger(index) && index >= 0 && index < (plan?.workoutSplit?.length || 0)) {
       setOpenIndex(index);
+      if (selectionRequest?.start) setPendingStart(index);
     }
-  }, [selectionRequest?.id, selectionRequest?.index, plan?.workoutSplit?.length]);
+  }, [selectionRequest?.id, selectionRequest?.index, selectionRequest?.start, plan?.workoutSplit?.length]);
 
   // Load completed workouts from dataService
   useEffect(() => {
@@ -516,6 +542,13 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   }, [openIndex, plan]);
 
   useEffect(() => {
+    if (pendingStart === null) return;
+    const day = plan?.workoutSplit?.[pendingStart];
+    setPendingStart(null);
+    if (day && !isRestDay(day) && day.exercises?.length) startSessionRef.current?.(day, { source: 'today_focus' });
+  }, [pendingStart, plan]);
+
+  useEffect(() => {
     if (!celebration) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -537,11 +570,44 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
     setOpenIndex((prev) => (prev === index ? -1 : index));
   };
 
+  const tracksLoad = goalKey === 'muscle' || goalKey === 'fat_loss';
+
+  // Shared by the guided session and the quick log: persist, celebrate and
+  // open the feedback sheet.
+  const finalizeWorkout = async (entry, { source, mode, exercises, sets, minutes = 45, volume = 0, records = [] }) => {
+    const savedLog = await saveWorkoutLog(entry);
+    setCompletedDays((prev) => ({ ...prev, [entry.dayFocus]: true }));
+    setFeedbackEffort(null);
+    setFeedbackPain(null);
+    setFeedbackEnergy(null);
+    setFeedbackDuration(Math.max(1, Math.min(600, Math.round(minutes))));
+    setFeedbackError('');
+    trackEvent('workout_completed', { module: goalKey, source });
+    trackEvent('workout_session_completed', { module: goalKey, mode, durationBucket: bucketMinutes(minutes), records: records.length > 0 });
+    if (goalKey === 'meditation') trackEvent('meditation_completed', { source });
+    recordProductStep('workout_completed').catch((error) => console.warn('[Activation]', error?.message || error));
+
+    if (navigator.vibrate) navigator.vibrate(200);
+    const burst = (opts) => confetti({ ...opts, disableForReducedMotion: true });
+    burst({ particleCount: 80, spread: 100, origin: { y: 0.7 } });
+    setTimeout(() => burst({ particleCount: 50, spread: 120, origin: { x: 0.3, y: 0.6 } }), 200);
+    setTimeout(() => burst({ particleCount: 50, spread: 120, origin: { x: 0.7, y: 0.6 } }), 400);
+
+    setCelebration({
+      focus: entry.dayFocus,
+      logId: savedLog?.id,
+      date: entry.date,
+      exercises,
+      sets,
+      volume,
+      minutes: mode === 'guided' ? minutes : null,
+      records,
+    });
+  };
+
   const handleCompleteWorkout = async (day) => {
     const today = toDateStr(new Date());
     const focus = day.focus;
-
-    // Check if already completed today
     if (completedDays[focus]) return;
 
     const entry = {
@@ -569,37 +635,64 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
     };
 
     try {
-      const savedLog = await saveWorkoutLog(entry);
-      setCompletedDays((prev) => ({ ...prev, [focus]: true }));
-      setFeedbackEffort(null);
-      setFeedbackPain(null);
-      setFeedbackEnergy(null);
-      setFeedbackDuration(45);
-      setFeedbackError('');
-      trackEvent('workout_completed', { module: goalKey, source: 'workout_panel' });
-      if (goalKey === 'meditation') trackEvent('meditation_completed', { source: 'workout_panel' });
-      recordProductStep('workout_completed').catch((error) => console.warn('[Activation]', error?.message || error));
-
-      // 🎉 CELEBRATION!
-      // Haptic feedback
-      if (navigator.vibrate) navigator.vibrate(200);
-
-      // Confetti burst
-      const burst = (opts) => confetti({ ...opts, disableForReducedMotion: true });
-      burst({ particleCount: 80, spread: 100, origin: { y: 0.7 } });
-      setTimeout(() => burst({ particleCount: 50, spread: 120, origin: { x: 0.3, y: 0.6 } }), 200);
-      setTimeout(() => burst({ particleCount: 50, spread: 120, origin: { x: 0.7, y: 0.6 } }), 400);
-
-      // Show celebration overlay
-      setCelebration({
-        focus,
-        logId: savedLog?.id,
-        date: today,
+      await finalizeWorkout(entry, {
+        source: 'workout_panel',
+        mode: 'quick',
         exercises: (day.exercises || []).length,
-        sets: (day.exercises || []).reduce((s, ex) => s + (parseInt(ex.sets) || 4), 0),
+        sets: (day.exercises || []).reduce((sum, ex) => sum + (parseInt(ex.sets) || 4), 0),
       });
     } catch {
       toast.error(t('errors.saveFailed'));
+    }
+  };
+
+  const startSession = async (day, { source = 'workout_panel' } = {}) => {
+    if (sessionDraft && sessionDraft.dayFocus === day.focus) {
+      setSession(sessionDraft);
+      trackEvent('workout_session_started', { module: goalKey, source, resumed: true });
+      return;
+    }
+    const logs = await getWorkoutLogs(60).catch(() => []);
+    clearSessionDraft();
+    setSessionDraft(null);
+    setSession(buildSession(day, { logs, tracksLoad }));
+    trackEvent('workout_session_started', { module: goalKey, source, resumed: false });
+  };
+
+  startSessionRef.current = startSession;
+
+  const closeSession = () => {
+    setSessionDraft(loadSessionDraft());
+    setSession(null);
+  };
+
+  const discardDraft = () => {
+    clearSessionDraft();
+    setSessionDraft(null);
+  };
+
+  const handleSessionFinish = async (finished, summary) => {
+    if (sessionSaving) return;
+    setSessionSaving(true);
+    try {
+      const logs = await getWorkoutLogs(60).catch(() => []);
+      const records = findRecords(finished, buildPreviousPerformance(logs));
+      await finalizeWorkout(sessionToLogEntry(finished, toDateStr(new Date())), {
+        source: 'workout_session',
+        mode: 'guided',
+        exercises: summary.exercisesDone,
+        sets: summary.setsDone,
+        minutes: summary.minutes,
+        volume: summary.volume,
+        records,
+      });
+      clearSessionDraft();
+      setSessionDraft(null);
+      setSession(null);
+    } catch {
+      toast.error(t('errors.saveFailed'));
+    } finally {
+      setSessionSaving(false);
     }
   };
 
@@ -763,15 +856,38 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
                       <span className="text-xs font-semibold font-outfit">{t('workout.completed')}</span>
                     </div>
                   ) : (
-                    <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleCompleteWorkout(day)}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold font-outfit shadow-lg shadow-orange-500/20 cursor-pointer"
-                    >
-                      <Dumbbell size={16} />
-                      {t('workout.completeBtn')}
-                    </motion.button>
+                    <div className="flex flex-col gap-1.5">
+                      {sessionDraft?.dayFocus === day.focus && (
+                        <p className="px-1 text-[11px] text-slate-400">{s('resumeHint')}</p>
+                      )}
+                      <motion.button
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => startSession(day)}
+                        className="w-full flex items-center justify-center gap-2 min-h-12 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold font-outfit shadow-lg shadow-orange-500/20 cursor-pointer"
+                      >
+                        <Play size={16} fill="currentColor" />
+                        {sessionDraft?.dayFocus === day.focus ? s('resume') : s('start')}
+                      </motion.button>
+                      <div className="flex items-center justify-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleCompleteWorkout(day)}
+                          className="min-h-10 px-2 text-[11px] font-semibold text-slate-500 underline-offset-2 hover:text-slate-300 hover:underline"
+                        >
+                          {s('quickLog')}
+                        </button>
+                        {sessionDraft?.dayFocus === day.focus && (
+                          <button
+                            type="button"
+                            onClick={discardDraft}
+                            className="inline-flex min-h-10 items-center gap-1 px-2 text-[11px] font-semibold text-slate-500 hover:text-slate-300"
+                          >
+                            <RotateCcw size={12} /> {s('discard')}
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </motion.div>
               )}
@@ -795,6 +911,21 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
           {workoutSplit.length - trainingDays.length} {t('workout.restDays')}
         </span>
       </div>
+
+      {/* ▶ Guided workout session */}
+      <AnimatePresence>
+        {session && (
+          <WorkoutSession
+            key={session.startedAt}
+            session={session}
+            saving={sessionSaving}
+            onClose={closeSession}
+            onFinish={handleSessionFinish}
+            onShowDemo={setDemoExercise}
+            onShowVideo={(v) => { setVideoExercise(v); trackEvent('exercise_video_play', { exerciseId: v.video.id, language: lang }); }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* 🎉 Celebration Overlay */}
       <AnimatePresence>
@@ -830,7 +961,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="flex justify-center gap-8 mb-4 rounded-xl border border-slate-800 bg-slate-950/50 py-2.5"
+                className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4 rounded-xl border border-slate-800 bg-slate-950/50 py-2.5"
               >
                 <div className="text-center">
                   <p className="text-xl font-bold text-white font-outfit">{celebration.exercises}</p>
@@ -840,11 +971,33 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
                   <p className="text-xl font-bold text-white font-outfit">{celebration.sets}</p>
                   <p className="text-[9px] text-slate-500">{t('celebration.sets')}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-xl font-bold text-emerald-400 font-outfit">✅</p>
-                  <p className="text-[9px] text-slate-500">{t('celebration.complete')}</p>
-                </div>
+                {celebration.minutes ? (
+                  <div className="text-center">
+                    <p className="text-xl font-bold text-white font-outfit">{celebration.minutes}</p>
+                    <p className="text-[9px] text-slate-500">{s('summaryMinutes')}</p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-xl font-bold text-emerald-400 font-outfit">✅</p>
+                    <p className="text-[9px] text-slate-500">{t('celebration.complete')}</p>
+                  </div>
+                )}
+                {celebration.volume > 0 && (
+                  <div className="text-center">
+                    <p className="text-xl font-bold text-white font-outfit">{celebration.volume.toLocaleString(lang)}</p>
+                    <p className="text-[9px] text-slate-500">{s('summaryVolume')} (kg)</p>
+                  </div>
+                )}
               </motion.div>
+              {celebration.records?.length > 0 && (
+                <div className="mb-4 space-y-1 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-left">
+                  {celebration.records.slice(0, 3).map((record) => (
+                    <p key={record.name} className="text-xs font-semibold text-amber-200">
+                      🏆 {s('record', { name: record.name, weight: record.weight })}
+                    </p>
+                  ))}
+                </div>
+              )}
 
               <motion.div
                 initial={{ y: 10, opacity: 0 }}

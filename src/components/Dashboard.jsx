@@ -116,9 +116,9 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
     { id: 'profile', label: t('dashboard.tabs.profile'), icon: User },
   ];
 
-  const navigateFromToday = (tab, dayIndex) => {
+  const navigateFromToday = (tab, dayIndex, options = {}) => {
     if (tab === 'workout' && Number.isInteger(dayIndex)) {
-      setWorkoutSelection((previous) => ({ id: (previous?.id || 0) + 1, index: dayIndex }));
+      setWorkoutSelection((previous) => ({ id: (previous?.id || 0) + 1, index: dayIndex, start: Boolean(options.start) }));
     }
     setActiveTab(tab);
   };

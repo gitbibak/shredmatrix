@@ -12,6 +12,7 @@ import {
   Snowflake,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { sessionText } from '../i18n/workoutSessionCopy';
 import { getReferralSummary, getStreakFreezes, getWorkoutLogs, saveStreakFreeze } from '../lib/dataService';
 import ReminderSettings from './ReminderSettings';
 import { trackEvent } from '../lib/analytics';
@@ -178,7 +179,8 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
     ? t('todayFocus.restCta')
     : todayCompleted && nextTraining
       ? t('todayFocus.nextPreview', { focus: nextTraining.dayPlan?.focus || t('todayFocus.training') })
-      : todayCompleted ? t('todayFocus.completedCta') : t('todayFocus.workoutCta');
+      : todayCompleted ? t('todayFocus.completedCta') : sessionText(lang, 'start');
+  const startsSession = !restToday && !todayCompleted && todayExerciseCount > 0;
   const ctaTarget = restToday ? 'nutrition' : 'workout';
   const ctaDayIndex = todayCompleted && nextTraining ? nextTraining.index : todayRow.index;
 
@@ -230,7 +232,7 @@ export default function TodayFocusPanel({ plan, onNavigate }) {
         type="button"
         onClick={() => {
           trackEvent('primary_action_click', { destination: ctaTarget, module: moduleKey, completed: todayCompleted });
-          onNavigate?.(ctaTarget, ctaTarget === 'workout' ? ctaDayIndex : undefined);
+          onNavigate?.(ctaTarget, ctaTarget === 'workout' ? ctaDayIndex : undefined, { start: startsSession });
         }}
         className="w-full flex items-center justify-center gap-2 rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm font-outfit font-bold text-orange-300 hover:bg-orange-500/15 transition-colors"
       >

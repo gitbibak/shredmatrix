@@ -70,7 +70,7 @@ async function readAllAdminRows(table, columns, configure = (query) => query, ke
 export const ADMIN_EVENT_NAMES = Object.freeze([
   'meal_photo_analyzed', 'meal_photo_analysis_failed', 'sign_up_error', 'login_error',
   'affiliate_link_click', 'water_logged', 'sleep_logged', 'nutrition_logged',
-  'meditation_completed', 'invite_sent',
+  'meditation_completed', 'invite_sent', 'workout_session_started', 'workout_session_completed',
 ]);
 
 const PROFILE_COLUMNS = 'id, name, email, created_at, role, app_language, acquisition_source, acquisition_campaign, acquisition_content, landing_path, plan_created_at';

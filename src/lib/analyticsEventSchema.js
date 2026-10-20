@@ -20,6 +20,8 @@ export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   plan_generated: { allowed: ['goalType', 'environment', 'language'] },
   workout_started: { allowed: ['module', 'source'] },
   workout_completed: { allowed: ['module', 'source'] },
+  workout_session_started: { allowed: ['module', 'source', 'resumed'] },
+  workout_session_completed: { allowed: ['module', 'mode', 'durationBucket', 'records'] },
   nutrition_logged: { allowed: ['source', 'category', 'photoAssisted'] },
   water_logged: { allowed: ['source', 'targetReached'] },
   sleep_logged: { allowed: ['source'] },

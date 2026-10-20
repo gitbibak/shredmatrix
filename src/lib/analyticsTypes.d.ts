@@ -18,6 +18,8 @@ export interface GrowthEventMap {
   plan_generated: { goalType?: string; environment?: string; language?: string };
   workout_started: { module?: string; source?: string };
   workout_completed: { module?: string; source?: string };
+  workout_session_started: { module?: string; source?: string; resumed?: boolean };
+  workout_session_completed: { module?: string; mode?: 'guided' | 'quick'; durationBucket?: string; records?: boolean };
   nutrition_logged: { source?: string; category?: string; photoAssisted?: boolean };
   water_logged: { source?: string; targetReached?: boolean };
   sleep_logged: { source?: string };
