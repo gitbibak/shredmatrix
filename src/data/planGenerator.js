@@ -3207,6 +3207,14 @@ const focusMap = {
     'Üst Vücut & Sırt': 'Upper Body & Back',
     'Tam Vücut Akış': 'Full Body Flow',
     'Esneklik & Toparlanma': 'Flexibility & Recovery',
+    'Core Kontrol + Reformer Temeli': 'Core Control + Reformer Basics',
+    'Düşük Yoğunluk Kardiyo + Mobilite': 'Low-Intensity Cardio + Mobility',
+    'Güvenli Beceri Hazırlığı + Mobilite': 'Safe Skill Prep + Mobility',
+    'Kontrollü Mat Pilates': 'Controlled Mat Pilates',
+    'Kontrollü Reformer Progresyonu': 'Controlled Reformer Progression',
+    'Pilates Temeli + Core Kontrolü': 'Pilates Basics + Core Control',
+    'Reformer-Only Master Kontrol': 'Reformer-Only Master Control',
+    'Tam Vücut Kuvvet + Kolay Kardiyo': 'Full-Body Strength + Easy Cardio',
     'İleri Core': 'Advanced Core',
     'Lateral & Rotasyon': 'Lateral & Rotation',
     'Props ile Pilates': 'Pilates with Props',
@@ -3353,6 +3361,14 @@ const focusMap = {
     'Üst Vücut & Sırt': 'Tren Superior & Espalda',
     'Tam Vücut Akış': 'Flujo Cuerpo Completo',
     'Esneklik & Toparlanma': 'Flexibilidad & Recuperación',
+    'Core Kontrol + Reformer Temeli': 'Control del Core + Bases de Reformer',
+    'Düşük Yoğunluk Kardiyo + Mobilite': 'Cardio de Baja Intensidad + Movilidad',
+    'Güvenli Beceri Hazırlığı + Mobilite': 'Preparación Segura de Habilidades + Movilidad',
+    'Kontrollü Mat Pilates': 'Pilates en Esterilla Controlado',
+    'Kontrollü Reformer Progresyonu': 'Progresión Controlada en Reformer',
+    'Pilates Temeli + Core Kontrolü': 'Bases de Pilates + Control del Core',
+    'Reformer-Only Master Kontrol': 'Control Máster Solo Reformer',
+    'Tam Vücut Kuvvet + Kolay Kardiyo': 'Fuerza de Cuerpo Completo + Cardio Suave',
     'İleri Core': 'Core Avanzado',
     'Lateral & Rotasyon': 'Lateral & Rotación',
     'Props ile Pilates': 'Pilates con Accesorios',
@@ -3417,8 +3433,104 @@ const deloadNoteMap = {
 
 // Tekrar (reps) alanındaki Türkçe kısaltmalar: 10/bacak, 3/taraf, 8/kol, 30 dk
 const repsTokenMap = {
-  en: [[/bacak/g, 'leg'], [/taraf/g, 'side'], [/\bkol\b/g, 'arm'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'fast'], [/rahat/g, 'easy'], [/\/tip\b/g, '/letter']],
-  es: [[/bacak/g, 'pierna'], [/taraf/g, 'lado'], [/\bkol\b/g, 'brazo'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'rápido'], [/rahat/g, 'suave'], [/\/tip\b/g, '/letra']],
+  en: [[/bacak/g, 'leg'], [/taraf/g, 'side'], [/\bkol\b/g, 'arm'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'fast'], [/rahat/g, 'easy'], [/\/tip\b/g, '/letter'], [/nefes/g, 'breaths'], [/Akış/g, 'Flow'], [/akış/g, 'flow'], [/geçiş/g, 'transitions'], [/yön/g, 'direction'], [/ iş /g, ' work '], [/dinl\./g, 'rest']],
+  es: [[/bacak/g, 'pierna'], [/taraf/g, 'lado'], [/\bkol\b/g, 'brazo'], [/\bdk\b/g, 'min'], [/\bsn\b/g, 's'], [/hızlı/g, 'rápido'], [/rahat/g, 'suave'], [/\/tip\b/g, '/letra'], [/nefes/g, 'respiraciones'], [/Akış/g, 'Flujo'], [/akış/g, 'flujo'], [/geçiş/g, 'transiciones'], [/yön/g, 'dirección'], [/ iş /g, ' trabajo '], [/dinl\./g, 'desc.']],
+};
+
+// Session names authored in Turkish inside workoutPhases (cardio, pilates,
+// reformer and meditation). The original name is kept as sourceName so the
+// animated guide and technique video lookups stay exactly as before.
+const sessionNameMap = {
+  en: {
+    'Arm Circles (Hafif Ağırlık)': 'Arm Circles (Light Weights)',
+    'Ashtanga Primary Series (Kısa)': 'Ashtanga Primary Series (Short)',
+    'Açık Farkındalık': 'Open Awareness',
+    'Bicycle (Üst Pozisyon)': 'Bicycle (Elevated)',
+    'Devre (3 tur) — Push-Up': 'Circuit (3 rounds) — Push-Up',
+    'Duygu Gözlemi': 'Noting Emotions',
+    'EMOM 16dk (4 tur) — Clean & Press x5': 'EMOM 16 min (4 rounds) — Clean & Press x5',
+    'Farkındalık Yürüyüşü': 'Mindful Walk',
+    'Finisher: 100 Push-Up Challenge (min sürede)': 'Finisher: 100 Push-Up Challenge (fastest time)',
+    'Foam Roller Sırt': 'Foam Roller Upper Back',
+    'Full Reformer Flow (45 dk)': 'Full Reformer Flow (45 min)',
+    'Hafif Tempo Yürüyüş': 'Light Brisk Walk',
+    'Hafif Yürüyüş': 'Light Walk',
+    'Hafif Yüzme': 'Easy Swim',
+    'Hafif Yüzme veya Bisiklet': 'Easy Swim or Bike',
+    'Kişisel Vinyasa Akışı': 'Personal Vinyasa Flow',
+    'Kısa Vücut Taraması': 'Short Body Scan',
+    'Leg Circles (Ağır Yay)': 'Leg Circles (Heavy Spring)',
+    'Leg Circles (Kayışlı)': 'Leg Circles (In Straps)',
+    'Mat Koreografi (Müzikli)': 'Mat Choreography (With Music)',
+    'Mermaid (İleri)': 'Mermaid (Advanced)',
+    'Mobilite Akışı': 'Mobility Flow',
+    'Mobilite Çalışması': 'Mobility Work',
+    'Nefes Farkındalığı': 'Breath Awareness',
+    'Nefes Sayımı': 'Breath Counting',
+    'Push-Up → Pike → Teaser Geçiş': 'Push-Up → Pike → Teaser Transition',
+    'Rehberli Görselleştirme': 'Guided Visualization',
+    'Scissors (Üst Pozisyon)': 'Scissors (Elevated)',
+    'Serbest Gün': 'Free Day',
+    'Serbest Hareket Çalışması': 'Free Movement Practice',
+    'Sessiz Farkındalık Oturumu': 'Silent Awareness Session',
+    'Sevgi-Şefkat Meditasyonu': 'Loving-Kindness Meditation',
+    'Soğuk / Sıcak Kontrast': 'Cold / Hot Contrast',
+    'Swimming (İleri)': 'Swimming (Advanced)',
+    'Tempolu Yürüyüş veya Bisiklet': 'Brisk Walk or Bike',
+    'Uzun Vücut Taraması': 'Long Body Scan',
+    'Vücut Taraması': 'Body Scan',
+    'Yürüyüş Meditasyonu': 'Walking Meditation',
+    'Öz-Sorgulama': 'Self-Inquiry',
+    'Şefkat Meditasyonu': 'Compassion Meditation',
+    '→ ardından Assault Bike Sprint': '→ then Assault Bike Sprint',
+    '→ ardından Rowing Sprint': '→ then Rowing Sprint',
+    '↻ Turlar arası dinlenme: 90s': '↻ Rest between rounds: 90s',
+  },
+  es: {
+    'Arm Circles (Hafif Ağırlık)': 'Círculos de Brazos (Peso Ligero)',
+    'Ashtanga Primary Series (Kısa)': 'Serie Primaria de Ashtanga (Corta)',
+    'Açık Farkındalık': 'Conciencia Abierta',
+    'Bicycle (Üst Pozisyon)': 'Bicycle (Posición Elevada)',
+    'Devre (3 tur) — Push-Up': 'Circuito (3 rondas) — Push-Up',
+    'Duygu Gözlemi': 'Observación de Emociones',
+    'EMOM 16dk (4 tur) — Clean & Press x5': 'EMOM 16 min (4 rondas) — Clean & Press x5',
+    'Farkındalık Yürüyüşü': 'Caminata Consciente',
+    'Finisher: 100 Push-Up Challenge (min sürede)': 'Finisher: Reto de 100 Push-Ups (en el menor tiempo)',
+    'Foam Roller Sırt': 'Foam Roller Espalda',
+    'Full Reformer Flow (45 dk)': 'Flujo Completo de Reformer (45 min)',
+    'Hafif Tempo Yürüyüş': 'Caminata Ligera a Buen Ritmo',
+    'Hafif Yürüyüş': 'Caminata Ligera',
+    'Hafif Yüzme': 'Natación Suave',
+    'Hafif Yüzme veya Bisiklet': 'Natación o Bicicleta Suave',
+    'Kişisel Vinyasa Akışı': 'Flujo Vinyasa Personal',
+    'Kısa Vücut Taraması': 'Escaneo Corporal Breve',
+    'Leg Circles (Ağır Yay)': 'Leg Circles (Muelle Pesado)',
+    'Leg Circles (Kayışlı)': 'Leg Circles (Con Correas)',
+    'Mat Koreografi (Müzikli)': 'Coreografía en Esterilla (Con Música)',
+    'Mermaid (İleri)': 'Mermaid (Avanzado)',
+    'Mobilite Akışı': 'Flujo de Movilidad',
+    'Mobilite Çalışması': 'Trabajo de Movilidad',
+    'Nefes Farkındalığı': 'Conciencia de la Respiración',
+    'Nefes Sayımı': 'Conteo de Respiraciones',
+    'Push-Up → Pike → Teaser Geçiş': 'Transición Push-Up → Pike → Teaser',
+    'Rehberli Görselleştirme': 'Visualización Guiada',
+    'Scissors (Üst Pozisyon)': 'Scissors (Posición Elevada)',
+    'Serbest Gün': 'Día Libre',
+    'Serbest Hareket Çalışması': 'Práctica de Movimiento Libre',
+    'Sessiz Farkındalık Oturumu': 'Sesión de Conciencia en Silencio',
+    'Sevgi-Şefkat Meditasyonu': 'Meditación de Amor Bondadoso',
+    'Soğuk / Sıcak Kontrast': 'Contraste Frío / Calor',
+    'Swimming (İleri)': 'Swimming (Avanzado)',
+    'Tempolu Yürüyüş veya Bisiklet': 'Caminata Rápida o Bicicleta',
+    'Uzun Vücut Taraması': 'Escaneo Corporal Largo',
+    'Vücut Taraması': 'Escaneo Corporal',
+    'Yürüyüş Meditasyonu': 'Meditación Caminando',
+    'Öz-Sorgulama': 'Autoindagación',
+    'Şefkat Meditasyonu': 'Meditación de Compasión',
+    '→ ardından Assault Bike Sprint': '→ después Sprint en Assault Bike',
+    '→ ardından Rowing Sprint': '→ después Sprint de Remo',
+    '↻ Turlar arası dinlenme: 90s': '↻ Descanso entre rondas: 90s',
+  },
 };
 
 // ── Home program localization ──────────────────────────
@@ -3566,13 +3678,18 @@ function localizeExerciseEntry(ex, lang) {
   if (!ex || lang === 'tr') return ex;
   let name = ex.name;
   let reps = ex.reps;
+  let sourceName = ex.sourceName;
   if (typeof name === 'string') {
     const dl = deloadNoteMap[lang]?.[name];
     const home = homeExerciseNameMap[lang]?.[name];
+    const session = sessionNameMap[lang]?.[name];
     if (dl) {
       name = dl;
     } else if (home) {
       name = home;
+    } else if (session) {
+      sourceName = name;
+      name = session;
     } else if (name.startsWith('Süperset:')) {
       name = name.replace('Süperset:', supersetPrefixMap[lang] || 'Superset:');
     }
@@ -3580,7 +3697,7 @@ function localizeExerciseEntry(ex, lang) {
   if (typeof reps === 'string' && repsTokenMap[lang]) {
     for (const [re, tgt] of repsTokenMap[lang]) reps = reps.replace(re, tgt);
   }
-  return { ...ex, name, reps };
+  return sourceName ? { ...ex, name, reps, sourceName } : { ...ex, name, reps };
 }
 
 export function localizePlan(plan, lang) {

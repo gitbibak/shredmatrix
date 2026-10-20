@@ -5,6 +5,8 @@ import { useTranslation } from './i18n/LanguageContext';
 import { PLAN_VERSION } from './data/planVersion';
 import { TURKISH_SEO_SLUGS } from './data/turkishSeoPages';
 
+const TURKISH_TEXT = /[çğıöşüÇĞİÖŞÜ]/;
+
 // The plan engine is ~220 kB; load it only when a plan must be generated so
 // landing and SEO pages stay light.
 const loadPlanEngine = () => import('./data/planGenerator');
@@ -425,6 +427,20 @@ function AppContent() {
       setPlan(newPlan);
       savePlan(newPlan, email).catch(() => {});
       return newPlan;
+    }
+    // Saved English/Spanish plans can still hold Turkish session names from
+    // before a translation was added. Re-translate the visible text only; the
+    // exercises and any adaptations stay exactly as saved.
+    const planLang = savedPlan.lang || lang;
+    if (planLang && planLang !== 'tr' && TURKISH_TEXT.test(JSON.stringify(savedPlan.workoutSplit || []))) {
+      const { localizePlan } = await loadPlanEngine();
+      const workoutSplit = localizePlan(savedPlan, planLang).workoutSplit;
+      if (JSON.stringify(workoutSplit) !== JSON.stringify(savedPlan.workoutSplit)) {
+        const translated = { ...savedPlan, workoutSplit };
+        setPlan(translated);
+        savePlan(translated, email).catch(() => {});
+        return translated;
+      }
     }
     setPlan(savedPlan);
     return savedPlan;

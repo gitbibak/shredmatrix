@@ -82,8 +82,9 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
 
   const index = Math.min(session.exerciseIndex || 0, session.exercises.length - 1);
   const exercise = session.exercises[index];
-  const info = exercise ? getExerciseInfo(exercise.name) : null;
-  const video = exercise ? getExerciseVideo(exercise.name, lang) : null;
+  const lookupName = exercise ? exercise.sourceName || exercise.name : null;
+  const info = lookupName ? getExerciseInfo(lookupName) : null;
+  const video = lookupName ? getExerciseVideo(lookupName, lang) : null;
   const summary = summarizeSession(session, now);
   const restLeft = restEndsAt ? Math.ceil((restEndsAt - now) / 1000) : 0;
   const isLast = index === session.exercises.length - 1;

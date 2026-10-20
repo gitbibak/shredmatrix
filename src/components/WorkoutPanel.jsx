@@ -104,7 +104,8 @@ function bucketMinutes(minutes) {
 function ExerciseRow({ exercise, index, t, onShowDemo, onShowVideo }) {
   const { lang } = useTranslation();
   const [showTip, setShowTip] = useState(false);
-  const databaseInfo = getExerciseInfo(exercise.name);
+  const lookupName = exercise.sourceName || exercise.name;
+  const databaseInfo = getExerciseInfo(lookupName);
   const hasStructuredMetadata = Object.hasOwn(exercise, 'equipment');
   const info = hasStructuredMetadata
     ? { ...exercise }
@@ -113,7 +114,7 @@ function ExerciseRow({ exercise, index, t, onShowDemo, onShowVideo }) {
   const difficulty = exercise.difficulty || info?.difficulty;
   const diff = difficulty ? getDifficultyLabel(difficulty) : null;
   // Own technique video when it exists for this language; languages without videos yet keep the YouTube search link.
-  const video = getExerciseVideo(exercise.name, lang);
+  const video = getExerciseVideo(lookupName, lang);
   const showYouTube = !video && !hasExerciseVideos(lang);
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' form technique')}`;
   return (

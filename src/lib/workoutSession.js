@@ -71,6 +71,7 @@ function sessionExercise(exercise, section, previous, tracksLoad) {
   const usesWeight = tracksLoad && !target.timed && exercise.equipment !== 'none';
   return {
     name: exercise.name,
+    ...(exercise.sourceName ? { sourceName: exercise.sourceName } : {}),
     section,
     targetSets: exercise.sets,
     targetReps: exercise.reps,
