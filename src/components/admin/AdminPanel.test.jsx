@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 const api = vi.hoisted(() => Object.fromEntries([
   'verifyAdminAccess', 'getAdminSnapshot', 'getSupportTickets', 'getSupportStats', 'updateSupportTicket',
-  'getContentReviews', 'updateContentReview', 'getAdminTestimonials', 'updateTestimonialStatus', 'deleteUser',
+  'getContentReviews', 'updateContentReview', 'getAdminTestimonials', 'updateTestimonialStatus', 'deleteUser', 'getMemberDetail',
 ].map((name) => [name, vi.fn()])));
 vi.mock('../../lib/adminService', () => api);
 vi.mock('recharts', () => Object.fromEntries([
@@ -22,10 +22,20 @@ const snapshot = {
     member('mert', 'Mert Plansız', '2026-10-17', { app_language: 'en', acquisition_source: 'google' }),
     member('eski', 'Eski Plansız', '2026-09-01', { app_language: 'tr' }),
   ],
-  plans: [{ user_id: 'ayse', goal: 'muscle', experience: 'beginner', environment: 'gym' }],
+  plans: [{ user_id: 'ayse', goal: 'muscle', experience: 'beginner', environment: 'gym', gender: 'female', age: '34', height: '168', weight: '64.5', calories: '1950' }],
   activity: [{ user_id: 'ayse', activity_date: '2026-10-17' }],
-  workouts: [],
+  workouts: [{ user_id: 'ayse', date: '2026-10-17' }],
+  memberActivity: [{ user_id: 'ayse', total_workouts: 3, recent_workouts: 1, last_workout: '2026-10-17' }],
+  insightsAvailable: true,
   events: [],
+};
+const memberDetail = {
+  plan: { macros: { protein: 120, carbs: 210, fat: 60 }, focusAreas: ['core'] },
+  activity: {
+    workouts: [{ date: '2026-10-17', day_focus: 'Tam Vücut A', exercises: [{ name: 'Goblet Squat', weight: 16, sets: [{ weight: 16, reps: 10, completed: true }, { weight: 16, reps: 9, completed: false }] }], session_duration_minutes: 34, perceived_exertion: 2, pain_reported: false }],
+    weights: [], measurements: [], water: [], sleep: [],
+  },
+  tickets: [],
 };
 const ticket = { id: 'ticket', subject: 'Test destek', message: 'Yardıma ihtiyacım var', status: 'open', category: 'support', priority: 'high', page_url: 'javascript:alert(1)' };
 
@@ -42,23 +52,32 @@ beforeEach(() => {
   api.getSupportStats.mockResolvedValue({ open: 1, reviewing: 0, resolved: 0, total: 1 });
   api.getContentReviews.mockResolvedValue([]);
   api.getAdminTestimonials.mockResolvedValue([]);
+  api.getMemberDetail.mockResolvedValue(memberDetail);
 });
 afterEach(cleanup);
 
 describe('admin panel', () => {
+  it('opens on the member list by default', async () => {
+    render(<MemoryRouter initialEntries={['/admin']}><AdminPanel user={{ id: 'admin', name: 'Test Admin' }} /></MemoryRouter>);
+    expect(await screen.findByRole('heading', { level: 1, name: 'Kullanıcılar' })).toBeInTheDocument();
+    expect((await screen.findAllByText('Ayşe Planlı')).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: /Antrenman yapan 1/ })).toBeInTheDocument();
+  });
+
   it('opens on a daily summary computed from the snapshot', async () => {
-    open();
+    open('overview');
     expect(await screen.findByText(/Dün 2 kayıt geldi; 1 kişi plan kurdu\./)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1, name: 'Bugün' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Özet' })).toBeInTheDocument();
     expect(screen.getByText(/1 açık destek talebi bekliyor\./)).toBeInTheDocument();
   });
 
   it('maps old tab links to the new sections', async () => {
     open('dashboard');
-    expect(await screen.findByRole('heading', { level: 1, name: 'Bugün' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Özet' })).toBeInTheDocument();
     cleanup();
     open('quality');
-    expect(await screen.findByRole('heading', { level: 1, name: 'İçerik' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Destek' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Yorumlar ve incelemeler/ })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('keeps support data and reports the failure when the snapshot fails', async () => {
@@ -80,7 +99,7 @@ describe('admin panel', () => {
   });
 
   it('opens the filtered member list from the attention items', async () => {
-    open();
+    open('overview');
     fireEvent.click(await screen.findByRole('button', { name: /Son 7 günde plan kurmayan yeni üye/ }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Kullanıcılar' })).toBeInTheDocument();
     expect(screen.getAllByText('Mert Plansız').length).toBeGreaterThan(0);
@@ -100,8 +119,14 @@ describe('admin panel', () => {
   it('shows member details and requires explicit text before a delete request', async () => {
     open('users');
     fireEvent.click((await screen.findAllByRole('button', { name: 'Ayşe Planlı detaylarını aç' }))[0]);
-    const details = screen.getByRole('dialog', { name: 'Ayşe Planlı' });
-    expect(within(details).getByText('Kas gelişimi')).toBeInTheDocument();
+    const details = screen.getByRole('complementary', { name: 'Ayşe Planlı' });
+    expect(within(details).getByText('168 cm')).toBeInTheDocument();
+    expect(within(details).getByText('64.5 kg')).toBeInTheDocument();
+    expect(await within(details).findByText('P 120 g · K 210 g · Y 60 g')).toBeInTheDocument();
+    expect(await within(details).findByText('Tam Vücut A')).toBeInTheDocument();
+    expect(within(details).getByText('1/2 set')).toBeInTheDocument();
+    expect(within(details).getByText(/Goblet Squat 16 kg/)).toBeInTheDocument();
+    expect(api.getMemberDetail).toHaveBeenCalledWith('ayse');
     fireEvent.click(within(details).getByRole('button', { name: /Hesabı kalıcı sil/ }));
     expect(screen.getByRole('dialog', { name: 'Hesabı kalıcı olarak sil' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Kalıcı olarak sil' })).toBeDisabled();
@@ -109,6 +134,18 @@ describe('admin panel', () => {
     expect(screen.getByRole('button', { name: 'Kalıcı olarak sil' })).toBeEnabled();
     fireEvent.click(screen.getByRole('button', { name: 'Vazgeç' }));
     expect(api.deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('moves between members in the list order and closes with Escape', async () => {
+    open('users');
+    fireEvent.click((await screen.findAllByRole('button', { name: 'Ayşe Planlı detaylarını aç' }))[0]);
+    const first = screen.getByRole('complementary', { name: 'Ayşe Planlı' });
+    fireEvent.click(within(first).getByRole('button', { name: 'Sonraki üye' }));
+    expect(await screen.findByRole('complementary', { name: 'Mert Plansız' })).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: 'ArrowUp' });
+    expect(await screen.findByRole('complementary', { name: 'Ayşe Planlı' })).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(screen.queryByRole('complementary', { name: 'Ayşe Planlı' })).not.toBeInTheDocument());
   });
 
   it('keeps unsaved review notes when refreshing all sections', async () => {

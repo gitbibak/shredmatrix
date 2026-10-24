@@ -32,13 +32,22 @@ export async function verifyAdminAccess() {
 // Read every page in a stable primary-key order instead of silently accepting
 // the API's row limit. A changing count or overlapping page requires a refresh.
 async function readAllAdminRows(table, columns, configure = (query) => query, keys = ['id']) {
-  const pageSize = 500;
   const selected = columns.trim() === '*' ? '*' : [...new Set([...keys, ...columns.split(',').map((column) => column.trim())])].join(', ');
+  return readAllPages(() => configure(supabase.from(table).select(selected, { count: 'exact' })), keys);
+}
+
+// Same paging guarantees for admin-only RPCs that return a table.
+async function readAllRpcRows(fn, args, keys) {
+  return readAllPages(() => supabase.rpc(fn, args, { count: 'exact' }), keys);
+}
+
+async function readAllPages(makeQuery, keys) {
+  const pageSize = 500;
   const rows = [];
   const seen = new Set();
   let expectedCount;
   while (true) {
-    let query = configure(supabase.from(table).select(selected, { count: 'exact' }));
+    let query = makeQuery();
     keys.forEach((key) => { query = query.order(key, { ascending: true }); });
     const { data, count, error } = await query.range(rows.length, rows.length + pageSize - 1);
     if (error) throw error;
@@ -73,8 +82,29 @@ export const ADMIN_EVENT_NAMES = Object.freeze([
   'meditation_completed', 'invite_sent', 'workout_session_started', 'workout_session_completed',
 ]);
 
-const PROFILE_COLUMNS = 'id, name, email, created_at, role, app_language, acquisition_source, acquisition_campaign, acquisition_content, landing_path, plan_created_at';
-const PLAN_COLUMNS = 'user_id, goal:plan_data->>goal, primary_goal:plan_data->>primaryGoal, experience:plan_data->>userExperience, environment:plan_data->>trainingEnvironment, gender:plan_data->>userGender, age:plan_data->>userAge';
+const PROFILE_COLUMNS = 'id, name, email, created_at, role, app_language, browser_locale, time_zone, acquisition_source, acquisition_medium, acquisition_campaign, acquisition_content, acquisition_term, landing_path, first_landing_page, plan_created_at, first_login_at, referral_code, referred_by_code';
+const PLAN_COLUMNS = 'user_id, goal:plan_data->>goal, primary_goal:plan_data->>primaryGoal, experience:plan_data->>userExperience, environment:plan_data->>trainingEnvironment, gender:plan_data->>userGender, age:plan_data->>userAge, height:plan_data->>userHeight, weight:plan_data->>userWeight, target_weight:plan_data->>userTargetWeight, body_fat:plan_data->>userBodyFat, activity_level:plan_data->>userActivityLevel, phase:plan_data->>phase, calories:plan_data->>dailyCalories, training_days:plan_data->>trainingDaysPerWeek, plan_lang:plan_data->>lang';
+
+// Workout, weight, water and sleep rows are readable only by their owner, so
+// the panel reads them through admin-only database functions
+// (supabase/migrations/20261025120000_admin_member_insights.sql). Until those
+// exist the panel shows "—" instead of a misleading 0.
+function isMissingFunction(error) {
+  return ['PGRST202', '42883'].includes(error?.code) || /could not find the function|does not exist/i.test(error?.message || '');
+}
+
+async function readMemberInsights(since30, since32) {
+  try {
+    const [activity, workoutDays] = await Promise.all([
+      readAllRpcRows('admin_member_activity', { p_since: since30 }, ['user_id']),
+      readAllRpcRows('admin_workout_days', { p_since: since32 }, ['user_id', 'date']),
+    ]);
+    return { available: true, memberActivity: activity.data, workouts: workoutDays.data };
+  } catch (error) {
+    if (isMissingFunction(error)) return { available: false, memberActivity: [], workouts: [] };
+    throw error;
+  }
+}
 
 export async function getAdminSnapshot(now = new Date()) {
   if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
@@ -83,13 +113,13 @@ export async function getAdminSnapshot(now = new Date()) {
     date.setUTCDate(date.getUTCDate() - days);
     return date;
   };
-  const [profiles, plans, activity, workouts, events] = await Promise.all([
+  const [profiles, plans, activity, insights, events] = await Promise.all([
     readAllAdminRows('profiles', PROFILE_COLUMNS),
     readAllAdminRows('plans', PLAN_COLUMNS),
     readAllAdminRows('user_activity_days',
       'user_id, activity_date, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed',
       (query) => query.gte('activity_date', utcDateKey(daysAgo(62))), ['user_id', 'activity_date']),
-    readAllAdminRows('workout_logs', 'user_id, date', (query) => query.gte('date', utcDateKey(daysAgo(32)))),
+    readMemberInsights(utcDateKey(daysAgo(30)), utcDateKey(daysAgo(32))),
     readAllAdminRows('growth_events', 'user_id, event_name, occurred_at, properties',
       (query) => query.gte('occurred_at', daysAgo(32).toISOString()).in('event_name', ADMIN_EVENT_NAMES)),
   ]);
@@ -98,8 +128,31 @@ export async function getAdminSnapshot(now = new Date()) {
     profiles: profiles.data,
     plans: plans.data,
     activity: activity.data,
-    workouts: workouts.data,
+    workouts: insights.workouts,
+    memberActivity: insights.memberActivity,
+    insightsAvailable: insights.available,
     events: events.data,
+  };
+}
+
+// ── Üye detayı (yan panel) ───────────────────────────────────
+// Panel açıldığında tek üye için okunur: planın tamamı, antrenman geçmişi,
+// kilo/ölçüm, su/uyku ve destek talepleri.
+export async function getMemberDetail(userId) {
+  if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
+  const [plan, detail, tickets] = await Promise.all([
+    supabase.from('plans').select('plan_data, created_at').eq('user_id', userId).maybeSingle(),
+    supabase.rpc('admin_member_detail', { p_user: userId }),
+    supabase.from('support_tickets').select('id, created_at, subject, category, status').eq('user_id', userId).order('created_at', { ascending: false }).limit(10),
+  ]);
+  if (plan.error) throw plan.error;
+  if (tickets.error) throw tickets.error;
+  if (detail.error && !isMissingFunction(detail.error)) throw detail.error;
+  return {
+    plan: plan.data?.plan_data || null,
+    planCreatedAt: plan.data?.created_at || null,
+    activity: detail.error ? null : detail.data,
+    tickets: tickets.data || [],
   };
 }
 

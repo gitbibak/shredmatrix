@@ -116,13 +116,37 @@ describe('buildAdminMetrics', () => {
 
 describe('buildUserRows', () => {
   it('lists newest members first with plan, activity and attribution', () => {
-    const rows = buildUserRows(snapshot());
+    const rows = buildUserRows({
+      ...snapshot(),
+      insightsAvailable: true,
+      memberActivity: [{ user_id: 'old', total_workouts: 9, recent_workouts: 2, last_workout: '2026-10-16', water_days: 3, sleep_days: 0, last_weight: 81.5 }],
+    });
     expect(rows[0].id).toBe('today');
     const old = rows.find(({ id }) => id === 'old');
-    expect(old).toMatchObject({ hasPlan: true, lastActive: '2026-10-17', activeDays: 2, workouts: 2, sourceLabel: 'Bilinmiyor' });
+    expect(old).toMatchObject({
+      hasPlan: true, lastActive: '2026-10-17', activeDays: 2, workouts: 2, totalWorkouts: 9,
+      lastWorkout: '2026-10-16', waterDays: 3, lastWeight: 81.5, sourceLabel: 'Bilinmiyor',
+    });
+    expect(rows.find(({ id }) => id === 'today')).toMatchObject({ workouts: 0, totalWorkouts: 0 });
     expect(old.plan).toMatchObject({ goal: 'Kas gelişimi', experience: 'Temel', environment: 'Salon', age: 41 });
     expect(rows.find(({ id }) => id === 'admin').isAdmin).toBe(true);
     expect(rows.find(({ id }) => id === 'today').hasPlan).toBe(false);
+  });
+
+  it('shows unknown instead of zero when member activity cannot be read', () => {
+    const rows = buildUserRows({ ...snapshot(), insightsAvailable: false, memberActivity: [] });
+    expect(rows.find(({ id }) => id === 'old')).toMatchObject({ workouts: null, totalWorkouts: null, insightsAvailable: false });
+  });
+
+  it('reads body and plan details from the plan fields', () => {
+    const base = snapshot();
+    const rows = buildUserRows({
+      ...base,
+      plans: [{ user_id: 'old', goal: 'Fat Loss', height: '178', weight: '82.5', target_weight: '', body_fat: null, activity_level: 'moderate', phase: '1', calories: '2150', training_days: '4' }],
+    });
+    expect(rows.find(({ id }) => id === 'old').plan).toMatchObject({
+      goal: 'Yağ yakımı', height: 178, weight: 82.5, targetWeight: null, bodyFat: null, activityLevel: 'Orta', phase: 1, calories: 2150, trainingDays: 4,
+    });
   });
 });
 

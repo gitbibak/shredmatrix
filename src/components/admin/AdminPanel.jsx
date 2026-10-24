@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  AlertCircle, ArrowLeft, ClipboardCheck, Home, MessageSquare, RefreshCw, Shield, TrendingUp, Users,
+  AlertCircle, ArrowLeft, BarChart3, MessageSquare, RefreshCw, Shield, Users,
 } from 'lucide-react';
 import {
   deleteUser, getAdminSnapshot, getAdminTestimonials, getContentReviews, getSupportStats, getSupportTickets,
@@ -10,28 +10,37 @@ import {
 import { buildAdminMetrics, buildUserRows } from '../../lib/adminMetrics';
 import AdminDialog from './AdminDialog';
 import TodaySection from './TodaySection';
-import UsersSection, { DEFAULT_USER_FILTERS, UserDetailDialog } from './UsersSection';
+import UsersSection, { DEFAULT_USER_FILTERS } from './UsersSection';
+import MemberPanel from './MemberPanel';
 import GrowthSection from './GrowthSection';
 import SupportSection from './SupportSection';
 import ContentSection from './ContentSection';
+import { SegmentedControl } from './adminUi';
 
 const SECTIONS = [
-  { id: 'today', label: 'Bugün', icon: Home, description: 'Günlük durum ve yapılacaklar' },
-  { id: 'users', label: 'Kullanıcılar', icon: Users, description: 'Üyeleri ara, filtrele ve incele' },
-  { id: 'growth', label: 'Büyüme', icon: TrendingUp, description: 'Kaynaklar, kullanım ve geri dönüş' },
-  { id: 'support', label: 'Destek', icon: MessageSquare, description: 'Kullanıcı talepleri' },
-  { id: 'content', label: 'İçerik', icon: ClipboardCheck, description: 'Yorum onayı ve uzman incelemeleri' },
+  { id: 'users', label: 'Kullanıcılar', icon: Users, description: 'Üyeleri bul, sırala ve tüm bilgilerini gör' },
+  { id: 'overview', label: 'Özet', icon: BarChart3, description: 'Günlük durum, kaynaklar ve büyüme' },
+  { id: 'support', label: 'Destek', icon: MessageSquare, description: 'Talepler, yorumlar ve içerik incelemeleri' },
 ];
-// Eski bağlantılar (?tab=dashboard vb.) yeni bölümlere yönlenir.
-const LEGACY_TABS = { dashboard: 'today', analytics: 'growth', activity: 'growth', quality: 'content' };
+// Eski bağlantılar (?tab=today, ?tab=content vb.) yeni bölümlere yönlenir.
+const LEGACY_TABS = {
+  today: ['overview'], dashboard: ['overview'], growth: ['overview'], analytics: ['overview'], activity: ['overview'],
+  content: ['support', 'reviews'], quality: ['support', 'reviews'],
+};
 const FILTER_KEYS = Object.keys(DEFAULT_USER_FILTERS);
+// Eski "plan=none" bağlantısı hızlı görünüme çevrilir.
+const legacyFilter = (params) => (params.get('plan') === 'none' && !params.get('view') ? { view: 'noplan' } : {});
 
 export default function AdminPanel({ user }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const requested = searchParams.get('tab');
-  const activeTab = SECTIONS.some(({ id }) => id === requested) ? requested : LEGACY_TABS[requested] || 'today';
-  const userFilters = useMemo(() => Object.fromEntries(FILTER_KEYS.map((key) => [key, searchParams.get(key) ?? DEFAULT_USER_FILTERS[key]])), [searchParams]);
+  const activeTab = SECTIONS.some(({ id }) => id === requested) ? requested : LEGACY_TABS[requested]?.[0] || 'users';
+  const supportView = searchParams.get('view') === 'reviews' || LEGACY_TABS[requested]?.[1] === 'reviews' ? 'reviews' : 'tickets';
+  const userFilters = useMemo(() => ({
+    ...Object.fromEntries(FILTER_KEYS.map((key) => [key, searchParams.get(key) ?? DEFAULT_USER_FILTERS[key]])),
+    ...legacyFilter(searchParams),
+  }), [searchParams]);
 
   const [accessState, setAccessState] = useState('checking');
   const isAllowed = accessState === 'allowed';
@@ -53,6 +62,7 @@ export default function AdminPanel({ user }) {
   const [refreshing, setRefreshing] = useState(false);
   const [updatingId, setUpdatingId] = useState(null);
   const [detailUserId, setDetailUserId] = useState(null);
+  const [detailOrder, setDetailOrder] = useState([]);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -144,6 +154,21 @@ export default function AdminPanel({ user }) {
     return () => window.removeEventListener('beforeunload', warn);
   }, [hasDrafts]);
 
+  // Yan panel açıkken: Esc kapatır, ↑/↓ veya k/j önceki/sonraki üyeye geçer.
+  useEffect(() => {
+    if (!detailUserId) return undefined;
+    const onKey = (event) => {
+      if (event.target?.closest?.('input, textarea, select, dialog')) return;
+      if (event.key === 'Escape') setDetailUserId(null);
+      const step = { ArrowDown: 1, j: 1, ArrowUp: -1, k: -1 }[event.key];
+      if (!step) return;
+      const nextId = detailOrder[detailOrder.indexOf(detailUserId) + step];
+      if (nextId) { event.preventDefault(); setDetailUserId(nextId); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [detailUserId, detailOrder]);
+
   const metrics = useMemo(() => (snapshot ? buildAdminMetrics(snapshot, { period }) : null), [snapshot, period]);
   const userRows = useMemo(() => (snapshot ? buildUserRows(snapshot) : null), [snapshot]);
   const today = metrics?.today;
@@ -172,12 +197,14 @@ export default function AdminPanel({ user }) {
   const section = SECTIONS.find(({ id }) => id === activeTab);
   const adminName = user?.name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Yönetici';
   const errorMessage = Object.values(errors).filter(Boolean).join(' ');
-  const badges = { support: supportStats?.open || 0, content: testimonials.length };
+  const badges = { support: (supportStats?.open || 0) + testimonials.length };
 
-  const go = (tab, params = {}) => {
+  const go = (target, params = {}) => {
     setNotice('');
+    const [tab, view] = LEGACY_TABS[target] || [target];
     setSearchParams(() => {
       const next = new URLSearchParams({ tab });
+      if (view) next.set('view', view);
       Object.entries(params).forEach(([key, value]) => next.set(key, value));
       return next;
     });
@@ -269,6 +296,15 @@ export default function AdminPanel({ user }) {
   };
 
   const detailRow = detailUserId ? userRows?.find((row) => row.id === detailUserId) : null;
+  const detailIndex = detailRow ? detailOrder.indexOf(detailRow.id) : -1;
+  const openUser = (id, order) => {
+    setDetailOrder(order?.length ? order : (userRows || []).map((row) => row.id));
+    setDetailUserId(id);
+  };
+  const stepUser = (step) => {
+    const nextId = detailOrder[detailIndex + step];
+    if (nextId) setDetailUserId(nextId);
+  };
 
   return (
     <div className="admin-panel min-h-dvh bg-slate-950 text-white lg:flex">
@@ -283,7 +319,7 @@ export default function AdminPanel({ user }) {
             <span className="block text-xs text-slate-400">Yönetim</span>
           </span>
         </div>
-        <nav aria-label="Yönetim bölümleri" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-slate-800 bg-slate-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:static lg:flex lg:flex-1 lg:flex-col lg:gap-1 lg:border-0 lg:bg-transparent lg:p-3 lg:pb-3">
+        <nav aria-label="Yönetim bölümleri" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t border-slate-800 bg-slate-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:static lg:flex lg:flex-1 lg:flex-col lg:gap-1 lg:border-0 lg:bg-transparent lg:p-3 lg:pb-3">
           {SECTIONS.map(({ id, label, icon: Icon }) => (
             <button
               key={id} type="button" aria-current={activeTab === id ? 'page' : undefined} onClick={() => go(id)}
@@ -309,9 +345,9 @@ export default function AdminPanel({ user }) {
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1 pb-24 lg:pb-0 lg:pl-60">
+      <div className={`min-w-0 flex-1 pb-24 lg:pb-0 lg:pl-60 ${detailRow ? 'xl:pr-[440px]' : ''}`}>
         {/* #root'taki overflow-x:hidden "sticky"yi bozduğu için başlık fixed; altındaki boşluk yerini tutar. */}
-        <header className="fixed inset-x-0 top-0 z-30 h-16 border-b border-slate-800/70 bg-slate-950/90 backdrop-blur-xl lg:left-60">
+        <header className={`fixed inset-x-0 top-0 z-30 h-16 border-b border-slate-800/70 bg-slate-950/90 backdrop-blur-xl lg:left-60 ${detailRow ? 'xl:right-[440px]' : ''}`}>
           <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-3 px-4 lg:px-8">
             <div className="flex min-w-0 items-center gap-2">
               <button type="button" onClick={() => navigate('/dashboard')} aria-label="Uygulamaya dön" className="grid min-h-9 min-w-9 place-items-center rounded-lg text-slate-400 hover:text-white lg:hidden"><ArrowLeft size={18} /></button>
@@ -341,44 +377,62 @@ export default function AdminPanel({ user }) {
             </div>
           )}
 
-          {activeTab === 'today' && (
-            <TodaySection
-              metrics={metrics} users={userRows} supportStats={supportStats} pendingTestimonials={testimonials.length}
-              loading={loading.snapshot} onNavigate={go} onOpenUser={setDetailUserId}
+          {activeTab === 'users' && (
+            <UsersSection
+              rows={userRows} loading={loading.snapshot} today={today} metrics={metrics}
+              filters={userFilters} onFiltersChange={setUserFilters} onOpenUser={openUser} selectedId={detailUserId}
             />
           )}
-          {activeTab === 'users' && (
-            <UsersSection rows={userRows} loading={loading.snapshot} today={today} filters={userFilters} onFiltersChange={setUserFilters} onOpenUser={setDetailUserId} />
-          )}
-          {activeTab === 'growth' && (
-            <GrowthSection metrics={metrics} period={period} onPeriodChange={setPeriod} loading={loading.snapshot} />
+          {activeTab === 'overview' && (
+            <div className="space-y-8">
+              <TodaySection
+                metrics={metrics} users={userRows} supportStats={supportStats} pendingTestimonials={testimonials.length}
+                loading={loading.snapshot} onNavigate={go} onOpenUser={(id) => openUser(id)}
+              />
+              <div>
+                <h2 className="mb-4 font-outfit text-lg font-bold text-white">Büyüme</h2>
+                <GrowthSection metrics={metrics} period={period} onPeriodChange={setPeriod} loading={loading.snapshot} />
+              </div>
+            </div>
           )}
           {activeTab === 'support' && (
-            <SupportSection
-              stats={supportStats} tickets={visibleTickets} filter={supportFilter} onFilterChange={setSupportFilter}
-              search={supportSearch} onSearchChange={setSupportSearch} notes={supportNotes}
-              onNoteChange={(id, value) => { dirtyNotes.current.add(id); setSupportNotes((notes) => ({ ...notes, [id]: value })); }}
-              onStatusChange={(ticket, status) => updateTicket(ticket, { status }, 'Destek kaydı güncellendi.')}
-              onSaveNote={(ticket) => updateTicket(ticket, { admin_note: noteFor(ticket) || null }, 'Yanıt kaydedildi.')}
-              onResolve={handleResolve} busy={busy} loading={loading.support} error={errors.support}
-            />
-          )}
-          {activeTab === 'content' && (
-            <ContentSection
-              testimonials={testimonials} reviews={contentReviews} drafts={qualityDrafts}
-              onDraftChange={(id, field, value) => { dirtyReviews.current.add(id); setQualityDrafts((items) => ({ ...items, [id]: { ...(items[id] || {}), [field]: value } })); }}
-              onReviewSave={handleReviewSave} onTestimonialStatus={handleTestimonialStatus}
-              busy={busy} loading={loading.quality} error={errors.quality}
-            />
+            <div className="space-y-4">
+              <SegmentedControl
+                label="Destek görünümü" value={supportView}
+                onChange={(view) => go('support', view === 'reviews' ? { view } : {})}
+                options={[['tickets', `Talepler${supportStats?.open ? ` (${supportStats.open})` : ''}`], ['reviews', `Yorumlar ve incelemeler${testimonials.length ? ` (${testimonials.length})` : ''}`]]}
+              />
+              {supportView === 'tickets' ? (
+                <SupportSection
+                  stats={supportStats} tickets={visibleTickets} filter={supportFilter} onFilterChange={setSupportFilter}
+                  search={supportSearch} onSearchChange={setSupportSearch} notes={supportNotes}
+                  onNoteChange={(id, value) => { dirtyNotes.current.add(id); setSupportNotes((notes) => ({ ...notes, [id]: value })); }}
+                  onStatusChange={(ticket, status) => updateTicket(ticket, { status }, 'Destek kaydı güncellendi.')}
+                  onSaveNote={(ticket) => updateTicket(ticket, { admin_note: noteFor(ticket) || null }, 'Yanıt kaydedildi.')}
+                  onResolve={handleResolve} busy={busy} loading={loading.support} error={errors.support}
+                />
+              ) : (
+                <ContentSection
+                  testimonials={testimonials} reviews={contentReviews} drafts={qualityDrafts}
+                  onDraftChange={(id, field, value) => { dirtyReviews.current.add(id); setQualityDrafts((items) => ({ ...items, [id]: { ...(items[id] || {}), [field]: value } })); }}
+                  onReviewSave={handleReviewSave} onTestimonialStatus={handleTestimonialStatus}
+                  busy={busy} loading={loading.quality} error={errors.quality}
+                />
+              )}
+            </div>
           )}
         </main>
       </div>
 
       {detailRow && (
-        <UserDetailDialog
+        <MemberPanel
+          key={detailRow.id}
           row={detailRow} today={today} onClose={() => setDetailUserId(null)}
+          position={detailIndex >= 0 ? { index: detailIndex, total: detailOrder.length } : null}
+          onPrev={detailIndex > 0 ? () => stepUser(-1) : null}
+          onNext={detailIndex >= 0 && detailIndex < detailOrder.length - 1 ? () => stepUser(1) : null}
           deleteDisabled={busy || detailRow.isAdmin || detailRow.id === user?.id}
-          onRequestDelete={() => { setDetailUserId(null); setDeleteConfirmation(''); setDeleteTarget(detailRow); }}
+          onRequestDelete={() => { setDeleteConfirmation(''); setDeleteTarget(detailRow); }}
         />
       )}
 

@@ -45,6 +45,9 @@ const GOAL_LABELS = {
 };
 const EXPERIENCE_LABELS = { beginner: 'Temel', intermediate: 'Orta', advanced: 'İleri', expert: 'Usta' };
 const GENDER_LABELS = { male: 'Erkek', erkek: 'Erkek', female: 'Kadın', kadın: 'Kadın', kadin: 'Kadın' };
+const ACTIVITY_LABELS = {
+  sedentary: 'Hareketsiz', light: 'Az hareketli', moderate: 'Orta', active: 'Aktif', athlete: 'Sporcu',
+};
 const ENVIRONMENT_LABELS = {
   gym: 'Salon', home_basic: 'Ev · dambıl + bant', home_bodyweight: 'Ev · ekipmansız',
   studio: 'Stüdyo reformer', home_reformer: 'Ev reformer',
@@ -62,6 +65,12 @@ export const experienceLabel = labelFrom(EXPERIENCE_LABELS);
 export const genderLabel = labelFrom(GENDER_LABELS);
 export const environmentLabel = labelFrom(ENVIRONMENT_LABELS);
 export const languageLabel = labelFrom(LANGUAGE_LABELS);
+export const activityLabel = labelFrom(ACTIVITY_LABELS);
+
+const toNumber = (value) => {
+  const number = Number(value);
+  return value == null || value === '' || !Number.isFinite(number) ? null : number;
+};
 
 // ── Geri dönüş (D1/D7) ───────────────────────────────────────
 // user_activity_days.activity_date sunucu (UTC) günüdür; bu yüzden UTC ile ölçülür.
@@ -304,6 +313,8 @@ export function buildAdminMetrics(snapshot = {}, { period = 7 } = {}) {
 /** Kullanıcı tablosu satırları: en yeni kayıt önce. */
 export function buildUserRows(snapshot = {}) {
   const data = prepare(snapshot);
+  const insights = snapshot.insightsAvailable !== false && Array.isArray(snapshot.memberActivity);
+  const memberActivity = new Map((snapshot.memberActivity || []).map((row) => [row.user_id, row]));
   const plansById = new Map(data.plans.map((plan) => [plan.user_id, plan]));
   const lastActive = new Map();
   const activeDays = new Map();
@@ -313,12 +324,14 @@ export function buildUserRows(snapshot = {}) {
     if (!lastActive.has(userId) || lastActive.get(userId) < day) lastActive.set(userId, day);
     activeDays.set(userId, (activeDays.get(userId) || 0) + 1);
   });
-  const workoutCount = new Map();
-  data.workouts.forEach(({ user_id: userId }) => workoutCount.set(userId, (workoutCount.get(userId) || 0) + 1));
+  // Plans are filtered to members in prepare(); admins keep their own plan here.
+  (snapshot.plans || []).forEach((plan) => { if (!plansById.has(plan.user_id)) plansById.set(plan.user_id, plan); });
 
   return (snapshot.profiles || [])
     .map((profile) => {
       const plan = plansById.get(profile.id);
+      const usage = memberActivity.get(profile.id);
+      const count = (value) => (insights ? toNumber(value) ?? 0 : null);
       return {
         id: profile.id,
         name: profile.name || '',
@@ -330,20 +343,46 @@ export function buildUserRows(snapshot = {}) {
         language: profile.app_language || null,
         source: profile.acquisition_source ? String(profile.acquisition_source).toLowerCase() : null,
         sourceLabel: sourceLabel(profile.acquisition_source),
+        medium: profile.acquisition_medium || null,
         campaign: profile.acquisition_campaign || null,
         content: profile.acquisition_content || null,
+        term: profile.acquisition_term || null,
         landing: profile.landing_path || null,
+        firstLanding: profile.first_landing_page || null,
+        browserLocale: profile.browser_locale || null,
+        timeZone: profile.time_zone || null,
+        firstLoginAt: profile.first_login_at || null,
+        planCreatedAt: profile.plan_created_at || null,
+        referralCode: profile.referral_code || null,
+        referredBy: profile.referred_by_code || null,
         hasPlan: Boolean(plan),
+        goalKey: plan ? String(plan.primary_goal || plan.goal || '') : null,
         plan: plan ? {
           goal: goalLabel(plan.goal || plan.primary_goal),
           experience: experienceLabel(plan.experience),
           environment: environmentLabel(plan.environment),
           gender: genderLabel(plan.gender),
-          age: Number.isInteger(Number(plan.age)) ? Number(plan.age) : null,
+          age: Number.isInteger(Number(plan.age)) && Number(plan.age) > 0 ? Number(plan.age) : null,
+          height: toNumber(plan.height),
+          weight: toNumber(plan.weight),
+          targetWeight: toNumber(plan.target_weight),
+          bodyFat: toNumber(plan.body_fat),
+          activityLevel: plan.activity_level ? activityLabel(plan.activity_level) : null,
+          phase: toNumber(plan.phase),
+          calories: toNumber(plan.calories),
+          trainingDays: toNumber(plan.training_days),
+          language: plan.plan_lang || null,
         } : null,
         lastActive: lastActive.get(profile.id) || null,
         activeDays: activeDays.get(profile.id) || 0,
-        workouts: workoutCount.get(profile.id) || 0,
+        insightsAvailable: insights,
+        workouts: count(usage?.recent_workouts),
+        totalWorkouts: count(usage?.total_workouts),
+        lastWorkout: usage?.last_workout || null,
+        waterDays: count(usage?.water_days),
+        sleepDays: count(usage?.sleep_days),
+        lastWeight: toNumber(usage?.last_weight),
+        lastWeightDate: usage?.last_weight_date || null,
       };
     })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
