@@ -432,11 +432,11 @@ function AppContent() {
     // before a translation was added. Re-translate the visible text only; the
     // exercises and any adaptations stay exactly as saved.
     const planLang = savedPlan.lang || lang;
-    if (planLang && planLang !== 'tr' && TURKISH_TEXT.test(JSON.stringify(savedPlan.workoutSplit || []))) {
+    if (planLang && planLang !== 'tr' && TURKISH_TEXT.test(JSON.stringify([savedPlan.workoutSplit || [], (savedPlan.dailyNutrition || []).map((day) => day.focus)]))) {
       const { localizePlan } = await loadPlanEngine();
-      const workoutSplit = localizePlan(savedPlan, planLang).workoutSplit;
-      if (JSON.stringify(workoutSplit) !== JSON.stringify(savedPlan.workoutSplit)) {
-        const translated = { ...savedPlan, workoutSplit };
+      const { workoutSplit, dailyNutrition } = localizePlan(savedPlan, planLang);
+      if (JSON.stringify([workoutSplit, dailyNutrition]) !== JSON.stringify([savedPlan.workoutSplit, savedPlan.dailyNutrition])) {
+        const translated = { ...savedPlan, workoutSplit, ...(dailyNutrition ? { dailyNutrition } : {}) };
         setPlan(translated);
         savePlan(translated, email).catch(() => {});
         return translated;

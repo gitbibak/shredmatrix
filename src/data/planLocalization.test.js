@@ -19,6 +19,7 @@ function leftovers(lang) {
         age: 30, gender: 'female', height: 170, weight: 65, experience, activityLevel: 'moderate',
         primaryGoal: goal, trainingEnvironment: environment, healthConditions: ['none'], allergies: ['none'],
       }, phase, lang), lang);
+      (plan.dailyNutrition || []).forEach((day) => { if (TURKISH.test(day.focus || '')) found.add(day.focus); });
       plan.workoutSplit.forEach((day) => {
         [day.day, day.focus].forEach((text) => { if (TURKISH.test(text)) found.add(text); });
         [...(day.exercises || []), ...(day.coreFinisher || [])].forEach((exercise) => {

@@ -269,7 +269,8 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
                 </button>
               )}
             </div>
-            {info?.tip && <p className="mt-3 text-xs leading-relaxed text-slate-500">💡 {info.tip}</p>}
+            {/* exerciseDatabase tips are written in Turkish only so far. */}
+            {lang === 'tr' && info?.tip && <p className="mt-3 text-xs leading-relaxed text-slate-500">💡 {info.tip}</p>}
             {exercise.timed && <p className="mt-3 text-xs text-slate-500">{s('timedHint')}</p>}
 
             <div className="mt-4 space-y-2">

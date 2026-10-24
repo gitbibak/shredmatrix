@@ -3728,7 +3728,7 @@ export function localizePlan(plan, lang) {
     dailyNutrition: plan.dailyNutrition?.map(dn => ({
       ...dn,
       day: dMap[dn.day] || dn.day,
-      focus: fMap[dn.focus] || dn.focus,
+      focus: fMap[dn.focus] || localizeHomeFocus(dn.focus, lang),
     })),
   };
 }

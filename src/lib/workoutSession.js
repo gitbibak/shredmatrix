@@ -68,7 +68,8 @@ export function buildPreviousPerformance(logs = []) {
 function sessionExercise(exercise, section, previous, tracksLoad) {
   const target = parseRepTarget(exercise.reps);
   const last = previous[normalizeName(exercise.name)] || null;
-  const usesWeight = tracksLoad && !target.timed && exercise.equipment !== 'none';
+  // Bodyweight and band work are counted in reps; only external loads get a kg field.
+  const usesWeight = tracksLoad && !target.timed && !['none', 'resistance_band', 'stable_surface'].includes(exercise.equipment);
   return {
     name: exercise.name,
     ...(exercise.sourceName ? { sourceName: exercise.sourceName } : {}),

@@ -57,6 +57,15 @@ describe('buildSession', () => {
     expect(plank).toMatchObject({ section: 'core', timed: true, usesWeight: false });
   });
 
+  it('counts band and bodyweight work in reps only', () => {
+    const session = buildSession({ focus: 'x', exercises: [
+      { name: 'Resistance Band Row', sets: 3, reps: '12', rest: '60s', equipment: 'resistance_band' },
+      { name: 'Incline Push-Up', sets: 3, reps: '10', rest: '60s', equipment: 'stable_surface' },
+      { name: 'Goblet Squat', sets: 3, reps: '10', rest: '60s', equipment: 'dumbbell' },
+    ] });
+    expect(session.exercises.map((exercise) => exercise.usesWeight)).toEqual([false, false, true]);
+  });
+
   it('skips load tracking for mobility style modules', () => {
     const session = buildSession(day, { tracksLoad: false });
     expect(session.exercises.every((exercise) => !exercise.usesWeight)).toBe(true);
