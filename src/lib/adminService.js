@@ -36,9 +36,26 @@ async function readAllAdminRows(table, columns, configure = (query) => query, ke
   return readAllPages(() => configure(supabase.from(table).select(selected, { count: 'exact' })), keys);
 }
 
-// Same paging guarantees for admin-only RPCs that return a table.
+// Admin-only RPCs that return a table. Functions do not reliably report a total
+// count, so pages are read in key order until a short page arrives.
 async function readAllRpcRows(fn, args, keys) {
-  return readAllPages(() => supabase.rpc(fn, args, { count: 'exact' }), keys);
+  const pageSize = 500;
+  const rows = [];
+  const seen = new Set();
+  while (true) {
+    let query = supabase.rpc(fn, args);
+    keys.forEach((key) => { query = query.order(key, { ascending: true }); });
+    const { data, error } = await query.range(rows.length, rows.length + pageSize - 1);
+    if (error) throw error;
+    const page = data || [];
+    for (const row of page) {
+      const identity = JSON.stringify(keys.map((key) => row[key]));
+      if (seen.has(identity)) throw new Error(`${fn} returned a duplicate row.`);
+      seen.add(identity);
+      rows.push(row);
+    }
+    if (page.length < pageSize) return { data: rows };
+  }
 }
 
 async function readAllPages(makeQuery, keys) {
@@ -101,8 +118,9 @@ async function readMemberInsights(since30, since32) {
     ]);
     return { available: true, memberActivity: activity.data, workouts: workoutDays.data };
   } catch (error) {
-    if (isMissingFunction(error)) return { available: false, memberActivity: [], workouts: [] };
-    throw error;
+    // Members, plans and sign-ups must still load if activity cannot be read.
+    if (!isMissingFunction(error)) console.error('[Admin] Member activity error:', error);
+    return { available: false, memberActivity: [], workouts: [] };
   }
 }
 

@@ -210,7 +210,8 @@ function windowStats(data, days, offset = 0) {
     planRate: percent(withPlan, registrations.length),
     active: activeIds.size,
     returning: [...activeIds].filter((id) => (signupDay.get(id) || '') < start).length,
-    workouts: workoutRows.length,
+    // admin_workout_days returns one row per member and day with a count.
+    workouts: workoutRows.reduce((sum, row) => sum + (Number(row.workouts) || 1), 0),
     workoutUsers: new Set(workoutRows.map(({ user_id: userId }) => userId)).size,
     photos: eventCount('meal_photo_analyzed'),
     photoFailures: eventCount('meal_photo_analysis_failed'),

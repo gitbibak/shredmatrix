@@ -70,6 +70,13 @@ describe('buildAdminMetrics', () => {
     expect(metrics.windows.yesterday.returning).toBe(1);
   });
 
+  it('counts several workouts logged on the same day', () => {
+    const base = snapshot();
+    const metrics = buildAdminMetrics({ ...base, workouts: [{ user_id: base.workouts[0].user_id, date: base.workouts[0].date, workouts: 3 }] });
+    expect(metrics.windows.last7.workouts).toBe(3);
+    expect(metrics.windows.last7.workoutUsers).toBe(1);
+  });
+
   it('measures activity, workouts and events inside the window only', () => {
     expect(metrics.windows.last7).toMatchObject({ workoutUsers: 1, photos: 1 });
     expect(metrics.windows.last7.funnel).toMatchObject({ opened: 2, todayViewed: 2, completed: 1 });

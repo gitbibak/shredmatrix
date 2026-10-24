@@ -158,6 +158,22 @@ describe('admin snapshot reads', () => {
     expect(snapshot.workouts).toEqual(rpcRows.admin_workout_days);
   });
 
+  it('still loads members when member activity fails to read', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mocks.rpc.mockImplementation(() => {
+      const q = { order: vi.fn(() => q), range: () => Promise.resolve({ error: new Error('timeout') }) };
+      return q;
+    });
+    mocks.from.mockImplementation((table) => {
+      const q = dataQuery({ data: [], count: 0, error: null });
+      q.range = () => Promise.resolve(table === 'profiles' ? { data: [{ id: 'a' }], count: 1, error: null } : { data: [], count: 0, error: null });
+      return q;
+    });
+    const snapshot = await getAdminSnapshot(new Date('2026-10-18T09:00:00Z'));
+    expect(snapshot.profiles).toHaveLength(1);
+    expect(snapshot.insightsAvailable).toBe(false);
+  });
+
   it('marks member activity unavailable instead of zero before the functions exist', async () => {
     mocks.rpc.mockImplementation(() => {
       const q = { order: vi.fn(() => q), range: () => Promise.resolve({ error: { code: 'PGRST202', message: 'Could not find the function' } }) };
