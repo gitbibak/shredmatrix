@@ -19,6 +19,7 @@ import {
   clearSessionDraft,
   findRecords,
   loadSessionDraft,
+  sessionProgressBucket,
   sessionToLogEntry,
 } from '../lib/workoutSession';
 const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
@@ -575,8 +576,16 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
 
   // Shared by the guided session and the quick log: persist, celebrate and
   // open the feedback sheet.
-  const finalizeWorkout = async (entry, { source, mode, exercises, sets, minutes = 45, volume = 0, records = [] }) => {
-    const savedLog = await saveWorkoutLog(entry);
+  const finalizeWorkout = async (entry, { source, mode, exercises, sets, minutes = 45, volume = 0, records = [], progressBucket }) => {
+    let savedLog;
+    try {
+      savedLog = await saveWorkoutLog(entry);
+    } catch (error) {
+      if (mode === 'guided') {
+        trackEvent('workout_session_save_failed', { progressBucket, reason: 'save' });
+      }
+      throw error;
+    }
     setCompletedDays((prev) => ({ ...prev, [entry.dayFocus]: true }));
     setFeedbackEffort(null);
     setFeedbackPain(null);
@@ -675,10 +684,14 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   const handleSessionFinish = async (finished, summary) => {
     if (sessionSaving) return;
     setSessionSaving(true);
+    const progressBucket = sessionProgressBucket(summary);
+    let saveAttempted = false;
     try {
       const logs = await getWorkoutLogs(60).catch(() => []);
       const records = findRecords(finished, buildPreviousPerformance(logs));
-      await finalizeWorkout(sessionToLogEntry(finished, toDateStr(new Date())), {
+      const entry = sessionToLogEntry(finished, toDateStr(new Date()));
+      saveAttempted = true;
+      await finalizeWorkout(entry, {
         source: 'workout_session',
         mode: 'guided',
         exercises: summary.exercisesDone,
@@ -686,12 +699,18 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
         minutes: summary.minutes,
         volume: summary.volume,
         records,
+        progressBucket,
       });
       clearSessionDraft();
       setSessionDraft(null);
       setSession(null);
+      return true;
     } catch {
+      if (!saveAttempted) {
+        trackEvent('workout_session_save_failed', { progressBucket, reason: 'preparation' });
+      }
       toast.error(t('errors.saveFailed'));
+      return false;
     } finally {
       setSessionSaving(false);
     }

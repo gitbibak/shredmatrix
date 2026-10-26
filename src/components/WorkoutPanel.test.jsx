@@ -1,7 +1,10 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import WorkoutPanel from './WorkoutPanel';
+import WorkoutSession from './WorkoutSession';
 import { getWorkoutLogs, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
+import { buildSession } from '../lib/workoutSession';
 
 vi.mock('../lib/dataService', () => ({
   getWorkoutLogs: vi.fn(),
@@ -131,6 +134,7 @@ describe('WorkoutPanel guided session', () => {
     expect(entry.exercises[0].sets[1]).toEqual({ weight: 40, reps: 8, completed: false });
     expect(await screen.findByText(/New record: Row 40 kg/)).toBeInTheDocument();
     expect(localStorage.getItem('fullbalance_workout_session')).toBeNull();
+    expect(trackEvent).not.toHaveBeenCalledWith('workout_session_abandoned', expect.anything());
   });
 
   it('keeps an unfinished session and offers to resume it', async () => {
@@ -139,10 +143,104 @@ describe('WorkoutPanel guided session', () => {
     fireEvent.click(within(session).getByLabelText('Set 1 Done'));
     fireEvent.click(within(session).getByLabelText('Close'));
 
+    expect(trackEvent).toHaveBeenCalledWith('workout_session_abandoned', {
+      progressBucket: 'under_25',
+      exitMethod: 'button',
+    });
+
     expect(await screen.findByText('Resume where you left off')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Resume where you left off'));
     const resumed = await screen.findByRole('dialog', { name: 'Pull' });
     expect(within(resumed).getByLabelText('Set 1 Done')).toHaveAttribute('aria-pressed', 'true');
     expect(saveWorkoutLog).not.toHaveBeenCalled();
+  });
+
+  it('records Escape once with a coarse stage and no session details', async () => {
+    render(<WorkoutPanel plan={plan} selectionRequest={{ id: 1, index: 1, start: true }} />);
+    await screen.findByRole('dialog', { name: 'Pull' });
+
+    await waitFor(() => {
+      fireEvent.keyDown(window, { key: 'Escape' });
+      expect(trackEvent.mock.calls.filter(([name]) => name === 'workout_session_abandoned')).toHaveLength(1);
+    });
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    const exits = trackEvent.mock.calls.filter(([name]) => name === 'workout_session_abandoned');
+    expect(exits).toEqual([['workout_session_abandoned', { progressBucket: 'none', exitMethod: 'escape' }]]);
+  });
+
+  it('records a failed guided save without treating the finish attempt as an exit', async () => {
+    saveWorkoutLog.mockRejectedValueOnce(new Error('private database detail'));
+    render(<WorkoutPanel plan={plan} selectionRequest={{ id: 1, index: 1, start: true }} />);
+    const session = await screen.findByRole('dialog', { name: 'Pull' });
+    fireEvent.click(within(session).getByLabelText('Set 1 Done'));
+    fireEvent.click(within(session).getByText('Next exercise'));
+    fireEvent.click(await within(session).findByText('Finish Workout'));
+    fireEvent.click(within(session).getByText('Yes, finish'));
+
+    await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('workout_session_save_failed', {
+      progressBucket: 'under_25',
+      reason: 'save',
+    }));
+    expect(trackEvent).not.toHaveBeenCalledWith('workout_session_abandoned', expect.anything());
+    expect(screen.getByRole('dialog', { name: 'Pull' })).toBeInTheDocument();
+    await waitFor(() => expect(within(session).getByLabelText('Close')).toBeEnabled());
+    fireEvent.click(within(session).getByLabelText('Close'));
+    expect(trackEvent).toHaveBeenCalledWith('workout_session_abandoned', {
+      progressBucket: 'under_25',
+      exitMethod: 'button',
+    });
+  });
+
+  it('does not report abandonment if Escape closes an in-flight successful finish', async () => {
+    let resolveSave;
+    saveWorkoutLog.mockReturnValueOnce(new Promise((resolve) => { resolveSave = resolve; }));
+    render(<WorkoutPanel plan={plan} selectionRequest={{ id: 1, index: 1, start: true }} />);
+    const session = await screen.findByRole('dialog', { name: 'Pull' });
+    fireEvent.click(within(session).getByLabelText('Set 1 Done'));
+    fireEvent.click(within(session).getByText('Next exercise'));
+    fireEvent.click(await within(session).findByText('Finish Workout'));
+    fireEvent.click(within(session).getByText('Yes, finish'));
+    await waitFor(() => expect(saveWorkoutLog).toHaveBeenCalledTimes(1));
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    resolveSave({ id: 'log-2' });
+    await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('workout_session_completed', expect.objectContaining({ mode: 'guided' })));
+    expect(trackEvent).not.toHaveBeenCalledWith('workout_session_abandoned', expect.anything());
+  });
+
+  it('does not report a save failure when celebration fails after persistence', async () => {
+    const originalVibrate = navigator.vibrate;
+    navigator.vibrate = () => { throw new Error('celebration failed'); };
+    try {
+      render(<WorkoutPanel plan={plan} selectionRequest={{ id: 1, index: 1, start: true }} />);
+      const session = await screen.findByRole('dialog', { name: 'Pull' });
+      fireEvent.click(within(session).getByLabelText('Set 1 Done'));
+      fireEvent.click(within(session).getByText('Next exercise'));
+      fireEvent.click(await within(session).findByText('Finish Workout'));
+      fireEvent.click(within(session).getByText('Yes, finish'));
+
+      await waitFor(() => expect(saveWorkoutLog).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('workout_session_completed', expect.objectContaining({ mode: 'guided' })));
+      expect(trackEvent.mock.calls.filter(([name]) => name === 'workout_session_save_failed')).toHaveLength(0);
+    } finally {
+      navigator.vibrate = originalVibrate;
+    }
+  });
+});
+
+describe('WorkoutSession finish guard', () => {
+  it('permits retry after an onFinish callback throws synchronously', async () => {
+    const session = buildSession({ focus: 'Single', exercises: [{ name: 'Row', sets: 1, reps: '8', rest: '0s' }] });
+    const onFinish = vi.fn()
+      .mockImplementationOnce(() => { throw new Error('finish callback failed'); })
+      .mockResolvedValue(false);
+    render(<WorkoutSession session={session} onFinish={onFinish} onClose={vi.fn()} />);
+    fireEvent.click(screen.getByLabelText('Set 1 Done'));
+    fireEvent.click(screen.getByText('Finish Workout'));
+    await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(1));
+
+    fireEvent.click(screen.getByText('Finish Workout'));
+    await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(2));
   });
 });

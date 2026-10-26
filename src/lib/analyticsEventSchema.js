@@ -22,6 +22,8 @@ export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   workout_completed: { allowed: ['module', 'source'] },
   workout_session_started: { allowed: ['module', 'source', 'resumed'] },
   workout_session_completed: { allowed: ['module', 'mode', 'durationBucket', 'records'] },
+  workout_session_abandoned: { allowed: ['progressBucket', 'exitMethod'], required: ['progressBucket', 'exitMethod'] },
+  workout_session_save_failed: { allowed: ['progressBucket', 'reason'], required: ['progressBucket', 'reason'] },
   nutrition_logged: { allowed: ['source', 'category', 'photoAssisted'] },
   water_logged: { allowed: ['source', 'targetReached'] },
   sleep_logged: { allowed: ['source'] },
@@ -62,6 +64,13 @@ export function validateGrowthEvent(eventName, properties = {}) {
       && article.publishedAt <= new Date().toISOString().slice(0, 10)
       && filtered.language === language
       && filtered.destination === destination;
+  }
+  if (eventName === 'workout_session_abandoned' || eventName === 'workout_session_save_failed') {
+    valid = valid
+      && ['none', 'under_25', '25_49', '50_74', '75_99', 'all_sets'].includes(filtered.progressBucket)
+      && (eventName === 'workout_session_abandoned'
+        ? ['button', 'escape'].includes(filtered.exitMethod)
+        : ['preparation', 'save'].includes(filtered.reason));
   }
   return { valid, properties: filtered };
 }

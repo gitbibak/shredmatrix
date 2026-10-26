@@ -1,15 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Check, ChevronLeft, ChevronRight, Flag, Minus, Play, Plus, Timer, X } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { sessionText } from '../i18n/workoutSessionCopy';
 import { getExerciseInfo } from '../data/exerciseDatabase';
 import { getExerciseVideo } from '../data/exerciseVideos';
+import { trackEvent } from '../lib/analytics';
 import {
   addSet,
   completeSet,
   isExerciseDone,
   saveSessionDraft,
+  sessionProgressBucket,
   summarizeSession,
   updateSet,
 } from '../lib/workoutSession';
@@ -79,6 +81,8 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
   const [confirmFinish, setConfirmFinish] = useState(false);
   const [notice, setNotice] = useState('');
   const chipsRef = useRef(null);
+  const closeReportedRef = useRef(false);
+  const finishPendingRef = useRef(false);
 
   const index = Math.min(session.exerciseIndex || 0, session.exercises.length - 1);
   const exercise = session.exercises[index];
@@ -88,6 +92,18 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
   const summary = summarizeSession(session, now);
   const restLeft = restEndsAt ? Math.ceil((restEndsAt - now) / 1000) : 0;
   const isLast = index === session.exercises.length - 1;
+
+  const handleClose = useCallback((exitMethod) => {
+    if (closeReportedRef.current) return;
+    closeReportedRef.current = true;
+    if (!finishPendingRef.current) {
+      trackEvent('workout_session_abandoned', {
+        progressBucket: sessionProgressBucket(summarizeSession(session)),
+        exitMethod,
+      });
+    }
+    onClose?.();
+  }, [onClose, session]);
 
   useEffect(() => { saveSessionDraft(session); }, [session]);
 
@@ -113,13 +129,13 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const onKey = (event) => { if (event.key === 'Escape') onClose?.(); };
+    const onKey = (event) => { if (event.key === 'Escape') handleClose('escape'); };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+  }, [handleClose]);
 
   useEffect(() => {
     chipsRef.current?.querySelector(`[data-index="${index}"]`)?.scrollIntoView?.({ block: 'nearest', inline: 'center', behavior: 'smooth' });
@@ -155,7 +171,12 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
       return;
     }
     setConfirmFinish(false);
-    onFinish?.(session, summarizeSession(session));
+    if (finishPendingRef.current) return;
+    finishPendingRef.current = true;
+    Promise.resolve().then(() => onFinish?.(session, summarizeSession(session))).then(
+      (saved) => { if (saved !== true) finishPendingRef.current = false; },
+      () => { finishPendingRef.current = false; },
+    );
   };
 
   const setsDoneHere = exercise.sets.filter((set) => set.done).length;
@@ -175,7 +196,7 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
         <div className="mx-auto flex max-w-xl items-center gap-3">
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => handleClose('button')}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-800 text-slate-400 hover:text-white"
             aria-label={s('close')}
           >

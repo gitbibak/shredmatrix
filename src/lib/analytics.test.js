@@ -108,6 +108,25 @@ describe('privacy-safe analytics', () => {
     expect(summary[today]?.challenge_joined).toBeUndefined();
   });
 
+  it('allows only coarse guided session exit and save failure values', async () => {
+    const analytics = await loadAnalytics();
+    analytics.trackEvent('workout_session_abandoned', {
+      progressBucket: '25_49', exitMethod: 'escape', exerciseName: 'Private Row', reps: 12,
+    });
+    analytics.trackEvent('workout_session_save_failed', {
+      progressBucket: 'all_sets', reason: 'save', error: 'private database detail',
+    });
+    analytics.trackEvent('workout_session_abandoned', { progressBucket: 'Private Row', exitMethod: 'button' });
+    analytics.trackEvent('workout_session_save_failed', { progressBucket: 'none', reason: 'private database detail' });
+
+    const events = JSON.parse(localStorage.getItem('fb_growth_event_queue') || '[]')
+      .filter((event) => event.event_name.startsWith('workout_session_'));
+    expect(events.map(({ event_name, properties }) => [event_name, properties])).toEqual([
+      ['workout_session_abandoned', { progressBucket: '25_49', exitMethod: 'escape' }],
+      ['workout_session_save_failed', { progressBucket: 'all_sets', reason: 'save' }],
+    ]);
+  });
+
   it('accepts only published article CTA identities and their curated destinations', async () => {
     const analytics = await loadAnalytics();
     const valid = { articleSlug: 'how-accurate-photo-calorie-counter', language: 'en', destination: '/en/photo-calorie-counter' };

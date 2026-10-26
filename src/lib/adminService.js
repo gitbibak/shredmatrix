@@ -97,6 +97,7 @@ export const ADMIN_EVENT_NAMES = Object.freeze([
   'meal_photo_analyzed', 'meal_photo_analysis_failed', 'sign_up_error', 'login_error',
   'affiliate_link_click', 'water_logged', 'sleep_logged', 'nutrition_logged',
   'meditation_completed', 'invite_sent', 'workout_session_started', 'workout_session_completed',
+  'workout_session_abandoned', 'workout_session_save_failed',
 ]);
 
 const PROFILE_COLUMNS = 'id, name, email, created_at, role, app_language, browser_locale, time_zone, acquisition_source, acquisition_medium, acquisition_campaign, acquisition_content, acquisition_term, landing_path, first_landing_page, plan_created_at, first_login_at, referral_code, referred_by_code';

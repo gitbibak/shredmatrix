@@ -3,6 +3,7 @@ export type AnalyticsProperties = Record<string, AnalyticsPrimitive | undefined>
 
 export type AcquisitionSource = string;
 export type ShareDestination = 'copy' | 'whatsapp' | 'native' | 'download' | 'other';
+export type WorkoutSessionProgressBucket = 'none' | 'under_25' | '25_49' | '50_74' | '75_99' | 'all_sets';
 
 export interface GrowthEventMap {
   visitor_started: { source?: string; language?: string };
@@ -20,6 +21,8 @@ export interface GrowthEventMap {
   workout_completed: { module?: string; source?: string };
   workout_session_started: { module?: string; source?: string; resumed?: boolean };
   workout_session_completed: { module?: string; mode?: 'guided' | 'quick'; durationBucket?: string; records?: boolean };
+  workout_session_abandoned: { progressBucket: WorkoutSessionProgressBucket; exitMethod: 'button' | 'escape' };
+  workout_session_save_failed: { progressBucket: WorkoutSessionProgressBucket; reason: 'preparation' | 'save' };
   nutrition_logged: { source?: string; category?: string; photoAssisted?: boolean };
   water_logged: { source?: string; targetReached?: boolean };
   sleep_logged: { source?: string };

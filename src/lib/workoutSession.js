@@ -172,6 +172,17 @@ export function summarizeSession(session, now = Date.now()) {
   return { setsDone, totalSets, exercisesDone, totalExercises: session.exercises.length, volume: Math.round(volume), minutes: Math.min(minutes, 600) };
 }
 
+// Analytics only receives a coarse share of completed sets, never set data.
+export function sessionProgressBucket({ setsDone, totalSets }) {
+  if (!totalSets || setsDone <= 0) return 'none';
+  const progress = setsDone / totalSets;
+  if (progress < 0.25) return 'under_25';
+  if (progress < 0.5) return '25_49';
+  if (progress < 0.75) return '50_74';
+  if (progress < 1) return '75_99';
+  return 'all_sets';
+}
+
 export function findRecords(session, previous = {}) {
   return session.exercises
     .filter((exercise) => exercise.usesWeight)
