@@ -44,7 +44,7 @@ Son7gün started16olay/10üye; guidedcompleted2olay/2üye; quick0/0. Üyebazlıb
 - workout_session_save_failed: yalnızca kaydetme hazırlığı veya gerçek günlük yazma reddi için güvenli neden kategorisi. Başarılı yazma sonrası kutlama hatası kaydetme hatası sayılmaz.
 - Aynı kapatmanın iki kez sayılması ve devam eden başarılı bitişin çıkış sayılması engellendi. Eşzamanlı bitirme ve senkron callback hata durumları test edildi.
 - İzinli mevcut analytics altyapısı, sıkı olay/özellik değer listeleri kullanıldı. Ham hata, egzersiz adı, set/tekrar/kilo, fotoğraf veya kişisel veri eklenmedi. Yeni tablo, yetki, RLS veya kimlik doğrulama değişikliği yok. Canlı growth_events kısıtları salt okunur kontrol edildi; yeni adlar mevcut biçim kısıtına uyuyor.
-- Admin olay okumasına iki olay dahil edildi. Kullanıcıya yeni ekran/alan eklenmedi. Bu değişikliğin kayıt veya bitirme oranını artırdığı iddia edilmiyor; sonraki düzeltmenin kanıtını üretmek amaçlanıyor.25Ekimkısmi gün,26–28Ekimilk3tamamlanmışgün;29Ekim’den itibaren yeterli olay varsa çıkış aralıkları ve kaydetme hatası ayrımı değerlendirilir.
+- Admin olay okumasına iki olay dahil edildi. Kullanıcıya yeni ekran/alan eklenmedi. Bu değişikliğin kayıt veya bitirme oranını artırdığı iddia edilmiyor; sonraki düzeltmenin kanıtını üretmek amaçlanıyor.Fiili yayın 26 Ekim, kısmi yayın günü hariç 27–29 Ekim ilk 3 tamamlanmış gün; 30 Ekim’den itibaren yeterli olay varsa çıkış aralıkları ve kaydetme hatası ayrımı değerlendirilir.
 
 Canlı kontrol: ana/,EN,ES,kayıt formu,girişe dönen oturumsuzdashboard,sitemapXMLve robotsokundu; robotsta kamu sayfaları açık. Gerçek hesap/kayıt açılmadı, özel oturumlu gerçek kullanıcı seansı çalıştırılmadı. Önceki gün yarım kalan kamu yönlendirmeleri bu tur doğrulandı. Kullanıcıya ait public/llms.txt ve ilgisiz .ad-capture/ dahil dosyalara dokunulmadı.
 
@@ -53,3 +53,7 @@ W43haftalık bölüm20Ekimtamamlandığındantekrarlanmadı.
 ## Doğrulama
 
 71 dosyada 505 test başarılı. İlk çalışmada işçi başlatma ve uzun zaman aşımı hataları oluştu; tek işçiyle tüm paket yeniden çalıştırılıp geçti. Değişen dosyaların lint kontrolü, analytics tip kontrolü ve diff kontrolü başarılı. Tam lint mevcut kod tabanında 593 hata veriyor. Üretim derlemesi geçti; 97 statik sayfa üretildi, 93 SEO sayfası ve 103 sitemap URL doğrulandı. SEO/sitemap üretimi güncellendi; içerik tarihleri deney için değiştirilmedi.
+
+## Yayın sonucu — 26 Ekim 2026
+
+Kod 69f96e1 ile gitbibak/main dalına gönderildi. Otomatik izin incelemesindeki ilk zaman aşımı sonrasında aracın izin verdiği tek tekrar başarılı oldu. Cloudflare sürümü defd4603-b3a1-4fc2-9d8c-cd163b1e0117 fullbalance.app/* üzerinde etkin. Canlı EN sayfasında yeni /assets/index-BmDAsTNE.js dosyası ve kayıt formu doğrulandı. Gerçek oturumlu seans verisi oluşturulmadığından canlı yeni olayların veritabanına uçtan uca yazılması ayrıca doğrulanmadı; bu kapsam bir sonraki izinli gerçek kullanımda kontrol edilecek. Raporun kayıt/traﬁk sayıları 25 Ekim denetiminin tarihlenmiş verileridir; 26 Ekim güncel sayıları diye sunulmaz.
