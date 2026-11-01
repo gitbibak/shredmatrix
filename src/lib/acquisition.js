@@ -85,7 +85,9 @@ export function captureAcquisitionContext(language) {
 
   const fresh = {
     acquisition_source: params.utm_source || referrer || 'direct',
-    acquisition_medium: params.utm_medium || (referrer ? 'referral' : 'none'),
+    // An explicitly tagged source with no medium is incomplete tagging, not
+    // evidence of direct or referral traffic. Keep the missing value unknown.
+    acquisition_medium: params.utm_medium || (params.utm_source ? null : referrer ? 'referral' : 'none'),
     acquisition_campaign: params.utm_campaign,
     acquisition_content: params.utm_content,
     acquisition_term: params.utm_term,
@@ -103,7 +105,10 @@ export function captureAcquisitionContext(language) {
 
   // A tagged URL can remain in the address bar while the visitor moves through
   // the page. Keep the first measured CTA when a later read has no utm_content.
-  if (hasCampaign && stored?.acquisition_content && !fresh.acquisition_content) {
+  const sameCampaign = stored
+    && ['acquisition_source', 'acquisition_medium', 'acquisition_campaign']
+      .every((key) => stored[key] === fresh[key]);
+  if (hasCampaign && sameCampaign && stored.acquisition_content && !fresh.acquisition_content) {
     result.acquisition_content = stored.acquisition_content;
   }
 
@@ -121,9 +126,10 @@ export function captureAcquisitionContext(language) {
   const creatorCode = params.creator_code || readCreatorCode();
   if (creatorCode) result.creator_code = creatorCode;
 
-  result.first_source = stored?.first_source || fresh.acquisition_source;
-  result.first_medium = stored?.first_medium || fresh.acquisition_medium;
-  result.first_campaign = stored?.first_campaign || fresh.acquisition_campaign;
+  const hasFirstTouch = stored && Object.hasOwn(stored, 'first_source');
+  result.first_source = hasFirstTouch ? stored.first_source : fresh.acquisition_source;
+  result.first_medium = hasFirstTouch ? stored.first_medium : fresh.acquisition_medium;
+  result.first_campaign = hasFirstTouch ? stored.first_campaign : fresh.acquisition_campaign;
   result.first_referral_code = stored?.first_referral_code || referralCode;
   result.first_creator_code = stored?.first_creator_code || creatorCode;
   result.first_landing_page = stored?.first_landing_page || fresh.landing_path;

@@ -13,6 +13,7 @@ describe('privacy-safe analytics', () => {
     document.head.querySelectorAll('script[data-fullbalance-ga]').forEach((script) => script.remove());
     delete window.gtag;
     delete window.dataLayer;
+    window.history.replaceState({}, '', '/');
     vi.unstubAllEnvs();
   });
 
@@ -95,7 +96,7 @@ describe('privacy-safe analytics', () => {
     });
 
     const event = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'workout_completed');
-    expect(event[2]).toEqual({ module: 'yoga' });
+    expect(event[2]).toEqual({ module: 'yoga', page_location: window.location.origin + '/' });
     expect(document.head.querySelector('script[data-fullbalance-ga="G-TEST123"]')).not.toBeNull();
   });
 
@@ -163,5 +164,104 @@ describe('privacy-safe analytics', () => {
       page_path: '/blog/test',
     });
     expect(pageViews.at(-1)[2].page_location).not.toContain('private');
+  });
+
+  it('keeps internal interaction sources out of GA traffic-source parameters while retaining first-party data', async () => {
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.setAnalyticsConsent('granted');
+    analytics.trackEvent('workout_started', { module: 'muscle', source: 'today_focus' });
+
+    const googleEvent = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'workout_started');
+    expect(googleEvent[2]).toMatchObject({ module: 'muscle', interaction_source: 'today_focus' });
+    expect(googleEvent[2]).not.toHaveProperty('source');
+    expect(googleEvent[2]).not.toHaveProperty('campaign_source');
+    const queuedEvent = JSON.parse(localStorage.getItem('fb_growth_event_queue'))
+      .find((event) => event.event_name === 'workout_started');
+    expect(queuedEvent.properties).toEqual({ module: 'muscle', source: 'today_focus' });
+  });
+
+  it('passes sanitized campaign fields on the first GA event and page view without forwarding arbitrary query data', async () => {
+    window.history.replaceState({}, '', '/en?utm_source=pinterest&utm_medium=organic_social&utm_campaign=free_plan&utm_content=pin_1&utm_term=home+workout&utm_id=fall26&email=private%40example.com&access_token=secret#private');
+    localStorage.setItem('fullbalance_analytics_consent', 'granted');
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics('en');
+    analytics.trackPageView('Home', '/en');
+
+    const campaign = {
+      campaign_source: 'pinterest', campaign_medium: 'organic_social', campaign_name: 'free_plan',
+      campaign_content: 'pin_1', campaign_term: 'home workout', campaign_id: 'fall26',
+      page_location: window.location.origin + '/en',
+    };
+    const events = window.dataLayer.filter((entry) => entry[0] === 'event');
+    expect(events[0][1]).toBe('visitor_started');
+    expect(events[0][2]).toMatchObject(campaign);
+    expect(events[0][2]).not.toHaveProperty('source');
+    expect(events.at(-1)[2]).toMatchObject(campaign);
+    const config = window.dataLayer.find((entry) => entry[0] === 'config')[2];
+    expect(config.page_location).toBe(window.location.origin + '/en');
+    expect(JSON.stringify(window.dataLayer)).not.toMatch(/private|secret|access_token|utm_/);
+  });
+
+  it('retains a tagged landing until consent after navigation without replaying it on subsequent pages', async () => {
+    window.history.replaceState({}, '', '/en?utm_source=newsletter&utm_medium=email&utm_campaign=welcome');
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    expect(window.dataLayer.filter((entry) => entry[0] === 'event')).toHaveLength(0);
+    window.history.replaceState({}, '', '/auth?mode=register&email=private%40example.com');
+    analytics.setAnalyticsConsent('granted');
+    const firstPageView = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'page_view');
+    expect(firstPageView[2]).toMatchObject({ campaign_source: 'newsletter', campaign_medium: 'email', campaign_name: 'welcome' });
+
+    analytics.trackPageView('Register', '/auth');
+    const laterPageView = window.dataLayer.filter((entry) => entry[0] === 'event' && entry[1] === 'page_view').at(-1);
+    expect(laterPageView[2]).not.toHaveProperty('campaign_source');
+    expect(JSON.stringify(window.dataLayer)).not.toContain('private');
+  });
+
+  it('rejects malformed UTM labels and does not invent a missing campaign medium', async () => {
+    const search = new URLSearchParams({
+      utm_source: 'pinterest', utm_campaign: 'private@example.com', utm_content: 'https://private.example',
+      utm_term: 'bad\nlabel', utm_id: 'x'.repeat(101),
+    });
+    window.history.replaceState({}, '', `/en?${search}`);
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.setAnalyticsConsent('granted');
+    const pageView = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'page_view');
+    expect(pageView[2].campaign_source).toBe('pinterest');
+    for (const field of ['campaign_medium', 'campaign_name', 'campaign_content', 'campaign_term', 'campaign_id']) {
+      expect(pageView[2]).not.toHaveProperty(field);
+    }
+  });
+
+  it('does not reuse stored conversion attribution for a new untagged GA visit', async () => {
+    localStorage.setItem('fb_acquisition', JSON.stringify({ acquisition_source: 'pinterest', acquisition_medium: 'social', acquisition_content: 'seo_hero' }));
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.setAnalyticsConsent('granted');
+    const pageView = window.dataLayer.find((entry) => entry[0] === 'event' && entry[1] === 'page_view');
+    expect(pageView[2]).not.toHaveProperty('campaign_source');
+    expect(pageView[2]).not.toHaveProperty('campaign_content');
+  });
+
+  it('does not bypass UTM validation through visitor or signup attribution aliases', async () => {
+    window.history.replaceState({}, '', '/en?utm_source=private%40example.com&utm_campaign=private%40example.com');
+    localStorage.setItem('fullbalance_analytics_consent', 'granted');
+    const analytics = await loadAnalytics();
+    analytics.initAnalytics();
+    analytics.trackSignUp('email');
+
+    expect(JSON.stringify(window.dataLayer)).not.toContain('private');
+    const events = window.dataLayer.filter((entry) => entry[0] === 'event');
+    for (const [, , properties] of events) {
+      expect(properties).not.toHaveProperty('acquisitionSource');
+      expect(properties).not.toHaveProperty('campaign');
+      expect(properties).not.toHaveProperty('source');
+      expect(properties).not.toHaveProperty('interaction_source');
+    }
+    const signup = JSON.parse(localStorage.getItem('fb_growth_event_queue'))
+      .find((event) => event.event_name === 'signup_completed');
+    expect(signup.properties).toMatchObject({ acquisitionSource: 'private@example.com', campaign: 'private@example.com' });
   });
 });

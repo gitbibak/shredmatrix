@@ -116,4 +116,42 @@ describe('first-party acquisition attribution', () => {
       acquisition_content: 'seo_en_home_workout_hero',
     });
   });
+
+  it('does not carry an old CTA into a different campaign', () => {
+    captureAcquisitionContext('en');
+    recordAcquisitionContent('seo_en_home_workout_hero');
+    window.history.replaceState({}, '', '/en?utm_source=pinterest&utm_medium=organic_social&utm_campaign=new_plan');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'pinterest',
+      acquisition_campaign: 'new_plan',
+      acquisition_content: null,
+    });
+  });
+
+  it('keeps an omitted tagged medium unknown instead of guessing from the referrer', () => {
+    window.history.replaceState({}, '', '/en?utm_source=pinterest&utm_campaign=free_plan');
+    vi.spyOn(document, 'referrer', 'get').mockReturnValue('https://www.pinterest.com/');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'pinterest',
+      acquisition_medium: null,
+      first_medium: null,
+    });
+  });
+
+  it('does not fill missing first-touch fields with a later campaign', () => {
+    window.history.replaceState({}, '', '/en?utm_source=pinterest');
+    captureAcquisitionContext('en');
+    window.history.replaceState({}, '', '/en?utm_source=google&utm_medium=cpc&utm_campaign=later_campaign');
+
+    expect(captureAcquisitionContext('en')).toMatchObject({
+      acquisition_source: 'google',
+      acquisition_medium: 'cpc',
+      acquisition_campaign: 'later_campaign',
+      first_source: 'pinterest',
+      first_medium: null,
+      first_campaign: null,
+    });
+  });
 });

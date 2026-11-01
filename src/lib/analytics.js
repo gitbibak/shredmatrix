@@ -16,6 +16,50 @@ const SENSITIVE_PARAM_PATTERN = /name|email|phone|weight|bmi|body|fat|allerg|hea
 let configured = false;
 let identifiedUserId = null;
 let flushTimer = null;
+let pendingLandingCampaign = null;
+
+const GA_CAMPAIGN_FIELDS = {
+  utm_source: 'campaign_source',
+  utm_medium: 'campaign_medium',
+  utm_campaign: 'campaign_name',
+  utm_content: 'campaign_content',
+  utm_term: 'campaign_term',
+  utm_id: 'campaign_id',
+};
+
+function googleCampaignParams() {
+  const search = new URLSearchParams(window.location.search);
+  return Object.fromEntries(Object.entries(GA_CAMPAIGN_FIELDS).flatMap(([queryKey, gaKey]) => {
+    const value = search.get(queryKey)?.trim();
+    // Campaign labels only: exclude URLs, email addresses, controls, and oversized values.
+    return value && value.length <= 100 && /^[\p{L}\p{N}][\p{L}\p{N}._ -]*$/u.test(value)
+      ? [[gaKey, value]]
+      : [];
+  }));
+}
+
+function googlePageLocation(path = window.location.pathname) {
+  return `${window.location.origin}${String(path || '/').split('?')[0].split('#')[0]}`;
+}
+
+function sendGoogleEvent(eventName, properties) {
+  if (getAnalyticsConsent() !== 'granted' || !configured || !window.gtag) return;
+  const googleProperties = Object.fromEntries(Object.entries(properties)
+    .filter(([key]) => !['source', 'acquisitionSource', 'campaign'].includes(key)));
+  const campaign = googleCampaignParams();
+  // Keep a tagged landing available if consent is granted after SPA navigation.
+  // Never replay first-party conversion attribution or internal CTA content to GA.
+  const landingCampaign = Object.keys(campaign).length ? campaign : pendingLandingCampaign;
+  window.gtag('event', eventName, {
+    page_location: googlePageLocation(),
+    ...googleProperties,
+    ...(eventName === 'visitor_started' || properties.source === undefined
+      ? {}
+      : { interaction_source: properties.source }),
+    ...landingCampaign,
+  });
+  pendingLandingCampaign = null;
+}
 
 function randomId() {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
@@ -165,6 +209,7 @@ function configureGoogleAnalytics() {
   window.gtag('js', new Date());
   window.gtag('config', MEASUREMENT_ID, {
     send_page_view: false,
+    page_location: googlePageLocation(),
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
   });
@@ -198,6 +243,7 @@ export function setAnalyticsConsent(choice) {
 
 export function initAnalytics(language) {
   if (typeof window === 'undefined') return;
+  pendingLandingCampaign ??= googleCampaignParams();
   ensureDataLayer();
   window.gtag('consent', 'default', {
     analytics_storage: 'denied',
@@ -251,7 +297,7 @@ export function trackEvent(eventName, params = {}) {
     recordLocalEvent(eventName);
     enqueueEvent(eventName, validation.properties);
     scheduleFlush();
-    if (getAnalyticsConsent() === 'granted' && configured && window.gtag) window.gtag('event', eventName, validation.properties);
+    sendGoogleEvent(eventName, validation.properties);
   } catch (error) {
     debugLog('track_failed', error?.message || error);
   }
@@ -264,7 +310,7 @@ function trackLegacyEvent(eventName, params = {}) {
     recordLocalEvent(eventName);
     enqueueEvent(eventName, clean);
     scheduleFlush();
-    if (getAnalyticsConsent() === 'granted' && configured && window.gtag) window.gtag('event', eventName, clean);
+    sendGoogleEvent(eventName, clean);
   } catch (error) {
     debugLog('legacy_track_failed', error?.message || error);
   }

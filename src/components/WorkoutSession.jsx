@@ -295,6 +295,9 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
             {exercise.timed && <p className="mt-3 text-xs text-slate-500">{s('timedHint')}</p>}
 
             <div className="mt-4 space-y-2">
+              {summary.setsDone === 0 && (
+                <p className="mb-3 text-sm leading-relaxed text-emerald-200">{s('firstSetHint')}</p>
+              )}
               <div className={`grid gap-2 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 ${exercise.usesWeight ? 'grid-cols-[1.5rem_1fr_1fr_3rem]' : 'grid-cols-[1.5rem_1fr_3rem]'}`}>
                 <span className="text-center">{s('set')}</span>
                 {exercise.usesWeight && <span className="text-center">{s('kg')}</span>}
