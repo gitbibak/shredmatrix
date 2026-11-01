@@ -36,4 +36,6 @@ Bugün yeni GSC/GA verisi okunamadı. Son doğrulanmış 31 Ekim hesabı: GSC 22
 
 31 ilgili ölçüm testi, tür denetimi ve değişen dosyaların lint'i geçti. Tüm paket ilk eşzamanlı build koşusunda iki zamanlama hatası verdi; kaynak değiştirmeden 2 worker ile tekrar çalıştırıldığında **71 dosya / 514 test geçti**. Genel lint mevcut 593 hatayla başarısız; bunlar değişen dosyalarda değil. Üretim derlemesi geçti.
 
-Kamu ana sayfa, EN, ES, auth, dashboard, sitemap ve robots HTTP kontrolleri bu istemciye 403 döndü. Bu nedenle canlı sayfaların çalıştığı veya bozuk olduğu çıkarılmadı. Görsel UI doğrulaması ve gerçek GA isteği doğrulaması tamamlanmış değildir. Cloudflare yayın sonucu ve git commit ayrıca kayıt edilecek.
+Kamu ana sayfa, EN, ES, auth, dashboard, sitemap ve robots HTTP kontrolleri bu istemciye 403 döndü. Bu nedenle canlı sayfaların çalıştığı veya bozuk olduğu çıkarılmadı. Görsel UI doğrulaması ve gerçek GA isteği doğrulaması tamamlanmış değildir.
+
+Cloudflare yayını başarılı: fullbalance.app/*, sürüm `b57a8db8-21a7-4c24-be8c-c6ba6e22091f`. Kod ve günlük rapor commit'i `6ea3e5a`, gitbibak/main push başarılı. Kontrol düzlemi yayın onayı, kullanıcı akışının tarayıcıda uçtan uca doğrulandığı anlamına gelmez. Analytics admin ayarları ve DebugView bekleyen işler olarak açık kaldı.
