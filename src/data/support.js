@@ -1,7 +1,7 @@
 // Optional "buy me a protein shake" support. Everything in the app stays free;
 // the buttons stay hidden until SUPPORT_URL is set to the founder's own page
 // (Buy Me a Coffee or similar), so nothing points at a page that does not exist.
-export const SUPPORT_URL = '';
+export const SUPPORT_URL = 'https://buymeacoffee.com/tolgadeveci';
 
 export function isSupportEnabled(url = SUPPORT_URL) {
   return /^https:\/\/[^\s]+$/.test(url);
