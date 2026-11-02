@@ -38,6 +38,13 @@ describe('SupportCard', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('answers how the app stays free on the landing page', () => {
+    render(<SupportCard lang="tr" placement="landing_free_section" variant="note" url={URL} />);
+    expect(screen.getByText('Nasıl ücretsiz kalıyor?')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', { name: /Destek ol/ }));
+    expect(trackEvent).toHaveBeenCalledWith('support_link_click', { placement: 'landing_free_section', language: 'tr' });
+  });
+
   it('has the same keys in every language', () => {
     const keys = Object.keys(supportCopy.tr).sort();
     expect(Object.keys(supportCopy.en).sort()).toEqual(keys);

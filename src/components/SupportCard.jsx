@@ -24,6 +24,18 @@ export default function SupportCard({ lang = 'tr', placement, variant = 'card', 
     return link('inline-flex items-center gap-1 hover:text-white', c.footer);
   }
 
+  if (variant === 'note') {
+    return (
+      <div className="mt-5 border-l-2 border-amber-500/40 pl-4 text-sm leading-6">
+        <p className="font-semibold text-slate-200">{c.howFreeTitle}</p>
+        <p className="mt-1 text-slate-400">
+          {c.howFree}{' '}
+          {link('inline-flex items-center gap-1 font-semibold text-amber-300 hover:text-amber-200', c.howFreeLink)}
+        </p>
+      </div>
+    );
+  }
+
   if (variant === 'inline') {
     return (
       <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.07] px-3 py-2.5 text-left">

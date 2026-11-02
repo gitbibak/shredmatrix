@@ -15,6 +15,9 @@ export const supportCopy = {
     cta: 'Bir protein shake ısmarla',
     why: 'Neden destek?',
     footer: 'Destek ol 🥤',
+    howFreeTitle: 'Nasıl ücretsiz kalıyor?',
+    howFree: 'Verilerin satılmaz ve reklam amacıyla paylaşılmaz. Full Balance, isteyen kullanıcıların küçük destekleriyle ayakta kalıyor.',
+    howFreeLink: 'Destek ol 🥤',
     long: [
       'Merhaba, ben Tolga 👋',
       'Full Balance\'ı, herkesin kişisel antrenman ve beslenme planına ücretsiz ulaşabilmesi için geliştiriyorum. Abonelik, reklam ya da premium duvarı yok, bundan sonra da olmayacak.',
@@ -29,6 +32,9 @@ export const supportCopy = {
     cta: 'Buy me a protein shake',
     why: 'Why support?',
     footer: 'Support 🥤',
+    howFreeTitle: 'How does it stay free?',
+    howFree: 'Your data is never sold or shared for advertising. Full Balance is kept running by small, optional support from people who use it.',
+    howFreeLink: 'Support 🥤',
     long: [
       'Hi, I\'m Tolga 👋',
       'I build Full Balance so anyone can get a personal training and nutrition plan for free. No subscription, no ads, no premium wall, and that won\'t change.',
@@ -43,6 +49,9 @@ export const supportCopy = {
     cta: 'Invítame a un batido de proteínas',
     why: '¿Por qué apoyar?',
     footer: 'Apoyar 🥤',
+    howFreeTitle: '¿Cómo sigue siendo gratis?',
+    howFree: 'Tus datos no se venden ni se comparten con fines publicitarios. Full Balance se mantiene gracias al apoyo voluntario de quienes la usan.',
+    howFreeLink: 'Apoyar 🥤',
     long: [
       'Hola, soy Tolga 👋',
       'Desarrollo Full Balance para que cualquiera pueda tener un plan personal de entrenamiento y nutrición gratis. Sin suscripción, sin anuncios ni muros premium, y seguirá así.',

@@ -390,6 +390,7 @@ export default function LandingPage({ onStart }) {
             <Eyebrow>{lang === 'tr' ? '%100 ücretsiz' : lang === 'es' ? '100% gratis' : '100% free'}</Eyebrow>
             <h2 className="max-w-full break-words font-outfit text-2xl font-extrabold leading-tight sm:text-4xl">{c.freeTitle}</h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.freeDesc}</p>
+            <SupportCard lang={lang} placement="landing_free_section" variant="note" />
             <button onClick={() => startRegistration('free_section')} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-emerald-500 px-6 font-outfit text-sm font-bold text-slate-950 hover:bg-emerald-400">{c.primaryCta}<ArrowRight size={17} /></button>
           </div>
           <div>
