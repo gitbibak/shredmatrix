@@ -232,6 +232,7 @@ function windowStats(data, days, offset = 0) {
       meditation: eventCount('meditation_completed'),
       invites: eventCount('invite_sent'),
       sessionsStarted: eventCount('workout_session_started'),
+      supportClicks: eventCount('support_link_click'),
       sessionsCompleted: events.filter((event) => event.event_name === 'workout_session_completed' && event.properties?.mode === 'guided' && inRange(event.day, start, end)).length,
     },
     registrationRows: registrations,

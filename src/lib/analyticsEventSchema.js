@@ -10,6 +10,7 @@ export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   visitor_started: { allowed: ['source', 'language'] },
   article_cta_click: { allowed: ['articleSlug', 'language', 'destination'], required: ['articleSlug', 'language', 'destination'] },
   affiliate_link_click: { allowed: ['placement', 'productId', 'language', 'store'], required: ['placement', 'productId'] },
+  support_link_click: { allowed: ['placement', 'language'], required: ['placement'] },
   signup_started: { allowed: SIGNUP },
   signup_completed: { allowed: SIGNUP },
   login_completed: { allowed: ['method'] },

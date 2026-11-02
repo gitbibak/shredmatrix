@@ -12,6 +12,7 @@ import ExerciseVideoModal from './ExerciseVideoModal';
 import { getExerciseVideo, hasExerciseVideos } from '../data/exerciseVideos';
 import AffiliateGear from './AffiliateGear';
 import WorkoutSession from './WorkoutSession';
+import SupportCard from './SupportCard';
 import { sessionText } from '../i18n/workoutSessionCopy';
 import {
   buildPreviousPerformance,
@@ -1111,6 +1112,9 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
               <button type="button" onClick={() => setCelebration(null)} className="mt-2 min-h-11 px-4 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
                 {t('workout.feedbackSkip')}
               </button>
+              <div className="mt-3">
+                <SupportCard lang={lang} placement="workout_complete" variant="inline" />
+              </div>
             </motion.div>
           </motion.div>
         )}

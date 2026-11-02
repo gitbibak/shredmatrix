@@ -13,6 +13,7 @@ import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, del
 import { useToast } from './ToastProvider';
 import UserStoryForm from './UserStoryForm';
 import InviteFriendsCard from './InviteFriendsCard';
+import SupportCard from './SupportCard';
 import ReminderSettings from './ReminderSettings';
 import ProgressPhotoComparison from './ProgressPhotoComparison';
 
@@ -743,6 +744,11 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
           title={t('referral.profileTitle')}
           description={t('referral.profileDesc')}
         />
+      </motion.div>
+
+      {/* ── Optional support (hidden until a support page is configured) ── */}
+      <motion.div variants={itemV}>
+        <SupportCard lang={lang} placement="profile" />
       </motion.div>
 
       {/* ── Body Stats ── */}

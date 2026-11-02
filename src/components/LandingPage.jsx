@@ -19,6 +19,7 @@ import OptimizedImage from './OptimizedImage';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import ApprovedTestimonials from './ApprovedTestimonials';
 import { recordAcquisitionContent } from '../lib/acquisition';
+import SupportCard from './SupportCard';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -453,6 +454,7 @@ export default function LandingPage({ onStart }) {
               <Link to="/editorial-policy" className="hover:text-white">{lang === 'tr' ? 'Yayın ilkeleri' : lang === 'es' ? 'Política editorial' : 'Editorial policy'}</Link>
               <Link to={pricingAlternates[lang] || pricingAlternates.tr} className="hover:text-white">{pricing.eyebrow}</Link>
               <Link to={lang === 'tr' ? '/kurucu-tolga-deveci' : lang === 'es' ? '/es/fundador-tolga-deveci' : '/en/founder-tolga-deveci'} className="hover:text-white">{c.founderLink}</Link>
+              <SupportCard lang={lang} placement="landing_footer" variant="footer" />
             </div>
           </div>
           <p className="mt-5 max-w-3xl text-xs leading-5 text-slate-600">{c.founderCredit}</p>

@@ -96,7 +96,7 @@ async function readAllPages(makeQuery, keys) {
 export const ADMIN_EVENT_NAMES = Object.freeze([
   'meal_photo_analyzed', 'meal_photo_analysis_failed', 'sign_up_error', 'login_error',
   'affiliate_link_click', 'water_logged', 'sleep_logged', 'nutrition_logged',
-  'meditation_completed', 'invite_sent', 'workout_session_started', 'workout_session_completed',
+  'meditation_completed', 'invite_sent', 'workout_session_started', 'workout_session_completed', 'support_link_click',
   'workout_session_abandoned', 'workout_session_save_failed',
 ]);
 

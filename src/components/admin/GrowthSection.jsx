@@ -69,6 +69,7 @@ export default function GrowthSection({ metrics, period, onPeriodChange, loading
     ['Davet gönderimi', current.usage.invites],
     ['Antrenman modu başlatma', current.usage.sessionsStarted],
     ['Antrenman modu bitirme', current.usage.sessionsCompleted],
+    ['Destek (protein shake) tıklaması', current.usage.supportClicks],
   ].map(([label, value]) => ({ label, value }));
   const toRows = (items) => items.map((item) => ({ ...item, key: item.label }));
 

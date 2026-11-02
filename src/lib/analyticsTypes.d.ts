@@ -19,6 +19,7 @@ export interface GrowthEventMap {
   plan_generated: { goalType?: string; environment?: string; language?: string };
   workout_started: { module?: string; source?: string };
   workout_completed: { module?: string; source?: string };
+  support_link_click: { placement: string; language?: string };
   workout_session_started: { module?: string; source?: string; resumed?: boolean };
   workout_session_completed: { module?: string; mode?: 'guided' | 'quick'; durationBucket?: string; records?: boolean };
   workout_session_abandoned: { progressBucket: WorkoutSessionProgressBucket; exitMethod: 'button' | 'escape' };
