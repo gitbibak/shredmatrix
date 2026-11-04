@@ -112,10 +112,10 @@ export const turkishSeoPages = {
   'baslangic-pilates-programi': {
     icon: 'Waves',
     accent: '#a78bfa',
-    title: 'Evde Ücretsiz',
+    title: '30 Günlük Ücretsiz',
     titleAccent: 'Pilates Programı',
-    metaTitle: 'Evde Ücretsiz Pilates Programı: 30 Gün, Başlangıç | Full Balance',
-    description: 'Evde mat üzerinde 30 günlük ücretsiz pilates programı: gün gün hareketler, set ve tekrar, 4 haftalık ilerleme tablosu. Reformer gerekmez, yeni başlayanlara uygun, yazdırılabilir.',
+    metaTitle: '30 Günlük Pilates Programı: Evde, Ücretsiz, Gün Gün | Full Balance',
+    description: '30 günlük ücretsiz pilates programı: evde mat üzerinde her gün hangi hareket, kaç tekrar ve 4 haftalık ilerleme tablosu. Yeni başlayanlara uygun, reformer gerekmez, yazdırılabilir.',
     keywords: 'evde pilates programı ücretsiz, 30 günlük pilates programı, başlangıç pilates programı, evde pilates, yeni başlayanlar için pilates, 1 aylık pilates programı',
     heroCopy: 'Hız yerine nefes, hizalanma ve kontrolü öğreten kısa mat seanslarıyla güvenli bir temel oluştur. Aşağıda gerçek örnek hafta ve 30 günlük ilerleme tablosu var; yazdırabilir ya da uygulamada seans seans takip edebilirsin.',
     sections: [
@@ -521,6 +521,29 @@ export const turkishSeoPages = {
       ['25 kg band yeterli mi?', 'Squat, kalça ve çekiş hareketleri için evet; omuz ve kol hareketleri için fazla gelebilir. Bu durumda program bandı kısa tutarak veya iki elle tutuş değiştirerek direnci azaltmanı önerir.'],
       ['Kapı ankrajı gerekli mi?', 'Çekiş ve sırt hareketleri için işe yarar ama şart değildir; program ankraj yoksa ayak altına sabitlenen ve oturarak yapılan çekiş varyasyonlarını kullanır.'],
       ['Haftada kaç gün?', 'Başlangıçta 3 tam vücut günü ve arada dinlenme; ilerledikçe 4 güne çıkabilir. Dinlenme günleri seriyi bozmaz.'],
+    ],
+  },
+  '28-gunluk-challenge': {
+    icon: 'Flame',
+    accent: '#f97316',
+    title: '28 Günlük Ücretsiz',
+    titleAccent: 'Spor Challenge',
+    metaTitle: '28 Günlük Spor Challenge: 28 Günde 12 Antrenman, Ücretsiz | Full Balance',
+    description: '28 günlük ücretsiz spor challenge\'ı: haftada 3 antrenman, 4 hafta, evde ekipmansız ya da dambılla. Kişisel planın hazır, ilerlemen uygulamada takip edilir. Ödeme ekranı yok.',
+    keywords: '28 günlük challenge, 28 günlük spor challenge, 30 günlük spor challenge, evde spor challenge, ücretsiz fitness challenge',
+    heroCopy: 'Kural basit: 28 günde 12 antrenman, yani haftada 3. Planın seviyene göre hazırlanır; antrenman modunda setleri işaretlersin, uygulama haftalık hedefini takip eder. Deneme süresi, kart veya ödeme ekranı yok.',
+    sections: [
+      { title: 'Neden 28 gün ve 12 antrenman?', body: 'Haftada 3 antrenman, yeni başlayan biri için hem toparlanmaya hem düzenliliğe izin verir. 4 hafta, hareketi öğrenip ilk gelişimi görmek ve bunu alışkanlığa çevirmek için yeterli bir süre.' },
+      { title: 'Kaçırırsan bitmez', body: 'Bir gün kaçırmak challenge\'ı bozmaz; hedef haftalık. Haftanın 3 antrenmanını istediğin günlere yayabilirsin.' },
+      { title: 'Evde ya da salonda', body: 'Ekipmansız, dambıl ve bantla veya salonda: plan sahip olduğun ortama göre hazırlanır. Pilates ve yoga hedefleri de challenge\'a sayılır.' },
+      { title: 'Tamamen ücretsiz', body: 'Diğer challenge uygulamaları genellikle bir testten sonra ödeme ekranı gösterir. Full Balance\'ta plan, takip ve challenge ücretsizdir.' },
+    ],
+    faqs: [
+      ['28 günlük challenge\'a nasıl katılırım?', 'Ücretsiz hesap oluştur, hedefini seç ve planın hazırlanınca Bugün ekranındaki "Challenge\'a katıl" butonuna dokun. Sayaç o gün başlar.'],
+      ['Her gün spor yapmam gerekiyor mu?', 'Hayır. Hedef haftada 3 antrenman. Aradaki günler dinlenme veya hafif yürüyüş içindir.'],
+      ['Challenge sonunda ne olur?', '12 antrenmanı tamamlarsan challenge rozetin uygulamada kalır ve istersen paylaşabilirsin. Tamamlayamazsan yeniden başlayabilirsin; yaptığın her antrenman kayıtlıdır.'],
+      ['Kilo verme garantisi var mı?', 'Hayır. Bu challenge düzenli antrenman alışkanlığı içindir. Vücut değişimi beslenme, uyku ve süreye bağlıdır.'],
+      ['Ücretli mi?', 'Hayır. Challenge, kişisel plan ve takip tamamen ücretsizdir; kredi kartı istenmez.'],
     ],
   },
   '30-gunluk-evde-spor-programi': {
