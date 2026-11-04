@@ -35,6 +35,7 @@ export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   challenge_joined: { allowed: CHALLENGE, required: ['challengeId', 'challengeType'] },
   challenge_day_completed: { allowed: [...CHALLENGE, 'challengeDay'], required: ['challengeId', 'challengeType'] },
   challenge_completed: { allowed: CHALLENGE, required: ['challengeId', 'challengeType'] },
+  challenge_shared: { allowed: CHALLENGE, required: ['challengeId', 'challengeType'] },
   invite_opened: { allowed: ['source', 'referralCode'] },
   invite_sent: { allowed: [...SHARE, 'referralCode'], required: ['cardType', 'destination'] },
   invite_accepted: { allowed: ['source', 'referralCode'] },

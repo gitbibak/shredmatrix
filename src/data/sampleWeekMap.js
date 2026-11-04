@@ -25,6 +25,9 @@ const SAMPLE_WEEK_BY_PATH = {
   '/40-yas-ustu-evde-spor-programi': 'fat_loss_bodyweight',
   '/en/beginner-workout-plan-over-40': 'fat_loss_bodyweight',
   '/es/rutina-en-casa-mayores-40': 'fat_loss_bodyweight',
+  '/28-gunluk-challenge': 'fat_loss_bodyweight',
+  '/en/28-day-challenge': 'fat_loss_bodyweight',
+  '/es/reto-28-dias': 'fat_loss_bodyweight',
   '/baslangic-pilates-programi': 'pilates_mat',
   '/en/pilates-workout-at-home': 'pilates_mat',
   '/es/pilates-en-casa-principiantes': 'pilates_mat',
@@ -134,7 +137,46 @@ export const FOUR_WEEK_PLAN = {
   },
 };
 
+const CHALLENGE_PATHS = new Set(['/28-gunluk-challenge', '/en/28-day-challenge', '/es/reto-28-dias']);
+
+export const CHALLENGE_PLAN = {
+  tr: {
+    title: '28 günlük challenge: hafta hafta',
+    intro: 'Hedef 28 günde 12 antrenman. Her hafta 3 antrenman yeter; günleri sen seçersin. Uygulama tamamladığın antrenmanları haftalık kutucuklara işler.',
+    columns: ['Hafta', 'Hedef', 'Odak', 'İpucu'],
+    rows: [
+      ['1', '3 antrenman', 'Hareketleri öğren', 'Kolay varyasyonla başla; antrenman modunda her seti işaretle.'],
+      ['2', '3 antrenman (toplam 6)', 'Tekrarı artır', 'Her sette 1-2 tekrar ekle; dinlenme sayacına güven.'],
+      ['3', '3 antrenman (toplam 9)', 'Biraz zorlaştır', 'Bir üst varyasyon veya yavaş iniş temposu dene.'],
+      ['4', '3 antrenman (toplam 12)', 'Bitir ve kutla', 'Challenge rozetini al; sonraki faz uygulamada açılır.'],
+    ],
+  },
+  en: {
+    title: '28-day challenge: week by week',
+    intro: 'The goal is 12 workouts in 28 days. Three a week is enough and you pick the days. The app fills your weekly boxes as you finish workouts.',
+    columns: ['Week', 'Goal', 'Focus', 'Tip'],
+    rows: [
+      ['1', '3 workouts', 'Learn the movements', 'Start with the easier variation; tick every set in workout mode.'],
+      ['2', '3 workouts (6 total)', 'Add reps', 'Add 1-2 reps per set; let the rest timer pace you.'],
+      ['3', '3 workouts (9 total)', 'Make it a bit harder', 'Try the next variation or a slower lowering tempo.'],
+      ['4', '3 workouts (12 total)', 'Finish and celebrate', 'Earn your challenge badge; the next phase unlocks in the app.'],
+    ],
+  },
+  es: {
+    title: 'Reto de 28 días: semana a semana',
+    intro: 'El objetivo son 12 entrenos en 28 días. Con 3 por semana basta y tú eliges los días. La app marca tus casillas semanales al terminar cada entreno.',
+    columns: ['Semana', 'Objetivo', 'Enfoque', 'Consejo'],
+    rows: [
+      ['1', '3 entrenos', 'Aprende los movimientos', 'Empieza con la variante fácil; marca cada serie en el modo entreno.'],
+      ['2', '3 entrenos (6 en total)', 'Suma repeticiones', 'Añade 1-2 repeticiones por serie; deja que el temporizador marque el descanso.'],
+      ['3', '3 entrenos (9 en total)', 'Súbelo un poco', 'Prueba la siguiente variante o una bajada más lenta.'],
+      ['4', '3 entrenos (12 en total)', 'Termina y celébralo', 'Consigue tu insignia; la siguiente fase se abre en la app.'],
+    ],
+  },
+};
+
 export function getFourWeekPlan(path, lang = 'tr') {
+  if (CHALLENGE_PATHS.has(path)) return CHALLENGE_PLAN[lang] || CHALLENGE_PLAN.en;
   if (PILATES_PATHS.has(path)) return PILATES_FOUR_WEEK_PLAN[lang] || PILATES_FOUR_WEEK_PLAN.en;
   if (!FOUR_WEEK_PATHS.has(path)) return null;
   return FOUR_WEEK_PLAN[lang] || FOUR_WEEK_PLAN.en;

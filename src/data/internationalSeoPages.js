@@ -191,6 +191,24 @@ const pageDefinitions = {
       faqs: [['¿Se puede ganar músculo con bandas elásticas?', 'Sí. Ganar músculo depende del esfuerzo y de las series semanales, no de si usas mancuerna o banda. La banda da más resistencia en el punto más difícil; la rutina lo aprovecha con bajadas lentas y pausas.'], ['¿Qué banda debe comprar un principiante?', 'Una media (10-20 kg) para casi todo y una dura (20-35 kg) para remos y sentadillas. Empieza con una y añade la siguiente cuando llegues al tope del rango.'], ['¿Necesito anclaje de puerta?', 'Ayuda para remos y espalda pero no es obligatorio; sin él la rutina usa remos sentado con la banda bajo los pies.'], ['¿Cuántos días por semana?', 'Tres días de cuerpo completo con descanso entre ellos al principio, hasta cuatro después. Los días de descanso no rompen tu racha.']],
     },
   },
+  challenge28: {
+    paths: { tr: '/28-gunluk-challenge', en: '/en/28-day-challenge', es: '/es/reto-28-dias' },
+    category: 'workout',
+    en: {
+      title: '28-Day Fitness Challenge', accent: '12 Workouts, Free', metaTitle: '28-Day Fitness Challenge: 12 Workouts in 28 Days, Free | Full Balance',
+      description: 'A free 28-day fitness challenge: 3 workouts a week for 4 weeks, at home without equipment, with dumbbells or at the gym. Your personal plan is ready and progress is tracked in the app. No paywall.',
+      hero: 'The rule is simple: 12 workouts in 28 days, 3 a week. Your plan matches your level; tick sets in workout mode and the app tracks your weekly goal. No trial, no card, no paywall.',
+      sections: [['Why 28 days and 12 workouts?', 'Three workouts a week leaves room for recovery and consistency. Four weeks is enough to learn the movements, see early progress and turn it into a habit.'], ['Miss a day, keep going', 'The goal is weekly, so one missed day does not break the challenge. Spread the 3 workouts across any days you like.'], ['Home or gym', 'No equipment, dumbbells and bands, or the gym: the plan follows what you have. Pilates and yoga goals count too.'], ['Actually free', 'Many challenge apps show a paywall after a quiz. In Full Balance the plan, tracking and challenge are free.']],
+      faqs: [['How do I join the 28-day challenge?', 'Create a free account, choose your goal and, once your plan is ready, tap "Join the challenge" on the Today screen. The counter starts that day.'], ['Do I need to train every day?', 'No. The goal is 3 workouts a week; the days in between are for rest or easy walks.'], ['What happens at the end?', 'Finish 12 workouts and your challenge badge stays in the app, ready to share. If you do not finish, start again; every workout stays logged.'], ['Is weight loss guaranteed?', 'No. The challenge builds a training habit. Body change depends on nutrition, sleep and time.'], ['Is it paid?', 'No. The challenge, personal plan and tracking are completely free; no credit card.']],
+    },
+    es: {
+      title: 'Reto Fitness de 28 Días', accent: '12 Entrenos, Gratis', metaTitle: 'Reto de 28 Días: 12 Entrenos en 28 Días, Gratis | Full Balance',
+      description: 'Reto fitness gratis de 28 días: 3 entrenos por semana durante 4 semanas, en casa sin material, con mancuernas o en el gimnasio. Tu plan personal está listo y la app sigue tu progreso. Sin muro de pago.',
+      hero: 'La regla es simple: 12 entrenos en 28 días, 3 por semana. Tu plan se adapta a tu nivel; marca las series en el modo entreno y la app sigue tu objetivo semanal. Sin prueba, sin tarjeta, sin muro de pago.',
+      sections: [['¿Por qué 28 días y 12 entrenos?', 'Tres entrenos por semana dejan espacio para recuperarse y ser constante. Cuatro semanas bastan para aprender los movimientos, ver el primer progreso y convertirlo en hábito.'], ['Si fallas un día, sigue', 'El objetivo es semanal, así que un día perdido no rompe el reto. Reparte los 3 entrenos en los días que quieras.'], ['En casa o en el gimnasio', 'Sin material, con mancuernas y bandas o en el gimnasio: el plan sigue lo que tienes. Los objetivos de pilates y yoga también cuentan.'], ['Gratis de verdad', 'Muchas apps de retos muestran un muro de pago tras un test. En Full Balance el plan, el seguimiento y el reto son gratis.']],
+      faqs: [['¿Cómo me uno al reto de 28 días?', 'Crea una cuenta gratis, elige tu objetivo y, cuando tu plan esté listo, toca "Unirme al reto" en la pantalla Hoy. El contador empieza ese día.'], ['¿Tengo que entrenar todos los días?', 'No. El objetivo son 3 entrenos por semana; los días intermedios son para descansar o caminar suave.'], ['¿Qué pasa al final?', 'Si completas 12 entrenos, tu insignia del reto queda en la app para compartirla. Si no lo terminas, empieza de nuevo; cada entreno queda registrado.'], ['¿Garantiza perder peso?', 'No. El reto crea el hábito de entrenar. El cambio corporal depende de la nutrición, el sueño y el tiempo.'], ['¿Es de pago?', 'No. El reto, el plan personal y el seguimiento son totalmente gratis; sin tarjeta.']],
+    },
+  },
   fourWeekHome: {
     paths: { tr: '/30-gunluk-evde-spor-programi', en: '/en/4-week-home-workout-plan', es: '/es/rutina-4-semanas-en-casa' },
     category: 'workout',
@@ -362,6 +380,7 @@ export function getInternationalRelatedPages(page) {
     photoCalories: ['calories', 'protein', 'nutrition', 'bmi', 'fatLoss', 'home'],
     workout: ['homeWorkout', 'homeDumbbell', 'homeMuscle', 'muscle', 'fatLoss', 'beginnerPilates', 'nutrition', 'bmi'],
     homeWorkout: ['fourWeekHome', 'homeDumbbell', 'resistanceBand', 'womenHome', 'homeMuscle', 'over40', 'beginnerPilates', 'nutrition'],
+    challenge28: ['fourWeekHome', 'homeWorkout', 'homeDumbbell', 'beginnerPilates', 'womenHome', 'over40', 'fatLoss', 'nutrition'],
     fourWeekHome: ['homeWorkout', 'resistanceBand', 'womenHome', 'over40', 'homeDumbbell', 'fatLoss', 'calories', 'nutrition'],
     resistanceBand: ['homeDumbbell', 'homeWorkout', 'fourWeekHome', 'homeMuscle', 'womenHome', 'muscle', 'protein', 'nutrition'],
     womenHome: ['fourWeekHome', 'homeWorkout', 'resistanceBand', 'fatLoss', 'calories', 'beginnerPilates', 'nutrition', 'bmi'],

@@ -25,6 +25,7 @@ const CalorieCalc = lazy(() => import('./CalorieCalc'));
 const DataExport = lazy(() => import('./DataExport'));
 const ProgramAdvisor = lazy(() => import('./ProgramAdvisor'));
 const TodayFocusPanel = lazy(() => import('./TodayFocusPanel'));
+const Challenge28Card = lazy(() => import('./Challenge28Card'));
 const BalanceScoreCard = lazy(() => import('./BalanceScoreCard'));
 const MuscleRecovery = lazy(() => import('./MuscleRecovery'));
 const StreakCalendar = lazy(() => import('./StreakCalendar'));
@@ -346,6 +347,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={navigateFromToday} />
+                  <Challenge28Card plan={plan} onPlanUpdate={onPlanUpdate} lang={lang} />
                   <BalanceScoreCard plan={plan} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />

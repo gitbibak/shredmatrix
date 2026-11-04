@@ -34,6 +34,7 @@ export interface GrowthEventMap {
   challenge_joined: ChallengeProperties;
   challenge_day_completed: ChallengeProperties & { challengeDay?: number };
   challenge_completed: ChallengeProperties;
+  challenge_shared: ChallengeProperties;
   invite_opened: { source?: string; referralCode?: string };
   invite_sent: ShareProperties & { referralCode?: string };
   invite_accepted: { source?: string; referralCode?: string };

@@ -233,6 +233,8 @@ function windowStats(data, days, offset = 0) {
       invites: eventCount('invite_sent'),
       sessionsStarted: eventCount('workout_session_started'),
       supportClicks: eventCount('support_link_click'),
+      challengeJoins: events.filter((event) => event.event_name === 'challenge_joined' && event.properties?.challengeId === 'start28' && inRange(event.day, start, end)).length,
+      challengeCompletions: events.filter((event) => event.event_name === 'challenge_completed' && event.properties?.challengeId === 'start28' && inRange(event.day, start, end)).length,
       sessionsCompleted: events.filter((event) => event.event_name === 'workout_session_completed' && event.properties?.mode === 'guided' && inRange(event.day, start, end)).length,
     },
     registrationRows: registrations,

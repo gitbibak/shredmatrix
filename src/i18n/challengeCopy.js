@@ -1,0 +1,73 @@
+// 28-day start challenge: 12 workouts in 28 days (3 per week). Free, no paywall.
+export const CHALLENGE_PATHS = { tr: '/28-gunluk-challenge', en: '/en/28-day-challenge', es: '/es/reto-28-dias' };
+
+export const challengeCopy = {
+  tr: {
+    eyebrow: '28 günlük challenge',
+    title: '28 günde 12 antrenman',
+    pitch: 'Haftada 3 antrenman, 4 hafta. Planın hazır; tek yapman gereken başlamak. Tamamen ücretsiz.',
+    join: 'Challenge\'a katıl',
+    invited: 'Bu sayfadan geldin: challenge\'ın seni bekliyor 💪',
+    day: '{day}. gün / 28',
+    progress: '{done}/12 antrenman',
+    week: '{n}. hafta',
+    today: 'Bugünün antrenmanına git',
+    behind: 'Bu hafta {left} antrenman kaldı. Yetişebilirsin!',
+    onTrack: 'Harika gidiyorsun, bu haftanın hedefi tamam ✓',
+    doneTitle: 'Challenge tamamlandı! 🏆',
+    doneText: '28 günde 12 antrenman. Bu bir alışkanlık artık.',
+    endedTitle: 'Challenge bitti',
+    endedText: '28 günde {done} antrenman yaptın. Her antrenman sayılır; yeniden başlamak ister misin?',
+    restart: 'Yeniden başla',
+    share: 'Paylaş',
+    shareText: 'Full Balance 28 günlük challenge\'ını tamamladım: 28 günde 12 antrenman! Sen de ücretsiz katıl:',
+    leave: 'Challenge\'dan çık',
+  },
+  en: {
+    eyebrow: '28-day challenge',
+    title: '12 workouts in 28 days',
+    pitch: '3 workouts a week for 4 weeks. Your plan is ready; all you have to do is start. Completely free.',
+    join: 'Join the challenge',
+    invited: 'You came from the challenge page: it is waiting for you 💪',
+    day: 'Day {day} / 28',
+    progress: '{done}/12 workouts',
+    week: 'Week {n}',
+    today: 'Go to today\'s workout',
+    behind: '{left} workouts left this week. You can still make it!',
+    onTrack: 'Great pace, this week\'s goal is done ✓',
+    doneTitle: 'Challenge complete! 🏆',
+    doneText: '12 workouts in 28 days. That is a habit now.',
+    endedTitle: 'Challenge over',
+    endedText: 'You did {done} workouts in 28 days. Every workout counts; want to start again?',
+    restart: 'Start again',
+    share: 'Share',
+    shareText: 'I completed the Full Balance 28-day challenge: 12 workouts in 28 days! Join free:',
+    leave: 'Leave challenge',
+  },
+  es: {
+    eyebrow: 'Reto de 28 días',
+    title: '12 entrenos en 28 días',
+    pitch: '3 entrenos por semana durante 4 semanas. Tu plan está listo; solo tienes que empezar. Totalmente gratis.',
+    join: 'Unirme al reto',
+    invited: 'Vienes de la página del reto: te está esperando 💪',
+    day: 'Día {day} / 28',
+    progress: '{done}/12 entrenos',
+    week: 'Semana {n}',
+    today: 'Ir al entreno de hoy',
+    behind: 'Te quedan {left} entrenos esta semana. ¡Aún llegas!',
+    onTrack: 'Vas genial, el objetivo de esta semana está hecho ✓',
+    doneTitle: '¡Reto completado! 🏆',
+    doneText: '12 entrenos en 28 días. Ya es un hábito.',
+    endedTitle: 'Reto terminado',
+    endedText: 'Hiciste {done} entrenos en 28 días. Cada entreno cuenta; ¿quieres empezar de nuevo?',
+    restart: 'Empezar de nuevo',
+    share: 'Compartir',
+    shareText: 'He completado el reto de 28 días de Full Balance: ¡12 entrenos en 28 días! Únete gratis:',
+    leave: 'Salir del reto',
+  },
+};
+
+export function challengeText(lang, key, values = {}) {
+  const copy = challengeCopy[lang] || challengeCopy.en;
+  return String(copy[key] ?? challengeCopy.en[key] ?? key).replace(/\{(\w+)\}/g, (_, name) => values[name] ?? '');
+}
