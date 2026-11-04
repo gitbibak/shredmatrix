@@ -136,10 +136,17 @@ const articleAlternates = (article) => {
   return translations.length > 1 ? Object.fromEntries(translations.map((item) => [blogLang(item), getArticlePath(item)])) : null;
 };
 
+function sectionTable(table) {
+  if (!table) return '';
+  const head = table.head.map((cell) => `<th scope="col">${escapeHtml(cell)}</th>`).join('');
+  const rows = table.rows.map((row) => `<tr>${row.map((cell, index) => (index === 0 ? `<th scope="row">${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`)).join('')}</tr>`).join('');
+  return `<table>${table.caption ? `<caption>${escapeHtml(table.caption)}</caption>` : ''}<thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
 function articleBody(article) {
   const lang = blogLang(article);
   const copy = blogCopy(lang);
-  const sections = article.sections.map((section) => `<section><h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}</section>`).join('');
+  const sections = article.sections.map((section) => `<section><h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}${sectionTable(section.table)}${section.download ? `<p><a href="${escapeHtml(section.download.href)}">${escapeHtml(section.download.label)}</a></p>` : ''}</section>`).join('');
   const sources = article.sources.map(([label, href]) => `<li><a href="${escapeHtml(href)}" rel="noreferrer">${escapeHtml(label)}</a></li>`).join('');
   const localLinks = article.internalLinks?.filter(([href]) => lang === 'tr' || href.startsWith(`/${lang}/`)) || [];
   const internalLinks = localLinks.length ? `<nav aria-label="${escapeHtml(copy.tools)}"><h2>${escapeHtml(copy.tools)}</h2><ul>${localLinks.map(([href, label]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join('')}</ul></nav>` : '';

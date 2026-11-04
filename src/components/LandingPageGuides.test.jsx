@@ -26,12 +26,14 @@ function renderLanding(language) {
 describe('homepage guide links', () => {
   it.each([
     ['en', 'Understand why each habit matters', '/en/blog', [
-      '/en/blog/how-accurate-photo-calorie-counter',
-      '/en/blog/estimate-mixed-meal-rice-chicken-sauce',
-      '/en/blog/home-workout-progress-without-new-equipment',
+      '/en/blog/turkish-food-calories',
+      '/en/blog/28-day-workout-challenge-calendar-printable',
+      '/en/blog/can-you-spot-reduce-fat',
     ]],
     ['es', 'Comprende por qué importa cada hábito', '/es/blog', [
-      '/es/blog/precision-calorias-foto-porciones-aceite',
+      '/es/blog/calorias-comida-espanola',
+      '/es/blog/calendario-reto-28-dias-imprimible',
+      '/es/blog/grasa-localizada-se-puede-quemar',
     ]],
   ])('keeps %s visitors in their language for every guide link', (language, heading, indexPath, articlePaths) => {
     renderLanding(language);

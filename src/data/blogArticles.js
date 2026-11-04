@@ -1,6 +1,8 @@
 import { growthBlogArticles } from './growthBlogArticles.js';
+import { originalBlogArticles } from './originalBlogArticles.js';
 
 export const blogArticles = [
+  ...originalBlogArticles,
   ...growthBlogArticles,
   {
     slug: 'antrenman-oncesi-sonrasi-ne-yenir',

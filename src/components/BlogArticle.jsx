@@ -193,6 +193,30 @@ export default function BlogArticle() {
                 {section.paragraphs.map((paragraph) => (
                   <p key={paragraph} className="mt-4 text-base leading-8 text-slate-300">{paragraph}</p>
                 ))}
+                {section.table && (
+                  <div className="mt-6 overflow-x-auto rounded-xl border border-slate-800">
+                    <table className="w-full min-w-[520px] text-left text-sm">
+                      {section.table.caption && <caption className="px-4 pt-3 text-left text-xs text-slate-500">{section.table.caption}</caption>}
+                      <thead className="text-xs uppercase tracking-wide text-slate-400">
+                        <tr>{section.table.head.map((cell) => <th key={cell} scope="col" className="px-4 py-3 font-semibold">{cell}</th>)}</tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800 text-slate-300">
+                        {section.table.rows.map((row) => (
+                          <tr key={row[0]}>{row.map((cell, index) => (
+                            index === 0
+                              ? <th key={index} scope="row" className="px-4 py-3 font-semibold text-white">{cell}</th>
+                              : <td key={index} className="px-4 py-3 tabular-nums">{cell}</td>
+                          ))}</tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                {section.download && (
+                  <a href={section.download.href} target="_blank" rel="noopener" className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-emerald-500 px-4 text-sm font-bold text-slate-950 hover:bg-emerald-400">
+                    {section.download.label}
+                  </a>
+                )}
               </section>
             ))}
 
