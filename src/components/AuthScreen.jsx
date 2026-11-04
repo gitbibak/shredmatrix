@@ -5,6 +5,7 @@ import { Lock, Mail, User, Eye, EyeOff, Sparkles, Shield, ArrowRight, ArrowLeft,
 import { Link } from 'react-router-dom';
 import { signUp, signIn, resetPassword, signInWithGoogle } from '../lib/dataService';
 import { trackAuthView, trackEvent, trackLogin, trackLoginStart, trackSignUp, trackSignUpStart } from '../lib/analytics';
+import AnalyticsConsent from './AnalyticsConsent';
 
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -296,6 +297,8 @@ export default function AuthScreen({ onAuth, onBack }) {
             {t('auth.subtitle')}
           </p>
         </motion.div>
+
+        <AnalyticsConsent active delayMs={0} placement="inline" />
 
         {/* ── Mode Toggle ── */}
         <motion.div

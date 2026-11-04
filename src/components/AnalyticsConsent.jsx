@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 import { getAnalyticsConsent, setAnalyticsConsent } from '../lib/analytics';
 import { useTranslation } from '../i18n/LanguageContext';
 
-export default function AnalyticsConsent({ active = false, delayMs = 12000 }) {
+export default function AnalyticsConsent({ active = false, delayMs = 12000, placement = 'floating' }) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
@@ -26,7 +26,7 @@ export default function AnalyticsConsent({ active = false, delayMs = 12000 }) {
 
   return (
     <aside
-      className="fixed bottom-3 left-3 right-3 z-[9999] mx-auto max-w-md rounded-xl border border-slate-700 bg-slate-900/98 p-3.5 text-white shadow-2xl shadow-black/50 backdrop-blur-xl sm:bottom-5"
+      className={`${placement === 'inline' ? 'mb-6 w-full' : 'fixed bottom-3 left-3 right-3 z-[9999] mx-auto max-w-md sm:bottom-5'} rounded-xl border border-slate-700 bg-slate-900/98 p-3.5 text-white shadow-2xl shadow-black/50 backdrop-blur-xl`}
       role="dialog"
       aria-modal="false"
       aria-labelledby="analytics-consent-title"
