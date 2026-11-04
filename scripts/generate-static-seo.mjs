@@ -7,6 +7,7 @@ import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '..
 import { getLandingBlogArticles } from '../src/data/blogRelated.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
+import { storePrices } from '../src/data/storePrices.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
@@ -354,8 +355,10 @@ for (const page of reviewPages) {
 for (const page of pricingPages) {
   const canonical = `${BASE_URL}${page.path}`;
   const table = `<table><thead><tr>${page.compareHead.map((head) => `<th>${escapeHtml(head)}</th>`).join('')}</tr></thead><tbody>${page.compareRows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  const prices = storePrices[page.lang] || storePrices.en;
+  const priceTable = `<section><h2>${escapeHtml(prices.title)}</h2><p>${escapeHtml(prices.intro)}</p><table><thead><tr>${prices.head.map((head) => `<th>${escapeHtml(head)}</th>`).join('')}</tr></thead><tbody>${prices.rows.map(([app, purpose, price, ours, source]) => `<tr><td><a href="${escapeHtml(source)}" rel="nofollow noopener">${escapeHtml(app)}</a></td><td>${escapeHtml(purpose)}</td><td>${escapeHtml(price)}</td><td>${escapeHtml(ours)}</td></tr>`).join('')}</tbody></table><p>${escapeHtml(prices.note)}</p></section>`;
   const faqs = page.faqs.map(([question, answer]) => `<section><h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p></section>`).join('');
-  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p><p><strong>${escapeHtml(page.priceLabel)}: ${escapeHtml(page.price)}</strong> ${escapeHtml(page.priceNote)}</p></header><article><section><h2>${escapeHtml(page.compareTitle)}</h2>${table}</section><section><h2>${escapeHtml(page.whyTitle)}</h2><ul>${page.why.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section><section><h2>${escapeHtml(page.honestyTitle)}</h2><p>${escapeHtml(page.honesty)}</p><a href="/privacy">${escapeHtml(page.privacy)}</a></section><section><h2>${escapeHtml(page.faqTitle)}</h2>${faqs}</section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a> · <a href="${escapeHtml(page.compareHref)}">${escapeHtml(page.compareLink)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p><p><strong>${escapeHtml(page.priceLabel)}: ${escapeHtml(page.price)}</strong> ${escapeHtml(page.priceNote)}</p></header><article><section><h2>${escapeHtml(page.compareTitle)}</h2>${table}</section>${priceTable}<section><h2>${escapeHtml(page.whyTitle)}</h2><ul>${page.why.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section><section><h2>${escapeHtml(page.honestyTitle)}</h2><p>${escapeHtml(page.honesty)}</p><a href="/privacy">${escapeHtml(page.privacy)}</a></section><section><h2>${escapeHtml(page.faqTitle)}</h2>${faqs}</section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a> · <a href="${escapeHtml(page.compareHref)}">${escapeHtml(page.compareLink)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [

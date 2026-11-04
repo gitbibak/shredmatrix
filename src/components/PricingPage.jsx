@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { ArrowLeft, BadgeCheck, Check, CircleDollarSign, HeartHandshake, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { pricingAlternates, pricingPages } from '../data/pricingPages';
+import StorePriceTable from './StorePriceTable';
 
 const BASE_URL = 'https://fullbalance.app';
 
@@ -86,6 +87,8 @@ export default function PricingPage() {
           <h2 className="flex items-center gap-2 font-outfit text-2xl font-bold"><CircleDollarSign size={22} className="text-orange-400" />{c.compareTitle}</h2>
           <PricingComparison headings={c.compareHead} rows={c.compareRows} />
         </section>
+
+        <StorePriceTable lang={lang} />
 
         <section className="mt-14 grid gap-8 md:grid-cols-2">
           <div>
