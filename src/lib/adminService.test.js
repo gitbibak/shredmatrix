@@ -122,6 +122,29 @@ describe('admin snapshot reads', () => {
     await expect(getAdminSnapshot()).rejects.toThrow('offline');
   });
 
+  it('reads heard_from and keeps working before its migration is applied', async () => {
+    const profileSelects = [];
+    const run = async (columnExists) => {
+      profileSelects.length = 0;
+      mocks.from.mockImplementation((table) => {
+        const q = dataQuery({ data: [], count: 0, error: null });
+        let columns = '';
+        q.select = vi.fn((value) => { columns = value; if (table === 'profiles') profileSelects.push(value); return q; });
+        q.range = () => Promise.resolve(table === 'profiles' && !columnExists && columns.includes('heard_from')
+          ? { error: { code: '42703', message: 'column profiles.heard_from does not exist' } }
+          : { data: table === 'profiles' ? [{ id: 'a', role: 'user', created_at: '2026-10-10T10:00:00Z' }] : [], count: table === 'profiles' ? 1 : 0, error: null });
+        return q;
+      });
+      return getAdminSnapshot(new Date('2026-10-18T09:00:00Z'));
+    };
+    expect((await run(true)).profiles).toHaveLength(1);
+    expect(profileSelects).toHaveLength(1);
+    expect(profileSelects[0]).toContain('heard_from');
+    expect((await run(false)).profiles).toHaveLength(1);
+    expect(profileSelects).toHaveLength(2);
+    expect(profileSelects[1]).not.toContain('heard_from');
+  });
+
   it('reads only the plan fields it needs instead of whole plan documents', async () => {
     const selects = {};
     const filters = {};

@@ -885,6 +885,14 @@ export async function updateProfile(updates) {
   }
 }
 
+// Like updateProfile, but throws so the caller can show a save error.
+export async function updateProfileStrict(updates) {
+  const userId = getUserId();
+  if (!isSupabaseReady() || !userId) throw new Error('Not signed in');
+  const { error } = await supabase.from('profiles').update(updates).eq('id', userId);
+  if (error) throw error;
+}
+
 export async function getProfile() {
   const userId = getUserId();
   if (!isSupabaseReady() || !userId) return null;

@@ -250,6 +250,7 @@ export default function MemberPanel({ row, today, position, onClose, onPrev, onN
         <Section title="Kaynak ve cihaz">
           <Fields items={[
             ['İlk kaynak', row.sourceLabel],
+            ['Nereden duyduğunu söyledi', row.heardFrom],
             ['Ortam (medium)', row.medium],
             ['Kampanya', row.campaign],
             ['İçerik', row.content],

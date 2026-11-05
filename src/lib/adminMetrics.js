@@ -54,6 +54,16 @@ const ENVIRONMENT_LABELS = {
 };
 const UNKNOWN = 'Bilinmiyor';
 
+// Self-reported "how did you hear about us" answers (profiles.heard_from).
+const HEARD_FROM_LABELS = {
+  instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', google: 'Google araması',
+  ai_assistant: 'ChatGPT / yapay zekâ', friend: 'Arkadaş / aile', forum: 'Forum / Reddit / Ekşi', other: 'Diğer',
+};
+
+export function heardFromLabel(value) {
+  return value ? HEARD_FROM_LABELS[value] || value : null;
+}
+
 export function sourceLabel(source) {
   if (!source) return UNKNOWN;
   return SOURCE_LABELS[String(source).toLowerCase()] || String(source);
@@ -292,6 +302,11 @@ export function buildAdminMetrics(snapshot = {}, { period = 7 } = {}) {
     period: { days: period, current: strip(current), previous: strip(previous) },
     newWithoutPlan7: last7.registrations - last7.withPlan,
     trend,
+    heardFrom: {
+      answered: members.filter((profile) => profile.heard_from).length,
+      total: members.length,
+      rows: groupRegistrations(members.filter((profile) => profile.heard_from), (p) => p.heard_from, heardFromLabel, planIds),
+    },
     sources: groupRegistrations(periodRegistrations, (p) => (p.acquisition_source ? String(p.acquisition_source).toLowerCase() : null), sourceLabel, planIds),
     landings: groupRegistrations(periodRegistrations, (p) => p.landing_path || null, (path) => path, planIds),
     campaigns: groupRegistrations(periodRegistrations.filter((p) => p.acquisition_campaign), (p) => p.acquisition_campaign, (name) => name, planIds),
@@ -347,6 +362,7 @@ export function buildUserRows(snapshot = {}) {
         language: profile.app_language || null,
         source: profile.acquisition_source ? String(profile.acquisition_source).toLowerCase() : null,
         sourceLabel: sourceLabel(profile.acquisition_source),
+        heardFrom: heardFromLabel(profile.heard_from),
         medium: profile.acquisition_medium || null,
         campaign: profile.acquisition_campaign || null,
         content: profile.acquisition_content || null,

@@ -99,6 +99,13 @@ export default function GrowthSection({ metrics, period, onPeriodChange, loading
         </Panel>
       </div>
 
+      <Panel
+        title="Nereden duydular?"
+        description={`Üyelerin kendi cevabı, tüm zamanlar. ${metrics.heardFrom.answered}/${metrics.heardFrom.total} üye cevapladı.`}
+      >
+        <AcquisitionTable rows={metrics.heardFrom.rows} label="Cevap" emptyText="Henüz cevap yok. Soru, uygulamanın Bugün sekmesinde bir kez gösteriliyor." />
+      </Panel>
+
       <div className="grid gap-4 lg:grid-cols-3">
         <Panel title="Kullanım hunisi" description="Dönemde uygulamayı açan tekil üyeler; sıralı dönüşüm değildir.">
           <BarList rows={toRows(funnelRows)} color="bg-violet-500/25" />

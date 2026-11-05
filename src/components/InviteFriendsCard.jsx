@@ -18,6 +18,7 @@ const SURFACE_CAMPAIGN = {
   profile: 'invite_profile',
   workout: 'invite_workout',
   share: 'invite_share',
+  challenge: 'invite_challenge',
 };
 
 export function buildInviteMessage(t, { userName, streak, workoutCount } = {}) {

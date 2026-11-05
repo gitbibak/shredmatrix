@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Flame, Share2, Trophy } from 'lucide-react';
 import { getWorkoutLogs } from '../lib/dataService';
 import { getAcquisitionContext } from '../lib/acquisition';
@@ -7,7 +7,9 @@ import { CHALLENGE28, challengeStatus } from '../lib/challenge28';
 import { CHALLENGE_PATHS, challengeText } from '../i18n/challengeCopy';
 import { toDateStr, workoutDatesFromLogs } from '../utils/streaks';
 
+const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 const EVENT = { challengeId: CHALLENGE28.id, challengeType: 'workout' };
+const LOCALES = { tr: 'tr-TR', en: 'en-US', es: 'es-ES' };
 
 function cameFromChallengePage() {
   try {
@@ -23,6 +25,7 @@ export default function Challenge28Card({ plan, onPlanUpdate, lang = 'tr' }) {
   const s = (key, values) => challengeText(lang, key, values);
   const [dates, setDates] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const viewed = useRef(false);
   const challenge = plan?.challenge28 || null;
   const today = toDateStr(new Date());
@@ -84,6 +87,8 @@ export default function Challenge28Card({ plan, onPlanUpdate, lang = 'tr' }) {
   }
 
   const finished = status.state === 'completed';
+  // Completion needed 12 workouts; older logs may have aged out of the 60-day read.
+  const sharedDone = challenge?.completedAt ? Math.max(status.done, CHALLENGE28.target) : status.done;
   const ended = status.state === 'ended';
   return (
     <section className={`rounded-2xl border p-4 sm:p-5 ${finished ? 'border-amber-400/40 bg-amber-500/[0.07]' : 'border-slate-800 bg-slate-900'}`}>
@@ -123,7 +128,7 @@ export default function Challenge28Card({ plan, onPlanUpdate, lang = 'tr' }) {
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {finished && (
-          <button type="button" onClick={share} className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-amber-500 px-3 text-sm font-bold text-slate-950">
+          <button type="button" aria-expanded={showShare} onClick={() => { if (!showShare) trackEvent('challenge_shared', EVENT); setShowShare((value) => !value); }} className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-amber-500 px-3 text-sm font-bold text-slate-950">
             <Trophy size={15} aria-hidden="true" /> {s('share')}
           </button>
         )}
@@ -143,6 +148,32 @@ export default function Challenge28Card({ plan, onPlanUpdate, lang = 'tr' }) {
           </button>
         )}
       </div>
+
+      {finished && showShare && (
+        <Suspense fallback={null}>
+          <InviteFriendsCard
+            surface="challenge"
+            compact
+            className="mt-4"
+            userName={plan?.userName}
+            title={s('shareTitle')}
+            description={s('shareDesc')}
+            imageCard={{
+              variant: 'workout',
+              theme: plan?.primaryGoal,
+              dateLabel: new Date(`${challenge?.completedAt || today}T12:00:00`).toLocaleDateString(LOCALES[lang] || LOCALES.en, { day: 'numeric', month: 'short', year: 'numeric' }),
+              progress: { value: sharedDone, total: CHALLENGE28.target, label: s('statWorkouts') },
+              eyebrow: s('imageEyebrow'),
+              headline: s('imageHeadline', { done: sharedDone }),
+              subline: s('imageSubline'),
+              stats: [
+                { label: s('statDays'), value: CHALLENGE28.days },
+                { label: s('statWeeks'), value: 4 },
+              ],
+            }}
+          />
+        </Suspense>
+      )}
     </section>
   );
 }

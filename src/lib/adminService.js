@@ -125,6 +125,17 @@ async function readMemberInsights(since30, since32) {
   }
 }
 
+// heard_from arrives with migration 20261105120000; until it is applied the
+// panel keeps working without it.
+async function readProfiles() {
+  try {
+    return await readAllAdminRows('profiles', `${PROFILE_COLUMNS}, heard_from, heard_from_at`);
+  } catch (error) {
+    if (error?.code !== '42703' && !/heard_from/.test(error?.message || '')) throw error;
+    return readAllAdminRows('profiles', PROFILE_COLUMNS);
+  }
+}
+
 export async function getAdminSnapshot(now = new Date()) {
   if (!isSupabaseReady()) throw new Error('Supabase bağlantısı hazır değil.');
   const daysAgo = (days) => {
@@ -133,7 +144,7 @@ export async function getAdminSnapshot(now = new Date()) {
     return date;
   };
   const [profiles, plans, activity, insights, events] = await Promise.all([
-    readAllAdminRows('profiles', PROFILE_COLUMNS),
+    readProfiles(),
     readAllAdminRows('plans', PLAN_COLUMNS),
     readAllAdminRows('user_activity_days',
       'user_id, activity_date, today_viewed, workout_plan_viewed, workout_day_opened, workout_completed',

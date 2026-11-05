@@ -7,6 +7,7 @@ import { toDateStr } from '../utils/streaks';
 
 vi.mock('../lib/dataService', () => ({ getWorkoutLogs: vi.fn() }));
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
+vi.mock('./InviteFriendsCard', () => ({ default: ({ imageCard, title }) => <div data-testid="share-card">{title} · {imageCard.headline} · {imageCard.progress.value}/{imageCard.progress.total}</div> }));
 vi.mock('../lib/acquisition', () => ({ getAcquisitionContext: vi.fn(() => ({ first_landing_page: '/28-gunluk-challenge' })) }));
 
 const today = toDateStr(new Date());
@@ -28,5 +29,12 @@ describe('Challenge28Card', () => {
     expect(await screen.findByText('1')).toBeInTheDocument();
     expect(screen.getByText('Day 1 / 28')).toBeInTheDocument();
     expect(screen.getByText('2 workouts left this week. You can still make it!')).toBeInTheDocument();
+  });
+
+  it('offers an image share card once the challenge is complete', async () => {
+    render(<Challenge28Card plan={{ primaryGoal: 'muscle', challenge28: { startedAt: today, completedAt: today } }} onPlanUpdate={vi.fn()} lang="tr" />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Paylaş' }));
+    expect(await screen.findByTestId('share-card')).toHaveTextContent('Başarını paylaş · 12 antrenman · 12/12');
+    expect(trackEvent).toHaveBeenCalledWith('challenge_shared', { challengeId: 'start28', challengeType: 'workout' });
   });
 });

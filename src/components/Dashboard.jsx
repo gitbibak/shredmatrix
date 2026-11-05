@@ -32,6 +32,7 @@ const StreakCalendar = lazy(() => import('./StreakCalendar'));
 const LongevityPanel = lazy(() => import('./LongevityPanel'));
 const PushPermission = lazy(() => import('./PushPermission'));
 const MilestoneStoryPrompt = lazy(() => import('./MilestoneStoryPrompt'));
+const HeardFromCard = lazy(() => import('./HeardFromCard'));
 const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
@@ -349,6 +350,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
                   <TodayFocusPanel plan={plan} onNavigate={navigateFromToday} />
                   <Challenge28Card plan={plan} onPlanUpdate={onPlanUpdate} lang={lang} />
                   <BalanceScoreCard plan={plan} />
+                  <HeardFromCard key={user?.id} userId={user?.id} lang={lang} />
                   <div className="grid grid-cols-2 gap-3">
                     <WaterTracker compact />
                     <SleepTracker compact />

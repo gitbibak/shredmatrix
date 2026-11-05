@@ -170,3 +170,18 @@ describe('helpers', () => {
     expect(sourceLabel(null)).toBe('Bilinmiyor');
   });
 });
+
+describe('heard-from answers', () => {
+  it('counts self-reported answers for members only and labels them', () => {
+    const data = snapshot();
+    data.profiles = data.profiles.map((profile) => (
+      profile.id === 'old' || profile.id === 'wk' ? { ...profile, heard_from: 'instagram' }
+        : profile.id === 'admin' ? { ...profile, heard_from: 'friend' } : profile
+    ));
+    const metrics = buildAdminMetrics(data);
+    expect(metrics.heardFrom.answered).toBe(2);
+    expect(metrics.heardFrom.total).toBe(6);
+    expect(metrics.heardFrom.rows).toEqual([expect.objectContaining({ label: 'Instagram', registrations: 2, withPlan: 2 })]);
+    expect(buildUserRows(data).find((row) => row.id === 'wk').heardFrom).toBe('Instagram');
+  });
+});
