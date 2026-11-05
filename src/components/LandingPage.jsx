@@ -228,8 +228,10 @@ const photoToolPaths = { tr: '/fotografla-kalori-hesaplama', en: '/en/photo-calo
 
 function PhoneShot({ src, alt, className = '', eager = false }) {
   return (
-    <div className={`rounded-[2rem] border border-slate-700/80 bg-slate-900 p-1.5 shadow-2xl shadow-black/60 ${className}`}>
-      <img src={src} alt={alt} width="640" height="1385" loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : undefined} decoding="async" className="block h-auto w-full rounded-[1.6rem]" />
+    <div className={`rounded-[2.4rem] bg-gradient-to-b from-slate-600 to-slate-800 p-[3px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.85),0_0_60px_-10px_rgba(249,115,22,0.25)] ${className}`}>
+      <div className="rounded-[2.3rem] bg-black p-2">
+        <img src={src} alt={alt} width="900" height="1948" loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : undefined} decoding="async" className="block h-auto w-full rounded-[1.8rem]" />
+      </div>
     </div>
   );
 }
@@ -359,8 +361,7 @@ export default function LandingPage({ onStart, language }) {
             <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="shrink-0 text-emerald-400" /> {c.freeNote}</motion.p>
           </motion.div>
           <figure className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[380px]">
-            <PhoneShot src={`/images/app/${shotLang}-nutrition.webp`} alt="" className="absolute -right-6 top-10 hidden w-[78%] rotate-6 opacity-60 sm:block" />
-            <PhoneShot src={`/images/app/${shotLang}-session.webp`} alt={m.shots[0][1]} eager className="relative mx-auto w-[86%] -rotate-2 sm:mx-0 sm:w-[80%]" />
+            <PhoneShot src={`/images/app/${shotLang}-session.webp`} alt={m.shots[0][1]} eager className="mx-auto w-[86%]" />
             <figcaption className="mt-4 text-center text-[11px] text-slate-500">{m.shotCaption}</figcaption>
           </figure>
         </div>
