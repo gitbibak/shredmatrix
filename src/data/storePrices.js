@@ -51,3 +51,11 @@ export const storePrices = {
     ],
   },
 };
+
+// Highest yearly price listed among the rows above, for one-line summaries
+// (landing page). Update together with the rows and STORE_PRICES_CHECKED_AT.
+export const storePriceHeadline = {
+  tr: { max: '₺3.999,99', period: 'yıllık', store: 'App Store Türkiye', date: '4 Kasım 2026', free: '0 TL' },
+  en: { max: '$95.99', period: 'a year', store: 'the US App Store', date: 'November 4, 2026', free: '$0' },
+  es: { max: '87,99 €', period: 'al año', store: 'la App Store de España', date: '4 de noviembre de 2026', free: '0 €' },
+};

@@ -3,10 +3,10 @@ import { coachMarketing } from '../data/coachMarketing';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Activity, ArrowRight, BarChart3, BookOpen, Brain, Camera, Check,
-  ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
-  HeartPulse, House, Languages, Leaf, Lock, MapPin, PackageOpen, Salad, ShieldCheck,
-  Sparkles, Sun, Target, TrendingUp,
+  Activity, ArrowRight, BookOpen, Brain, Camera, Check,
+  ChevronDown, ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
+  House, Languages, Leaf, Lock, MapPin, PackageOpen, ShieldCheck,
+  Sparkles, Sun,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -20,6 +20,8 @@ import { buildTrackedShareUrl } from '../lib/shareLinks';
 import ApprovedTestimonials from './ApprovedTestimonials';
 import { recordAcquisitionContent } from '../lib/acquisition';
 import SupportCard from './SupportCard';
+import { storePriceHeadline } from '../data/storePrices';
+import { CHALLENGE_PATHS } from '../i18n/challengeCopy';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -36,8 +38,8 @@ const copy = {
     metaDescription: 'Evde ekipmansız, temel ekipmanla veya salonda; 6 hedef modu, kişisel beslenme, su, uyku ve ilerleme takibi tamamen ücretsiz.',
     navCta: 'Ücretsiz başla',
     freeBadge: 'Tamamen ücretsiz · Kredi kartı gerekmez',
-    heroTitle: 'Ücretsiz kişisel fitness ve wellness uygulaması',
-    heroDesc: 'Evde ekipmansız, evde temel ekipmanla veya salonda: kas gelişimi, yağ yakımı, yoga, meditasyon, reformer ve pilates planın hedefinle birlikte ortamına da uyarlanır.',
+    heroTitle: 'Kişisel antrenman ve beslenme planın. Tamamen ücretsiz.',
+    heroDesc: 'Hedefine, seviyene ve evindeki ekipmana göre hazırlanır. Antrenmanda setlerini işaretle, dinlenmeyi uygulama saysın; öğününün fotoğrafını çek, kalorisini gör.',
     primaryCta: 'Ücretsiz hesabını oluştur',
     share: 'Arkadaşına gönder',
     copied: 'Bağlantı kopyalandı',
@@ -51,25 +53,10 @@ const copy = {
     equipmentDesc: 'Dambıl, direnç bandı ve mat gibi temel ekipmana göre hazırlanmış egzersizler ve uygun alternatifler.',
     homeVenueNote: 'Salonu seçersen program makine ve serbest ağırlıklara göre hazırlanır. Reformer gibi cihaz gerektiren hedeflerde yalnızca uygun ortam seçenekleri gösterilir.',
     homeCta: 'Ortamına uygun ücretsiz planı oluştur',
-    previewEyebrow: 'Tek sakin akış',
-    previewTitle: 'Planını uygula, alışkanlıklarını gör, ilerlemeni takip et.',
-    previewDesc: 'Full Balance farklı araçlara dağılmadan antrenman, öğün, su, uyku ve vücut gelişimini aynı kişisel panelde birleştirir.',
     goalsEyebrow: '6 kişisel hedef',
     goalsTitle: 'Sana uygun başlangıç noktasını seç',
     goalsDesc: 'Her hedef başlangıç, orta, ileri ve usta seviyelerine göre farklı planlanır. Hedefini daha sonra değiştirebilirsin.',
-    includedEyebrow: 'Programdan fazlası',
-    includedTitle: 'Beslenme, ilerleme ve longevity birlikte çalışır',
-    includedDesc: 'Yeni formlar doldurmak yerine mevcut günlük kayıtların anlamlı bir görünümde birleşir.',
-    nutritionTitle: 'Kişisel beslenme',
-    nutritionDesc: 'Kalori ve makro hedefleri, 7 günlük menü, bütçe seçenekleri, sağlık ve alerji bilgilerine göre uyarlama.',
-    progressTitle: 'Anlaşılır ilerleme',
-    progressDesc: 'Kilo, ölçü, fotoğraf, antrenman, su ve uyku eğilimleri; Excel ve rapor çıktısı dahil.',
-    longevityTitle: 'Longevity dengesi',
-    longevityDesc: 'Hareket, kuvvet, mobilite, toparlanma ve beslenme alışkanlıklarını beş şeffaf başlıkta izle.',
     longevityNote: 'Biyolojik yaş veya yaşam süresi tahmini yapmaz; yalnızca kaydettiğin alışkanlıkları anlamlandırır.',
-    photoMealEyebrow: 'Yeni ücretsiz öğün aracı',
-    photoMealTitle: 'Öğün fotoğrafını gerçekçi bir kalori aralığına dönüştür',
-    photoMealDesc: 'Tabağını fotoğrafla; yapay zeka yiyecekleri ve porsiyonları tanısın, kalori ve makrolar veritabanından hesaplansın. Gizli yağ ve sos önerilerini onayla, porsiyonu düzelt. Fotoğraf yalnızca analiz için işlenir, saklanmaz; sonuç tek bir kesin sayı gibi sunulmaz.',
     photoMealCta: 'Fotoğrafla ücretsiz dene',
     freeTitle: 'Gerçekten ücretsiz ne demek?',
     freeDesc: 'Temel özellikleri göstermek için ödeme istemiyoruz. Full Balance’ın kişisel planları ve takip araçları ücretsiz kullanılabilir.',
@@ -86,7 +73,6 @@ const copy = {
     guidesDesc: 'Antrenman, beslenme ve sağlıklı yaşam konularını sade, uygulanabilir ve kaynaklı içeriklerle açıklıyoruz.',
     readGuide: 'Rehberi oku',
     allGuides: 'Tüm rehberler',
-    stats: ['hedef', 'program', 'ücretsiz'],
     finalTitle: 'Sağlıklı rutinini bugün ücretsiz kur',
     finalDesc: 'Tek hedef seç, kısa bilgilerini gir ve kişisel planını kullanmaya başla.',
     footerMedical: 'Full Balance tıbbi tanı veya tedavi aracı değildir. Sağlık durumuna uygun kararlar için sağlık uzmanına danış.',
@@ -95,58 +81,158 @@ const copy = {
   en: {
     metaTitle: 'Full Balance - Free Fitness, Nutrition and Longevity App',
     metaDescription: 'Free personal plans for home workouts with or without equipment and gym training, plus nutrition, water, sleep and progress tracking.',
-    navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your free personal fitness and wellness app',
-    heroDesc: 'At home with no equipment, with basic equipment or at the gym: muscle growth, fat loss, yoga, meditation, reformer and pilates plans adapt to both your goal and training environment.',
+    navCta: 'Start free', freeBadge: 'Completely free · No credit card', heroTitle: 'Your personal workout and nutrition plan. Completely free.',
+    heroDesc: 'Built for your goal, your level and the equipment you have at home. Tick off your sets while the app counts your rest; snap a meal and see its calories.',
     primaryCta: 'Create your free account', share: 'Share with a friend', copied: 'Link copied', freeNote: 'No subscription · no paywall · no hidden fees',
     homeEyebrow: 'Built for your actual setup', homeTitle: 'Your plan only uses what you have at home.', homeDesc: 'Choose where you train during signup. Full Balance adapts exercises to your goal, level, health preferences and selected environment.',
     noEquipmentTitle: 'Home · No equipment', noEquipmentDesc: 'Bodyweight movements and safe household support. No gym machine or equipment you do not own.',
     equipmentTitle: 'Home · Basic equipment', equipmentDesc: 'Exercises and practical alternatives for dumbbells, resistance bands and a mat.',
     homeVenueNote: 'Choose the gym for machine and free-weight programming. Equipment-specific goals such as reformer only show compatible environments.', homeCta: 'Create my free setup-based plan',
-    previewEyebrow: 'One calm flow', previewTitle: 'Follow your plan, understand your habits and track progress.', previewDesc: 'Full Balance brings workouts, meals, water, sleep and body progress into one personal dashboard.',
-    goalsEyebrow: '6 personal goals', goalsTitle: 'Choose the right place to begin', goalsDesc: 'Each goal has foundation, intermediate, advanced and master plans. You can change your goal later.',
-    includedEyebrow: 'More than a program', includedTitle: 'Nutrition, progress and longevity work together', includedDesc: 'Your existing daily records become one meaningful view without extra forms.',
-    nutritionTitle: 'Personal nutrition', nutritionDesc: 'Calories, macros, weekly menus, budget options and adjustments for health and allergy information.',
-    progressTitle: 'Clear progress', progressDesc: 'Weight, measurements, photos, workouts, water and sleep trends, including Excel and report export.',
-    longevityTitle: 'Longevity balance', longevityDesc: 'Track movement, strength, mobility, recovery and nutrition across five transparent pillars.', longevityNote: 'It does not predict biological age or lifespan; it only helps you understand recorded habits.',
-    photoMealEyebrow: 'New free meal tool', photoMealTitle: 'Turn a meal photo into a realistic calorie range',
-    photoMealDesc: 'Snap your plate; AI recognises the foods and portions and calories come from the food database. Confirm suggested hidden oils or sauces and fix any portion. The photo is processed only for the analysis and never stored, and the result is shown as a range rather than a falsely exact number.',
+    goalsEyebrow: '6 personal goals', goalsTitle: 'Choose the right place to begin', goalsDesc: 'Each goal has foundation, intermediate, advanced and master plans. You can change your goal later.', longevityNote: 'It does not predict biological age or lifespan; it only helps you understand recorded habits.',
     photoMealCta: 'Try it free with a photo',
     freeTitle: 'What does truly free mean?', freeDesc: 'We do not ask for payment to reveal essential features. Personal plans and tracking tools are free to use.',
     freeItems: ['No credit card', 'No subscription or trial', 'All 6 goals unlocked', 'Nutrition and longevity included', 'Export your data', 'Turkish, English and Spanish'],
     stepsEyebrow: 'Simple start', stepsTitle: 'Your personal plan in three steps', steps: [['Choose your goal', 'Select one of six goals and your experience level.'], ['Add the essentials', 'Complete the short profile, health and allergy preferences.'], ['Start today', 'See your workout and nutrition plan; recommendations adapt as you progress.']],
     guidesEyebrow: 'Sourced guides', guidesTitle: 'Understand why each habit matters', guidesDesc: 'Clear, practical and sourced guides on training and nutrition.', readGuide: 'Read guide',
-    allGuides: 'All guides', stats: ['goals', 'programs', 'free'],
+    allGuides: 'All guides',
     finalTitle: 'Build your healthy routine for free today', finalDesc: 'Choose one goal, add the essentials and start using your personal plan.', footerMedical: 'Full Balance is not a medical diagnosis or treatment tool. Consult a health professional for decisions related to your condition.',
     founderLink: 'Founder & developer', founderCredit: 'Full Balance is an independent product founded and developed by Tolga Deveci.',
   },
   es: {
     metaTitle: 'Full Balance - App Gratuita de Fitness, Nutrición y Longevidad',
     metaDescription: 'Planes personales gratis para entrenar en casa con o sin equipo o en el gimnasio, con nutrición, agua, sueño y seguimiento del progreso.',
-    navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu aplicación personal gratuita de fitness y bienestar',
-    heroDesc: 'En casa sin equipo, con equipo básico o en el gimnasio: los planes de músculo, pérdida de grasa, yoga, meditación, reformer y pilates se adaptan a tu objetivo y entorno.',
+    navCta: 'Empieza gratis', freeBadge: 'Totalmente gratis · Sin tarjeta', heroTitle: 'Tu plan personal de entrenamiento y nutrición. Totalmente gratis.',
+    heroDesc: 'Se adapta a tu objetivo, tu nivel y el material que tienes en casa. Marca tus series mientras la app cuenta el descanso; fotografía tu comida y ve sus calorías.',
     primaryCta: 'Crea tu cuenta gratis', share: 'Compartir', copied: 'Enlace copiado', freeNote: 'Sin suscripción · sin muro de pago · sin costes ocultos',
     homeEyebrow: 'Creado para tu espacio real', homeTitle: 'Tu plan solo utiliza lo que tienes en casa.', homeDesc: 'Elige dónde entrenas durante el registro. Full Balance adapta los ejercicios a tu objetivo, nivel, preferencias de salud y entorno.',
     noEquipmentTitle: 'Casa · Sin equipo', noEquipmentDesc: 'Movimientos con peso corporal y apoyo doméstico seguro. Sin máquinas ni material que no tengas.',
     equipmentTitle: 'Casa · Equipo básico', equipmentDesc: 'Ejercicios y alternativas para mancuernas, bandas de resistencia y esterilla.',
     homeVenueNote: 'Elige gimnasio para usar máquinas y peso libre. Objetivos específicos como reformer solo muestran entornos compatibles.', homeCta: 'Crear mi plan gratuito según mi espacio',
-    previewEyebrow: 'Un flujo sencillo', previewTitle: 'Sigue tu plan, comprende tus hábitos y controla tu progreso.', previewDesc: 'Full Balance reúne entrenamiento, comidas, agua, sueño y progreso corporal en un panel personal.',
-    goalsEyebrow: '6 objetivos personales', goalsTitle: 'Elige el punto de partida adecuado', goalsDesc: 'Cada objetivo incluye niveles inicial, intermedio, avanzado y maestro. Puedes cambiarlo después.',
-    includedEyebrow: 'Más que un programa', includedTitle: 'Nutrición, progreso y longevidad unidos', includedDesc: 'Tus registros diarios forman una vista útil sin formularios adicionales.',
-    nutritionTitle: 'Nutrición personal', nutritionDesc: 'Calorías, macros, menú semanal, presupuesto y ajustes según salud y alergias.',
-    progressTitle: 'Progreso claro', progressDesc: 'Peso, medidas, fotos, entrenamientos, agua y sueño, con exportación Excel e informes.',
-    longevityTitle: 'Equilibrio de longevidad', longevityDesc: 'Observa movimiento, fuerza, movilidad, recuperación y nutrición en cinco pilares transparentes.', longevityNote: 'No predice edad biológica ni longevidad; solo interpreta los hábitos registrados.',
-    photoMealEyebrow: 'Nueva herramienta gratuita', photoMealTitle: 'Convierte una foto de tu comida en un rango realista de calorías',
-    photoMealDesc: 'Fotografía tu plato; la IA reconoce alimentos y porciones y las calorías salen de la base de datos de alimentos. Confirma los aceites o salsas ocultos que sugiere y corrige cualquier porción. La foto se procesa solo para el análisis y nunca se guarda; el resultado se muestra como un rango, no como una cifra falsamente exacta.',
+    goalsEyebrow: '6 objetivos personales', goalsTitle: 'Elige el punto de partida adecuado', goalsDesc: 'Cada objetivo incluye niveles inicial, intermedio, avanzado y maestro. Puedes cambiarlo después.', longevityNote: 'No predice edad biológica ni longevidad; solo interpreta los hábitos registrados.',
     photoMealCta: 'Probar gratis con una foto',
     freeTitle: '¿Qué significa realmente gratis?', freeDesc: 'No pedimos pagos para mostrar funciones esenciales. Los planes y herramientas de seguimiento son gratuitos.',
     freeItems: ['Sin tarjeta', 'Sin suscripción ni prueba', 'Los 6 objetivos abiertos', 'Nutrición y longevidad incluidas', 'Exporta tus datos', 'Turco, inglés y español'],
     stepsEyebrow: 'Inicio sencillo', stepsTitle: 'Tu plan personal en tres pasos', steps: [['Elige tu objetivo', 'Selecciona uno de seis objetivos y tu nivel.'], ['Añade lo esencial', 'Completa el perfil breve y tus preferencias de salud y alergias.'], ['Empieza hoy', 'Consulta entrenamiento y nutrición; las recomendaciones se adaptan a tu progreso.']],
     guidesEyebrow: 'Guías con fuentes', guidesTitle: 'Comprende por qué importa cada hábito', guidesDesc: 'Guías claras y prácticas sobre nutrición y hábitos saludables.', readGuide: 'Leer guía',
-    allGuides: 'Todas las guías', stats: ['objetivos', 'programas', 'gratis'],
+    allGuides: 'Todas las guías',
     finalTitle: 'Crea hoy tu rutina saludable gratis', finalDesc: 'Elige un objetivo, añade lo esencial y empieza tu plan personal.', footerMedical: 'Full Balance no es una herramienta de diagnóstico ni tratamiento. Consulta a un profesional de salud.',
     founderLink: 'Fundador y desarrollador', founderCredit: 'Full Balance es un producto independiente fundado y desarrollado por Tolga Deveci.',
   },
 };
+
+// Sections added in the Nov 2026 landing refresh: real app screens, price
+// strip, challenge banner and FAQ.
+const more = {
+  tr: {
+    tryCta: 'Kayıt olmadan dene: fotoğrafla kalori',
+    shotCaption: 'Gerçek uygulama ekranı · örnek verilerle',
+    priceEyebrow: 'Ücret karşılaştırması',
+    priceOthers: 'Benzer uygulamalarda yıllık abonelik',
+    priceUpTo: 'en fazla',
+    priceOurs: 'Full Balance\'ta her şey',
+    priceNote: (h) => `Fiyatlar ${h.date} tarihinde ${h.store} sayfalarından okundu; bölge ve kampanyaya göre değişebilir.`,
+    priceLink: 'Karşılaştırmayı gör',
+    showEyebrow: 'Uygulamanın içi',
+    showTitle: 'Kayıt olunca seni bunlar karşılıyor',
+    showDesc: 'Aşağıdakiler gerçek uygulama ekranları. Tarayıcıda çalışır; telefonunda ana ekrana ekleyip uygulama gibi kullanırsın.',
+    shots: [
+      ['session', 'Antrenmanda ne yapacağını düşünme', ['Her hareket için animasyonlu anlatım ve teknik videosu', 'Kilonu ve tekrarını işaretle, önceki kilon hazır gelsin', 'Dinlenme sayacı kendiliğinden başlar', 'Yeni rekorların kutlanır']],
+      ['today', 'Her gün tek, net bir odak', ['Bugünün antrenmanı tek dokunuşla başlar', 'Haftalık hedefin bir bakışta', 'Son 7 günün denge puanı: aktivite, toparlanma, tutarlılık', 'İstersen hatırlatıcı kur']],
+      ['nutrition', 'Beslenmen antrenman gününe göre değişir', ['Her güne özel kalori ve makro hedefi', '7 günlük menü; bütçe, sağlık ve alerji seçenekleri', 'Öğününün fotoğrafını çek, kalori aralığını gör']],
+      ['progress', 'Gelişimini sayılarla gör', ['Kilo, ölçü ve yağ oranı grafikleri', 'Raporlar ve Excel çıktısı', 'Antrenman, su ve uyku alışkanlıkların tek yerde']],
+    ],
+    challengeEyebrow: '28 günlük challenge',
+    challengeTitle: '28 günde 12 antrenman. Ücretsiz katıl.',
+    challengeDesc: 'Haftada 3 antrenman, 4 hafta. İlerlemen antrenmanlarını işaretledikçe kendiliğinden dolar; istersen yazdırılabilir takvimi buzdolabına as.',
+    challengeCta: 'Challenge\'ı incele',
+    faqEyebrow: 'Sık sorulanlar',
+    faqTitle: 'Aklındaki sorular',
+    faqs: [
+      ['Gerçekten tamamen ücretsiz mi?', 'Evet. Kişisel plan, antrenman modu, beslenme planı, fotoğrafla kalori ve ilerleme takibi ücretsiz. Kredi kartı istenmez, deneme süresi yoktur, premium duvarı yoktur.'],
+      ['Nasıl ücretsiz kalıyor?', 'Verilerin satılmaz ve reklam amacıyla paylaşılmaz. Full Balance, isteyen kullanıcıların küçük ve tamamen isteğe bağlı destekleriyle ayakta kalıyor.'],
+      ['Uygulama indirmem gerekiyor mu?', 'Hayır. Full Balance tarayıcıda çalışır; telefonunda ana ekrana ekleyerek uygulama gibi açabilirsin. Aynı hesapla telefon ve bilgisayarda kullanırsın.'],
+      ['Ekipmanım yok, yeni başlıyorum. Bana uygun mu?', 'Evet. Kayıtta evde ekipmansız, evde temel ekipman veya salon seçersin. Başlangıç seviyesinde hareketler daha basittir ve her birinin anlatımı vardır.'],
+      ['Verilerim ne oluyor?', 'Verilerin hesabında tutulur; dışa aktarabilir ve Profil bölümünden hesabını kalıcı olarak silebilirsin. Öğün fotoğrafları yalnızca analiz için işlenir, saklanmaz.'],
+      ['Hangi dillerde kullanabilirim?', 'Türkçe, İngilizce ve İspanyolca. Dili istediğin zaman değiştirebilirsin.'],
+    ],
+  },
+  en: {
+    tryCta: 'Try without signing up: photo calories',
+    shotCaption: 'Real app screen · sample data',
+    priceEyebrow: 'Price check',
+    priceOthers: 'Yearly subscription in similar apps',
+    priceUpTo: 'up to',
+    priceOurs: 'Everything in Full Balance',
+    priceNote: (h) => `Prices read from ${h.store} pages on ${h.date}; they can vary by region and promotion.`,
+    priceLink: 'See the comparison',
+    showEyebrow: 'Inside the app',
+    showTitle: 'What you get as soon as you sign up',
+    showDesc: 'These are real app screens. It runs in your browser; add it to your home screen and it works like an app.',
+    shots: [
+      ['session', 'Never wonder what to do next', ['Animated how-to and technique video for every exercise', 'Log weight and reps; your last weights are pre-filled', 'The rest timer starts on its own', 'New personal records get celebrated']],
+      ['today', 'One clear focus every day', ['Start today\'s workout with one tap', 'Your weekly goal at a glance', '7-day balance score: activity, recovery, consistency', 'Optional reminders']],
+      ['nutrition', 'Nutrition that follows your training day', ['Calorie and macro targets for each day', '7-day menu with budget, health and allergy options', 'Snap a meal, see its calorie range']],
+      ['progress', 'See your progress in numbers', ['Weight, measurements and body fat charts', 'Reports and Excel export', 'Workouts, water and sleep habits in one place']],
+    ],
+    challengeEyebrow: '28-day challenge',
+    challengeTitle: '12 workouts in 28 days. Join free.',
+    challengeDesc: '3 workouts a week for 4 weeks. Your progress fills in as you check off workouts, and there is a printable calendar for your fridge.',
+    challengeCta: 'See the challenge',
+    faqEyebrow: 'FAQ',
+    faqTitle: 'Questions you might have',
+    faqs: [
+      ['Is it really completely free?', 'Yes. Your personal plan, workout mode, nutrition plan, photo calories and progress tracking are free. No credit card, no trial, no paywall.'],
+      ['How does it stay free?', 'Your data is never sold or shared for advertising. Full Balance is kept running by small, completely optional support from people who use it.'],
+      ['Do I need to download an app?', 'No. Full Balance runs in your browser; add it to your phone\'s home screen to open it like an app. Use the same account on your phone and computer.'],
+      ['I have no equipment and I am a beginner. Is it for me?', 'Yes. At signup you choose home with no equipment, home with basic equipment or the gym. Beginner exercises are simpler and each one comes with instructions.'],
+      ['What happens to my data?', 'Your data stays in your account; you can export it and permanently delete your account from your profile. Meal photos are processed only for the analysis and never stored.'],
+      ['Which languages are available?', 'English, Spanish and Turkish. You can switch at any time.'],
+    ],
+  },
+  es: {
+    tryCta: 'Prueba sin registro: calorías con foto',
+    shotCaption: 'Pantalla real de la app · datos de ejemplo',
+    priceEyebrow: 'Comparación de precios',
+    priceOthers: 'Suscripción anual en apps similares',
+    priceUpTo: 'hasta',
+    priceOurs: 'Todo en Full Balance',
+    priceNote: (h) => `Precios leídos en ${h.store} el ${h.date}; pueden variar según región y promoción.`,
+    priceLink: 'Ver la comparación',
+    showEyebrow: 'Dentro de la app',
+    showTitle: 'Lo que encuentras al registrarte',
+    showDesc: 'Estas son pantallas reales de la app. Funciona en el navegador; añádela a la pantalla de inicio y se usa como una app.',
+    shots: [
+      ['session', 'No pienses qué toca ahora', ['Explicación animada y vídeo de técnica en cada ejercicio', 'Marca peso y repeticiones; tu último peso aparece listo', 'El temporizador de descanso arranca solo', 'Celebras cada nuevo récord']],
+      ['today', 'Un foco claro cada día', ['Empieza el entreno de hoy con un toque', 'Tu objetivo semanal de un vistazo', 'Puntuación de equilibrio de 7 días: actividad, recuperación, constancia', 'Recordatorios si los quieres']],
+      ['nutrition', 'Tu nutrición sigue a tu día de entreno', ['Calorías y macros para cada día', 'Menú de 7 días con opciones de presupuesto, salud y alergias', 'Fotografía tu comida y ve su rango de calorías']],
+      ['progress', 'Tu progreso en números', ['Gráficos de peso, medidas y grasa corporal', 'Informes y exportación a Excel', 'Entrenos, agua y sueño en un solo lugar']],
+    ],
+    challengeEyebrow: 'Reto de 28 días',
+    challengeTitle: '12 entrenos en 28 días. Únete gratis.',
+    challengeDesc: '3 entrenos por semana durante 4 semanas. Tu progreso se completa al marcar los entrenos, y hay un calendario imprimible para la nevera.',
+    challengeCta: 'Ver el reto',
+    faqEyebrow: 'Preguntas frecuentes',
+    faqTitle: 'Dudas habituales',
+    faqs: [
+      ['¿Es totalmente gratis de verdad?', 'Sí. Tu plan personal, el modo entrenamiento, el plan de nutrición, las calorías con foto y el seguimiento del progreso son gratis. Sin tarjeta, sin prueba y sin muro de pago.'],
+      ['¿Cómo sigue siendo gratis?', 'Tus datos no se venden ni se comparten con fines publicitarios. Full Balance se mantiene gracias al apoyo pequeño y totalmente voluntario de quienes la usan.'],
+      ['¿Tengo que descargar una app?', 'No. Full Balance funciona en el navegador; añádela a la pantalla de inicio del móvil para abrirla como una app. Usas la misma cuenta en el móvil y en el ordenador.'],
+      ['No tengo material y soy principiante. ¿Es para mí?', 'Sí. Al registrarte eliges casa sin equipo, casa con equipo básico o gimnasio. Los ejercicios de nivel inicial son más sencillos y cada uno tiene su explicación.'],
+      ['¿Qué pasa con mis datos?', 'Tus datos se guardan en tu cuenta; puedes exportarlos y eliminar tu cuenta de forma permanente desde tu perfil. Las fotos de comida solo se procesan para el análisis y no se guardan.'],
+      ['¿En qué idiomas está?', 'Español, inglés y turco. Puedes cambiar de idioma cuando quieras.'],
+    ],
+  },
+};
+
+const photoToolPaths = { tr: '/fotografla-kalori-hesaplama', en: '/en/photo-calorie-counter', es: '/es/contar-calorias-con-foto' };
+
+function PhoneShot({ src, alt, className = '', eager = false }) {
+  return (
+    <div className={`rounded-[2rem] border border-slate-700/80 bg-slate-900 p-1.5 shadow-2xl shadow-black/60 ${className}`}>
+      <img src={src} alt={alt} width="640" height="1385" loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : undefined} decoding="async" className="block h-auto w-full rounded-[1.6rem]" />
+    </div>
+  );
+}
 
 const goalAssets = {
   muscle: MODULE_IMAGES.muscle,
@@ -171,10 +257,19 @@ function SectionTitle({ eyebrow, title, desc }) {
   );
 }
 
-export default function LandingPage({ onStart }) {
-  const { t, lang } = useTranslation();
+export default function LandingPage({ onStart, language }) {
+  const { t, lang: uiLang, setLang } = useTranslation();
+  // /en and /es render this page with their own language whatever the UI language was.
+  const lang = language || uiLang;
+  useEffect(() => {
+    if (language && language !== uiLang) setLang?.(language);
+  }, [language, uiLang, setLang]);
   const [shareCopied, setShareCopied] = useState(false);
   const c = copy[lang] || copy.tr;
+  const m = more[lang] || more.tr;
+  const shotLang = more[lang] ? lang : 'tr';
+  const priceHead = storePriceHeadline[shotLang];
+  const [openFaq, setOpenFaq] = useState(0);
   const pricing = pricingPages.find((page) => page.lang === lang) || pricingPages[0];
 
   useEffect(() => {
@@ -197,11 +292,6 @@ export default function LandingPage({ onStart }) {
   const blogLanguage = lang === 'en' || lang === 'es' ? lang : 'tr';
   const guides = blogArticles.filter((article) => getArticleLanguage(article) === blogLanguage).slice(0, 3);
   const longevityGuide = blogArticles.find((article) => article.slug === 'longevity-nedir-saglikli-yasam-aliskanliklari');
-  const photoMealPath = lang === 'es'
-    ? '/es/calculadora-calorias-macros'
-    : lang === 'en'
-      ? '/en/calorie-macro-calculator'
-      : '/kalori-makro-takibi';
 
   const handleShare = async () => {
     const shareData = {
@@ -239,7 +329,7 @@ export default function LandingPage({ onStart }) {
     <div className="min-h-screen overflow-x-hidden bg-slate-950 text-white">
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl safe-area-top">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
-          <Link to="/" className="flex shrink-0 items-center gap-1.5" aria-label="Full Balance ana sayfa">
+          <Link to={language ? `/${language}` : '/'} className="flex shrink-0 items-center gap-1.5" aria-label="Full Balance">
             <Sparkles size={18} className="text-orange-500" />
             <span className="whitespace-nowrap font-outfit text-xs font-extrabold text-white sm:text-base">FULL <span className="text-cyan-400">BALANCE</span></span>
           </Link>
@@ -249,27 +339,105 @@ export default function LandingPage({ onStart }) {
         </div>
       </nav>
 
-      <header className="relative flex min-h-[760px] items-end overflow-hidden border-b border-white/10 pt-24 sm:min-h-[820px]">
-        <OptimizedImage src="/images/home-bodyweight.jpg" alt={c.noEquipmentTitle} sizes="100vw" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" width="1536" height="1024" />
-        <div className="absolute inset-0 bg-slate-950/70" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/20" />
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-6 sm:pb-24">
-          <motion.div initial="hidden" animate="visible" className="max-w-4xl">
+      <header className="relative overflow-hidden border-b border-white/10 pt-24">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_80%_30%,rgba(249,115,22,0.18),transparent),radial-gradient(50%_45%_at_10%_80%,rgba(34,211,238,0.12),transparent)]" />
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 pb-16 pt-6 sm:px-6 sm:pb-20 lg:grid-cols-[1.1fr_0.9fr] lg:pt-12">
+          <motion.div initial="hidden" animate="visible" className="min-w-0">
             <motion.p custom={0} variants={fadeUp} className="mb-5 inline-flex items-center gap-2 border border-emerald-400/40 bg-emerald-950/75 px-3 py-2 text-xs font-bold text-emerald-300">
               <CreditCard size={15} /> {c.freeBadge}
             </motion.p>
-            <motion.h1 custom={1} variants={fadeUp} className="max-w-4xl break-words font-outfit text-4xl font-black leading-[1.06] text-white sm:text-6xl lg:text-7xl">{c.heroTitle}</motion.h1>
-            <motion.p custom={2} variants={fadeUp} className="mt-6 max-w-3xl text-base leading-8 text-slate-200 sm:text-xl">{c.heroDesc}</motion.p>
-            <motion.div custom={3} variants={fadeUp} className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <button onClick={() => startRegistration('hero')} className="inline-flex min-h-14 w-full items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400 sm:w-auto">{c.primaryCta}<ChevronRight size={18} /></button>
-              <button onClick={handleShare} className="inline-flex min-h-14 w-full items-center justify-center gap-2 border border-white/25 bg-slate-950/55 px-6 font-outfit text-sm font-bold text-white hover:border-cyan-400/60 sm:w-auto"><ArrowRight size={17} />{shareCopied ? c.copied : c.share}</button>
+            <motion.h1 custom={1} variants={fadeUp} className="break-words font-outfit text-4xl font-black leading-[1.06] text-white sm:text-6xl">{c.heroTitle}</motion.h1>
+            <motion.p custom={2} variants={fadeUp} className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">{c.heroDesc}</motion.p>
+            <motion.div custom={3} variants={fadeUp} className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+              <button onClick={() => startRegistration('hero')} className="inline-flex min-h-14 items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
+              <Link
+                to={photoToolPaths[shotLang]}
+                onClick={() => { recordAcquisitionContent(`landing_${lang}_hero_photo_tool`); trackLandingCta('hero_photo_tool'); }}
+                className="inline-flex min-h-14 items-center justify-center gap-2 border border-white/25 bg-slate-950/55 px-6 font-outfit text-sm font-bold text-white hover:border-cyan-400/60"
+              ><Camera size={17} className="text-cyan-300" />{m.tryCta}</Link>
             </motion.div>
-            <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="text-emerald-400" /> {c.freeNote}</motion.p>
+            <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="shrink-0 text-emerald-400" /> {c.freeNote}</motion.p>
           </motion.div>
+          <figure className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[380px]">
+            <PhoneShot src={`/images/app/${shotLang}-nutrition.webp`} alt="" className="absolute -right-6 top-10 hidden w-[78%] rotate-6 opacity-60 sm:block" />
+            <PhoneShot src={`/images/app/${shotLang}-session.webp`} alt={m.shots[0][1]} eager className="relative mx-auto w-[86%] -rotate-2 sm:mx-0 sm:w-[80%]" />
+            <figcaption className="mt-4 text-center text-[11px] text-slate-500">{m.shotCaption}</figcaption>
+          </figure>
         </div>
       </header>
 
+      <section aria-label={m.priceEyebrow} className="border-b border-white/10 bg-slate-900/40">
+        <div className="mx-auto grid max-w-6xl gap-4 px-5 py-8 sm:px-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
+          <div>
+            <p className="text-xs font-bold uppercase text-slate-500">{m.priceOthers}</p>
+            <p className="mt-1 font-outfit text-2xl font-extrabold text-slate-300 sm:text-3xl"><span className="text-base font-semibold text-slate-500">{m.priceUpTo} </span><span>{priceHead.max}</span></p>
+          </div>
+          <ArrowRight size={22} className="hidden text-slate-600 md:block" aria-hidden="true" />
+          <div>
+            <p className="text-xs font-bold uppercase text-emerald-400">{m.priceOurs}</p>
+            <p className="mt-1 font-outfit text-4xl font-black text-emerald-400">{priceHead.free}</p>
+          </div>
+          <p className="text-xs leading-5 text-slate-500 md:col-span-3">{m.priceNote(priceHead)} <Link to={pricing.path} className="font-semibold text-emerald-300 underline underline-offset-4">{m.priceLink}</Link></p>
+        </div>
+      </section>
+
       <ApprovedTestimonials language={lang} />
+
+      <section className="border-b border-white/10 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionTitle eyebrow={m.showEyebrow} title={m.showTitle} desc={m.showDesc} />
+          <div className="space-y-16 sm:space-y-24">
+            {m.shots.map(([screen, title, points], index) => (
+              <motion.article key={screen} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} className="grid items-center gap-8 md:grid-cols-2 md:gap-14">
+                <div className={`mx-auto w-full max-w-[260px] sm:max-w-[300px] ${index % 2 ? 'md:order-2' : ''}`}>
+                  <PhoneShot src={`/images/app/${shotLang}-${screen}.webp`} alt={title} />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-xs font-black text-orange-400">0{index + 1}</span>
+                  <h3 className="mt-3 font-outfit text-2xl font-extrabold leading-tight text-white sm:text-3xl">{title}</h3>
+                  <ul className="mt-5 space-y-3">
+                    {points.map((point) => (
+                      <li key={point} className="flex items-start gap-3 text-sm leading-6 text-slate-300 sm:text-base">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center bg-emerald-500/10"><Check size={15} className="text-emerald-400" /></span>{point}
+                      </li>
+                    ))}
+                  </ul>
+                  {screen === 'nutrition' && (
+                    <Link
+                      to={photoToolPaths[shotLang]}
+                      onClick={() => { recordAcquisitionContent(`landing_${lang}_photo_meal_tool`); trackLandingCta('photo_meal_tool'); }}
+                      className="mt-6 inline-flex min-h-11 items-center gap-2 bg-cyan-400 px-5 font-outfit text-sm font-bold text-slate-950 hover:bg-cyan-300"
+                    ><Camera size={17} />{c.photoMealCta}<ChevronRight size={16} /></Link>
+                  )}
+                  {screen === 'progress' && (
+                      <div className="mt-6 flex items-start gap-3 border-l-2 border-emerald-500 bg-emerald-500/5 p-4 text-sm leading-6 text-slate-400">
+                        <Activity size={19} className="mt-0.5 shrink-0 text-emerald-400" />
+                        <p>{c.longevityNote} <Link to={blogLanguage === 'tr' ? getArticlePath(longevityGuide) : getBlogPath(blogLanguage)} className="font-semibold text-emerald-400 underline underline-offset-4">{blogLanguage === 'tr' ? c.readGuide : c.allGuides}</Link></p>
+                      </div>
+                  )}
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-white/10 py-12">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <Link
+            to={CHALLENGE_PATHS[shotLang]}
+            onClick={() => { recordAcquisitionContent(`landing_${lang}_challenge`); trackLandingCta('challenge'); }}
+            className="flex flex-col gap-5 border border-orange-400/40 bg-orange-500/[0.07] p-6 transition-colors hover:border-orange-400/80 sm:flex-row sm:items-center sm:justify-between sm:p-8"
+          >
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 text-xs font-bold uppercase text-orange-400"><Flame size={15} />{m.challengeEyebrow}</p>
+              <h2 className="mt-2 font-outfit text-2xl font-extrabold text-white sm:text-3xl">{m.challengeTitle}</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-400">{m.challengeDesc}</p>
+            </div>
+            <span className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 bg-orange-500 px-5 font-outfit text-sm font-bold text-white">{m.challengeCta}<ChevronRight size={17} /></span>
+          </Link>
+        </div>
+      </section>
 
       <section className="border-b border-white/10 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
@@ -301,22 +469,6 @@ export default function LandingPage({ onStart }) {
         </div>
       </section>
 
-      <section className="border-b border-white/10 py-16 sm:py-20">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-          <div>
-            <Eyebrow>{c.previewEyebrow}</Eyebrow>
-            <h2 className="font-outfit text-3xl font-extrabold leading-tight sm:text-4xl">{c.previewTitle}</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">{c.previewDesc}</p>
-            <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-800 pt-5 text-center">
-              <div><strong className="block text-xl text-white">6</strong><span className="text-xs text-slate-500">{c.stats[0]}</span></div>
-              <div><strong className="block text-xl text-white">24</strong><span className="text-xs text-slate-500">{c.stats[1]}</span></div>
-              <div><strong className="block text-xl text-emerald-400">{lang === 'tr' ? '%100' : '100%'}</strong><span className="text-xs text-slate-500">{c.stats[2]}</span></div>
-            </div>
-          </div>
-          <OptimizedImage src={lang === 'tr' ? '/og/full-balance-og-tr.png' : '/og/full-balance-og-en.png'} alt="Full Balance beslenme, kalori, su ve ilerleme paneli" sizes="(min-width: 1024px) 50vw, 100vw" width="1200" height="630" loading="lazy" className="w-full border border-slate-800 object-cover" />
-        </div>
-      </section>
-
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <SectionTitle eyebrow={c.goalsEyebrow} title={c.goalsTitle} desc={c.goalsDesc} />
@@ -335,51 +487,6 @@ export default function LandingPage({ onStart }) {
                 </motion.article>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-slate-800 bg-slate-900/35 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <SectionTitle eyebrow={c.includedEyebrow} title={c.includedTitle} desc={c.includedDesc} />
-          <div className="grid gap-px overflow-hidden border border-slate-800 bg-slate-800 md:grid-cols-3">
-            {[
-              { icon: Salad, color: 'text-emerald-400', title: c.nutritionTitle, desc: c.nutritionDesc },
-              { icon: TrendingUp, color: 'text-cyan-400', title: c.progressTitle, desc: c.progressDesc },
-              { icon: HeartPulse, color: 'text-rose-400', title: c.longevityTitle, desc: c.longevityDesc },
-            ].map((item) => (
-              <article key={item.title} className="bg-slate-950 p-6 sm:p-8">
-                <item.icon size={26} className={item.color} />
-                <h3 className="mt-5 font-outfit text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-400">{item.desc}</p>
-              </article>
-            ))}
-          </div>
-          <Link
-            to={photoMealPath}
-            onClick={() => {
-              recordAcquisitionContent(`landing_${lang}_photo_meal_tool`);
-              trackLandingCta('photo_meal_tool');
-            }}
-            className="mt-5 flex flex-col gap-5 border border-cyan-500/35 bg-cyan-500/[0.07] p-5 transition-colors hover:border-cyan-400/70 sm:flex-row sm:items-center sm:justify-between sm:p-6"
-          >
-            <div className="flex min-w-0 items-start gap-4">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-cyan-500/10 text-cyan-300">
-                <Camera size={23} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase text-cyan-300">{c.photoMealEyebrow}</p>
-                <h3 className="mt-2 font-outfit text-xl font-bold text-white sm:text-2xl">{c.photoMealTitle}</h3>
-                <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">{c.photoMealDesc}</p>
-              </div>
-            </div>
-            <span className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 bg-cyan-400 px-5 font-outfit text-sm font-bold text-slate-950">
-              {c.photoMealCta}<ChevronRight size={17} />
-            </span>
-          </Link>
-          <div className="mt-5 flex items-start gap-3 border-l-2 border-emerald-500 bg-emerald-500/5 p-4 text-sm leading-6 text-slate-400">
-            <Activity size={19} className="mt-0.5 shrink-0 text-emerald-400" />
-            <p>{c.longevityNote} <Link to={blogLanguage === 'tr' ? getArticlePath(longevityGuide) : getBlogPath(blogLanguage)} className="font-semibold text-emerald-400 underline underline-offset-4">{blogLanguage === 'tr' ? c.readGuide : c.allGuides}</Link></p>
           </div>
         </div>
       </section>
@@ -419,6 +526,24 @@ export default function LandingPage({ onStart }) {
       </section>
 
       <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl px-5 sm:px-6">
+          <SectionTitle eyebrow={m.faqEyebrow} title={m.faqTitle} />
+          <div className="divide-y divide-slate-800 border-y border-slate-800">
+            {m.faqs.map(([question, answer], index) => (
+              <div key={question}>
+                <h3>
+                  <button type="button" aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? -1 : index)} className="flex min-h-14 w-full items-center justify-between gap-4 py-4 text-left font-outfit text-base font-bold text-white sm:text-lg">
+                    {question}<ChevronDown size={19} className={`shrink-0 text-slate-500 transition-transform ${openFaq === index ? 'rotate-180' : ''}`} />
+                  </button>
+                </h3>
+                {openFaq === index && <p className="pb-5 text-sm leading-7 text-slate-400 sm:text-base">{answer}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-slate-800 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <SectionTitle eyebrow={c.guidesEyebrow} title={c.guidesTitle} desc={c.guidesDesc} />
@@ -441,6 +566,7 @@ export default function LandingPage({ onStart }) {
         <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">{c.finalDesc}</p>
         <button onClick={() => startRegistration('final')} className="mt-8 inline-flex min-h-14 items-center gap-2 bg-orange-500 px-8 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
         <p className="mt-4 text-xs text-emerald-400">{c.freeNote}</p>
+        <button onClick={handleShare} className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white"><ArrowRight size={16} />{shareCopied ? c.copied : c.share}</button>
       </section>
 
       <footer id="for-trainers" className="border-t border-slate-800 px-5 py-8">
