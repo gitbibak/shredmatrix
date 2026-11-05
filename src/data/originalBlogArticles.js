@@ -125,7 +125,7 @@ export const originalBlogArticles = [
   },
   {
     ...food, language: 'es', translationKey: 'spanish-dish-calories', slug: 'calorias-comida-espanola',
-    title: 'Calorías de la Comida Española: 9 Platos Caseros con Ración y Aceite',
+    title: 'Calorías de la Comida Española: 8 Platos Caseros con Ración y Aceite',
     description: 'Tortilla de patatas, lentejas, paella, gazpacho, pisto y croquetas: la receta y la ración de cada plato, sus calorías y proteína aproximadas y cuánto viene del aceite añadido.',
     category: 'Nutrición', readTime: '6 min',
     imageAlt: 'Ilustración de revisión de comida con un plato casero y notas de ración, calorías y aceite',
