@@ -35,6 +35,7 @@ const BASE_URL = 'https://fullbalance.app';
 const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png`;
 
 import { turkishSeoPages } from '../data/turkishSeoPages';
+import BrandMark from './BrandMark';
 
 const PAGE_ICONS = { Activity, Brain, Dumbbell, FileDown, Flame, Leaf, Scale, Shield, Sparkles, Target, TrendingUp, UtensilsCrossed, Waves };
 const pages = Object.fromEntries(Object.entries(turkishSeoPages).map(([slug, page]) => [slug, { ...page, icon: PAGE_ICONS[page.icon] || Sparkles }]));
@@ -215,7 +216,7 @@ export default function SeoLandingPage({ slug }) {
         <div className="relative mx-auto max-w-6xl">
           <nav className="mb-14 flex items-center justify-between gap-4">
             <Link to="/" className="flex items-center gap-2 font-outfit text-sm font-bold text-white">
-              <Sparkles size={18} className="text-orange-400" />
+              <BrandMark size={20} />
               FULL BALANCE
             </Link>
             <Link

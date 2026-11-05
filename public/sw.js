@@ -1,4 +1,4 @@
-const CACHE = 'fb-v10';
+const CACHE = 'fb-v11';
 const PRE_CACHE = [
   '/',
   '/index.html',

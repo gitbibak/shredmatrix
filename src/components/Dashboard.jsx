@@ -40,6 +40,7 @@ const Leaderboard = lazy(() => import('./Leaderboard'));
 const StravaConnectCard = lazy(() => import('./StravaPanel').then(m => ({ default: m.StravaConnectCard })));
 const StravaActivitiesPanel = lazy(() => import('./StravaPanel').then(m => ({ default: m.StravaActivitiesPanel })));
 
+import BrandMark from './BrandMark';
 import {
   Sparkles, UtensilsCrossed, Dumbbell, TrendingUp, User,
   LogOut, Target, CalendarCheck, Share2, ChevronDown,
@@ -193,7 +194,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Sparkles className="text-[#ff6d00]" size={18} />
+            <BrandMark size={20} />
             <h1 className="text-base font-outfit font-bold gradient-text tracking-tight">
               FULL BALANCE
             </h1>

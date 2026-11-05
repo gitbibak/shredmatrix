@@ -6,7 +6,7 @@ import {
   Activity, ArrowRight, BookOpen, Brain, Camera, Check,
   ChevronDown, ChevronRight, CircleDot, Cog, CreditCard, Dumbbell, Flame,
   House, Languages, Leaf, Lock, MapPin, PackageOpen, ShieldCheck,
-  Sparkles, Sun,
+  Sun,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18n/LanguageContext';
@@ -22,6 +22,7 @@ import { recordAcquisitionContent } from '../lib/acquisition';
 import SupportCard from './SupportCard';
 import { storePriceHeadline } from '../data/storePrices';
 import { CHALLENGE_PATHS } from '../i18n/challengeCopy';
+import BrandMark from './BrandMark';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -332,7 +333,7 @@ export default function LandingPage({ onStart, language }) {
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl safe-area-top">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
           <Link to={language ? `/${language}` : '/'} className="flex shrink-0 items-center gap-1.5" aria-label="Full Balance">
-            <Sparkles size={18} className="text-orange-500" />
+            <BrandMark size={22} />
             <span className="whitespace-nowrap font-outfit text-xs font-extrabold text-white sm:text-base">FULL <span className="text-cyan-400">BALANCE</span></span>
           </Link>
           <div className="flex items-center gap-2">
@@ -573,7 +574,7 @@ export default function LandingPage({ onStart, language }) {
       <footer id="for-trainers" className="border-t border-slate-800 px-5 py-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2"><Sparkles size={16} className="text-orange-500" /><span className="font-outfit text-sm font-bold">FULL BALANCE</span></div>
+            <div className="flex items-center gap-2"><BrandMark size={18} /><span className="font-outfit text-sm font-bold">FULL BALANCE</span></div>
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
               <Link to="/privacy" className="hover:text-white">{t('auth.privacyLink') || 'Gizlilik'}</Link>
               <Link to="/terms" className="hover:text-white">{t('auth.termsLink') || 'Koşullar'}</Link>

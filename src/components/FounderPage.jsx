@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { ArrowLeft, CheckCircle2, Code2, Compass, ExternalLink, Layers3, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Code2, Compass, ExternalLink, Layers3, Mail, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import BrandMark from './BrandMark';
 
 const BASE_URL = 'https://fullbalance.app';
 
@@ -237,7 +238,7 @@ export default function FounderPage() {
           <Link to={lang === 'tr' ? '/' : `/${lang}`} className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white">
             <ArrowLeft size={18} /> {c.home}
           </Link>
-          <Link to="/" className="flex items-center gap-2 font-outfit text-sm font-bold"><Sparkles size={16} className="text-orange-500" /> FULL BALANCE</Link>
+          <Link to="/" className="flex items-center gap-2 font-outfit text-sm font-bold"><BrandMark size={18} /> FULL BALANCE</Link>
         </div>
       </header>
 
