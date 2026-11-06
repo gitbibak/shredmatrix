@@ -74,6 +74,13 @@ export default function GrowthSection({ metrics, period, onPeriodChange, loading
     ['28 günlük challenge tamamlama', current.usage.challengeCompletions],
   ].map(([label, value]) => ({ label, value }));
   const toRows = (items) => items.map((item) => ({ ...item, key: item.label }));
+  const engagement = current.engagement;
+  const reviewRows = [
+    ['Yıldız sorusu gösterildi', engagement.reviewPrompts],
+    ['4–5 yıldız', engagement.ratingsHigh],
+    ['1–3 yıldız (özel geri bildirim)', engagement.ratingsLow],
+    ['Fikir kutusundan gelen fikir', engagement.ideas],
+  ].map(([label, value]) => ({ label, value }));
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -121,6 +128,30 @@ export default function GrowthSection({ metrics, period, onPeriodChange, loading
               <BarList rows={metrics.campaigns.map((row) => ({ ...row, value: row.registrations }))} limit={6} />
             </div>
           )}
+        </Panel>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel title="Yorum ve fikir" description="Yıldız sorusu, verilen puanlar ve gelen fikirler. Fikirler Destek bölümünde 'fikir' olarak görünür.">
+          <BarList rows={toRows(reviewRows)} color="bg-amber-500/25" />
+        </Panel>
+        <Panel title="Gösterilen istekler" description="Bugün sekmesindeki kurucu notu ve fikir kutusu; kurucu notunda ne seçildiği.">
+          {engagement.asks.length === 0 && engagement.founderNote.length === 0
+            ? <p className="py-3 text-sm text-slate-500">Bu dönemde gösterim yok.</p>
+            : <>
+                <BarList rows={toRows(engagement.asks)} color="bg-orange-500/25" />
+                {engagement.founderNote.length > 0 && (
+                  <div className="mt-4 border-t border-slate-800 pt-4">
+                    <p className="mb-2 text-xs font-medium text-slate-400">Kurucudan not · seçimler</p>
+                    <BarList rows={toRows(engagement.founderNote)} color="bg-orange-500/15" />
+                  </div>
+                )}
+              </>}
+        </Panel>
+        <Panel title="Destek tıklamaları (yere göre)" description="Protein shake bağlantısına hangi yerden tıklandı.">
+          {engagement.supportByPlacement.length === 0
+            ? <p className="py-3 text-sm text-slate-500">Bu dönemde tıklama yok.</p>
+            : <BarList rows={toRows(engagement.supportByPlacement)} color="bg-amber-400/25" />}
         </Panel>
       </div>
 

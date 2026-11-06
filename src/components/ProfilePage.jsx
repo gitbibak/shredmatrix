@@ -12,6 +12,8 @@ import { generatePlan } from '../data/planGenerator';
 import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, deleteProgressPhoto } from '../lib/dataService';
 import { useToast } from './ToastProvider';
 import UserStoryForm from './UserStoryForm';
+import IdeaBox from './IdeaBox';
+import WhatsNew from './WhatsNew';
 import InviteFriendsCard from './InviteFriendsCard';
 import SupportCard from './SupportCard';
 import ReminderSettings from './ReminderSettings';
@@ -224,6 +226,12 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
   const { t, lang, setLang, SUPPORTED, langLabels, langFlags } = useTranslation();
   const fileInputRef = useRef(null);
   const galleryInputRef = useRef(null);
+  // "Write a review" links land on /dashboard?tab=profile&review=1.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('review') !== '1') return undefined;
+    const timer = setTimeout(() => document.getElementById('review')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const [profilePhoto, setProfilePhoto] = useState(loadPhoto);
   const [gallery, setGallery] = useState(loadGallery);
@@ -824,8 +832,10 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       </motion.div>
 
       {/* ── Actions ── */}
-      <motion.div variants={itemV}>
+      <motion.div variants={itemV} id="review" className="scroll-mt-20 space-y-3">
         <UserStoryForm lang={lang} />
+        <IdeaBox lang={lang} placement="profile" />
+        <WhatsNew lang={lang} />
       </motion.div>
 
       {/* ── Actions ── */}

@@ -44,7 +44,10 @@ function ReviewList({ language, all }) {
           {item.created_at && !Number.isNaN(Date.parse(item.created_at)) && <time dateTime={item.created_at} className="mt-1 block text-xs text-slate-500">{new Date(item.created_at).toLocaleDateString(language)}</time>}
         </article>)}
       </div>
-      {!all && <a href={{ tr: '/reviews', en: '/en/reviews', es: '/es/opiniones' }[language]} className="mt-5 inline-flex min-h-11 items-center text-sm font-bold text-cyan-300 underline">{({ tr: 'Tüm yorumlar', en: 'All reviews', es: 'Todas las reseñas' })[language]}</a>}
+      {!all && <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1">
+        <a href={{ tr: '/reviews', en: '/en/reviews', es: '/es/opiniones' }[language]} className="inline-flex min-h-11 items-center text-sm font-bold text-cyan-300 underline">{({ tr: 'Tüm yorumlar', en: 'All reviews', es: 'Todas las reseñas' })[language]}</a>
+        <a href="/dashboard?tab=profile&review=1" className="inline-flex min-h-11 items-center text-sm font-semibold text-slate-300 hover:text-white">{({ tr: 'Kullanıyorsan sen de yorum yaz →', en: 'Using it? Write a review →', es: '¿La usas? Escribe una reseña →' })[language]}</a>
+      </div>}
       {failed && <p role="alert" className="mt-3 text-sm text-amber-300">{errorCopy[language]}</p>}
       {all && hasMore && <button type="button" disabled={loading} onClick={more} className="mt-5 min-h-11 px-4 text-sm font-bold text-cyan-300">{loading ? '…' : ({ tr: 'Daha fazla yorum', en: 'More reviews', es: 'Más reseñas' })[language]}</button>}
     </div>

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { CheckCircle2, MessageSquare, Star } from 'lucide-react';
-import { submitTestimonial } from '../lib/dataService';
+import { getUserId, submitTestimonial } from '../lib/dataService';
+import { canAsk, recordAsk, recordRating } from '../lib/engagementAsks';
+import SupportCard from './SupportCard';
+import { supportText } from '../data/support';
 
 const COPY = {
   tr: {
@@ -41,6 +44,7 @@ export default function UserStoryForm({ lang = 'en', onSubmitted, embedded = fal
   const [result, setResult] = useState('');
   const [consent, setConsent] = useState(false);
   const [state, setState] = useState('idle');
+  const [askSupport, setAskSupport] = useState(false);
   const consentPublic = improve ? false : consent;
 
   const submit = async (event) => {
@@ -49,6 +53,13 @@ export default function UserStoryForm({ lang = 'en', onSubmitted, embedded = fal
     setState('sending');
     try {
       await submitTestimonial({ rating, body, resultSummary: improve ? '' : result, language: lang, consentPublic });
+      const userId = getUserId();
+      recordRating(rating, { userId });
+      // Thank a happy reviewer with one gentle support line; never after criticism.
+      if (!improve && rating >= 4 && canAsk('support', { userId, ignoreAccountAge: true })) {
+        recordAsk('support', { userId });
+        setAskSupport(true);
+      }
       setState('sent');
       onSubmitted?.({ rating, consentPublic });
     } catch {
@@ -57,9 +68,12 @@ export default function UserStoryForm({ lang = 'en', onSubmitted, embedded = fal
   };
 
   if (state === 'sent') return (
-    <div role="status" className="flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-      <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
-      <p className="text-xs leading-5 text-slate-300">{consentPublic ? c.sent : c.sentPrivate}</p>
+    <div>
+      <div role="status" className="flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-400" />
+        <p className="text-xs leading-5 text-slate-300">{consentPublic ? c.sent : c.sentPrivate}</p>
+      </div>
+      {askSupport && <div className="mt-3"><SupportCard lang={lang} placement="after_review" variant="inline" message={supportText(lang).afterReview} /></div>}
     </div>
   );
 

@@ -20,6 +20,9 @@ export interface GrowthEventMap {
   workout_started: { module?: string; source?: string };
   workout_completed: { module?: string; source?: string };
   support_link_click: { placement: string; language?: string };
+  engagement_ask_shown: { kind: 'founder_note' | 'idea' | 'support' | 'review'; placement: string };
+  idea_submitted: { placement: string; language?: string };
+  founder_note_action: { action: 'idea' | 'review' | 'support' | 'close'; noteId: string };
   workout_session_started: { module?: string; source?: string; resumed?: boolean };
   workout_session_completed: { module?: string; mode?: 'guided' | 'quick'; durationBucket?: string; records?: boolean };
   workout_session_abandoned: { progressBucket: WorkoutSessionProgressBucket; exitMethod: 'button' | 'escape' };

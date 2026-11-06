@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
-import { getWorkoutLogs, recordProductStep, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+import { getUserId, getWorkoutLogs, recordProductStep, saveWorkoutFeedback, saveWorkoutLog } from '../lib/dataService';
+import { RATING_MILESTONES, canAsk, recordAsk } from '../lib/engagementAsks';
 
 const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 import { trackEvent } from '../lib/analytics';
@@ -491,6 +492,21 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   });
   const [completedDays, setCompletedDays] = useState({});
   const [celebration, setCelebration] = useState(null);
+  // The support line shows on a celebration only when the ask rules allow it
+  // and this workout does not also open the star-rating moment.
+  const [supportAskFor, setSupportAskFor] = useState(null);
+  useEffect(() => {
+    if (!celebration) return undefined;
+    let active = true;
+    getWorkoutLogs().then((logs) => {
+      const userId = getUserId();
+      const count = Math.max(1, (logs || []).length);
+      if (!active || RATING_MILESTONES.includes(count) || !canAsk('support', { userId })) return;
+      recordAsk('support', { userId });
+      setSupportAskFor(celebration);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [celebration]);
   const [inviteMoment, setInviteMoment] = useState(null);
   const [feedbackEffort, setFeedbackEffort] = useState(null);
   const [feedbackPain, setFeedbackPain] = useState(null);
@@ -1112,9 +1128,11 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
               <button type="button" onClick={() => setCelebration(null)} className="mt-2 min-h-11 px-4 text-[11px] font-semibold text-slate-500 hover:text-slate-300">
                 {t('workout.feedbackSkip')}
               </button>
-              <div className="mt-3">
-                <SupportCard lang={lang} placement="workout_complete" variant="inline" />
-              </div>
+              {supportAskFor === celebration && (
+                <div className="mt-3">
+                  <SupportCard lang={lang} placement="workout_complete" variant="inline" />
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

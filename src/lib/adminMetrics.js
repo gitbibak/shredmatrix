@@ -200,6 +200,13 @@ function prepare(snapshot) {
   return { now, today, members, memberIds, plans, planIds, signupDay, activity, workouts, events };
 }
 
+const ASK_LABELS = { founder_note: 'Kurucudan not', idea: 'Fikir kutusu', support: 'Destek satırı', review: 'Yorum kartı' };
+const FOUNDER_ACTION_LABELS = { idea: 'Fikrini yaz', review: 'Yorum yap', support: 'Destek ol', close: 'Kapattı' };
+const SUPPORT_PLACEMENT_LABELS = {
+  profile: 'Profil', workout_complete: 'Antrenman sonrası', after_review: 'Yorumdan sonra', founder_note: 'Kurucudan not',
+  landing_footer: 'Ana sayfa alt bilgi', landing_free_section: 'Ana sayfa · nasıl ücretsiz',
+};
+
 function windowStats(data, days, offset = 0) {
   const { today, members, planIds, signupDay, activity, workouts, events } = data;
   const end = addUtcDays(today, -offset);
@@ -208,7 +215,8 @@ function windowStats(data, days, offset = 0) {
   const activeRows = activity.filter(({ activity_date: date }) => inRange(dayOf(date), start, end));
   const activeIds = new Set(activeRows.map(({ user_id: userId }) => userId));
   const workoutRows = workouts.filter(({ date }) => inRange(dayOf(date), start, end));
-  const eventCount = (name) => events.filter((event) => event.event_name === name && inRange(event.day, start, end)).length;
+  const inWindow = (name) => events.filter((event) => event.event_name === name && inRange(event.day, start, end));
+  const eventCount = (name) => inWindow(name).length;
   const usersWith = (flag) => new Set(activeRows.filter((row) => row[flag]).map(({ user_id: userId }) => userId)).size;
   const withPlan = registrations.filter(({ id }) => planIds.has(id)).length;
   return {
@@ -246,6 +254,16 @@ function windowStats(data, days, offset = 0) {
       challengeJoins: events.filter((event) => event.event_name === 'challenge_joined' && event.properties?.challengeId === 'start28' && inRange(event.day, start, end)).length,
       challengeCompletions: events.filter((event) => event.event_name === 'challenge_completed' && event.properties?.challengeId === 'start28' && inRange(event.day, start, end)).length,
       sessionsCompleted: events.filter((event) => event.event_name === 'workout_session_completed' && event.properties?.mode === 'guided' && inRange(event.day, start, end)).length,
+    },
+    // Reviews, ideas and support: which asks were shown and what they led to.
+    engagement: {
+      asks: countValues(inWindow('engagement_ask_shown').map((event) => event.properties?.kind || null), (value) => ASK_LABELS[value] || value || UNKNOWN),
+      reviewPrompts: eventCount('review_prompt_view'),
+      ratingsHigh: inWindow('review_prompt_rated').filter((event) => Number(event.properties?.rating) >= 4).length,
+      ratingsLow: inWindow('review_prompt_rated').filter((event) => Number(event.properties?.rating) >= 1 && Number(event.properties?.rating) <= 3).length,
+      ideas: eventCount('idea_submitted'),
+      founderNote: countValues(inWindow('founder_note_action').map((event) => event.properties?.action || null), (value) => FOUNDER_ACTION_LABELS[value] || value || UNKNOWN),
+      supportByPlacement: countValues(inWindow('support_link_click').map((event) => event.properties?.placement || null), (value) => SUPPORT_PLACEMENT_LABELS[value] || value || UNKNOWN),
     },
     registrationRows: registrations,
   };

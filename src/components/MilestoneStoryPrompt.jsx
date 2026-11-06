@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MessageSquareText, X } from 'lucide-react';
 import { getWorkoutLogs, getWellbeingCheckins, hasSubmittedTestimonial } from '../lib/dataService';
 import UserStoryForm from './UserStoryForm';
+import { canAsk, recordAsk } from '../lib/engagementAsks';
 
 const COPY = {
   tr: { title: 'Full Balance deneyimin nasıl?', desc: 'İşine yarayanları ve geliştirmemiz gerekenleri paylaşır mısın?', action: 'Kısa yorum yaz', later: 'Şimdi değil', never: 'Tekrar sorma', close: 'Kapat' },
@@ -25,7 +26,10 @@ export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
       if (preference?.never || preference?.submitted || Date.now() - (preference?.dismissedAt || 0) < MONTH) return;
       const [logs, checkins, submitted] = await Promise.all([getWorkoutLogs(30), getWellbeingCheckins(30), hasSubmittedTestimonial()]);
       const days = new Set(checkins.map((entry) => entry.date).filter(Boolean));
-      if (active && !submitted && (logs.length >= 3 || days.size >= 3)) setVisible(true);
+      if (active && !submitted && (logs.length >= 3 || days.size >= 3) && canAsk('review', { userId })) {
+        recordAsk('review', { userId });
+        setVisible(true);
+      }
     };
     load().catch(() => {});
     return () => { active = false; };

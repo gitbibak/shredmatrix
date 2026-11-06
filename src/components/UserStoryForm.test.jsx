@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import UserStoryForm from './UserStoryForm';
 import { submitTestimonial } from '../lib/dataService';
-vi.mock('../lib/dataService', () => ({ submitTestimonial: vi.fn() }));
+vi.mock('../lib/dataService', () => ({ submitTestimonial: vi.fn(), getUserId: vi.fn(() => 'member-1') }));
 describe('review consent and submission', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => { vi.clearAllMocks(); localStorage.clear(); sessionStorage.clear(); });
   it('requires an explicit rating and accepts a negative public review', async () => {
     submitTestimonial.mockResolvedValue({});
     const done = vi.fn();
@@ -51,5 +51,22 @@ describe('review consent and submission', () => {
     expect(body).toHaveValue('The weekly plans help me maintain a consistent routine.');
     fireEvent.click(screen.getByRole('button', { name: 'Send' }));
     expect(await screen.findByRole('status')).toHaveTextContent('Thank you');
+  });
+
+  it('thanks a happy reviewer with one support line, but never after criticism', async () => {
+    submitTestimonial.mockResolvedValue({});
+    const { unmount } = render(<UserStoryForm lang="en" />);
+    fireEvent.click(screen.getByRole('button', { name: '5/5' }));
+    fireEvent.change(screen.getByPlaceholderText('Your Full Balance experience'), { target: { value: 'Clear plans, honest numbers and everything is completely free.' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+    expect(await screen.findByText(/Thank you so much for the kind words/)).toBeInTheDocument();
+    unmount();
+    localStorage.clear(); sessionStorage.clear();
+
+    render(<UserStoryForm lang="en" mode="improve" initialRating={2} />);
+    fireEvent.change(screen.getByPlaceholderText('What should we change?'), { target: { value: 'Meal tracking takes too many taps for a quick lunch.' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+    await screen.findByRole('status');
+    expect(screen.queryByText(/kind words/)).not.toBeInTheDocument();
   });
 });

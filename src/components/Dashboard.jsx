@@ -1,7 +1,8 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
-import { preloadProfilePhoto, recordProductStep } from '../lib/dataService';
+import { getProfile, preloadProfilePhoto, recordProductStep } from '../lib/dataService';
+import { rememberAccountCreated } from '../lib/engagementAsks';
 import { trackEvent } from '../lib/analytics';
 import { Link } from 'react-router-dom';
 import { coachText } from '../data/coachCopy';
@@ -33,6 +34,7 @@ const LongevityPanel = lazy(() => import('./LongevityPanel'));
 const PushPermission = lazy(() => import('./PushPermission'));
 const MilestoneStoryPrompt = lazy(() => import('./MilestoneStoryPrompt'));
 const HeardFromCard = lazy(() => import('./HeardFromCard'));
+const EngagementSlot = lazy(() => import('./EngagementSlot'));
 const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
@@ -96,7 +98,15 @@ function DisclosureSection({ title, description, icon: Icon, open, onToggle, chi
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, onShowGuide }) {
   const { t, lang } = useTranslation();
-  const [activeTab, setActiveTab] = useState('today');
+  const [activeTab, setActiveTab] = useState(() => {
+    // ?tab= opens a tab directly (manifest shortcuts, "write a review" links).
+    try {
+      const tab = new URLSearchParams(window.location.search).get('tab');
+      return ['nutrition', 'workout', 'today', 'progress', 'profile'].includes(tab) ? tab : 'today';
+    } catch {
+      return 'today';
+    }
+  });
   const [workoutSelection, setWorkoutSelection] = useState(null);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
@@ -125,6 +135,14 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
     }
     setActiveTab(tab);
   };
+
+  // The ask rules (support, ideas) need the account age; store it once per device.
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) return;
+    try { if (localStorage.getItem(`fb_account_created:${userId}`)) return; } catch { return; }
+    getProfile().then((profile) => rememberAccountCreated(userId, profile?.created_at)).catch(() => {});
+  }, [user?.id]);
 
   useEffect(() => {
     if (activeTab !== 'workout') setWorkoutSelection(null);
@@ -349,6 +367,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={navigateFromToday} />
+                  <EngagementSlot key={user?.id} lang={lang} />
                   <Challenge28Card plan={plan} onPlanUpdate={onPlanUpdate} lang={lang} />
                   <BalanceScoreCard plan={plan} />
                   <HeardFromCard key={user?.id} userId={user?.id} lang={lang} />

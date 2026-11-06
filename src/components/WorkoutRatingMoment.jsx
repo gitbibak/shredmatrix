@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
 import { getUserId, hasSubmittedTestimonial } from '../lib/dataService';
+import { RATING_MILESTONES, recordRating } from '../lib/engagementAsks';
 import { trackEvent } from '../lib/analytics';
 import UserStoryForm from './UserStoryForm';
 
@@ -8,13 +9,13 @@ import UserStoryForm from './UserStoryForm';
 // Milestone workouts only, never more than once a month, never after a review.
 // 4-5 stars → public review invitation; 1-3 stars → private "what should we
 // improve?" so honest criticism reaches the team instead of being lost.
-export const RATING_MILESTONES = [3, 10, 25, 50, 100];
+export { RATING_MILESTONES };
 const MONTH = 30 * 86400000;
 
 const COPY = {
-  tr: { title: 'Full Balance bugün kaç yıldız?', desc: 'Tek dokunuş yeter; dürüst puan bizim için en değerlisi.', skip: 'Geç' },
-  en: { title: 'How many stars for Full Balance today?', desc: 'One tap is enough; an honest score is what helps us most.', skip: 'Skip' },
-  es: { title: '¿Cuántas estrellas para Full Balance hoy?', desc: 'Un toque basta; una puntuación sincera es lo que más nos ayuda.', skip: 'Omitir' },
+  tr: { title: 'Full Balance bugün kaç yıldız?', firstTitle: 'İlk antrenmanın nasıldı?', desc: 'Tek dokunuş yeter; dürüst puan bizim için en değerlisi.', skip: 'Geç' },
+  en: { title: 'How many stars for Full Balance today?', firstTitle: 'How was your first workout?', desc: 'One tap is enough; an honest score is what helps us most.', skip: 'Skip' },
+  es: { title: '¿Cuántas estrellas para Full Balance hoy?', firstTitle: '¿Qué tal tu primer entreno?', desc: 'Un toque basta; una puntuación sincera es lo que más nos ayuda.', skip: 'Omitir' },
 };
 
 export function storageKey(userId) { return 'fb_review_prompt:' + userId; }
@@ -53,6 +54,7 @@ export default function WorkoutRatingMoment({ lang = 'en', workoutCount = 0 }) {
   const skip = () => { remember({ dismissedAt: Date.now() }); setVisible(false); };
   const rate = (value) => {
     setRating(value);
+    recordRating(value, { userId });
     trackEvent('review_prompt_rated', { surface: 'workout', rating: value });
   };
 
@@ -61,7 +63,7 @@ export default function WorkoutRatingMoment({ lang = 'en', workoutCount = 0 }) {
     <section className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4" aria-label={c.title}>
       {rating === 0 ? (
         <>
-          <h3 className="font-outfit text-sm font-bold text-white">{c.title}</h3>
+          <h3 className="font-outfit text-sm font-bold text-white">{Number(workoutCount) === 1 ? c.firstTitle : c.title}</h3>
           <p className="mt-1 text-xs leading-5 text-slate-400">{c.desc}</p>
           <div className="mt-3 flex items-center justify-between">
             <div className="flex gap-1" aria-label="Rating">

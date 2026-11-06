@@ -8,7 +8,7 @@ import { trackEvent } from '../lib/analytics';
  * SUPPORT_URL is configured. Never a popup: an inline line after a workout,
  * a card on the profile and a footer link.
  */
-export default function SupportCard({ lang = 'tr', placement, variant = 'card', url = SUPPORT_URL }) {
+export default function SupportCard({ lang = 'tr', placement, variant = 'card', url = SUPPORT_URL, message }) {
   const [open, setOpen] = useState(false);
   if (!isSupportEnabled(url)) return null;
   const c = supportText(lang);
@@ -39,7 +39,7 @@ export default function SupportCard({ lang = 'tr', placement, variant = 'card', 
   if (variant === 'inline') {
     return (
       <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.07] px-3 py-2.5 text-left">
-        <p className="text-xs leading-relaxed text-amber-100/90">{c.afterWorkout}</p>
+        <p className="text-xs leading-relaxed text-amber-100/90">{message || c.afterWorkout}</p>
         {link('mt-1.5 inline-flex min-h-9 items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-amber-200', c.cta)}
       </div>
     );
