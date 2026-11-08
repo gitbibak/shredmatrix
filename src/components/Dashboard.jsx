@@ -368,6 +368,7 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
                 <motion.div variants={columnVariants} className="max-w-4xl mx-auto space-y-4">
                   <TodayFocusPanel plan={plan} onNavigate={navigateFromToday} />
                   <EngagementSlot key={user?.id} lang={lang} />
+                  <MilestoneStoryPrompt key={`review-${user?.id}`} lang={lang} userId={user?.id} />
                   <Challenge28Card plan={plan} onPlanUpdate={onPlanUpdate} lang={lang} />
                   <BalanceScoreCard plan={plan} />
                   <HeardFromCard key={user?.id} userId={user?.id} lang={lang} />
@@ -385,7 +386,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
                     <DailyChallenge />
                   </DisclosureSection>
                   <PushPermission daysSinceJoin={daysSinceJoin} />
-                  <MilestoneStoryPrompt key={user?.id} lang={lang} userId={user?.id} />
                   <InviteFriendsCard surface="today" compact userName={plan?.userName || user?.name} />
                 </motion.div>
               </motion.div>

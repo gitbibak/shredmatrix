@@ -125,7 +125,6 @@ const copy = {
 // strip, challenge banner and FAQ.
 const more = {
   tr: {
-    tryCta: 'Kayıt olmadan dene: fotoğrafla kalori',
     shotCaption: 'Gerçek uygulama ekranı · örnek verilerle',
     priceEyebrow: 'Ücret karşılaştırması',
     priceOthers: 'Benzer uygulamalarda yıllık abonelik',
@@ -158,7 +157,6 @@ const more = {
     ],
   },
   en: {
-    tryCta: 'Try without signing up: photo calories',
     shotCaption: 'Real app screen · sample data',
     priceEyebrow: 'Price check',
     priceOthers: 'Yearly subscription in similar apps',
@@ -191,7 +189,6 @@ const more = {
     ],
   },
   es: {
-    tryCta: 'Prueba sin registro: calorías con foto',
     shotCaption: 'Pantalla real de la app · datos de ejemplo',
     priceEyebrow: 'Comparación de precios',
     priceOthers: 'Suscripción anual en apps similares',
@@ -353,11 +350,6 @@ export default function LandingPage({ onStart, language }) {
             <motion.p custom={2} variants={fadeUp} className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">{c.heroDesc}</motion.p>
             <motion.div custom={3} variants={fadeUp} className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <button onClick={() => startRegistration('hero')} className="inline-flex min-h-14 items-center justify-center gap-2 bg-orange-500 px-7 font-outfit text-sm font-bold text-white hover:bg-orange-400">{c.primaryCta}<ChevronRight size={18} /></button>
-              <Link
-                to={photoToolPaths[shotLang]}
-                onClick={() => { recordAcquisitionContent(`landing_${lang}_hero_photo_tool`); trackLandingCta('hero_photo_tool'); }}
-                className="inline-flex min-h-14 items-center justify-center gap-2 border border-white/25 bg-slate-950/55 px-6 font-outfit text-sm font-bold text-white hover:border-cyan-400/60"
-              ><Camera size={17} className="text-cyan-300" />{m.tryCta}</Link>
             </motion.div>
             <motion.p custom={4} variants={fadeUp} className="mt-4 flex items-center gap-2 text-xs text-slate-300"><ShieldCheck size={15} className="shrink-0 text-emerald-400" /> {c.freeNote}</motion.p>
           </motion.div>

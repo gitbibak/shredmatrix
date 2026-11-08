@@ -1,7 +1,6 @@
 import { coachMarketing } from '../data/coachMarketing';
 import { lazy, Suspense, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import LandingPage from './LandingPage';
+import { Link, Navigate } from 'react-router-dom';
 import { Activity, Brain, CheckCircle2, ChevronRight, Dumbbell, Globe2, Sparkles, Target, UtensilsCrossed } from 'lucide-react';
 import { SEO_LAST_REVIEWED, findInternationalSeoPage, formatReviewedDate, getInternationalRelatedPages } from '../data/internationalSeoPages';
 import { getArticlePath, getBlogPath, getBlogCopy } from '../data/blogLocale';
@@ -60,11 +59,8 @@ function useInternationalSeo(page) {
 
 export default function InternationalLandingPage({ pathname }) {
   const page = findInternationalSeoPage(pathname);
-  const navigate = useNavigate();
   useInternationalSeo(page);
   if (!page) return <Navigate to="/" replace />;
-  // /en and /es are the home pages for those languages: same page as /, in their language.
-  if (page.topic === 'home') return <LandingPage language={page.lang} onStart={() => navigate(`/auth?mode=register&lang=${page.lang}`)} />;
   const Icon = icons[page.category] || Globe2;
   const related = getInternationalRelatedPages(page).slice(0, 8);
   const blogGuides = getLandingBlogArticles(page.path, page.lang);

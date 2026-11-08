@@ -44,6 +44,12 @@ function accountAgeDays(userId, now) {
   return Number.isNaN(created) ? null : (now - created) / DAY;
 }
 
+/** Days since signup, or null when unknown on this device. */
+export function accountAge({ userId, now = Date.now() } = {}) {
+  if (!userId) return null;
+  try { return accountAgeDays(userId, now); } catch { return null; }
+}
+
 // ignoreAccountAge: a member who just wrote a 4-5 star review has told us how
 // they feel, so the new-account pause does not apply to that one moment.
 export function canAsk(kind, { userId, now = Date.now(), ignoreAccountAge = false } = {}) {

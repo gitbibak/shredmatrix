@@ -1,39 +1,45 @@
-import { useEffect, useRef, useState } from 'react';
-import { MessageSquareText, X } from 'lucide-react';
-import { getWorkoutLogs, getWellbeingCheckins, hasSubmittedTestimonial } from '../lib/dataService';
+import { useEffect, useState } from 'react';
+import { MessageSquareText, Star, X } from 'lucide-react';
+import { hasSubmittedTestimonial } from '../lib/dataService';
+import { trackEvent } from '../lib/analytics';
+import { accountAge, canAsk, recordAsk, recordRating } from '../lib/engagementAsks';
 import UserStoryForm from './UserStoryForm';
-import { canAsk, recordAsk } from '../lib/engagementAsks';
 
+// One-tap star rating on the Today tab for members who come back on a later
+// day. Workouts are not required: most members open the app without logging
+// one, and the workout-milestone prompt alone reached almost nobody.
+// 4-5 stars open the public review form, 1-3 open private "what should we
+// improve?" feedback. Shares the monthly limit with the workout rating moment.
 const COPY = {
-  tr: { title: 'Full Balance deneyimin nasıl?', desc: 'İşine yarayanları ve geliştirmemiz gerekenleri paylaşır mısın?', action: 'Kısa yorum yaz', later: 'Şimdi değil', never: 'Tekrar sorma', close: 'Kapat' },
-  en: { title: 'How is Full Balance working for you?', desc: 'What helps you, and what could we improve?', action: 'Write a short review', later: 'Not now', never: 'Do not ask again', close: 'Close' },
-  es: { title: '¿Cómo te va con Full Balance?', desc: '¿Qué te ayuda y qué podemos mejorar?', action: 'Escribir una reseña', later: 'Ahora no', never: 'No volver a preguntar', close: 'Cerrar' },
+  tr: { title: 'Full Balance\'ı nasıl buluyorsun?', desc: 'Tek dokunuş yeter; dürüst puanın bize yol gösteriyor.', later: 'Şimdi değil', never: 'Tekrar sorma', close: 'Kapat' },
+  en: { title: 'How do you like Full Balance?', desc: 'One tap is enough; your honest score guides what we build.', later: 'Not now', never: 'Do not ask again', close: 'Close' },
+  es: { title: '¿Qué te parece Full Balance?', desc: 'Basta un toque; tu puntuación sincera guía lo que construimos.', later: 'Ahora no', never: 'No volver a preguntar', close: 'Cerrar' },
 };
 const MONTH = 30 * 86400000;
 
 export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
   const c = COPY[lang] || COPY.en;
   const [visible, setVisible] = useState(false);
-  const dialog = useRef(null);
-  const submitted = useRef(false);
+  const [rating, setRating] = useState(0);
   const key = 'fb_review_prompt:' + userId;
+
   useEffect(() => {
     let active = true;
-    if (!userId) return;
-    const load = async () => {
-      let preference;
-      try { preference = JSON.parse(localStorage.getItem(key) || 'null'); } catch { /* Storage is optional. */ }
-      if (preference?.never || preference?.submitted || Date.now() - (preference?.dismissedAt || 0) < MONTH) return;
-      const [logs, checkins, submitted] = await Promise.all([getWorkoutLogs(30), getWellbeingCheckins(30), hasSubmittedTestimonial()]);
-      const days = new Set(checkins.map((entry) => entry.date).filter(Boolean));
-      if (active && !submitted && (logs.length >= 3 || days.size >= 3) && canAsk('review', { userId })) {
-        recordAsk('review', { userId });
-        setVisible(true);
-      }
-    };
-    load().catch(() => {});
+    if (!userId) return undefined;
+    let preference;
+    try { preference = JSON.parse(localStorage.getItem(key) || 'null'); } catch { /* Storage is optional. */ }
+    if (preference?.never || preference?.submitted || Date.now() - (preference?.dismissedAt || 0) < MONTH) return undefined;
+    const age = accountAge({ userId });
+    if (age === null || age < 1) return undefined;
+    hasSubmittedTestimonial().then((submitted) => {
+      if (!active || submitted || !canAsk('review', { userId })) return;
+      recordAsk('review', { userId });
+      setVisible(true);
+      trackEvent('review_prompt_view', { surface: 'today' });
+    }).catch(() => {});
     return () => { active = false; };
   }, [key, userId]);
+
   const remember = (preference) => {
     try { localStorage.setItem(key, JSON.stringify(preference)); } catch { /* Still dismiss in this session. */ }
   };
@@ -41,23 +47,48 @@ export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
     remember({ dismissedAt: Date.now(), never });
     setVisible(false);
   };
+  const rate = (value) => {
+    setRating(value);
+    recordRating(value, { userId });
+    trackEvent('review_prompt_rated', { surface: 'today', rating: value });
+  };
+
   if (!visible) return null;
-  return <section className="my-4 border-y border-emerald-500/20 py-4">
-    <div className="flex items-start gap-3">
-      <MessageSquareText size={20} className="mt-1 shrink-0 text-emerald-300" />
-      <div className="min-w-0 flex-1">
-        <h2 className="font-outfit text-sm font-bold text-white">{c.title}</h2>
-        <p className="mt-1 text-xs leading-5 text-slate-400">{c.desc}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button type="button" onClick={() => dialog.current?.showModal()} className="min-h-11 rounded-lg bg-emerald-600 px-4 text-xs font-bold text-white">{c.action}</button>
-          <button type="button" onClick={() => dismiss()} className="min-h-11 px-3 text-xs text-slate-300">{c.later}</button>
-          <button type="button" onClick={() => dismiss(true)} className="min-h-11 px-3 text-xs text-slate-400">{c.never}</button>
-        </div>
-      </div>
-    </div>
-    <dialog ref={dialog} aria-label={c.title} onClose={() => { if (submitted.current) setVisible(false); else dismiss(); }} className="fixed inset-0 m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-lg border border-slate-700 bg-slate-950 p-4 text-white backdrop:bg-black/70">
-      <div className="mb-2 flex justify-end"><button type="button" aria-label={c.close} onClick={() => dialog.current?.close()} className="grid h-11 w-11 place-items-center rounded-lg border border-slate-700"><X size={20} /></button></div>
-      <UserStoryForm lang={lang} embedded onSubmitted={() => { submitted.current = true; remember({ submitted: true }); }} />
-    </dialog>
-  </section>;
+  return (
+    <section aria-label={c.title} className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-4 sm:p-5">
+      {rating === 0 ? (
+        <>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-start gap-3">
+              <MessageSquareText size={19} className="mt-0.5 shrink-0 text-amber-300" aria-hidden="true" />
+              <div className="min-w-0">
+                <h2 className="font-outfit text-sm font-bold text-white">{c.title}</h2>
+                <p className="mt-0.5 text-xs leading-5 text-slate-400">{c.desc}</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => dismiss()} aria-label={c.close} className="-mr-2 -mt-2 grid h-11 w-11 shrink-0 place-items-center text-slate-500 hover:text-slate-300"><X size={18} /></button>
+          </div>
+          <div className="mt-2 flex items-center gap-1" aria-label="Rating">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <button key={value} type="button" onClick={() => rate(value)} aria-label={`${value}/5`} className="grid h-12 w-12 place-items-center">
+                <Star size={30} className="text-slate-500 transition-colors hover:fill-amber-400 hover:text-amber-400" />
+              </button>
+            ))}
+          </div>
+          <div className="mt-1 flex gap-1">
+            <button type="button" onClick={() => dismiss()} className="min-h-11 px-2 text-xs text-slate-300">{c.later}</button>
+            <button type="button" onClick={() => dismiss(true)} className="min-h-11 px-2 text-xs text-slate-500">{c.never}</button>
+          </div>
+        </>
+      ) : (
+        <UserStoryForm
+          lang={lang}
+          embedded
+          mode={rating >= 4 ? 'review' : 'improve'}
+          initialRating={rating}
+          onSubmitted={() => remember({ submitted: true })}
+        />
+      )}
+    </section>
+  );
 }
