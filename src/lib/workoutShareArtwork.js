@@ -1,6 +1,8 @@
 // Fully generated workout share card. No photos and no human figures: the
 // design is built from gradients, rings and typography so every card looks
-// consistent and nothing is downloaded at export time.
+// consistent. The only asset is the brand symbol (falls back to a barbell).
+
+import { drawBrandMark } from './brandCanvas';
 
 const GOAL_PALETTES = {
   muscle: { a: '#ff6d00', b: '#ffb347', glow: 'rgba(255,109,0,0.55)', spark: '#ccfa73' },
@@ -136,7 +138,7 @@ export async function drawWorkoutArtwork(ctx, canvas, card) {
   // Header: brand mark and date.
   const header = story ? 200 : 96;
   ctx.textAlign = 'left';
-  drawBarbell(ctx, 70, header - 34, colors.a);
+  if (!(await drawBrandMark(ctx, 70, header - 46, 52))) drawBarbell(ctx, 70, header - 34, colors.a);
   text(ctx, 'FULL BALANCE', 150, header - 6, 560, 34, '#ffffff', 800);
   if (card.dateLabel) {
     ctx.textAlign = 'right';

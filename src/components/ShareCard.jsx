@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { drawBrandLockup } from '../lib/brandCanvas';
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, X, Check, Download, MessageCircle, ShieldCheck, Users } from "lucide-react";
 import { useTranslation } from '../i18n/LanguageContext';
@@ -106,10 +107,7 @@ export default function ShareCard({ plan, onClose }) {
     ctx.fillRect(200, 160, 680, 3);
 
     // Brand
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 64px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('FULL BALANCE', 540, 130);
+    await drawBrandLockup(ctx, { cx: 540, y: 130, fontSize: 60 });
 
     // User name
     ctx.font = 'bold 36px sans-serif';

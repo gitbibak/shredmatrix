@@ -1,4 +1,5 @@
 import { drawWorkoutArtwork } from './workoutShareArtwork';
+import { drawBrandLockup } from './brandCanvas';
 
 // Generates square and portrait share cards for
 // emotional peaks: a completed workout, a streak milestone, a weekly summary.
@@ -113,9 +114,7 @@ export async function renderShareCard({ eyebrow = 'FULL BALANCE', headline = '',
     });
   }
 
-  ctx.fillStyle = '#e2e8f0';
-  ctx.font = 'bold 44px sans-serif';
-  ctx.fillText('FULL BALANCE', 540, 860);
+  await drawBrandLockup(ctx, { cx: 540, y: 860, fontSize: 44, color: '#e2e8f0' });
   ctx.fillStyle = '#64748b';
   ctx.font = '28px sans-serif';
   ctx.fillText(footer, 540, 910);
