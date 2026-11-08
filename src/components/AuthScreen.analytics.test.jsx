@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../i18n/LanguageContext';
 import { initAnalytics } from '../lib/analytics';
-import { signUp } from '../lib/dataService';
+import { signIn, signInWithGoogle, signUp } from '../lib/dataService';
 import AuthScreen from './AuthScreen';
 
 vi.mock('../lib/supabase', () => ({ supabase: null }));
@@ -87,4 +87,64 @@ describe('optional analytics before registration', () => {
     expect(googleSignupEvents()).toHaveLength(1);
     expect(googleSignupEvents()[0][2]).toMatchObject({ method: 'email' });
   });
+
+  it('offers Google before email fields with consent first and legal links beside the choice', async () => {
+    renderRegistration();
+    const choice = await screen.findByRole('dialog', { name: 'Allow anonymous usage analytics?' });
+    const google = screen.getByRole('button', { name: 'Continue with Google' });
+    const name = screen.getByLabelText('Your Name');
+    expect(choice.compareDocumentPosition(google) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(google.compareDocumentPosition(name) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+    expect(screen.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms');
+    expect(signInWithGoogle).not.toHaveBeenCalled();
+  });
+
+  it.each(['granted', 'denied'])('starts Google registration with %s analytics consent without requiring email fields', async (consent) => {
+    renderRegistration();
+    fireEvent.click(await screen.findByRole('button', {
+      name: consent === 'granted' ? 'Allow anonymous analytics' : 'Do not allow',
+    }));
+    fireEvent.click(screen.getByRole('button', { name: 'Continue with Google' }));
+    await waitFor(() => expect(signInWithGoogle).toHaveBeenCalledOnce());
+    expect(signUp).not.toHaveBeenCalled();
+    expect(signIn).not.toHaveBeenCalled();
+    const starts = window.dataLayer.filter((entry) => entry[0] === 'event' && entry[1] === 'signup_started');
+    expect(starts).toHaveLength(consent === 'granted' ? 1 : 0);
+    if (consent === 'granted') expect(starts[0][2]).toMatchObject({ method: 'google' });
+  });
+
+  it('shows a Google failure next to the promoted choice and keeps email registration usable', async () => {
+    signInWithGoogle.mockRejectedValueOnce(new Error('Google is temporarily unavailable'));
+    const onAuth = renderRegistration();
+    const google = screen.getByRole('button', { name: 'Continue with Google' });
+    fireEvent.click(google);
+    const error = await screen.findByRole('alert');
+    expect(error).toHaveTextContent('Google is temporarily unavailable');
+    expect(error.compareDocumentPosition(google) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    submitRegistration();
+    await waitFor(() => expect(onAuth).toHaveBeenCalledOnce());
+  });
+
+  it('preserves login ordering and hides Google during password recovery', async () => {
+    window.history.replaceState({}, '', '/auth?lang=en');
+    renderRegistration();
+    const email = screen.getByLabelText('Email address');
+    expect(email.compareDocumentPosition(screen.getByRole('button', { name: 'Continue with Google' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Forgot Password' }));
+    await screen.findByRole('button', { name: 'Send Reset Link' });
+    expect(screen.queryByRole('button', { name: 'Continue with Google' })).not.toBeInTheDocument();
+  });
+
+  it('preserves the email verification confirmation and its existing Google alternative', async () => {
+    signUp.mockResolvedValueOnce({ user: { id: 'test-user' }, session: null });
+    signIn.mockRejectedValueOnce(new Error('Email not confirmed'));
+    const onAuth = renderRegistration();
+    submitRegistration();
+    await waitFor(() => expect(screen.queryByLabelText('Your Name')).not.toBeInTheDocument());
+    expect(screen.queryByLabelText('Email address')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Continue with Google' })).toHaveLength(1);
+    expect(onAuth).not.toHaveBeenCalled();
+  });
+
 });
