@@ -49,7 +49,7 @@ function useInternationalSeo(page) {
     setMeta('meta[property="og:description"]', { property: 'og:description' }, page.description);
     setMeta('meta[property="og:url"]', { property: 'og:url' }, url);
     setMeta('meta[property="og:locale"]', { property: 'og:locale' }, page.lang === 'es' ? 'es_ES' : 'en_US');
-    setMeta('meta[property="og:image"]', { property: 'og:image' }, `${BASE_URL}/og/full-balance-og-en.png`);
+    setMeta('meta[property="og:image"]', { property: 'og:image' }, `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`);
     setMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, page.metaTitle);
     setMeta('meta[name="twitter:description"]', { name: 'twitter:description' }, page.description);
     try { localStorage.setItem('shredmatrix_lang', page.lang); } catch {}

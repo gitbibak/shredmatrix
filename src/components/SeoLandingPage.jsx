@@ -32,7 +32,7 @@ const SampleHomeWeek = lazy(() => import('./SampleHomeWeek'));
 const PublicHealthCalculator = lazy(() => import('./PublicHealthCalculator'));
 
 const BASE_URL = 'https://fullbalance.app';
-const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png`;
+const OG_IMAGE = `${BASE_URL}/og/full-balance-og-tr.png?v=2`;
 
 import { turkishSeoPages } from '../data/turkishSeoPages';
 import BrandMark from './BrandMark';

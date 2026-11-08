@@ -226,7 +226,7 @@ for (const page of seoLandingPages) {
       ...(page.faqs.length ? [{ '@type': 'FAQPage', mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }] : []),
     ],
   };
-  await writeRoute(`/${page.slug}`, buildDocument({ title: page.metaTitle || `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png`, schema, body, alternates }));
+  await writeRoute(`/${page.slug}`, buildDocument({ title: page.metaTitle || `${page.title} | Full Balance`, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-tr.png?v=2`, schema, body, alternates }));
 }
 
 for (const lang of ['tr', 'en', 'es']) {
@@ -333,7 +333,7 @@ for (const page of founderPages) {
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: 'Tolga Deveci', item: canonical }] },
     ],
   };
-  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang === 'es' ? 'en' : page.lang}.png`, schema, body, lang: page.lang, alternates: founderAlternates }));
+  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`, schema, body, lang: page.lang, alternates: founderAlternates }));
 }
 
 for (const page of internationalSeoPages) {
@@ -350,13 +350,13 @@ for (const page of internationalSeoPages) {
       { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: BASE_URL, applicationCategory: 'HealthApplication', operatingSystem: 'Web, iOS, Android, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
     ],
   };
-  await writeRoute(page.path, buildDocument({ title: page.metaTitle, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-en.png`, schema, body, lang: page.lang, alternates: page.alternates }));
+  await writeRoute(page.path, buildDocument({ title: page.metaTitle, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`, schema, body, lang: page.lang, alternates: page.alternates }));
 }
 
 for (const page of reviewPages) {
   const canonical = BASE_URL + page.path;
   const body = `<main class="static-seo"><a href="${page.lang === 'tr' ? '/' : '/' + page.lang}">Full Balance</a><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p></main>`;
-  await writeRoute(page.path, buildDocument({ title: page.title + ' | Full Balance', description: page.description, canonical, image: BASE_URL + '/og/full-balance-og-en.png', schema: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.title, url: canonical, inLanguage: page.lang }, body, lang: page.lang, alternates: Object.fromEntries(reviewPages.map((p) => [p.lang, p.path])) }));
+  await writeRoute(page.path, buildDocument({ title: page.title + ' | Full Balance', description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`, schema: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.title, url: canonical, inLanguage: page.lang }, body, lang: page.lang, alternates: Object.fromEntries(reviewPages.map((p) => [p.lang, p.path])) }));
 }
 
 for (const page of pricingPages) {
@@ -375,7 +375,7 @@ for (const page of pricingPages) {
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.eyebrow, item: canonical }] },
     ],
   };
-  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang === 'es' ? 'en' : page.lang}.png`, schema, body, lang: page.lang, alternates: pricingAlternates }));
+  await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`, schema, body, lang: page.lang, alternates: pricingAlternates }));
 }
 
 console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + pricingPages.length + 2 + reviewPages.length} static SEO pages.`);
