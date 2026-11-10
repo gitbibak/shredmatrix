@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { MessageSquareText, Star, X } from 'lucide-react';
-import { hasSubmittedTestimonial } from '../lib/dataService';
+import { getProfile, hasSubmittedTestimonial } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
-import { accountAge, canAsk, recordAsk, recordRating } from '../lib/engagementAsks';
+import { accountAge, recordAsk, recordRating, rememberAccountCreated, reviewDue } from '../lib/engagementAsks';
 import UserStoryForm from './UserStoryForm';
 
 // One-tap star rating on the Today tab for members who come back on a later
@@ -15,7 +15,6 @@ const COPY = {
   en: { title: 'How do you like Full Balance?', desc: 'One tap is enough; your honest score guides what we build.', later: 'Not now', never: 'Do not ask again', close: 'Close' },
   es: { title: '¿Qué te parece Full Balance?', desc: 'Basta un toque; tu puntuación sincera guía lo que construimos.', later: 'Ahora no', never: 'No volver a preguntar', close: 'Cerrar' },
 };
-const MONTH = 30 * 86400000;
 
 export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
   const c = COPY[lang] || COPY.en;
@@ -26,17 +25,22 @@ export default function MilestoneStoryPrompt({ lang = 'en', userId }) {
   useEffect(() => {
     let active = true;
     if (!userId) return undefined;
-    let preference;
-    try { preference = JSON.parse(localStorage.getItem(key) || 'null'); } catch { /* Storage is optional. */ }
-    if (preference?.never || preference?.submitted || Date.now() - (preference?.dismissedAt || 0) < MONTH) return undefined;
-    const age = accountAge({ userId });
-    if (age === null || age < 1) return undefined;
-    hasSubmittedTestimonial().then((submitted) => {
-      if (!active || submitted || !canAsk('review', { userId })) return;
+    (async () => {
+      // First visit on this device: signup date is not cached yet.
+      if (accountAge({ userId }) === null) {
+        const profile = await getProfile().catch(() => null);
+        rememberAccountCreated(userId, profile?.created_at);
+      }
+      if (!active || !reviewDue({ userId })) return;
+      if (await hasSubmittedTestimonial().catch(() => true)) {
+        try { localStorage.setItem(key, JSON.stringify({ submitted: true })); } catch { /* optional */ }
+        return;
+      }
+      if (!active || !reviewDue({ userId })) return;
       recordAsk('review', { userId });
       setVisible(true);
       trackEvent('review_prompt_view', { surface: 'today' });
-    }).catch(() => {});
+    })();
     return () => { active = false; };
   }, [key, userId]);
 

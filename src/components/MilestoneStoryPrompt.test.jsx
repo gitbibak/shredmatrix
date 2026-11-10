@@ -1,11 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MilestoneStoryPrompt from './MilestoneStoryPrompt';
-import { hasSubmittedTestimonial } from '../lib/dataService';
+import { getProfile, hasSubmittedTestimonial } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
 import { rememberAccountCreated } from '../lib/engagementAsks';
 
-vi.mock('../lib/dataService', () => ({ hasSubmittedTestimonial: vi.fn(), getUserId: () => 'm1', submitTestimonial: vi.fn() }));
+vi.mock('../lib/dataService', () => ({ getProfile: vi.fn(), hasSubmittedTestimonial: vi.fn(), getUserId: () => 'm1', submitTestimonial: vi.fn() }));
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
 
 const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString();
@@ -21,6 +21,12 @@ describe('Today review prompt', () => {
     render(<MilestoneStoryPrompt lang="en" userId="m1" />);
     expect(await screen.findByText('How do you like Full Balance?')).toBeInTheDocument();
     expect(trackEvent).toHaveBeenCalledWith('review_prompt_view', { surface: 'today' });
+  });
+
+  it('reads the signup date from the profile on a first visit', async () => {
+    getProfile.mockResolvedValue({ created_at: daysAgo(5) });
+    render(<MilestoneStoryPrompt lang="en" userId="m1" />);
+    expect(await screen.findByText('How do you like Full Balance?')).toBeInTheDocument();
   });
 
   it('waits until the day after signup', async () => {

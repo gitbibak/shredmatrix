@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { Lightbulb, MessageSquareHeart, X } from 'lucide-react';
 import { getUserId } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
-import { canAsk, hasSeen, markSeen, recordAsk, supportPaused } from '../lib/engagementAsks';
+import { canAsk, hasSeen, markSeen, recordAsk, reviewDue, supportPaused } from '../lib/engagementAsks';
 import { activeFounderNote } from '../data/founderNotes';
 import { SUPPORT_URL, isSupportEnabled } from '../data/support';
 import IdeaBox, { ideaCopy } from './IdeaBox';
 import UserStoryForm from './UserStoryForm';
 
 // One engagement card on the Today tab per session: the monthly founder note
-// while it is active and unseen, otherwise (rarely) the idea box.
+// while it is active and unseen, otherwise (rarely) the idea box. Steps aside
+// while the rating prompt is due.
 function pick(userId) {
+  if (reviewDue({ userId })) return null;
   const note = activeFounderNote();
   if (note && !hasSeen(`note:${note.id}`, { userId }) && canAsk('founder_note', { userId })) return { kind: 'founder_note', note };
   if (canAsk('idea', { userId })) return { kind: 'idea' };

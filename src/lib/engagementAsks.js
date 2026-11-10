@@ -11,6 +11,7 @@ const DAY = 86400000;
 const SESSION_KEY = 'fb_ask_session';
 const stateKey = (userId) => `fb_asks:${userId}`;
 const createdKey = (userId) => `fb_account_created:${userId}`;
+const reviewKey = (userId) => `fb_review_prompt:${userId}`;
 
 export const ASK_RULES = Object.freeze({
   support: { minAccountDays: 3, cooldownDays: 14 },
@@ -19,6 +20,7 @@ export const ASK_RULES = Object.freeze({
   founder_note: { minAccountDays: 0, cooldownDays: 0 }, // gated by note id instead
 });
 const LOW_RATING_SUPPORT_PAUSE_DAYS = 30;
+const REVIEW_PAUSE_DAYS = 30;
 
 // Workout counts that open the star-rating moment (1 = right after the first
 // workout). A support ask never shares the screen with a rating ask.
@@ -65,6 +67,22 @@ export function canAsk(kind, { userId, now = Date.now(), ignoreAccountAge = fals
     if (rule.cooldownDays > 0 && now - last < rule.cooldownDays * DAY && sessionKind !== kind) return false;
     if (kind === 'support' && state.lowRatingAt && now - state.lowRatingAt < LOW_RATING_SUPPORT_PAUSE_DAYS * DAY) return false;
     return true;
+  } catch {
+    return false;
+  }
+}
+
+// Reviews come first: while the Today rating prompt is due, the founder note
+// and idea box step aside so it can use the session's one ask.
+export function reviewDue({ userId, now = Date.now() } = {}) {
+  if (!userId) return false;
+  try {
+    const preference = JSON.parse(localStorage.getItem(reviewKey(userId)) || 'null');
+    if (preference?.never || preference?.submitted) return false;
+    if (now - (preference?.dismissedAt || 0) < REVIEW_PAUSE_DAYS * DAY) return false;
+    const age = accountAgeDays(userId, now);
+    if (age === null || age < 1) return false;
+    return canAsk('review', { userId, now });
   } catch {
     return false;
   }

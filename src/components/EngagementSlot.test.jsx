@@ -15,8 +15,16 @@ describe('Today engagement slot', () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-11-10T10:00:00Z'));
     rememberAccountCreated('member-1', '2026-10-01T10:00:00Z');
+    localStorage.setItem('fb_review_prompt:member-1', JSON.stringify({ submitted: true }));
   });
   afterEach(() => vi.useRealTimers());
+
+  it('steps aside while the rating prompt is due', () => {
+    localStorage.removeItem('fb_review_prompt:member-1');
+    const { container } = render(<EngagementSlot lang="tr" />);
+    expect(container).toBeEmptyDOMElement();
+    expect(trackEvent).not.toHaveBeenCalled();
+  });
 
   it('shows the monthly founder note once and records the ask', async () => {
     render(<EngagementSlot lang="tr" />);
