@@ -105,6 +105,40 @@ export function buildSession(day, { logs = [], now = Date.now(), tracksLoad = tr
   };
 }
 
+// A member's first guided workout is a short version (3 moves, 2 sets each,
+// about 10 minutes): most new members opened the full 6-8 move session and
+// left before the first set. The full session rides along so they can switch.
+export const STARTER_EXERCISES = 3;
+export const STARTER_SETS = 2;
+
+export function toStarterSession(session) {
+  const main = session.exercises.filter((exercise) => exercise.section === 'main');
+  const picked = (main.length ? main : session.exercises).slice(0, STARTER_EXERCISES);
+  if (!picked.length || picked.length === session.exercises.length && picked.every((exercise) => exercise.sets.length <= STARTER_SETS)) return session;
+  return {
+    ...session,
+    starter: true,
+    full: { exercises: session.exercises },
+    exercises: picked.map((exercise) => {
+      const sets = exercise.sets.slice(0, STARTER_SETS);
+      return { ...exercise, targetSets: sets.length, sets };
+    }),
+  };
+}
+
+// Switch to the full session, keeping every set already logged.
+export function expandStarterSession(session) {
+  if (!session?.starter || !session.full) return session;
+  const exercises = session.full.exercises.map((exercise) => {
+    const started = session.exercises.find((item) => item.name === exercise.name && item.section === exercise.section);
+    if (!started) return exercise;
+    const sets = exercise.sets.map((set, i) => started.sets[i] || set);
+    return { ...exercise, sets: [...sets, ...started.sets.slice(sets.length)] };
+  });
+  const { starter: _starter, full: _full, ...rest } = session;
+  return { ...rest, exercises };
+}
+
 function clamp(value, max) {
   if (value === null || value === undefined || value === '') return null;
   const number = Number(String(value).replace(',', '.'));

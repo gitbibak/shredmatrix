@@ -4,6 +4,7 @@ import {
   buildPreviousPerformance,
   buildSession,
   completeSet,
+  expandStarterSession,
   findRecords,
   loadSessionDraft,
   parseRepTarget,
@@ -12,6 +13,7 @@ import {
   saveSessionDraft,
   sessionToLogEntry,
   summarizeSession,
+  toStarterSession,
   updateSet,
 } from './workoutSession';
 
@@ -113,5 +115,47 @@ describe('drafts', () => {
     expect(loadSessionDraft(now + 60_000)?.dayFocus).toBe('Upper A');
     expect(loadSessionDraft(now + 13 * 60 * 60 * 1000)).toBeNull();
     expect(localStorage.getItem('fullbalance_workout_session')).toBeNull();
+  });
+});
+
+describe('first-workout starter session', () => {
+  const bigDay = {
+    focus: 'Full Body',
+    exercises: ['Squat', 'Row', 'Press', 'Lunge', 'Curl'].map((name) => ({ name, sets: 4, reps: '10', rest: '60s', equipment: 'none' })),
+    coreFinisher: [{ name: 'Plank', sets: 3, reps: '30s', rest: '30s' }],
+  };
+
+  it('keeps three main moves with two sets each', () => {
+    const starter = toStarterSession(buildSession(bigDay));
+    expect(starter.starter).toBe(true);
+    expect(starter.exercises.map((exercise) => exercise.name)).toEqual(['Squat', 'Row', 'Press']);
+    expect(starter.exercises.every((exercise) => exercise.sets.length === 2 && exercise.targetSets === 2)).toBe(true);
+    expect(summarizeSession(starter).totalSets).toBe(6);
+  });
+
+  it('switches to the full workout without losing logged sets', () => {
+    let starter = toStarterSession(buildSession(bigDay));
+    starter = completeSet(starter, 0, 0);
+    starter = { ...starter, exerciseIndex: 1 };
+    const full = expandStarterSession(starter);
+    expect(full.starter).toBeUndefined();
+    expect(full.full).toBeUndefined();
+    expect(full.exercises).toHaveLength(6);
+    expect(full.exercises[0].sets).toHaveLength(4);
+    expect(full.exercises[0].targetSets).toBe(4);
+    expect(full.exercises[0].sets[0].done).toBe(true);
+    expect(full.exerciseIndex).toBe(1);
+  });
+
+  it('leaves an already short session alone', () => {
+    const tiny = buildSession({ focus: 'Mini', exercises: [{ name: 'Squat', sets: 2, reps: '10', rest: '60s' }] });
+    expect(toStarterSession(tiny)).toBe(tiny);
+  });
+
+  it('logs a finished starter like any other workout', () => {
+    const starter = completeSet(toStarterSession(buildSession(bigDay)), 0, 0);
+    const entry = sessionToLogEntry(starter, '2026-11-12');
+    expect(entry.exercises).toHaveLength(1);
+    expect(entry.exercises[0].name).toBe('Squat');
   });
 });

@@ -21,6 +21,7 @@ import {
   clearSessionDraft,
   findRecords,
   loadSessionDraft,
+  toStarterSession,
   sessionProgressBucket,
   sessionToLogEntry,
 } from '../lib/workoutSession';
@@ -679,11 +680,14 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
       trackEvent('workout_session_started', { module: goalKey, source, resumed: true });
       return;
     }
-    const logs = await getWorkoutLogs(60).catch(() => []);
+    const logs = await getWorkoutLogs(60).catch(() => null);
     clearSessionDraft();
     setSessionDraft(null);
-    setSession(buildSession(day, { logs, tracksLoad }));
-    trackEvent('workout_session_started', { module: goalKey, source, resumed: false });
+    const full = buildSession(day, { logs: logs || [], tracksLoad });
+    // No workout logged yet: start with the short first-workout version.
+    const next = Array.isArray(logs) && logs.length === 0 ? toStarterSession(full) : full;
+    setSession(next);
+    trackEvent('workout_session_started', { module: goalKey, source, resumed: false, starter: Boolean(next.starter) });
   };
 
   startSessionRef.current = startSession;
