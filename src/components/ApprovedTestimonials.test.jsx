@@ -26,4 +26,10 @@ describe('approved public reviews', () => {
     expect(screen.queryByText('Different language')).not.toBeInTheDocument();
     expect(screen.queryByText(/Verified user/)).not.toBeInTheDocument();
   });
+  it('shows the reviewer name when they chose it, otherwise only "member"', async () => {
+    getApprovedTestimonials.mockResolvedValue([{ id: '1', language: 'tr', rating: 5, body: 'İsimli yorum', display_name: 'Ayşe K.' }, { id: '2', language: 'tr', rating: 5, body: 'Anonim yorum' }]);
+    render(<ApprovedTestimonials language="tr" />);
+    expect(await screen.findByText('Ayşe K.')).toBeInTheDocument();
+    expect(screen.getAllByText(/Full Balance üyesi/)).toHaveLength(2);
+  });
 });

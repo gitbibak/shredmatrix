@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import UserStoryForm from './UserStoryForm';
+import UserStoryForm, { shortName } from './UserStoryForm';
 import { submitTestimonial } from '../lib/dataService';
-vi.mock('../lib/dataService', () => ({ submitTestimonial: vi.fn(), getUserId: vi.fn(() => 'member-1') }));
+vi.mock('../lib/dataService', () => ({ submitTestimonial: vi.fn(), getUserId: vi.fn(() => 'member-1'), getProfile: vi.fn(() => Promise.resolve({ name: 'Ayşe Nur Kaya' })) }));
 describe('review consent and submission', () => {
   beforeEach(() => { vi.clearAllMocks(); localStorage.clear(); sessionStorage.clear(); });
   it('requires an explicit rating and accepts a negative public review', async () => {
@@ -19,6 +19,38 @@ describe('review consent and submission', () => {
     expect(submitTestimonial).toHaveBeenCalledWith(expect.objectContaining({ rating: 1, consentPublic: true }));
     expect(done).toHaveBeenCalledWith({ rating: 1, consentPublic: true });
   });
+  it('offers to publish with a short name, prefilled from the profile', async () => {
+    submitTestimonial.mockResolvedValue({});
+    render(<UserStoryForm lang="tr" />);
+    fireEvent.click(screen.getByRole('button', { name: '5/5' }));
+    fireEvent.change(screen.getByPlaceholderText('Full Balance deneyimin'), { target: { value: 'Planlar çok net, her şey ücretsiz ve reklamsız. Çok memnunum.' } });
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(await screen.findByDisplayValue('Ayşe K.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Gönder' }));
+    await screen.findByRole('status');
+    expect(submitTestimonial).toHaveBeenCalledWith(expect.objectContaining({ consentPublic: true, displayName: 'Ayşe K.' }));
+  });
+
+  it('publishes anonymously when the member turns the name off', async () => {
+    submitTestimonial.mockResolvedValue({});
+    render(<UserStoryForm lang="en" />);
+    fireEvent.click(screen.getByRole('button', { name: '5/5' }));
+    fireEvent.change(screen.getByPlaceholderText('Your Full Balance experience'), { target: { value: 'Clear plans and everything is free, I use it every week now.' } });
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('checkbox', { name: /Show my name/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+    await screen.findByRole('status');
+    expect(submitTestimonial).toHaveBeenCalledWith(expect.objectContaining({ consentPublic: true, displayName: '' }));
+  });
+
+  it('never builds a name from an email or placeholder', () => {
+    expect(shortName('Mehmet Ali Yılmaz')).toBe('Mehmet Y.');
+    expect(shortName('Zeynep')).toBe('Zeynep');
+    expect(shortName('User')).toBe('');
+    expect(shortName('a@b.com')).toBe('');
+    expect(shortName('')).toBe('');
+  });
+
   it('sends private feedback when publication consent is not given', async () => {
     submitTestimonial.mockResolvedValue({});
     render(<UserStoryForm lang="en" />);

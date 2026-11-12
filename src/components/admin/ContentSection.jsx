@@ -17,7 +17,7 @@ export default function ContentSection({ testimonials, reviews, drafts, onDraftC
       <Panel
         id="testimonials"
         title={<span className="inline-flex items-center gap-2"><Star size={16} className="text-amber-400" aria-hidden="true" />Bekleyen kullanıcı yorumları</span>}
-        description="Yayın izni verilenler anonim yayınlanabilir. 'Gizli' etiketli girişler yalnızca ekibe yazılmış geri bildirimdir ve yayınlanamaz."
+        description="Yayın izni verilenler yayınlanabilir; isim verenler adıyla, diğerleri anonim görünür. 'Gizli' etiketli girişler yalnızca ekibe yazılmış geri bildirimdir ve yayınlanamaz."
       >
         {loading && testimonials.length === 0 && <SkeletonRows rows={3} />}
         {!loading && !error && testimonials.length === 0 && <p className="py-3 text-sm text-slate-500">Bekleyen yorum yok.</p>}
@@ -28,6 +28,7 @@ export default function ContentSection({ testimonials, reviews, drafts, onDraftC
                 <span className="text-sm text-amber-400" aria-label={`${story.rating} yıldız`}>{'★'.repeat(story.rating)}</span>
                 <span className="flex items-center gap-1.5">
                   {!story.consent_public && <Pill>Gizli geri bildirim</Pill>}
+                  {story.consent_public && story.display_name && <Pill>{story.display_name}</Pill>}
                   {story.language && <Pill>{String(story.language).toUpperCase()}</Pill>}
                 </span>
               </div>
@@ -38,7 +39,7 @@ export default function ContentSection({ testimonials, reviews, drafts, onDraftC
                   {story.consent_public ? 'Reddet' : 'Okundu, arşivle'}
                 </button>
                 {story.consent_public
-                  ? <button type="button" disabled={busy} onClick={() => onTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white disabled:opacity-40">Anonim yayınla</button>
+                  ? <button type="button" disabled={busy} onClick={() => onTestimonialStatus(story.id, 'approved')} className="min-h-9 rounded-lg bg-emerald-600 text-xs font-bold text-white disabled:opacity-40">{story.display_name ? 'Adıyla yayınla' : 'Anonim yayınla'}</button>
                   : <span className="grid min-h-9 place-items-center rounded-lg border border-slate-700 text-xs text-slate-500">Yayınlanamaz</span>}
               </div>
             </li>

@@ -487,7 +487,7 @@ export async function recordProductStep(step) {
 // USER STORIES
 // ══════════════════════════════════════════════
 
-export async function submitTestimonial({ rating, body, resultSummary, language = 'en', consentPublic }) {
+export async function submitTestimonial({ rating, body, resultSummary, language = 'en', consentPublic, displayName }) {
   const userId = getUserId();
   if (!isSupabaseReady() || !userId) throw new Error('Sign in required');
   const payload = {
@@ -499,6 +499,9 @@ export async function submitTestimonial({ rating, body, resultSummary, language 
     consent_public: Boolean(consentPublic),
     status: 'pending',
   };
+  // A name is only stored for reviews the member allowed us to publish.
+  const name = String(displayName || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  if (payload.consent_public && name.length >= 2) payload.display_name = name;
   // Public consent is optional: without it the entry is private product feedback
   // that only the admin panel can read; it can never be published.
   if (!Number.isInteger(Number(rating)) || Number(rating) < 1 || Number(rating) > 5 || payload.body.length < 30) throw new Error('Invalid testimonial');
@@ -511,7 +514,7 @@ export async function getApprovedTestimonials(limit = 6, language, offset = 0) {
   if (!isSupabaseReady()) return [];
   let query = supabase
     .from('testimonials')
-    .select('id, rating, body, result_summary, language, created_at')
+    .select('id, rating, body, result_summary, language, display_name, created_at')
     .eq('status', 'approved')
     .eq('consent_public', true);
   if (['tr', 'en', 'es'].includes(language)) query = query.eq('language', language);

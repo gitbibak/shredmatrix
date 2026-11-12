@@ -5,7 +5,7 @@ import { submitSupportTicket } from '../lib/supportService';
 import { trackEvent } from '../lib/analytics';
 import { rememberAccountCreated } from '../lib/engagementAsks';
 
-vi.mock('../lib/dataService', () => ({ getUserId: () => 'member-1', submitTestimonial: vi.fn() }));
+vi.mock('../lib/dataService', () => ({ getUserId: () => 'member-1', getProfile: vi.fn(() => Promise.resolve(null)), submitTestimonial: vi.fn() }));
 vi.mock('../lib/supportService', () => ({ submitSupportTicket: vi.fn() }));
 vi.mock('../lib/analytics', () => ({ trackEvent: vi.fn() }));
 

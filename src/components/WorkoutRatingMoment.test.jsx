@@ -5,6 +5,7 @@ import { hasSubmittedTestimonial, submitTestimonial } from '../lib/dataService';
 
 vi.mock('../lib/dataService', () => ({
   getUserId: () => 'user-1',
+  getProfile: vi.fn(() => Promise.resolve(null)),
   hasSubmittedTestimonial: vi.fn(),
   submitTestimonial: vi.fn(),
 }));

@@ -31,7 +31,7 @@ function ReviewList({ language, all }) {
   if (!visible.length && failed) return all ? <button type="button" onClick={() => { setLoading(true); setFailed(false); setAttempt((value) => value + 1); }} className="mx-5 my-8 min-h-11 text-sm text-cyan-300">{errorCopy[language]}</button> : null;
   if (!visible.length) return all ? <p role="status" className="px-5 py-12 text-slate-400">{loading ? '…' : ({ tr: 'Henüz yayınlanan yorum yok.', en: 'No published reviews yet.', es: 'Todavía no hay reseñas publicadas.' }[language])}</p> : null;
   const title = { tr: 'Full Balance kullananlardan', en: 'From people using Full Balance', es: 'De quienes usan Full Balance' };
-  const label = { tr: 'Kullanıcı yorumu · anonim', en: 'User review · anonymous', es: 'Opinión de usuario · anónima' };
+  const label = { tr: 'Full Balance üyesi', en: 'Full Balance member', es: 'Miembro de Full Balance' };
   return <section className="border-b border-slate-800 py-12">
     <div className="mx-auto max-w-6xl px-5 sm:px-6">
       <h2 className="mb-6 font-outfit text-2xl font-bold text-white">{title[language] || title.en}</h2>
@@ -40,7 +40,7 @@ function ReviewList({ language, all }) {
           <div className="flex gap-1 text-amber-400" aria-label={item.rating + '/5'}>{Array.from({ length: item.rating }, (_, i) => <Star key={i} size={14} fill="currentColor" aria-hidden="true" />)}</div>
           {item.result_summary && <p className="mt-3 break-words text-xs font-bold text-cyan-300">{item.result_summary}</p>}
           <blockquote className="mt-3 break-words text-sm leading-6 text-slate-300">{item.body}</blockquote>
-          <p className="mt-4 text-xs text-slate-400">{label[language] || label.en}</p>
+          <p className="mt-4 text-xs text-slate-400">{item.display_name ? <><span className="font-semibold text-slate-200">{item.display_name}</span> · </> : null}{label[language] || label.en}</p>
           {item.created_at && !Number.isNaN(Date.parse(item.created_at)) && <time dateTime={item.created_at} className="mt-1 block text-xs text-slate-500">{new Date(item.created_at).toLocaleDateString(language)}</time>}
         </article>)}
       </div>
