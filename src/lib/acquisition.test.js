@@ -161,7 +161,7 @@ describe('landing start tab', () => {
 
   it('opens Nutrition for people who first landed on the photo calorie counter', async () => {
     const { landingStartTab } = await import('./acquisition');
-    for (const path of ['/en/photo-calorie-counter', '/es/contar-calorias-con-foto', '/fotografla-kalori-hesaplama/']) {
+    for (const path of ['/en/photo-calorie-counter', '/es/contar-calorias-con-foto', '/fotografla-kalori-hesaplama/', '/en/free-cal-ai-alternative']) {
       localStorage.setItem('fb_acquisition', JSON.stringify({ first_landing_page: path }));
       expect(landingStartTab()).toBe('nutrition');
     }
@@ -171,6 +171,8 @@ describe('landing start tab', () => {
     const { landingStartTab } = await import('./acquisition');
     expect(landingStartTab()).toBeNull();
     localStorage.setItem('fb_acquisition', JSON.stringify({ first_landing_page: '/en' }));
+    expect(landingStartTab()).toBeNull();
+    localStorage.setItem('fb_acquisition', JSON.stringify({ first_landing_page: '/en/free-fitbod-alternative' }));
     expect(landingStartTab()).toBeNull();
   });
 });

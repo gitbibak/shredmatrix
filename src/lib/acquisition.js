@@ -179,10 +179,14 @@ export function recordAcquisitionContent(content) {
   writeStored({ ...stored, acquisition_content: value });
 }
 
-// Members who first arrived on the photo calorie counter (mostly via ChatGPT)
-// came for meal tracking, so their first app visit opens Nutrition instead of
-// the workout-first Today tab.
-const MEAL_TOOL_LANDINGS = ['/fotografla-kalori-hesaplama', '/en/photo-calorie-counter', '/es/contar-calorias-con-foto'];
+// Members who first arrived on the photo calorie counter or a calorie-app
+// comparison (mostly via ChatGPT) came for meal tracking, so their first app
+// visit opens Nutrition instead of the workout-first Today tab.
+const MEAL_TOOL_LANDINGS = [
+  '/fotografla-kalori-hesaplama', '/en/photo-calorie-counter', '/es/contar-calorias-con-foto',
+  '/cal-ai-ucretsiz-alternatif', '/en/free-cal-ai-alternative', '/es/alternativa-gratis-cal-ai',
+  '/myfitnesspal-ucretsiz-alternatif', '/en/free-myfitnesspal-alternative', '/es/alternativa-gratis-myfitnesspal',
+];
 
 export function landingStartTab() {
   const landing = String(readStored()?.first_landing_page || '').replace(/\/+$/, '');

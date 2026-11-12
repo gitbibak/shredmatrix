@@ -1,3 +1,4 @@
+import { alternativePages } from '../src/data/alternativePages.js';
 import { coachMarketing } from '../src/data/coachMarketing.js';
 import { access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -159,6 +160,18 @@ for (const page of internationalSeoPages) {
   assert(occurrences(html, 'type="application/ld+json"') === 1, `${page.path} has conflicting structured data blocks`);
 }
 
+for (const page of alternativePages) {
+  const html = await readFile(join(distDir, page.path.replace(/^\//, ''), 'index.html'), 'utf8');
+  assert(html.includes(`<html lang="${page.lang}">`), `${page.path} document language is missing`);
+  assertSingleLocalizedH1(html, page.path, page.lang);
+  assert(html.includes(`rel="canonical" href="${BASE_URL}${page.path}"`), `${page.path} canonical is missing`);
+  for (const lang of ['tr', 'en', 'es']) assert(html.includes(`hreflang="${lang}" href="${BASE_URL}${page.alternates[lang]}"`), `${page.path} ${lang} alternate is missing`);
+  assert(html.includes(`/auth?mode=register&amp;lang=${page.lang}`), `${page.path} registration CTA is missing`);
+  assert(html.includes('"@type":"FAQPage"'), `${page.path} FAQ schema is missing`);
+  assert(occurrences(html, 'type="application/ld+json"') === 1, `${page.path} has conflicting structured data blocks`);
+  assert(page.appPrice && html.includes('rel="nofollow noopener"'), `${page.path} must show the sourced App Store price`);
+}
+
 const sitemap = await readFile(join(rootDir, 'public', 'sitemap.xml'), 'utf8');
 for (const page of reviewPages) {
   const html = await readFile(join(distDir, page.path.slice(1), 'index.html'), 'utf8');
@@ -170,4 +183,4 @@ for (const [path] of publicPages) {
   assert(sitemap.includes(`<loc>${BASE_URL}${path}</loc>`), `${path} is missing from sitemap.xml`);
 }
 
-console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderRoutes.length + 4} static SEO pages and ${publicPages.length} sitemap URLs.`);
+console.log(`Verified ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderRoutes.length + 4 + alternativePages.length} static SEO pages and ${publicPages.length} sitemap URLs.`);

@@ -8,6 +8,7 @@ import { getLandingBlogArticles } from '../src/data/blogRelated.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
 import { storePrices } from '../src/data/storePrices.js';
+import { ALTERNATIVES_REVIEWED, alternativePages } from '../src/data/alternativePages.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
@@ -365,7 +366,7 @@ for (const page of pricingPages) {
   const prices = storePrices[page.lang] || storePrices.en;
   const priceTable = `<section><h2>${escapeHtml(prices.title)}</h2><p>${escapeHtml(prices.intro)}</p><table><thead><tr>${prices.head.map((head) => `<th>${escapeHtml(head)}</th>`).join('')}</tr></thead><tbody>${prices.rows.map(([app, purpose, price, ours, source]) => `<tr><td><a href="${escapeHtml(source)}" rel="nofollow noopener">${escapeHtml(app)}</a></td><td>${escapeHtml(purpose)}</td><td>${escapeHtml(price)}</td><td>${escapeHtml(ours)}</td></tr>`).join('')}</tbody></table><p>${escapeHtml(prices.note)}</p></section>`;
   const faqs = page.faqs.map(([question, answer]) => `<section><h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p></section>`).join('');
-  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p><p><strong>${escapeHtml(page.priceLabel)}: ${escapeHtml(page.price)}</strong> ${escapeHtml(page.priceNote)}</p></header><article><section><h2>${escapeHtml(page.compareTitle)}</h2>${table}</section>${priceTable}<section><h2>${escapeHtml(page.whyTitle)}</h2><ul>${page.why.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section><section><h2>${escapeHtml(page.honestyTitle)}</h2><p>${escapeHtml(page.honesty)}</p><a href="/privacy">${escapeHtml(page.privacy)}</a></section><section><h2>${escapeHtml(page.faqTitle)}</h2>${faqs}</section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a> · <a href="${escapeHtml(page.compareHref)}">${escapeHtml(page.compareLink)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p><p><strong>${escapeHtml(page.priceLabel)}: ${escapeHtml(page.price)}</strong> ${escapeHtml(page.priceNote)}</p></header><article><section><h2>${escapeHtml(page.compareTitle)}</h2>${table}</section>${priceTable}<section><h2>${escapeHtml(page.whyTitle)}</h2><ul>${page.why.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section><section><h2>${escapeHtml(page.honestyTitle)}</h2><p>${escapeHtml(page.honesty)}</p><a href="/privacy">${escapeHtml(page.privacy)}</a></section><section><h2>${escapeHtml(page.faqTitle)}</h2>${faqs}</section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a> · <a href="${escapeHtml(page.compareHref)}">${escapeHtml(page.compareLink)}</a><ul>${alternativePages.filter((item) => item.lang === page.lang).map((item) => `<li><a href="${item.path}">${escapeHtml(item.heading)}</a></li>`).join('')}</ul></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -378,4 +379,88 @@ for (const page of pricingPages) {
   await writeRoute(page.path, buildDocument({ title: page.title, description: page.description, canonical, image: `${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2`, schema, body, lang: page.lang, alternates: pricingAlternates }));
 }
 
-console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + pricingPages.length + 2 + reviewPages.length} static SEO pages.`);
+// "Free alternative to X" pages are standalone documents (no app bundle):
+// fast for crawlers and AI assistants. A small inline script keeps the first
+// visit's source so a signup that starts here is still attributed correctly.
+const ACQUISITION_SNIPPET = `<script>(function(){try{if(localStorage.getItem('fb_acquisition'))return;var q=new URLSearchParams(location.search),s=q.get('utm_source'),m=q.get('utm_medium');if(!s&&document.referrer){var h=new URL(document.referrer).hostname.replace(/^www\\./,'');if(h!==location.hostname){s=/(^|\\.)(chatgpt\\.com|chat\\.openai\\.com)$/.test(h)?'chatgpt.com':/^google\\.|\\.google\\./.test(h)?'google':/^bing\\.|\\.bing\\./.test(h)?'bing':/(^|\\.)perplexity\\.ai$/.test(h)?'perplexity.ai':h;m=m||'referral'}}s=s||'direct';m=m||(s==='direct'?'none':null);localStorage.setItem('fb_acquisition',JSON.stringify({acquisition_source:s,acquisition_medium:m,acquisition_campaign:q.get('utm_campaign'),landing_path:location.pathname,first_source:s,first_medium:m,first_campaign:q.get('utm_campaign'),first_landing_page:location.pathname}))}catch(e){}})();</script>`;
+
+function alternativeDocument(page) {
+  const canonical = BASE_URL + page.path;
+  const reviewed = formatReviewedDate(page.lang, ALTERNATIVES_REVIEWED);
+  const others = alternativePages.filter((item) => item.lang === page.lang && item.topic !== page.topic);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', '@id': `${canonical}#page`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, dateModified: ALTERNATIVES_REVIEWED, about: { '@id': `${BASE_URL}/#app` } },
+      { '@type': 'FAQPage', '@id': `${canonical}#faq`, inLanguage: page.locale, mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+      { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: `${BASE_URL}/`, applicationCategory: 'HealthApplication', operatingSystem: 'Web, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: page.lang === 'tr' ? 'TRY' : page.lang === 'es' ? 'EUR' : 'USD' } },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.heading, item: canonical }] },
+    ],
+  };
+  const rows = [...page.rows];
+  if (page.appPrice) rows.unshift([page.priceLabel, page.ours]);
+  const table = `<table><thead><tr><th></th><th>Full Balance</th></tr></thead><tbody>${rows.map(([label, value]) => `<tr><th scope="row">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`).join('')}</tbody></table>`;
+  const priceLine = page.appPrice ? `<p class="note"><strong>${escapeHtml(page.app)}</strong>: ${escapeHtml(page.appPrice)} (<a href="${escapeHtml(page.appStoreUrl)}" rel="nofollow noopener">App Store</a>). ${escapeHtml(page.note(reviewed))}</p>` : '';
+  const hreflang = ['tr', 'en', 'es'].map((lang) => `<link rel="alternate" hreflang="${lang}" href="${BASE_URL}${page.alternates[lang]}">`).join('') + `<link rel="alternate" hreflang="x-default" href="${BASE_URL}${page.alternates.en}">`;
+  const register = `/auth?mode=register&amp;lang=${page.lang}`;
+  const pricingHref = { tr: '/fiyatlandirma', en: '/en/pricing', es: '/es/precios' }[page.lang];
+  const homeHref = page.lang === 'tr' ? '/' : `/${page.lang}`;
+  return `<!doctype html>
+<html lang="${page.lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(page.title)} | Full Balance</title>
+<meta name="description" content="${escapeHtml(page.description)}">
+<link rel="canonical" href="${canonical}">${hreflang}
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${escapeHtml(page.title)}">
+<meta property="og:description" content="${escapeHtml(page.description)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="${page.lang === 'tr' ? 'tr_TR' : page.lang === 'en' ? 'en_US' : 'es_ES'}">
+<meta property="og:image" content="${BASE_URL}/og/full-balance-og-${page.lang}.png?v=2">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${safeJson(schema)}</script>
+${ACQUISITION_SNIPPET}
+<style>
+:root{--bg:#07081a;--card:#0f1229;--line:#232849;--text:#e2e8f0;--muted:#94a3b8;--accent:#ff8a1f;--sky:#38bdf8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:820px;margin:0 auto;padding:32px 16px 64px}a{color:var(--sky)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;text-decoration:none}.brand b{color:var(--sky)}
+h1{font-size:clamp(28px,6vw,42px);line-height:1.12;margin:28px 0 12px;color:#fff}h2{font-size:21px;margin:36px 0 10px;color:#fff}h3{font-size:16px;margin:18px 0 4px;color:#fff}
+.answer{font-size:18px;color:#cbd5e1;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:14px;padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}tbody th{color:var(--muted);font-weight:600;width:45%}
+.note{color:var(--muted);font-size:13px}ul{padding-left:20px}li{margin:6px 0}
+.cta{display:inline-block;margin:8px 8px 0 0;background:var(--accent);color:#111;font-weight:800;text-decoration:none;padding:12px 18px;border-radius:12px}.cta.alt{background:transparent;color:var(--sky);border:1px solid var(--line)}
+footer{margin-top:40px;font-size:14px;color:var(--muted)}footer a{margin-right:14px}
+</style>
+</head>
+<body>
+<main id="seo-static">
+<div class="top"><a class="brand" href="${homeHref}"><img src="/brand/mark.svg" alt="" width="28" height="29"><span>FULL <b>BALANCE</b></span></a><a href="${pricingHref}">${escapeHtml(page.pricing)}</a></div>
+<h1>${escapeHtml(page.heading)}</h1>
+<p class="answer">${escapeHtml(page.answer)}</p>
+<p><a class="cta" href="${register}">${escapeHtml(page.cta)}</a><a class="cta alt" href="${escapeHtml(page.toolHref)}">${escapeHtml(page.tool)}</a></p>
+<h2>Full Balance</h2>
+${table}
+${priceLine}
+<h2>${escapeHtml(page.betterTitle)}</h2>
+<ul>${page.better.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+<h2>${escapeHtml(page.pickTitle)}</h2>
+<p>${escapeHtml(page.pick)}</p>
+<h2>${escapeHtml(page.faqTitle)}</h2>
+${page.faqs.map(([question, answer]) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join('')}
+<p><a class="cta" href="${register}">${escapeHtml(page.cta)}</a></p>
+<footer><p>${escapeHtml(page.reviewed)}: <time datetime="${ALTERNATIVES_REVIEWED}">${escapeHtml(reviewed)}</time></p><p>${escapeHtml(page.others)}: ${others.map((item) => `<a href="${item.path}">${escapeHtml(item.heading)}</a>`).join('')}</p></footer>
+</main>
+</body>
+</html>
+`;
+}
+
+for (const page of alternativePages) {
+  await writeRoute(page.path, alternativeDocument(page));
+}
+
+console.log(`Generated ${blogArticles.length + seoLandingPages.length + internationalSeoPages.length + founderPages.length + pricingPages.length + 2 + reviewPages.length + alternativePages.length} static SEO pages.`);
