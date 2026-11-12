@@ -10,7 +10,7 @@ import SupportCard from './SupportCard';
 import UserStoryForm from './UserStoryForm';
 
 // One engagement card on the Today tab per session: the monthly founder note
-// while it is active and unseen, then the support card (every 14 days for
+// once, then the support card (every 14 days for
 // members past their first 3 days), otherwise (rarely) the idea box. Steps
 // aside while the rating prompt is due.
 const CLOSE = { tr: 'Kapat', en: 'Close', es: 'Cerrar' };
@@ -31,6 +31,9 @@ export default function EngagementSlot({ lang = 'tr' }) {
     if (!slot || recorded.current) return;
     recorded.current = true;
     recordAsk(slot.kind, { userId: getUserId() });
+    // The note shows in one session only; ignored notes used to hold the
+    // Today slot all month and the support card never got a turn.
+    if (slot.kind === 'founder_note') markSeen(`note:${slot.note.id}`, { userId: getUserId() });
     trackEvent('engagement_ask_shown', { kind: slot.kind, placement: 'today' });
   }, [slot]);
   const [open, setOpen] = useState(null);

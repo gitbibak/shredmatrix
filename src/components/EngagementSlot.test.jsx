@@ -35,6 +35,17 @@ describe('Today engagement slot', () => {
     expect(trackEvent).toHaveBeenCalledWith('founder_note_action', { action: 'close', noteId: '2026-11' });
   });
 
+  it('shows the note in one session only, then gives the next session to the support card', async () => {
+    const { unmount } = render(<EngagementSlot lang="tr" />);
+    expect(screen.getByText('Kurucudan bir not')).toBeInTheDocument();
+    await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('engagement_ask_shown', { kind: 'founder_note', placement: 'today' }));
+    unmount();
+    sessionStorage.clear();
+    render(<EngagementSlot lang="tr" />);
+    expect(screen.queryByText('Kurucudan bir not')).not.toBeInTheDocument();
+    expect(screen.getByText('Bir protein shake ısmarla')).toBeInTheDocument();
+  });
+
   it('turns an idea into an idea ticket', async () => {
     submitSupportTicket.mockResolvedValue({ ok: true });
     render(<EngagementSlot lang="en" />);
