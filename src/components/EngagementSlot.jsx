@@ -6,15 +6,20 @@ import { canAsk, hasSeen, markSeen, recordAsk, reviewDue, supportPaused } from '
 import { activeFounderNote } from '../data/founderNotes';
 import { SUPPORT_URL, isSupportEnabled } from '../data/support';
 import IdeaBox, { ideaCopy } from './IdeaBox';
+import SupportCard from './SupportCard';
 import UserStoryForm from './UserStoryForm';
 
 // One engagement card on the Today tab per session: the monthly founder note
-// while it is active and unseen, otherwise (rarely) the idea box. Steps aside
-// while the rating prompt is due.
+// while it is active and unseen, then the support card (every 14 days for
+// members past their first 3 days), otherwise (rarely) the idea box. Steps
+// aside while the rating prompt is due.
+const CLOSE = { tr: 'Kapat', en: 'Close', es: 'Cerrar' };
+
 function pick(userId) {
   if (reviewDue({ userId })) return null;
   const note = activeFounderNote();
   if (note && !hasSeen(`note:${note.id}`, { userId }) && canAsk('founder_note', { userId })) return { kind: 'founder_note', note };
+  if (isSupportEnabled(SUPPORT_URL) && canAsk('support', { userId })) return { kind: 'support' };
   if (canAsk('idea', { userId })) return { kind: 'idea' };
   return null;
 }
@@ -31,6 +36,15 @@ export default function EngagementSlot({ lang = 'tr' }) {
   const [open, setOpen] = useState(null);
   if (!slot) return null;
   const userId = getUserId();
+
+  if (slot.kind === 'support') {
+    return (
+      <div className="relative">
+        <SupportCard lang={lang} placement="today" />
+        <button type="button" onClick={() => setSlot(null)} aria-label={CLOSE[lang] || CLOSE.en} className="absolute right-1 top-1 grid h-11 w-11 place-items-center text-slate-500 hover:text-slate-300"><X size={18} /></button>
+      </div>
+    );
+  }
 
   if (slot.kind === 'idea') {
     return <IdeaBox lang={lang} placement="today" />;

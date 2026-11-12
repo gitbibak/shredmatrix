@@ -46,8 +46,18 @@ describe('Today engagement slot', () => {
     expect(trackEvent).toHaveBeenCalledWith('idea_submitted', { placement: 'founder_note', language: 'en' });
   });
 
-  it('falls back to the idea box after the note was seen, and stays quiet within its cooldown', () => {
+  it('shows the support card after the note was seen and counts the view', async () => {
     localStorage.setItem('fb_asks:member-1', JSON.stringify({ lastShown: {}, seen: { 'note:2026-11': Date.now() } }));
+    render(<EngagementSlot lang="tr" />);
+    expect(screen.getByText('Bir protein shake ısmarla')).toBeInTheDocument();
+    await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('engagement_ask_shown', { kind: 'support', placement: 'today' }));
+    expect(trackEvent).toHaveBeenCalledWith('support_card_view', { placement: 'today', language: 'tr' });
+    fireEvent.click(screen.getByRole('button', { name: 'Kapat' }));
+    expect(screen.queryByText('Bir protein shake ısmarla')).not.toBeInTheDocument();
+  });
+
+  it('falls back to the idea box after the note and a recent support ask, and stays quiet within its cooldown', () => {
+    localStorage.setItem('fb_asks:member-1', JSON.stringify({ lastShown: { support: Date.now() - 86400000 }, seen: { 'note:2026-11': Date.now() } }));
     const { unmount } = render(<EngagementSlot lang="en" />);
     expect(screen.getByText('Got an idea? 💡')).toBeInTheDocument();
     unmount();

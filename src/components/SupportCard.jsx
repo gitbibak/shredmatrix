@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, ExternalLink } from 'lucide-react';
 import { SUPPORT_URL, isSupportEnabled, supportText } from '../data/support';
 import { trackEvent } from '../lib/analytics';
@@ -10,7 +10,12 @@ import { trackEvent } from '../lib/analytics';
  */
 export default function SupportCard({ lang = 'tr', placement, variant = 'card', url = SUPPORT_URL, message }) {
   const [open, setOpen] = useState(false);
-  if (!isSupportEnabled(url)) return null;
+  const enabled = isSupportEnabled(url);
+  // Count real asks (cards and inline lines), not the always-present footer link.
+  useEffect(() => {
+    if (enabled && (variant === 'card' || variant === 'inline')) trackEvent('support_card_view', { placement, language: lang });
+  }, [enabled, variant, placement, lang]);
+  if (!enabled) return null;
   const c = supportText(lang);
   const onClick = () => trackEvent('support_link_click', { placement, language: lang });
   const link = (className, label) => (
