@@ -178,3 +178,13 @@ export function recordAcquisitionContent(content) {
   if (stored.acquisition_content) return;
   writeStored({ ...stored, acquisition_content: value });
 }
+
+// Members who first arrived on the photo calorie counter (mostly via ChatGPT)
+// came for meal tracking, so their first app visit opens Nutrition instead of
+// the workout-first Today tab.
+const MEAL_TOOL_LANDINGS = ['/fotografla-kalori-hesaplama', '/en/photo-calorie-counter', '/es/contar-calorias-con-foto'];
+
+export function landingStartTab() {
+  const landing = String(readStored()?.first_landing_page || '').replace(/\/+$/, '');
+  return MEAL_TOOL_LANDINGS.includes(landing) ? 'nutrition' : null;
+}

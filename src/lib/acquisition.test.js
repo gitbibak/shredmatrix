@@ -155,3 +155,22 @@ describe('first-party acquisition attribution', () => {
     });
   });
 });
+
+describe('landing start tab', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('opens Nutrition for people who first landed on the photo calorie counter', async () => {
+    const { landingStartTab } = await import('./acquisition');
+    for (const path of ['/en/photo-calorie-counter', '/es/contar-calorias-con-foto', '/fotografla-kalori-hesaplama/']) {
+      localStorage.setItem('fb_acquisition', JSON.stringify({ first_landing_page: path }));
+      expect(landingStartTab()).toBe('nutrition');
+    }
+  });
+
+  it('keeps the default for other landings or missing data', async () => {
+    const { landingStartTab } = await import('./acquisition');
+    expect(landingStartTab()).toBeNull();
+    localStorage.setItem('fb_acquisition', JSON.stringify({ first_landing_page: '/en' }));
+    expect(landingStartTab()).toBeNull();
+  });
+});

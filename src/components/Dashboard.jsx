@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getProfile, preloadProfilePhoto, recordProductStep } from '../lib/dataService';
+import { landingStartTab } from '../lib/acquisition';
 import { rememberAccountCreated } from '../lib/engagementAsks';
 import { trackEvent } from '../lib/analytics';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,6 @@ const PushPermission = lazy(() => import('./PushPermission'));
 const MilestoneStoryPrompt = lazy(() => import('./MilestoneStoryPrompt'));
 const HeardFromCard = lazy(() => import('./HeardFromCard'));
 const EngagementSlot = lazy(() => import('./EngagementSlot'));
-const InviteFriendsCard = lazy(() => import('./InviteFriendsCard'));
 
 const DailyChallenge = lazy(() => import('./DailyChallenge'));
 const Leaderboard = lazy(() => import('./Leaderboard'));
@@ -98,20 +98,25 @@ function DisclosureSection({ title, description, icon: Icon, open, onToggle, chi
 // ═════════════════════════════════════════════════════════
 export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, onShowGuide }) {
   const { t, lang } = useTranslation();
-  const [activeTab, setActiveTab] = useState(() => {
+  const [startTab] = useState(() => {
     // ?tab= opens a tab directly (manifest shortcuts, "write a review" links).
     try {
       const tab = new URLSearchParams(window.location.search).get('tab');
-      return ['nutrition', 'workout', 'today', 'progress', 'profile'].includes(tab) ? tab : 'today';
-    } catch {
-      return 'today';
-    }
+      if (['nutrition', 'workout', 'today', 'progress', 'profile'].includes(tab)) return { tab, fromLanding: false };
+      // First app visit after arriving on the photo calorie counter: open
+      // Nutrition with the tools expanded (first login is recorded on mount).
+      if (!localStorage.getItem('shredmatrix_first_login') && landingStartTab() === 'nutrition') {
+        return { tab: 'nutrition', fromLanding: true };
+      }
+    } catch { /* fall back to Today */ }
+    return { tab: 'today', fromLanding: false };
   });
+  const [activeTab, setActiveTab] = useState(startTab.tab);
   const [workoutSelection, setWorkoutSelection] = useState(null);
   const [showShare, setShowShare] = useState(false);
   const [showQuickStats, setShowQuickStats] = useState(false);
   const [progressView, setProgressView] = useState('measurements');
-  const [showNutritionTools, setShowNutritionTools] = useState(false);
+  const [showNutritionTools, setShowNutritionTools] = useState(startTab.fromLanding);
   const [showWorkoutTools, setShowWorkoutTools] = useState(false);
   const [showLongevity, setShowLongevity] = useState(false);
   const [showChallenge, setShowChallenge] = useState(false);
@@ -386,7 +391,6 @@ export default function Dashboard({ plan, user, onBack, onLogout, onPlanUpdate, 
                     <DailyChallenge />
                   </DisclosureSection>
                   <PushPermission daysSinceJoin={daysSinceJoin} />
-                  <InviteFriendsCard surface="today" compact userName={plan?.userName || user?.name} />
                 </motion.div>
               </motion.div>
               </Suspense>
