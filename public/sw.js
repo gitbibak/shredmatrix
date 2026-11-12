@@ -1,4 +1,4 @@
-const CACHE = 'fb-v11';
+const CACHE = 'fb-v12';
 const PRE_CACHE = [
   '/',
   '/index.html',
@@ -74,10 +74,16 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request, { cache: 'no-store' })
         .then((res) => {
-          // Cache fresh index.html on every navigation
+          // Keep the latest app shell for offline use. Standalone pages such as
+          // /press have no app root and must not replace the cached shell.
           if (res && res.status === 200) {
             const clone = res.clone();
-            caches.open(CACHE).then((cache) => cache.put('/index.html', clone));
+            clone.text().then((html) => {
+              if (html.includes('id="root"')) {
+                return caches.open(CACHE).then((cache) => cache.put('/index.html', new Response(html, { headers: clone.headers })));
+              }
+              return null;
+            }).catch(() => {});
           }
           return res;
         })
