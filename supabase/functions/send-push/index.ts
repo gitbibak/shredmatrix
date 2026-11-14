@@ -1,6 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
-import { getDailyNotification } from './notificationContent.js';
+import { announcementFor, getDailyNotification } from './notificationContent.js';
 import { dueReminders, scheduledMessage } from './reminderSchedule.js';
 
 const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
@@ -95,13 +95,14 @@ Deno.serve(async (req) => {
           skipped += 1;
           continue;
         }
-        const message = subscription.reminder_settings
+        const message = announcementFor(subscription.language, reminder.date, reminder.kind)
+          || (subscription.reminder_settings
           ? scheduledMessage(subscription.language, reminder)
           : getDailyNotification(
               subscription.language,
               reminder.date,
               subscription.id,
-            );
+            ));
         const result = await sendPushNotification(
           {
             endpoint: subscription.endpoint,

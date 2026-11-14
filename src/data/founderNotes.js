@@ -6,7 +6,7 @@
 export const FOUNDER_NOTES = [
   {
     id: '2026-11-support',
-    from: '2026-11-15',
+    from: '2026-11-14',
     until: '2026-12-14',
     primary: 'support',
     tr: {

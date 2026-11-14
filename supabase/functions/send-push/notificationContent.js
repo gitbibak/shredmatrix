@@ -77,3 +77,31 @@ export function getDailyNotification(language, localDate, subscriptionId) {
     url: `/dashboard?entry=push&message=${message.category}`,
   };
 }
+
+// One-off notes from the founder that replace a day's reminder (not water
+// breaks) for everyone with notifications on. Keep them rare: at most one a
+// month, and only for things members would want to know.
+export const PUSH_ANNOUNCEMENTS = [
+  {
+    date: '2026-11-15',
+    category: 'founder_support',
+    tr: ['Kurucudan bir rica 🥤', 'Full Balance ücretsiz ve reklamsız kalsın diye küçük bir destek isteğim var. Detaylar Bugün ekranında.'],
+    en: ['A small ask from the founder 🥤', 'A short note on keeping Full Balance free and ad-free. Details on your Today screen.'],
+    es: ['Una pequeña petición del fundador 🥤', 'Una nota breve para que Full Balance siga gratis y sin anuncios. Detalles en tu pantalla Hoy.'],
+  },
+];
+
+export function announcementFor(language, localDate, kind) {
+  if (kind === 'water') return null;
+  const note = PUSH_ANNOUNCEMENTS.find((item) => item.date === localDate);
+  if (!note) return null;
+  const safeLanguage = ['tr', 'en', 'es'].includes(language) ? language : 'en';
+  const [title, body] = note[safeLanguage];
+  return {
+    title,
+    body,
+    category: note.category,
+    language: safeLanguage,
+    url: `/dashboard?entry=push&message=${note.category}`,
+  };
+}
