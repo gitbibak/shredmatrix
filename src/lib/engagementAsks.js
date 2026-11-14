@@ -16,7 +16,7 @@ const reviewKey = (userId) => `fb_review_prompt:${userId}`;
 export const ASK_RULES = Object.freeze({
   support: { minAccountDays: 3, cooldownDays: 14 },
   idea: { minAccountDays: 1, cooldownDays: 21 },
-  review: { minAccountDays: 0, cooldownDays: 0 }, // the review prompts keep their own monthly limit
+  review: { minAccountDays: 0, cooldownDays: 7 }, // an ignored rating prompt waits a week instead of taking every session
   founder_note: { minAccountDays: 0, cooldownDays: 0 }, // gated by note id instead
 });
 const LOW_RATING_SUPPORT_PAUSE_DAYS = 30;

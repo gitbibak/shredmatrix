@@ -76,4 +76,20 @@ describe('Today engagement slot', () => {
     const { container } = render(<EngagementSlot lang="en" />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it('leads the support note with the support link for established members', async () => {
+    vi.setSystemTime(new Date('2026-11-20T10:00:00Z'));
+    render(<EngagementSlot lang="tr" />);
+    expect(screen.getByText('Kurucudan bir rica')).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: 'Protein shake ısmarla 🥤' });
+    expect(link).toHaveAttribute('href', expect.stringContaining('buymeacoffee.com'));
+    await waitFor(() => expect(trackEvent).toHaveBeenCalledWith('engagement_ask_shown', { kind: 'founder_note', placement: 'today' }));
+  });
+
+  it('never shows the support note in the first days after signup', () => {
+    vi.setSystemTime(new Date('2026-11-20T10:00:00Z'));
+    rememberAccountCreated('member-1', '2026-11-19T10:00:00Z');
+    render(<EngagementSlot lang="tr" />);
+    expect(screen.queryByText('Kurucudan bir rica')).not.toBeInTheDocument();
+  });
 });

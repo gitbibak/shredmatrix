@@ -18,7 +18,8 @@ const CLOSE = { tr: 'Kapat', en: 'Close', es: 'Cerrar' };
 function pick(userId) {
   if (reviewDue({ userId })) return null;
   const note = activeFounderNote();
-  if (note && !hasSeen(`note:${note.id}`, { userId }) && canAsk('founder_note', { userId })) return { kind: 'founder_note', note };
+  const noteAllowed = note?.primary === 'support' ? isSupportEnabled(SUPPORT_URL) && canAsk('support', { userId }) : true;
+  if (note && noteAllowed && !hasSeen(`note:${note.id}`, { userId }) && canAsk('founder_note', { userId })) return { kind: 'founder_note', note };
   if (isSupportEnabled(SUPPORT_URL) && canAsk('support', { userId })) return { kind: 'support' };
   if (canAsk('idea', { userId })) return { kind: 'idea' };
   return null;
@@ -31,6 +32,8 @@ export default function EngagementSlot({ lang = 'tr' }) {
     if (!slot || recorded.current) return;
     recorded.current = true;
     recordAsk(slot.kind, { userId: getUserId() });
+    // A support note also starts the support cooldown.
+    if (slot.note?.primary === 'support') recordAsk('support', { userId: getUserId() });
     // The note shows in one session only; ignored notes used to hold the
     // Today slot all month and the support card never got a turn.
     if (slot.kind === 'founder_note') markSeen(`note:${slot.note.id}`, { userId: getUserId() });
@@ -59,6 +62,10 @@ export default function EngagementSlot({ lang = 'tr' }) {
   const close = () => { done(); trackEvent('founder_note_action', { action: 'close', noteId: note.id }); setSlot(null); };
   const act = (action) => { done(); trackEvent('founder_note_action', { action, noteId: note.id }); setOpen(action); };
   const showSupport = isSupportEnabled(SUPPORT_URL) && !supportPaused({ userId });
+  const supportFirst = showSupport && note.primary === 'support';
+  const supportLink = (className) => (
+    <a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" onClick={() => { done(); trackEvent('founder_note_action', { action: 'support', noteId: note.id }); trackEvent('support_link_click', { placement: 'founder_note', language: lang }); }} className={className}>{c.support}</a>
+  );
 
   return (
     <section aria-labelledby="founder-note-title" className="relative overflow-hidden rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500/[0.12] via-slate-900 to-slate-900 p-4 sm:p-5">
@@ -72,11 +79,11 @@ export default function EngagementSlot({ lang = 'tr' }) {
       </div>
       {!open && (
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" onClick={() => act('idea')} className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-amber-400 px-4 text-sm font-bold text-slate-950"><Lightbulb size={16} />{c.idea}</button>
+          {supportFirst && supportLink('inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-amber-400 px-4 text-sm font-bold text-slate-950')}
+          {!supportFirst && <button type="button" onClick={() => act('idea')} className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-amber-400 px-4 text-sm font-bold text-slate-950"><Lightbulb size={16} />{c.idea}</button>}
           <button type="button" onClick={() => act('review')} className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-slate-700 px-4 text-sm font-semibold text-slate-200 hover:text-white"><MessageSquareHeart size={16} />{c.review}</button>
-          {showSupport && (
-            <a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" onClick={() => { done(); trackEvent('founder_note_action', { action: 'support', noteId: note.id }); trackEvent('support_link_click', { placement: 'founder_note', language: lang }); }} className="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-amber-300 hover:text-amber-200">{c.support}</a>
-          )}
+          {supportFirst && <button type="button" onClick={() => act('idea')} className="inline-flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-slate-300 hover:text-white"><Lightbulb size={16} />{c.idea}</button>}
+          {showSupport && !supportFirst && supportLink('inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-amber-300 hover:text-amber-200')}
         </div>
       )}
       {open === 'idea' && <div className="mt-4"><IdeaBox lang={lang} placement="founder_note" compact /><p className="mt-2 text-[11px] text-slate-500">{(ideaCopy[lang] || ideaCopy.en).desc}</p></div>}

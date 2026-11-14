@@ -42,10 +42,20 @@ describe('Today review prompt', () => {
     fireEvent.click(await screen.findByRole('button', { name: '5/5' }));
     expect(screen.getByText('Share your experience')).toBeInTheDocument();
     unmount();
-    localStorage.removeItem('fb_review_prompt:m1'); sessionStorage.clear();
+    localStorage.removeItem('fb_review_prompt:m1'); localStorage.removeItem('fb_asks:m1'); sessionStorage.clear();
     render(<MilestoneStoryPrompt lang="en" userId="m1" />);
     fireEvent.click(await screen.findByRole('button', { name: '2/5' }));
     expect(screen.getByText('What should we improve?')).toBeInTheDocument();
+  });
+
+  it('waits a week before asking again when the prompt was ignored', async () => {
+    rememberAccountCreated('m1', daysAgo(3));
+    const { unmount } = render(<MilestoneStoryPrompt lang="en" userId="m1" />);
+    expect(await screen.findByText('How do you like Full Balance?')).toBeInTheDocument();
+    unmount(); sessionStorage.clear();
+    const { container } = render(<MilestoneStoryPrompt lang="en" userId="m1" />);
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('respects not now for a month', async () => {

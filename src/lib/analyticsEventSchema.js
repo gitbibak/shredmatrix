@@ -24,7 +24,7 @@ export const GROWTH_EVENT_SCHEMAS = Object.freeze({
   plan_generated: { allowed: ['goalType', 'environment', 'language'] },
   workout_started: { allowed: ['module', 'source'] },
   workout_completed: { allowed: ['module', 'source'] },
-  workout_session_started: { allowed: ['module', 'source', 'resumed'] },
+  workout_session_started: { allowed: ['module', 'source', 'resumed', 'starter'] },
   workout_session_completed: { allowed: ['module', 'mode', 'durationBucket', 'records'] },
   workout_session_abandoned: { allowed: ['progressBucket', 'exitMethod'], required: ['progressBucket', 'exitMethod'] },
   workout_session_save_failed: { allowed: ['progressBucket', 'reason'], required: ['progressBucket', 'reason'] },
