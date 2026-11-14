@@ -69,6 +69,17 @@ export function getPushUnsupportedReason() {
 }
 
 /**
+ * iPhone/iPad on iOS 16.4+ in a Safari tab: push only works after "Add to
+ * Home Screen", so the app should explain that instead of asking.
+ */
+export function needsHomeScreenForPush() {
+  const ios = getIOSVersion();
+  if (!ios) return false;
+  if (ios.major < 16 || (ios.major === 16 && ios.minor < 4)) return false;
+  return !isStandalone();
+}
+
+/**
  * Get current notification permission status
  */
 export function getPermissionStatus() {

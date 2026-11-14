@@ -26,6 +26,7 @@ import {
   sessionToLogEntry,
 } from '../lib/workoutSession';
 const WorkoutRatingMoment = lazy(() => import('./WorkoutRatingMoment'));
+const PushPermission = lazy(() => import('./PushPermission'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
 import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
@@ -1039,6 +1040,9 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
                   ))}
                 </div>
               )}
+              <Suspense fallback={null}>
+                <div className="mb-4 empty:hidden"><PushPermission placement="workout_complete" /></div>
+              </Suspense>
 
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
