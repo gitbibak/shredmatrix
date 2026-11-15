@@ -46,9 +46,36 @@ describe('localized blog navigation', () => {
   it('keeps registration intent and language when entering from the English index', () => {
     localStorage.setItem('shredmatrix_lang', 'tr');
     open('/en/blog');
-    expect(screen.getByRole('link', { name: 'Get started free' }).getAttribute('href')).toBe('/auth?mode=register&lang=en');
+    expect(screen.getAllByRole('link', { name: 'Get started free' })).toHaveLength(2);
+    screen.getAllByRole('link', { name: 'Get started free' }).forEach((link) => {
+      expect(link.getAttribute('href')).toBe('/auth?mode=register&lang=en');
+    });
     expect(localStorage.getItem('shredmatrix_lang')).toBe('en');
     expect(document.querySelector('meta[property="og:locale"]').content).toBe('en_US');
+  });
+
+  it('tracks the visible Spanish index CTA while preserving first acquisition', () => {
+    localStorage.clear();
+    localStorage.setItem('fb_acquisition', JSON.stringify({
+      first_source: 'google', first_landing_page: '/es/blog', acquisition_content: 'campaign_hero',
+    }));
+    open('/es/blog');
+    const [hero, footer] = screen.getAllByRole('link', { name: 'Empieza gratis' });
+    expect(hero.getAttribute('href')).toBe('/auth?mode=register&lang=es');
+    expect(footer.getAttribute('href')).toBe('/auth?mode=register&lang=es');
+    fireEvent.click(hero);
+    expect(JSON.parse(localStorage.getItem('fb_acquisition')).acquisition_content).toBe('campaign_hero');
+    const events = JSON.parse(localStorage.getItem('fb_growth_event_queue') || '[]');
+    expect(events.at(-1)).toMatchObject({ event_name: 'landing_cta_click', properties: { placement: 'blog_es_index_hero' } });
+  });
+
+  it('records index CTA placement as first content when none exists', () => {
+    localStorage.clear();
+    open('/blog');
+    const links = screen.getAllByRole('link', { name: 'Ücretsiz başla' });
+    expect(links[0].getAttribute('href')).toBe('/auth?mode=register');
+    fireEvent.click(links[1]);
+    expect(JSON.parse(localStorage.getItem('fb_acquisition')).acquisition_content).toBe('blog_tr_index_footer');
   });
 
   it('does not render an English article under a Turkish URL', async () => {

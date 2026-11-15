@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { blogArticles } from '../data/blogArticles';
 import { BLOG_LANGUAGES, getArticleLanguage, getArticlePath, getBlogCopy, getBlogLanguage, getBlogPath } from '../data/blogLocale';
 import { useTranslation } from '../i18n/LanguageContext';
+import { recordAcquisitionContent } from '../lib/acquisition';
+import { trackLandingCta } from '../lib/analytics';
 
 const BASE_URL = 'https://fullbalance.app';
 
@@ -23,6 +25,12 @@ export default function BlogIndex() {
   const { setLang } = useTranslation();
   const copy = getBlogCopy(language);
   const articles = useMemo(() => blogArticles.filter((article) => getArticleLanguage(article) === language), [language]);
+  const registrationPath = `/auth?mode=register${language === 'tr' ? '' : `&lang=${language}`}`;
+  const trackIndexCta = (placement) => {
+    const ctaId = `blog_${language}_index_${placement}`;
+    recordAcquisitionContent(ctaId);
+    trackLandingCta(ctaId);
+  };
 
   useEffect(() => { setLang(language); }, [language, setLang]);
 
@@ -119,6 +127,9 @@ export default function BlogIndex() {
           <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
             {copy.lead}
           </p>
+          <Link to={registrationPath} onClick={() => trackIndexCta('hero')} className="mt-7 inline-flex min-h-12 items-center gap-2 bg-orange-500 px-6 py-3 font-outfit text-sm font-bold text-white transition-colors hover:bg-orange-400">
+            {copy.ctaLabel} <ArrowRight size={17} />
+          </Link>
           <nav aria-label="Blog languages" className="mt-6 flex flex-wrap gap-4 text-sm">
             {BLOG_LANGUAGES.map((lang) => <Link key={lang} to={getBlogPath(lang)} lang={lang} aria-current={language === lang ? 'page' : undefined} className={language === lang ? 'font-bold text-emerald-400' : 'text-slate-400 underline underline-offset-4 hover:text-white'}>{getBlogCopy(lang).languageName}</Link>)}
           </nav>
@@ -154,7 +165,7 @@ export default function BlogIndex() {
             <h2 className="font-outfit text-2xl font-bold">{copy.indexCtaTitle}</h2>
             <p className="mt-2 text-sm text-slate-400">{copy.indexCtaDescription}</p>
           </div>
-          <Link to={`/auth?mode=register${language === 'tr' ? '' : `&lang=${language}`}`} className="inline-flex min-h-12 items-center gap-2 bg-orange-500 px-6 py-3 font-outfit text-sm font-bold text-white transition-colors hover:bg-orange-400">
+          <Link to={registrationPath} onClick={() => trackIndexCta('footer')} className="inline-flex min-h-12 items-center gap-2 bg-orange-500 px-6 py-3 font-outfit text-sm font-bold text-white transition-colors hover:bg-orange-400">
             {copy.ctaLabel} <ArrowRight size={17} />
           </Link>
         </div>
