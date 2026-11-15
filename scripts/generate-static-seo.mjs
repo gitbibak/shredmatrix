@@ -8,7 +8,7 @@ import { getLandingBlogArticles } from '../src/data/blogRelated.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
 import { storePrices } from '../src/data/storePrices.js';
-import { ALTERNATIVES_REVIEWED, alternativePages } from '../src/data/alternativePages.js';
+import { alternativePages } from '../src/data/alternativePages.js';
 import { BASE_URL } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
 import { SEO_LAST_REVIEWED, formatReviewedDate, internationalSeoPages, getAlternatesForTurkishPath, getInternationalRelatedPages } from '../src/data/internationalSeoPages.js';
@@ -386,12 +386,12 @@ const ACQUISITION_SNIPPET = `<script>(function(){try{if(localStorage.getItem('fb
 
 function alternativeDocument(page) {
   const canonical = BASE_URL + page.path;
-  const reviewed = formatReviewedDate(page.lang, ALTERNATIVES_REVIEWED);
+  const reviewed = formatReviewedDate(page.lang, page.checkedAt);
   const others = alternativePages.filter((item) => item.lang === page.lang && item.topic !== page.topic);
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', '@id': `${canonical}#page`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, dateModified: ALTERNATIVES_REVIEWED, about: { '@id': `${BASE_URL}/#app` } },
+      { '@type': 'WebPage', '@id': `${canonical}#page`, url: canonical, name: page.title, description: page.description, inLanguage: page.locale, dateModified: page.checkedAt, about: { '@id': `${BASE_URL}/#app` } },
       { '@type': 'FAQPage', '@id': `${canonical}#faq`, inLanguage: page.locale, mainEntity: page.faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
       { '@type': ['WebApplication', 'SoftwareApplication'], '@id': `${BASE_URL}/#app`, name: 'Full Balance', url: `${BASE_URL}/`, applicationCategory: 'HealthApplication', operatingSystem: 'Web, PWA', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: page.lang === 'tr' ? 'TRY' : page.lang === 'es' ? 'EUR' : 'USD' } },
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Full Balance', item: `${BASE_URL}/` }, { '@type': 'ListItem', position: 2, name: page.heading, item: canonical }] },
@@ -452,7 +452,7 @@ ${priceLine}
 <h2>${escapeHtml(page.faqTitle)}</h2>
 ${page.faqs.map(([question, answer]) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join('')}
 <p><a class="cta" href="${register}">${escapeHtml(page.cta)}</a></p>
-<footer><p>${escapeHtml(page.reviewed)}: <time datetime="${ALTERNATIVES_REVIEWED}">${escapeHtml(reviewed)}</time></p><p>${escapeHtml(page.others)}: ${others.map((item) => `<a href="${item.path}">${escapeHtml(item.heading)}</a>`).join('')}</p></footer>
+<footer><p>${escapeHtml(page.reviewed)}: <time datetime="${page.checkedAt}">${escapeHtml(reviewed)}</time></p><p>${escapeHtml(page.others)}: ${others.map((item) => `<a href="${item.path}">${escapeHtml(item.heading)}</a>`).join(' · ')}</p></footer>
 </main>
 </body>
 </html>

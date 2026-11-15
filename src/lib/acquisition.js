@@ -186,6 +186,8 @@ const MEAL_TOOL_LANDINGS = [
   '/fotografla-kalori-hesaplama', '/en/photo-calorie-counter', '/es/contar-calorias-con-foto',
   '/cal-ai-ucretsiz-alternatif', '/en/free-cal-ai-alternative', '/es/alternativa-gratis-cal-ai',
   '/myfitnesspal-ucretsiz-alternatif', '/en/free-myfitnesspal-alternative', '/es/alternativa-gratis-myfitnesspal',
+  '/lose-it-ucretsiz-alternatif', '/en/free-lose-it-alternative', '/es/alternativa-gratis-lose-it',
+  '/yazio-ucretsiz-alternatif', '/en/free-yazio-alternative', '/es/alternativa-gratis-yazio',
 ];
 
 export function landingStartTab() {

@@ -6,7 +6,6 @@
 // stay limited to what their App Store page shows; no disparagement.
 import { STORE_PRICES_CHECKED_AT, storePrices } from './storePrices.js';
 
-export const ALTERNATIVES_REVIEWED = STORE_PRICES_CHECKED_AT;
 
 const priceRow = (lang, app) => storePrices[lang].rows.find((row) => row[0] === app);
 
@@ -242,11 +241,228 @@ const definitions = {
       ],
     },
   },
+  loseIt: {
+    app: 'Lose It!',
+    checkedAt: '2026-11-15',
+    prices: {
+      tr: ['Premium ₺12,99–₺549,99 (dönem belirtilmemiş); ücretsiz sürümü var', 'https://apps.apple.com/tr/app/lose-it-calorie-counter/id297368629'],
+      en: ['Premium $9.99–$79.99, lifetime $49.99–$59.99 (period not stated); free version available', 'https://apps.apple.com/us/app/lose-it-calorie-counter/id297368629'],
+      es: ['Premium 9,99–85,99 €, de por vida 69,99 € (periodo no indicado); tiene versión gratis', 'https://apps.apple.com/es/app/lose-it-calorie-counter/id297368629'],
+    },
+    paths: { tr: '/lose-it-ucretsiz-alternatif', en: '/en/free-lose-it-alternative', es: '/es/alternativa-gratis-lose-it' },
+    toolHref: { tr: '/gunluk-kalori-ihtiyaci-hesaplama', en: '/en/calorie-macro-calculator', es: '/es/calculadora-calorias-macros' },
+    tr: {
+      title: 'Lose It! Alternatifi: Ücretsiz Kalori Hedefi, Menü ve Antrenman',
+      description: 'Lose It! gibi kalori takibi isteyen ama premium ödemeden kalori hedefi, haftalık menü, fotoğrafla kalori ve antrenman planı isteyenler için Full Balance.',
+      heading: 'Ücretsiz Lose It! alternatifi',
+      answer: 'Lose It!\'in ücretsiz bir sürümü var, bazı özellikleri ise Premium gerektiriyor. Full Balance\'ta premium katmanı yok: kalori ve makro hedefi, 7 günlük menü, fotoğrafla kalori tahmini ve kişisel antrenman planı aynı ücretsiz hesapta.',
+      rows: [
+        ['Günlük kalori ve makro hedefi', 'Var, antrenman gününe göre değişir'],
+        ['7 günlük menü', 'Var; bütçe, sağlık ve alerji seçenekleriyle'],
+        ['Fotoğrafla kalori tahmini', 'Var, ücretsiz'],
+        ['Kişisel antrenman planı', 'Dahil'],
+        ['Kilo ve ölçü takibi', 'Var; Excel dışa aktarma dahil'],
+        ['Premium katmanı', 'Yok, her şey açık'],
+      ],
+      better: ['Barkod okutarak paketli ürün eklemek istiyorsan: Full Balance\'ta barkod okuyucu yok.', 'Çok geniş, markalı ürünlerden oluşan bir besin veritabanı istiyorsan: Full Balance\'ın veritabanı daha küçük.', 'Mağazadan yerel uygulama istiyorsan: Full Balance şimdilik tarayıcıdan çalışıyor.'],
+      pick: 'Sadece yediğini kaydetmek ve barkod okutmak istiyorsan Lose It!\'in ücretsiz sürümü iyi bir başlangıç. Kalori hedefi, menü ve antrenman planını ödeme yapmadan tek yerde istiyorsan Full Balance.',
+      faqs: [
+        ['Full Balance\'ta ücretli özellik var mı?', 'Hayır. Bütün özellikler herkes için açık.'],
+        ['Kalori hedefim nasıl belirleniyor?', 'Boy, kilo, yaş, aktivite ve hedefinden hesaplanır; antrenman günlerinde değişir. Hesaplayıcı üyeliksiz de kullanılabilir.'],
+        ['Kilo verme garantisi var mı?', 'Hayır. Full Balance genel bilgi ve plan sunar; tıbbi tavsiye vermez ve sonuç vaat etmez.'],
+      ],
+    },
+    en: {
+      title: 'Lose It! Alternative: Free Calorie Targets, Meal Plan and Workouts',
+      description: 'Want calorie and macro targets, a weekly meal plan, photo calorie estimates and a workout plan with no premium tier? Full Balance is free.',
+      heading: 'A free Lose It! alternative',
+      answer: 'Lose It! has a free version, and some features need Premium. Full Balance has no premium tier: calorie and macro targets, a 7-day meal plan, photo calorie estimates and a personal workout plan are all in the same free account.',
+      rows: [
+        ['Daily calorie and macro targets', 'Yes, adjusted on training days'],
+        ['7-day meal plan', 'Yes, with budget, health and allergy options'],
+        ['Photo calorie estimate', 'Yes, free'],
+        ['Personal workout plan', 'Included'],
+        ['Weight and measurements', 'Yes, with Excel export'],
+        ['Premium tier', 'None, everything is open'],
+      ],
+      better: ['You want to scan barcodes: Full Balance has no barcode scanner.', 'You want a very large database of branded products: Full Balance\'s database is smaller.', 'You want a native store app: Full Balance runs in the browser for now.'],
+      pick: 'If you only want to log food and scan barcodes, Lose It!\'s free version is a good start. If you want calorie targets, a meal plan and a workout plan in one place without paying, pick Full Balance.',
+      faqs: [
+        ['Does Full Balance have paid features?', 'No. Every feature is open to everyone.'],
+        ['How is my calorie target set?', 'From your height, weight, age, activity and goal, and it changes on training days. The calculator also works without an account.'],
+        ['Does it promise weight loss?', 'No. Full Balance gives general guidance and a plan; it is not medical advice and does not promise results.'],
+      ],
+    },
+    es: {
+      title: 'Alternativa a Lose It!: Calorías, Menú y Entreno Gratis',
+      description: '¿Quieres objetivos de calorías y macros, menú semanal, calorías con foto y plan de entreno sin nivel premium? Full Balance es gratis.',
+      heading: 'Una alternativa gratis a Lose It!',
+      answer: 'Lose It! tiene versión gratis y algunas funciones requieren Premium. Full Balance no tiene nivel premium: objetivos de calorías y macros, menú de 7 días, calorías con foto y plan de entreno personal están en la misma cuenta gratis.',
+      rows: [
+        ['Objetivo diario de calorías y macros', 'Sí, ajustado en días de entreno'],
+        ['Menú de 7 días', 'Sí, con opciones de presupuesto, salud y alergias'],
+        ['Calorías con foto', 'Sí, gratis'],
+        ['Plan de entreno personal', 'Incluido'],
+        ['Peso y medidas', 'Sí, con exportación a Excel'],
+        ['Nivel premium', 'Ninguno, todo está abierto'],
+      ],
+      better: ['Quieres escanear códigos de barras: Full Balance no tiene escáner.', 'Quieres una base muy grande de productos de marca: la de Full Balance es más pequeña.', 'Quieres una app nativa de tienda: por ahora Full Balance funciona en el navegador.'],
+      pick: 'Si solo quieres registrar comida y escanear códigos, la versión gratis de Lose It! es un buen comienzo. Si quieres objetivos de calorías, menú y plan de entreno en un solo lugar sin pagar, elige Full Balance.',
+      faqs: [
+        ['¿Full Balance tiene funciones de pago?', 'No. Todas las funciones están abiertas para todos.'],
+        ['¿Cómo se fija mi objetivo de calorías?', 'Con tu altura, peso, edad, actividad y objetivo, y cambia en días de entreno. La calculadora también funciona sin cuenta.'],
+        ['¿Promete perder peso?', 'No. Full Balance ofrece orientación general y un plan; no es consejo médico y no promete resultados.'],
+      ],
+    },
+  },
+  hevy: {
+    app: 'Hevy',
+    checkedAt: '2026-11-15',
+    prices: {
+      tr: ['Ücretsiz sürümü var; Pro aylık ₺19,99–₺29,99 · yıllık ₺159,99 · ömür boyu ₺3.999,99', 'https://apps.apple.com/tr/app/hevy-gym-log-workout-tracker/id1458862350'],
+      en: ['Free version available; Pro monthly $2.99–$3.99 · yearly $23.99 · lifetime $74.99', 'https://apps.apple.com/us/app/hevy-gym-log-workout-tracker/id1458862350'],
+      es: ['Tiene versión gratis; Pro mensual 3,49–4,49 € · anual 26,49 € · de por vida 89,99 €', 'https://apps.apple.com/es/app/hevy-gym-log-workout-tracker/id1458862350'],
+    },
+    paths: { tr: '/hevy-ucretsiz-alternatif', en: '/en/free-hevy-alternative', es: '/es/alternativa-gratis-hevy' },
+    toolHref: { tr: '/evde-dambil-antrenman-programi', en: '/en/home-dumbbell-workout-plan', es: '/es/entrenamiento-en-casa-con-mancuernas' },
+    tr: {
+      title: 'Hevy Alternatifi: Hazır Kişisel Plan, Antrenman ve Beslenme Ücretsiz',
+      description: 'Antrenmanı kaydetmenin yanında hedefine ve ekipmanına göre hazır bir plan ve beslenme hedefi isteyenler için ücretsiz Hevy alternatifi: Full Balance.',
+      heading: 'Hevy alternatifi: plan ve beslenme dahil',
+      answer: 'Hevy, antrenmanını kaydetmek için ücretsiz sürümü olan sevilen bir uygulama. Full Balance ise planı senin yerine hazırlar: hedefine, seviyene ve ekipmanına göre kişisel program kurar, set set yönlendirir ve aynı hesapta kalori ve makro hedefi, menü ve fotoğrafla kalori sunar. Premium katmanı yok.',
+      rows: [
+        ['Hedefe ve ekipmana göre hazır plan', 'Var; ekipmansız, dambıl, bant veya salon'],
+        ['Rehberli antrenman ve set kaydı', 'Var; dinlenme sayacı, önceki kilolar hazır'],
+        ['Antrenman sonrası geri bildirime göre ayar', 'Var'],
+        ['Kalori ve makro hedefi, menü', 'Dahil'],
+        ['Fotoğrafla kalori tahmini', 'Dahil'],
+        ['Premium katmanı', 'Yok'],
+      ],
+      better: ['Kendi programını zaten biliyorsan ve sadece kaydetmek istiyorsan: Hevy\'nin ücretsiz sürümü bu iş için çok iyi.', 'Arkadaşlarınla antrenman paylaştığın sosyal bir akış ve akıllı saat uygulaması istiyorsan: Full Balance\'ta bunlar yok, yalnızca Strava bağlantısı var.', 'Mağazadan yerel uygulama istiyorsan: Full Balance şimdilik tarayıcıdan çalışıyor.'],
+      pick: 'Programını kendin yazıyorsan Hevy. Hazır bir kişisel plan, set set yönlendirme ve beslenmeyi tek ücretsiz uygulamada istiyorsan Full Balance.',
+      faqs: [
+        ['Evde ekipmansız çalışabilir miyim?', 'Evet. Kayıtta ekipmanını seçersin; ekipmansız, dambıl, bant ve salon için farklı hareketler gelir.'],
+        ['İlk antrenman zor mu?', 'İlk rehberli antrenman kısa bir sürümdür: üç hareket, ikişer set, yaklaşık 10 dakika.'],
+        ['Ücretsiz mi?', 'Evet. Abonelik, deneme süresi ve reklam yok.'],
+      ],
+    },
+    en: {
+      title: 'Hevy Alternative: A Ready Personal Plan Plus Nutrition, Free',
+      description: 'Want more than a workout log? Full Balance builds a personal plan for your goal and equipment and adds nutrition targets, for free.',
+      heading: 'A Hevy alternative with a plan and nutrition',
+      answer: 'Hevy is a popular workout logger with a free version. Full Balance builds the plan for you: a personal program for your goal, level and equipment, guided set by set, plus calorie and macro targets, a meal plan and photo calorie estimates in the same account. There is no premium tier.',
+      rows: [
+        ['Ready plan for your goal and equipment', 'Yes: bodyweight, dumbbells, bands or gym'],
+        ['Guided workouts and set logging', 'Yes, with rest timer and previous weights pre-filled'],
+        ['Adjusts from post-workout feedback', 'Yes'],
+        ['Calorie and macro targets, meal plan', 'Included'],
+        ['Photo calorie estimate', 'Included'],
+        ['Premium tier', 'None'],
+      ],
+      better: ['You already know your program and only want to log it: Hevy\'s free version is excellent at that.', 'You want a social feed with friends and a smartwatch app: Full Balance has neither, only a Strava connection.', 'You want a native store app: Full Balance runs in the browser for now.'],
+      pick: 'Pick Hevy if you write your own program. Pick Full Balance if you want a ready personal plan, guided workouts and nutrition in one free app.',
+      faqs: [
+        ['Can I train at home with no equipment?', 'Yes. You choose your equipment at signup and get exercises for bodyweight, dumbbells, bands or the gym.'],
+        ['Is the first workout hard?', 'The first guided workout is a short version: three moves, two sets each, about 10 minutes.'],
+        ['Is it free?', 'Yes. No subscription, no trial and no ads.'],
+      ],
+    },
+    es: {
+      title: 'Alternativa a Hevy: Plan Personal Listo y Nutrición, Gratis',
+      description: '¿Quieres algo más que un registro de entrenos? Full Balance crea un plan personal según tu objetivo y material y añade nutrición, gratis.',
+      heading: 'Una alternativa a Hevy con plan y nutrición',
+      answer: 'Hevy es un registro de entrenos muy popular con versión gratis. Full Balance crea el plan por ti: un programa personal según tu objetivo, nivel y material, guiado serie a serie, además de objetivos de calorías y macros, menú y calorías con foto en la misma cuenta. No hay nivel premium.',
+      rows: [
+        ['Plan listo según objetivo y material', 'Sí: sin material, mancuernas, bandas o gimnasio'],
+        ['Entrenos guiados y registro de series', 'Sí, con descanso automático y pesos anteriores'],
+        ['Ajuste según tu valoración tras entrenar', 'Sí'],
+        ['Objetivos de calorías y macros, menú', 'Incluido'],
+        ['Calorías con foto', 'Incluido'],
+        ['Nivel premium', 'Ninguno'],
+      ],
+      better: ['Ya conoces tu programa y solo quieres registrarlo: la versión gratis de Hevy es excelente para eso.', 'Quieres un feed social con amigos y app de reloj: Full Balance no tiene ninguno, solo conexión con Strava.', 'Quieres una app nativa de tienda: por ahora Full Balance funciona en el navegador.'],
+      pick: 'Elige Hevy si escribes tu propio programa. Elige Full Balance si quieres un plan personal listo, entrenos guiados y nutrición en una app gratis.',
+      faqs: [
+        ['¿Puedo entrenar en casa sin material?', 'Sí. Eliges tu material al registrarte y recibes ejercicios para peso corporal, mancuernas, bandas o gimnasio.'],
+        ['¿El primer entreno es difícil?', 'El primer entreno guiado es una versión corta: tres ejercicios, dos series cada uno, unos 10 minutos.'],
+        ['¿Es gratis?', 'Sí. Sin suscripción, sin prueba y sin anuncios.'],
+      ],
+    },
+  },
+  yazio: {
+    app: 'Yazio',
+    paths: { tr: '/yazio-ucretsiz-alternatif', en: '/en/free-yazio-alternative', es: '/es/alternativa-gratis-yazio' },
+    toolHref: { tr: '/fotografla-kalori-hesaplama', en: '/en/photo-calorie-counter', es: '/es/contar-calorias-con-foto' },
+    tr: {
+      title: 'Yazio Alternatifi: Ücretsiz Kalori, Menü, Fotoğrafla Kalori ve Antrenman',
+      description: 'Yazio PRO ödemeden kalori ve makro hedefi, haftalık menü, fotoğrafla kalori ve kişisel antrenman planı isteyenler için ücretsiz Yazio alternatifi.',
+      heading: 'Ücretsiz Yazio alternatifi',
+      answer: 'Yazio\'nun ücretsiz bir sürümü var, bazı özellikleri PRO gerektiriyor. Full Balance\'ta premium katmanı yok: kalori ve makro hedefi, 7 günlük menü, fotoğrafla kalori tahmini ve kişisel antrenman planı aynı ücretsiz hesapta. Türkçe kullanılabiliyor.',
+      rows: [
+        ['Günlük kalori ve makro hedefi', 'Var, antrenman gününe göre değişir'],
+        ['7 günlük menü', 'Var; bütçe, sağlık ve alerji seçenekleriyle'],
+        ['Fotoğrafla kalori tahmini', 'Var, ücretsiz'],
+        ['Kişisel antrenman planı ve rehberli antrenman', 'Dahil'],
+        ['Su, uyku, kilo ve ölçü takibi', 'Var'],
+        ['Premium katmanı', 'Yok'],
+      ],
+      better: ['Aralıklı oruç (intermittent fasting) takibi istiyorsan: Full Balance\'ta oruç zamanlayıcısı yok.', 'Barkod okutarak ürün eklemek istiyorsan: Full Balance\'ta barkod okuyucu yok.', 'Mağazadan yerel uygulama istiyorsan: Full Balance şimdilik tarayıcıdan çalışıyor.'],
+      pick: 'Oruç takibi ve barkod senin için önemliyse Yazio. Kalori hedefi, menü, fotoğrafla kalori ve antrenman planını ödeme yapmadan tek yerde istiyorsan Full Balance.',
+      faqs: [
+        ['Full Balance\'ta PRO veya premium var mı?', 'Hayır. Bütün özellikler herkes için açık.'],
+        ['Türk yemeklerini tanıyor mu?', 'Fotoğrafla kalori aracı Türk mutfağından yaygın yemekleri de içeren bir veritabanıyla çalışır; porsiyonu ve malzemeleri düzeltebilirsin.'],
+        ['Uygulama indirmem gerekir mi?', 'Hayır. Tarayıcıda çalışır, istersen telefonunun ana ekranına ekleyebilirsin.'],
+      ],
+    },
+    en: {
+      title: 'Yazio Alternative: Free Calories, Meal Plan, Photo Calories and Workouts',
+      description: 'Want calorie and macro targets, a weekly meal plan, photo calorie estimates and a personal workout plan without Yazio PRO? Try Full Balance free.',
+      heading: 'A free Yazio alternative',
+      answer: 'Yazio has a free version, and some features need PRO. Full Balance has no premium tier: calorie and macro targets, a 7-day meal plan, photo calorie estimates and a personal workout plan are all in the same free account.',
+      rows: [
+        ['Daily calorie and macro targets', 'Yes, adjusted on training days'],
+        ['7-day meal plan', 'Yes, with budget, health and allergy options'],
+        ['Photo calorie estimate', 'Yes, free'],
+        ['Personal workout plan and guided workouts', 'Included'],
+        ['Water, sleep, weight and measurements', 'Yes'],
+        ['Premium tier', 'None'],
+      ],
+      better: ['You want intermittent fasting tracking: Full Balance has no fasting timer.', 'You want to scan barcodes: Full Balance has no barcode scanner.', 'You want a native store app: Full Balance runs in the browser for now.'],
+      pick: 'Pick Yazio if fasting tracking and barcode scanning matter to you. Pick Full Balance if you want calorie targets, a meal plan, photo calories and a workout plan in one place without paying.',
+      faqs: [
+        ['Does Full Balance have PRO or premium?', 'No. Every feature is open to everyone.'],
+        ['How accurate are photo calories?', 'They are an estimate shown as a range; you can correct foods, grams and hidden oil or sauce.'],
+        ['Do I need to download an app?', 'No. It runs in the browser, and you can add it to your phone\'s home screen.'],
+      ],
+    },
+    es: {
+      title: 'Alternativa a Yazio: Calorías, Menú, Calorías con Foto y Entreno Gratis',
+      description: '¿Quieres objetivos de calorías y macros, menú semanal, calorías con foto y plan de entreno sin Yazio PRO? Prueba Full Balance gratis.',
+      heading: 'Una alternativa gratis a Yazio',
+      answer: 'Yazio tiene versión gratis y algunas funciones requieren PRO. Full Balance no tiene nivel premium: objetivos de calorías y macros, menú de 7 días, calorías con foto y plan de entreno personal están en la misma cuenta gratis.',
+      rows: [
+        ['Objetivo diario de calorías y macros', 'Sí, ajustado en días de entreno'],
+        ['Menú de 7 días', 'Sí, con opciones de presupuesto, salud y alergias'],
+        ['Calorías con foto', 'Sí, gratis'],
+        ['Plan de entreno personal y entrenos guiados', 'Incluido'],
+        ['Agua, sueño, peso y medidas', 'Sí'],
+        ['Nivel premium', 'Ninguno'],
+      ],
+      better: ['Quieres seguimiento de ayuno intermitente: Full Balance no tiene temporizador de ayuno.', 'Quieres escanear códigos de barras: Full Balance no tiene escáner.', 'Quieres una app nativa de tienda: por ahora Full Balance funciona en el navegador.'],
+      pick: 'Elige Yazio si te importan el ayuno y el escáner de códigos. Elige Full Balance si quieres objetivos de calorías, menú, calorías con foto y plan de entreno en un solo lugar sin pagar.',
+      faqs: [
+        ['¿Full Balance tiene PRO o premium?', 'No. Todas las funciones están abiertas para todos.'],
+        ['¿Qué tan precisas son las calorías con foto?', 'Son una estimación en forma de rango; puedes corregir alimentos, gramos y aceite o salsa ocultos.'],
+        ['¿Tengo que descargar una app?', 'No. Funciona en el navegador y puedes añadirla a la pantalla de inicio.'],
+      ],
+    },
+  },
 };
 
 export const alternativePages = Object.entries(definitions).flatMap(([topic, definition]) =>
   ['tr', 'en', 'es'].map((lang) => {
-    const row = priceRow(lang, definition.app);
+    const custom = definition.prices?.[lang];
+    const row = custom ? [definition.app, null, custom[0], null, custom[1]] : priceRow(lang, definition.app);
     return {
       topic,
       lang,
@@ -258,6 +474,7 @@ export const alternativePages = Object.entries(definitions).flatMap(([topic, def
       ...definition[lang],
       appPrice: row ? row[2] : null,
       appStoreUrl: row ? row[4] : null,
+      checkedAt: definition.checkedAt || STORE_PRICES_CHECKED_AT,
     };
   }),
 );

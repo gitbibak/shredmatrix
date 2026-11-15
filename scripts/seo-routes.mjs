@@ -2,7 +2,7 @@ import { blogArticles } from '../src/data/blogArticles.js';
 import { getArticlePath } from '../src/data/blogLocale.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { internationalSeoPages } from '../src/data/internationalSeoPages.js';
-import { ALTERNATIVES_REVIEWED, alternativePages } from '../src/data/alternativePages.js';
+import { alternativePages } from '../src/data/alternativePages.js';
 import { turkishSeoPages } from '../src/data/turkishSeoPages.js';
 
 // Last meaningful content change per Turkish page; new pages default to today.
@@ -23,7 +23,7 @@ export const publicPages = [
   ['/', '2026-10-15'],
   ['/privacy', '2026-08-10'],
   ['/press', '2026-11-08'],
-  ...alternativePages.map((page) => [page.path, ALTERNATIVES_REVIEWED]),
+  ...alternativePages.map((page) => [page.path, page.checkedAt]),
   ['/terms', '2026-08-04'],
   ['/contact', '2026-08-10'],
   ['/editorial-policy', '2026-08-10'],
