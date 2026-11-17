@@ -170,6 +170,9 @@ for (const page of alternativePages) {
   assert(html.includes('"@type":"FAQPage"'), `${page.path} FAQ schema is missing`);
   assert(occurrences(html, 'type="application/ld+json"') === 1, `${page.path} has conflicting structured data blocks`);
   assert(page.appPrice && html.includes('rel="nofollow noopener"'), `${page.path} must show the sourced App Store price`);
+  // The CSP allows no inline scripts, so an inline <script> here would silently not run.
+  assert(!/<script>/.test(html), `${page.path} has an inline script the CSP will block`);
+  assert(html.includes('<script src="/acquisition-capture.js"></script>'), `${page.path} must capture the visit source`);
 }
 
 const sitemap = await readFile(join(rootDir, 'public', 'sitemap.xml'), 'utf8');
