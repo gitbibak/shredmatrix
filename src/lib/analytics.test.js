@@ -130,6 +130,7 @@ describe('privacy-safe analytics', () => {
 
   it('accepts only published article CTA identities and their curated destinations', async () => {
     const analytics = await loadAnalytics();
+    await import('../data/articleCtaCheck');
     const valid = { articleSlug: 'how-accurate-photo-calorie-counter', language: 'en', destination: '/en/photo-calorie-counter' };
     analytics.trackEvent('article_cta_click', { ...valid, email: 'private@example.com' });
     analytics.trackEvent('article_cta_click', { ...valid, destination: '/auth?email=private@example.com' });

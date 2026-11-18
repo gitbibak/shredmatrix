@@ -70,8 +70,10 @@ export function sortUserRows(rows, sort, dir) {
 }
 
 function csvCell(value) {
-  const text = value == null ? '' : String(value);
-  return /[",\n;]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  const raw = value == null ? '' : String(value);
+  // Member-controlled text must not run as a spreadsheet formula when the export is opened.
+  const text = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+  return /[",\n;']/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
 function downloadCsv(rows, today) {

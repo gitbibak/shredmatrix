@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs, getWaterHistory, getProgress, getSleep } from '../lib/dataService';
+import { parseLocalDate } from '../utils/calendarDate';
 
 const containerV = {
   hidden: { opacity: 0 },
@@ -129,11 +130,11 @@ export default function MonthlyReport({ plan }) {
 
     // ── Workouts ──
     const monthWorkouts = workoutData.filter(l => {
-      const d = new Date(l.date);
+      const d = parseLocalDate(l.date);
       return d >= monthStart && d <= monthEnd;
     });
     const prevWorkouts = workoutData.filter(l => {
-      const d = new Date(l.date);
+      const d = parseLocalDate(l.date);
       return d >= prevStart && d <= prevEnd;
     });
     const workoutCount = monthWorkouts.length;
@@ -207,7 +208,7 @@ export default function MonthlyReport({ plan }) {
     // ── Longest streak ──
     let longestStreak = 0;
     let currentStreak = 0;
-    const workoutDates = new Set(monthWorkouts.map(l => new Date(l.date).toDateString()));
+    const workoutDates = new Set(monthWorkouts.map(l => parseLocalDate(l.date).toDateString()));
     for (let d = 1; d <= dayOfMonth; d++) {
       const dateStr = new Date(now.getFullYear(), now.getMonth(), d).toDateString();
       if (workoutDates.has(dateStr)) {

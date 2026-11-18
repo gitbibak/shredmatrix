@@ -1,3 +1,4 @@
+import { localDateKey } from './calendarDate';
 /**
  * Explainable Full Balance score (0-100).
  *
@@ -248,7 +249,7 @@ export const MOODS = [
 const MOOD_STORAGE_KEY = 'shredmatrix_mood';
 
 export function saveMood(moodId) {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateKey();
   try {
     const history = JSON.parse(localStorage.getItem(MOOD_STORAGE_KEY) || '{}');
     history[today] = { mood: moodId, timestamp: Date.now() };
@@ -257,7 +258,7 @@ export function saveMood(moodId) {
 }
 
 export function getTodayMood() {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateKey();
   try {
     const history = JSON.parse(localStorage.getItem(MOOD_STORAGE_KEY) || '{}');
     return history[today]?.mood || null;

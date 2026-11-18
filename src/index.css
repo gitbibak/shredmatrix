@@ -283,3 +283,8 @@ button, a, [role="button"] {
   .print-area table { page-break-inside: auto; }
   .print-area tr { page-break-inside: avoid; }
 }
+
+/* The floating consent banner must not cover Next/Finish during a guided workout. */
+body:has([data-workout-session]) aside[aria-labelledby="analytics-consent-title"].fixed {
+  display: none;
+}

@@ -51,14 +51,16 @@ export default defineConfig({
               // Translations, data access and analytics are shared by every route.
               // Naming them keeps rolldown from folding them into the plan-data chunk.
               name: 'app-core',
-              test: /[\\/]src[\\/](i18n|lib|utils)[\\/]/,
+              // Only what the shell imports at boot: listing whole folders here pulled
+              // admin, workout and photo code into every page's first download.
+              test: /[\\/]src[\\/](i18n[\\/](LanguageContext|translations)|lib[\\/](supabase|dataService|analytics|analyticsEventSchema|acquisition|coaching))\./,
               priority: 9,
             },
             {
               // Tiny modules shared by the app shell and public pages. Kept out of
               // the heavy data chunk so landing pages never preload the plan engine.
               name: 'app-meta',
-              test: /[\\/]src[\\/]data[\\/](planVersion|moduleAssets|sampleWeekMap|sampleHomeWeeks)/,
+              test: /[\\/]src[\\/]data[\\/](planVersion|moduleAssets|turkishSeoSlugs)\./,
               priority: 8,
             },
             {

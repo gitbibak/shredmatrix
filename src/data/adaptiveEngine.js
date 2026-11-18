@@ -1,3 +1,13 @@
+// Saved plans carry the goal label in the member's language, so compare by key.
+const GOAL_KEYS = {
+  'Kas Gelişimi': 'muscle', 'Muscle Growth': 'muscle', 'Crecimiento Muscular': 'muscle',
+  'Yağ Yakımı': 'fat_loss', 'Fat Loss': 'fat_loss', 'Quema de Grasa': 'fat_loss',
+  Meditasyon: 'meditation', Meditation: 'meditation', 'Meditación': 'meditation',
+  Yoga: 'yoga', Pilates: 'pilates', Reformer: 'reformer',
+};
+const WELLNESS_GOALS = ['meditation', 'yoga', 'pilates', 'reformer'];
+const goalKeyOf = (goal) => GOAL_KEYS[goal] || goal || null;
+
 // ─────────────────────────────────────────────────────────
 // adaptiveEngine.js
 // Intelligent analysis engine that monitors user fitness
@@ -156,8 +166,9 @@ export async function analyzeProgress(plan) {
   }
 
   // --- Determine goal type ---
-  const isMuscleGoal = plan?.goal === 'Kas Gelişimi';
-  const isWellnessGoal = ['Meditasyon', 'Yoga', 'Pilates', 'Reformer'].includes(plan?.goal);
+  const goalKey = goalKeyOf(plan?.goal);
+  const isMuscleGoal = goalKey === 'muscle';
+  const isWellnessGoal = WELLNESS_GOALS.includes(goalKey);
   const plateauThreshold = isWellnessGoal ? 6 : PLATEAU_WEEKS;
 
   // --- Decide if program change is needed ---
@@ -253,9 +264,10 @@ function generateTips(ctx) {
     weightTrend, measureTrend, weightChange, fatChange,
     goal, progressCount, measureCount } = ctx;
 
-  const isMuscle = goal === 'Kas Gelişimi';
-  const isFatLoss = goal === 'Yağ Yakımı';
-  const isWellness = ['Meditasyon', 'Yoga', 'Pilates', 'Reformer'].includes(goal);
+  const goalKey = goalKeyOf(goal);
+  const isMuscle = goalKey === 'muscle';
+  const isFatLoss = goalKey === 'fat_loss';
+  const isWellness = WELLNESS_GOALS.includes(goalKey);
 
   // --- Data tracking nudges ---
   if (progressCount < 3) {

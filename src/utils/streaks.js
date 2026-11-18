@@ -28,10 +28,15 @@ export function weekdayIndex(date) {
   return (date.getDay() + 6) % 7;
 }
 
+// Whole words only: "Restoratif Yoga", "Yin & Restore" or "Stretch & Restore" are
+// training days with exercises, not rest days.
+const REST_WORDS = /(^|[\s/&-])(dinlenme|dinlen|rest|off|descanso)([\s/&-]|$)/i;
+
 export function isRestDay(day) {
   if (!day) return true;
-  const text = `${day.day || ''} ${day.focus || ''}`.toLowerCase();
-  return Boolean(day.isRest || text.includes('dinlen') || text.includes('rest') || text.includes('descanso'));
+  // Plans from the generator carry an explicit flag; older saved plans do not.
+  if (typeof day.isRest === 'boolean') return day.isRest;
+  return REST_WORDS.test(`${day.day || ''} ${day.focus || ''}`);
 }
 
 /** Weekday indexes the plan marks as rest days. */

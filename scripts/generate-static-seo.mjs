@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
-import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
+import { brandedTitle, getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
 import { getLandingBlogArticles } from '../src/data/blogRelated.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { pricingAlternates, pricingPages } from '../src/data/pricingPages.js';
@@ -19,7 +19,7 @@ function sampleWeekHtml(path, lang) {
   const sample = getSampleWeek(path, lang);
   if (!sample) return '';
   const { days, copy } = sample;
-  const rows = days.map((day) => `<tr><th scope="row">${escapeHtml(day.day)}</th><td>${escapeHtml(day.rest ? copy.restDay : day.focus)}</td><td><ul>${day.exercises.map((exercise) => `<li>${escapeHtml(formatSampleExercise(exercise, copy))}</li>`).join('')}</ul></td></tr>`).join('');
+  const rows = days.map((day) => `<tr><th scope="row">${escapeHtml(day.day)}</th><td>${escapeHtml(day.rest ? copy.restDay : day.focus)}</td><td>${day.rest ? '' : `<ul>${day.exercises.map((exercise) => `<li>${escapeHtml(formatSampleExercise(exercise, copy))}</li>`).join('')}</ul>`}</td></tr>`).join('');
   const fourWeek = getFourWeekPlan(path, lang);
   const fourWeekHtml = fourWeek
     ? `<h3>${escapeHtml(fourWeek.title)}</h3><p>${escapeHtml(fourWeek.intro)}</p><table><thead><tr>${fourWeek.columns.map((column) => `<th scope="col">${escapeHtml(column)}</th>`).join('')}</tr></thead><tbody>${fourWeek.rows.map((row) => `<tr><th scope="row">${escapeHtml(row[0])}</th>${row.slice(1).map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
@@ -30,6 +30,11 @@ function sampleWeekHtml(path, lang) {
 const REVIEW_LABEL = { tr: 'Son güncelleme', en: 'Last reviewed', es: 'Última revisión' };
 const SHORT_ANSWER_LABEL = { tr: 'Kısa cevap', en: 'Short answer', es: 'Respuesta breve' };
 const OG_LOCALES = { tr: 'tr_TR', en: 'en_US', es: 'es_ES' };
+const OG_IMAGE_ALT = {
+  tr: 'Full Balance: tamamen ücretsiz kişisel antrenman ve beslenme uygulaması',
+  en: 'Full Balance: a completely free personal workout and nutrition app',
+  es: 'Full Balance: app gratuita de entrenamiento y nutrición personal',
+};
 
 function leadAnswerBlock(faqs, lang) {
   const first = Array.isArray(faqs) ? faqs[0] : null;
@@ -98,7 +103,11 @@ function buildDocument({ title, description, canonical, image, type = 'website',
   html = replaceMeta(html, 'property', 'og:url', canonical);
   html = replaceMeta(html, 'property', 'og:image', image);
   html = replaceMeta(html, 'property', 'og:image:secure_url', image);
-  html = replaceMeta(html, 'property', 'og:image:type', 'image/jpeg');
+  html = replaceMeta(html, 'property', 'og:image:type', /\.png(\?|$)/i.test(image) ? 'image/png' : 'image/jpeg');
+  // The template is the Turkish home page: do not leak its image alt or keywords into other languages.
+  html = replaceMeta(html, 'property', 'og:image:alt', OG_IMAGE_ALT[lang] || OG_IMAGE_ALT.en);
+  html = replaceMeta(html, 'name', 'twitter:image:alt', OG_IMAGE_ALT[lang] || OG_IMAGE_ALT.en);
+  if (lang !== 'tr') html = html.replace(/\s*<meta name="keywords"[^>]*>/i, '');
   html = html.replace(/\s*<meta property="og:locale(?::alternate)?"[^>]*>/gi, '');
   const ogLocale = OG_LOCALES[lang] || OG_LOCALES.en;
   const ogLocaleTags = [
@@ -238,7 +247,7 @@ for (const article of blogArticles) {
   const lang = blogLang(article);
   const path = getArticlePath(article);
   const alternates = articleAlternates(article);
-  let document = buildDocument({ title: `${article.title} | Full Balance`, description: article.description, canonical: `${BASE_URL}${path}`, image: `${BASE_URL}${article.image}`, type: 'article', schema: articleSchema(article), body: articleBody(article), lang, alternates, ogAlternates: alternates || {} });
+  let document = buildDocument({ title: brandedTitle(article.title), description: article.description, canonical: `${BASE_URL}${path}`, image: `${BASE_URL}${article.image}`, type: 'article', schema: articleSchema(article), body: articleBody(article), lang, alternates, ogAlternates: alternates || {} });
   document = replaceMeta(document, 'name', 'author', blogCopy(lang).author);
   document = replaceMeta(document, 'property', 'og:image:alt', article.imageAlt);
   document = replaceMeta(document, 'name', 'twitter:image:alt', article.imageAlt);
@@ -323,7 +332,7 @@ const founderPages = [
 
 for (const page of founderPages) {
   const canonical = `${BASE_URL}${page.path}`;
-  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p></header><article><section><h2>${escapeHtml(page.summaryTitle)}</h2><p>${escapeHtml(page.summary)}</p></section><section><h2>${escapeHtml(page.roleTitle)}</h2><p>${escapeHtml(page.role)}</p></section><section><h2>${escapeHtml(page.productTitle)}</h2><p>${escapeHtml(page.product)}</p></section><section><h2>${escapeHtml(page.identityTitle)}</h2><p>${escapeHtml(page.identity)}</p><a href="https://x.com/TolgaDeveci" rel="me">${escapeHtml(page.socialProfile)}</a></section><section><h2>${escapeHtml(page.boundaryTitle)}</h2><p>${escapeHtml(page.boundary)}</p><a href="/editorial-policy">${escapeHtml(page.policy)}</a></section><section><h2>Contact</h2><p>${escapeHtml(page.contact)}</p></section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a></footer></main>`;
+  const body = `<main class="static-seo"><header><a href="/${page.lang === 'tr' ? '' : page.lang}">${escapeHtml(page.home)}</a><p>${escapeHtml(page.eyebrow)}</p><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.intro)}</p></header><article><section><h2>${escapeHtml(page.summaryTitle)}</h2><p>${escapeHtml(page.summary)}</p></section><section><h2>${escapeHtml(page.roleTitle)}</h2><p>${escapeHtml(page.role)}</p></section><section><h2>${escapeHtml(page.productTitle)}</h2><p>${escapeHtml(page.product)}</p></section><section><h2>${escapeHtml(page.identityTitle)}</h2><p>${escapeHtml(page.identity)}</p><a href="https://x.com/TolgaDeveci" rel="me">${escapeHtml(page.socialProfile)}</a></section><section><h2>${escapeHtml(page.boundaryTitle)}</h2><p>${escapeHtml(page.boundary)}</p><a href="/editorial-policy">${escapeHtml(page.policy)}</a></section><section><h2>${{ tr: 'İletişim', en: 'Contact', es: 'Contacto' }[page.lang]}</h2><p>${escapeHtml(page.contact)}</p></section></article><footer><a href="/auth?mode=register&amp;lang=${page.lang}">${escapeHtml(page.cta)}</a></footer></main>`;
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -410,7 +419,7 @@ function alternativeDocument(page) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(page.title)} | Full Balance</title>
+<title>${escapeHtml(brandedTitle(page.title))}</title>
 <meta name="description" content="${escapeHtml(page.description)}">
 <link rel="canonical" href="${canonical}">${hreflang}
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=6">

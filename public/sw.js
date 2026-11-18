@@ -1,13 +1,13 @@
-const CACHE = 'fb-v12';
+const CACHE = 'fb-v13';
+// Hashed build files live in their own cache so trimming images and pages can
+// never evict a chunk the cached app shell still needs.
+const ASSET_CACHE = 'fb-assets-v1';
 const PRE_CACHE = [
   '/',
-  '/index.html',
   '/favicon-32.png',
   '/icon-192.png',
-  '/icon-512.png',
   '/apple-touch-icon.png',
   '/manifest.json',
-  '/robots.txt',
 ];
 
 const MAX_ENTRIES = 50;
@@ -43,10 +43,25 @@ async function trimCache(cacheName) {
   }
 }
 
+// Old deploys leave their chunks behind. Entries are kept in insertion order, so
+// dropping from the front removes the oldest builds first.
+const MAX_ASSET_ENTRIES = 160;
+async function pruneAssets() {
+  const cache = await caches.open(ASSET_CACHE);
+  const keys = await cache.keys();
+  await Promise.all(keys.slice(0, Math.max(0, keys.length - MAX_ASSET_ENTRIES)).map((key) => cache.delete(key)));
+}
+
 // Install — cache app shell + force activate immediately
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(PRE_CACHE))
+    caches.open(CACHE).then(async (cache) => {
+      await cache.addAll(PRE_CACHE);
+      // "/index.html" redirects to "/", and a redirected response cannot answer a
+      // navigation. Store the shell itself as the offline fallback.
+      const shell = await cache.match('/');
+      if (shell) await cache.put('/index.html', shell.clone());
+    })
   );
   self.skipWaiting();
 });
@@ -55,8 +70,8 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    ).then(() => trimCache(CACHE))
+      Promise.all(keys.filter((k) => k !== CACHE && k !== ASSET_CACHE).map((k) => caches.delete(k)))
+    ).then(() => trimCache(CACHE)).then(() => pruneAssets())
   );
   self.clients.claim();
 });
@@ -93,20 +108,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Build assets are hashed. Always try the network first, including CSS hashes
-  // containing underscores or dashes, then use the exact cached asset offline.
+  // Build assets are content-hashed and never change: serve the cached copy and
+  // only go to the network for a file not seen before. A missing file comes back
+  // from the SPA fallback as HTML with status 200, which must not be stored as a script.
   if (url.pathname.startsWith('/assets/')) {
     event.respondWith(
-      fetch(request, { cache: 'no-store' })
-        .then((res) => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, clone));
-          }
-          return res;
-        })
-        .catch(() => caches.match(request))
-        .then((res) => res || fetch(request))
+      caches.open(ASSET_CACHE).then(async (cache) => {
+        const cached = await cache.match(request);
+        if (cached) return cached;
+        const res = await fetch(request);
+        const type = res.headers.get('content-type') || '';
+        if (res.status === 200 && !type.includes('text/html')) cache.put(request, res.clone());
+        return res;
+      })
     );
     return;
   }
@@ -148,8 +162,10 @@ self.addEventListener('push', (event) => {
     icon: '/icon-192.png',
     badge: '/favicon-32.png',
     vibrate: [100, 50, 100],
-    tag: 'fb-daily-plan',
-    renotify: false,
+    // Each reminder keeps its own tag from the server; a later reminder must
+    // still alert instead of silently replacing the one already in the tray.
+    tag: data.tag || 'fb-daily-plan',
+    renotify: true,
     data: { url: data.url || '/dashboard', category: data.category || 'general' },
   };
 

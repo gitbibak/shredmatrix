@@ -4,7 +4,7 @@ import { access, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blogArticles } from '../src/data/blogArticles.js';
-import { getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
+import { brandedTitle, getArticleLanguage, getArticlePath, getBlogPath, getBlogCopy } from '../src/data/blogLocale.js';
 import { reviewPages } from '../src/data/reviewPages.js';
 import { BASE_URL, publicPages } from './seo-routes.mjs';
 import { seoLandingPages } from './seo-static-pages.mjs';
@@ -43,7 +43,7 @@ for (const article of blogArticles) {
   const html = await readFile(file, 'utf8');
   const canonical = `${BASE_URL}${path}`;
 
-  assert(html.includes(`<title>${article.title} | Full Balance</title>`), `${article.slug} title is missing`);
+  assert(html.includes(`<title>${brandedTitle(article.title)}</title>`), `${article.slug} title is missing`);
   assert(html.includes(`<html lang="${lang}">`), `${path} document language is missing`);
   assert(html.includes(`property="og:locale" content="${lang === 'tr' ? 'tr_TR' : lang === 'en' ? 'en_US' : 'es_ES'}"`), `${path} Open Graph locale is incorrect`);
   assert(html.includes(`rel="canonical" href="${canonical}"`), `${article.slug} canonical is missing`);

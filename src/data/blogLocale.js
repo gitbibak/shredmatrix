@@ -72,3 +72,10 @@ const copy = {
 export function getBlogCopy(language = 'tr') {
   return copy[language] || copy.tr;
 }
+
+// Search results cut titles at roughly 60 characters; drop the brand suffix
+// rather than have the article's own title truncated.
+export function brandedTitle(title) {
+  const full = `${title} | Full Balance`;
+  return full.length <= 60 ? full : title;
+}

@@ -30,7 +30,7 @@ const PushPermission = lazy(() => import('./PushPermission'));
 import { getWorkoutDayImage } from '../data/moduleAssets';
 import OptimizedImage from './OptimizedImage';
 import { adaptNextWorkout, chooseAdaptation } from '../data/workoutAdaptation';
-import { computeStreaks, getRestDayIndexes, mondayOf, toDateStr, workoutDatesFromLogs } from '../utils/streaks';
+import { computeStreaks, getRestDayIndexes, isRestDay, mondayOf, toDateStr, workoutDatesFromLogs } from '../utils/streaks';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -77,20 +77,9 @@ const exerciseRowVariants = {
   exit: { opacity: 0, x: -12, transition: { duration: 0.15 } },
 };
 
-function isRestDay(day) {
-  const focus = `${day?.day || ''} ${day?.focus || ''}`.toLowerCase();
-  return (
-    Boolean(day?.isRest) ||
-    focus.includes('dinlen') ||
-    focus.includes('rest') ||
-    focus.includes('off') ||
-    focus.includes('descanso')
-  );
-}
-
 function resolveGoalKey(goal) {
   const value = String(goal || '').toLowerCase();
-  if (value.includes('yağ') || value.includes('fat')) return 'fat_loss';
+  if (value.includes('yağ') || value.includes('fat') || value.includes('grasa')) return 'fat_loss';
   if (value.includes('medit')) return 'meditation';
   if (value.includes('yoga')) return 'yoga';
   if (value.includes('pilates')) return 'pilates';
@@ -523,6 +512,7 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
   const [sessionSaving, setSessionSaving] = useState(false);
   const [pendingStart, setPendingStart] = useState(null);
   const startSessionRef = useRef(null);
+  const startingSessionRef = useRef(false);
   const toast = useToast();
   const s = (key, values) => sessionText(lang, key, values);
 
@@ -681,7 +671,15 @@ export default function WorkoutPanel({ plan, onPlanUpdate, selectionRequest }) {
       trackEvent('workout_session_started', { module: goalKey, source, resumed: true });
       return;
     }
-    const logs = await getWorkoutLogs(60).catch(() => null);
+    // One start at a time: on slow mobile data a second tap would otherwise
+    // rebuild the session and wipe the sets already ticked.
+    if (startingSessionRef.current) return;
+    startingSessionRef.current = true;
+    const logs = await Promise.race([
+      getWorkoutLogs(60).catch(() => null),
+      new Promise((resolve) => { window.setTimeout(() => resolve(null), 4000); }),
+    ]);
+    startingSessionRef.current = false;
     clearSessionDraft();
     setSessionDraft(null);
     const full = buildSession(day, { logs: logs || [], tracksLoad });

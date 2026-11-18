@@ -79,7 +79,10 @@
     }
   };
 
-  const isAssetLoadError = (value) => /dynamic import|module script|failed to fetch|load failed|chunkloaderror/i.test(String(value || ''));
+  // Only a failed app chunk warrants the reset below. A plain "Failed to fetch"
+  // is any API call on a weak connection: resetting then would reload the app
+  // mid-workout and drop the member's push subscription with the service worker.
+  const isAssetLoadError = (value) => /dynamically imported module|dynamic import|module script|chunkloaderror/i.test(String(value || ''));
   window.addEventListener('vite:preloadError', (event) => {
     event.preventDefault();
     recover();

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Trophy, Lock, Star, Medal } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs, getWaterHistory, getWater, getProgress, getFirstLogin, getMeasurements, getReferralSummary } from '../lib/dataService';
+import { localDateKey } from '../utils/calendarDate';
 
 // ── helpers ──────────────────────────────────────────────
 
@@ -18,7 +19,7 @@ function computeWaterStreak(waterHistory, todayWaterData) {
     .filter(Boolean);
 
   // Also check today's water data
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = localDateKey();
   if (todayWaterData && (todayWaterData.glasses || 0) >= 8 && !history.includes(todayStr)) {
     history.push(todayStr);
   }
@@ -34,7 +35,7 @@ function computeWaterStreak(waterHistory, todayWaterData) {
   for (let i = 0; i < sorted.length; i++) {
     const expected = new Date(now);
     expected.setDate(expected.getDate() - i);
-    const expectedStr = expected.toISOString().slice(0, 10);
+    const expectedStr = localDateKey(expected);
 
     if (sorted[i] === expectedStr) {
       streak++;
@@ -340,7 +341,7 @@ export default function Achievements({ plan, user }) {
     let cancelled = false;
     async function loadAchievements() {
       try {
-        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayStr = localDateKey();
         const [workoutLogs, waterHistory, todayWaterData, progressEntries, firstLoginDate, referralSummary] = await Promise.all([
           getWorkoutLogs(),
           getWaterHistory(),

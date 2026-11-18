@@ -9,6 +9,7 @@ import {
 import { useTranslation } from '../i18n/LanguageContext';
 import { getWorkoutLogs, getWaterHistory, getProgress } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
+import { parseLocalDate } from '../utils/calendarDate';
 
 const itemV = {
   hidden: { opacity: 0, y: 16 },
@@ -148,12 +149,12 @@ export default function WeeklyReport({ plan }) {
     const dailyWorkouts = [0, 0, 0, 0, 0, 0, 0]; // Mon-Sun
     try {
       const weekLogs = workoutData.filter((l) => {
-        const d = new Date(l.date);
+        const d = parseLocalDate(l.date);
         return d >= monday && d <= now;
       });
       workoutCount = weekLogs.length;
       weekLogs.forEach((log) => {
-        const d = new Date(log.date);
+        const d = parseLocalDate(log.date);
         const dayIdx = (d.getDay() + 6) % 7; // Mon=0
         dailyWorkouts[dayIdx] = 1;
         (log.exercises || []).forEach((ex) => {
@@ -169,7 +170,7 @@ export default function WeeklyReport({ plan }) {
     let prevTotalVolume = 0;
     try {
       const prevLogs = workoutData.filter((l) => {
-        const d = new Date(l.date);
+        const d = parseLocalDate(l.date);
         return d >= prevMonday && d <= prevSunday;
       });
       prevWorkoutCount = prevLogs.length;

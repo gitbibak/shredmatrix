@@ -232,6 +232,9 @@ export default function Onboarding({ onSubmit, initialData = null, resetDraftKey
       setTrainingEnvironment(normalizeTrainingEnvironment(initialData.primaryGoal, initialData.trainingEnvironment));
       setHealthConditions(Array.isArray(initialData.healthConditions) && initialData.healthConditions.length ? initialData.healthConditions : ['none']);
       setAllergies(Array.isArray(initialData.allergies) && initialData.allergies.length ? initialData.allergies : ['none']);
+      // Editing the plan must keep the member's chosen focus areas and weekly days.
+      setFocusAreas(normalizeFocusAreas(initialData.focusAreas || []));
+      setTrainingDaysPerWeek(initialData.trainingDaysPerWeek ? normalizeTrainingDays(initialData.trainingDaysPerWeek) : null);
       setStep(0);
       return;
     }

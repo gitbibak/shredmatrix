@@ -2,10 +2,11 @@ import { useEffect, useMemo } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Clock, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import { blogArticles, getBlogArticle } from '../data/blogArticles';
-import { BLOG_LANGUAGES, getArticleLanguage, getArticlePath, getBlogCopy, getBlogLanguage, getBlogPath } from '../data/blogLocale';
+import { BLOG_LANGUAGES, brandedTitle, getArticleLanguage, getArticlePath, getBlogCopy, getBlogLanguage, getBlogPath } from '../data/blogLocale';
 import { useTranslation } from '../i18n/LanguageContext';
 import { trackEvent } from '../lib/analytics';
 import { recordAcquisitionContent } from '../lib/acquisition';
+import '../data/articleCtaCheck';
 
 const BASE_URL = 'https://fullbalance.app';
 
@@ -42,7 +43,7 @@ export default function BlogArticle() {
     document.documentElement.lang = language;
     const url = `${BASE_URL}${getArticlePath(validArticle)}`;
     const imageUrl = `${BASE_URL}${article.image}`;
-    document.title = `${article.title} | Full Balance`;
+    document.title = brandedTitle(article.title);
     upsertMeta('name', 'description', article.description);
     upsertMeta('name', 'robots', 'index, follow, max-image-preview:large');
     upsertMeta('name', 'author', copy.author);

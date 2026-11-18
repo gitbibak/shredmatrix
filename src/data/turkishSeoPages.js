@@ -114,20 +114,20 @@ export const turkishSeoPages = {
     accent: '#a78bfa',
     title: '30 Günlük Ücretsiz',
     titleAccent: 'Pilates Programı',
-    metaTitle: '30 Günlük Pilates Programı: Evde, Ücretsiz, Gün Gün | Full Balance',
-    description: '30 günlük ücretsiz pilates programı: evde mat üzerinde her gün hangi hareket, kaç tekrar ve 4 haftalık ilerleme tablosu. Yeni başlayanlara uygun, reformer gerekmez, yazdırılabilir.',
+    metaTitle: '30 Günlük Pilates Programı: Evde, Ücretsiz Mat Planı',
+    description: '30 günlük ücretsiz pilates programı: evde mat üzerinde örnek hafta, hareket ve tekrar sayıları, 4 haftalık ilerleme tablosu. Reformer ve abonelik gerekmez.',
     keywords: 'evde pilates programı ücretsiz, 30 günlük pilates programı, başlangıç pilates programı, evde pilates, yeni başlayanlar için pilates, 1 aylık pilates programı',
-    heroCopy: 'Hız yerine nefes, hizalanma ve kontrolü öğreten kısa mat seanslarıyla güvenli bir temel oluştur. Aşağıda gerçek örnek hafta ve 30 günlük ilerleme tablosu var; yazdırabilir ya da uygulamada seans seans takip edebilirsin.',
+    heroCopy: 'Hız yerine nefes, hizalanma ve kontrolü öğreten kısa mat seanslarıyla güvenli bir temel oluştur. Aşağıda gerçek örnek hafta ve 30 günlük ilerleme tablosu var; uygulamada seans seans ücretsiz takip edebilirsin.',
     sections: [
       { title: 'Sade ve kontrollü başlangıç', body: 'İlk seanslar nefes, nötr hizalanma ve kontrollü hareket açıklığına odaklanır.' },
       { title: 'Sadece mekik değil', body: 'Core stabilitesi, pelvis kontrolü, koordinasyon, postür ve mobilite birlikte geliştirilir.' },
       { title: 'Kademeli ilerleme', body: 'Temel hareketler kontrollü yapılabildiğinde süre ve hareket karmaşıklığı adım adım artar.' },
     ],
     faqs: [
+      ['30 günlük pilates programında ne değişir?', 'Hareketler aynı kalır; her hafta seans süresi, kontrol ve zorluk biraz artar. 1. hafta nefes ve nötr pelvis, 2. hafta core kontrolü, 3. hafta akış ve denge, 4. hafta dayanıklılık üzerinedir.'],
       ['Reformer gerekir mi?', 'Hayır. Bu program evde mat üzerinde uygulanacak başlangıç pilates planıdır.'],
       ['Daha önce pilates yapmadım, uygun mu?', 'Evet. Kısa seanslar ve erişilebilir hareketlerle başlar.'],
       ['Haftada kaç gün yapılır?', 'İlk iki hafta 3 seans, sonraki iki hafta 4 seans ve haftada bir esneme günü yeterlidir. Plan, ayırabildiğin günlere göre seansları ve toparlanmayı dengeler.'],
-      ['30 günlük pilates programında ne değişir?', 'Hareketler aynı kalır; her hafta seans süresi, kontrol ve zorluk biraz artar. 1. hafta nefes ve nötr pelvis, 2. hafta core kontrolü, 3. hafta akış ve denge, 4. hafta dayanıklılık üzerinedir.'],
       ['Program gerçekten ücretsiz mi?', 'Evet. Örnek hafta ve 30 günlük tablo bu sayfada; kişisel plan, seans takibi ve hatırlatmalar da kredi kartı istemeden ücretsizdir.'],
     ],
   },
@@ -653,4 +653,4 @@ export const turkishSeoPages = {
   },
 };
 
-export const TURKISH_SEO_SLUGS = Object.keys(turkishSeoPages);
+export { TURKISH_SEO_SLUGS } from './turkishSeoSlugs.js';

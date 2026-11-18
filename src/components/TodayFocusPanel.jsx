@@ -16,7 +16,7 @@ import { sessionText } from '../i18n/workoutSessionCopy';
 import { getReferralSummary, getStreakFreezes, getWorkoutLogs, saveStreakFreeze } from '../lib/dataService';
 import ReminderSettings from './ReminderSettings';
 import { trackEvent } from '../lib/analytics';
-import { computeFreezeAllowance, computeStreaks, findFreezeCandidate, getRestDayIndexes } from '../utils/streaks';
+import { computeFreezeAllowance, computeStreaks, findFreezeCandidate, getRestDayIndexes, isRestDay } from '../utils/streaks';
 
 const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = {
@@ -45,11 +45,6 @@ function toISO(date) {
   return `${year}-${month}-${day}`;
 }
 
-function isRestDay(day) {
-  if (!day) return true;
-  const text = `${day.day || ''} ${day.focus || ''}`.toLowerCase();
-  return Boolean(day.isRest || text.includes('dinlen') || text.includes('rest') || text.includes('descanso'));
-}
 
 function getWeekRows(plan, workoutDates) {
   const monday = getMonday();

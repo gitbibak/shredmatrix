@@ -3764,5 +3764,9 @@ export function regeneratePlanWithPhase(existingPlan, phase) {
     focusAreas: existingPlan.focusAreas || [],
     trainingDaysPerWeek: existingPlan.trainingDaysPerWeek || null,
   };
-  return generatePlan(userMetrics, phase, planLang);
+  // Keep the plan in the member's language and carry over what a regeneration cannot rebuild.
+  return {
+    ...localizePlan(generatePlan(userMetrics, phase, planLang), planLang),
+    ...(existingPlan.challenge28 ? { challenge28: existingPlan.challenge28 } : {}),
+  };
 }

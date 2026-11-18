@@ -21,11 +21,8 @@ export const BASE_URL = 'https://fullbalance.app';
 export const publicPages = [
   ...reviewPages.map((page) => [page.path, '2026-09-20']),
   ['/', '2026-10-15'],
-  ['/privacy', '2026-08-10'],
   ['/press', '2026-11-08'],
   ...alternativePages.map((page) => [page.path, page.checkedAt]),
-  ['/terms', '2026-08-04'],
-  ['/contact', '2026-08-10'],
   ['/editorial-policy', '2026-08-10'],
   ['/fiyatlandirma', '2026-09-20'],
   ['/en/pricing', '2026-09-20'],

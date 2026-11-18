@@ -1,5 +1,9 @@
-import { getBlogArticle } from '../data/blogArticles';
-import { getArticleLanguage } from '../data/blogLocale';
+// Registered by src/data/articleCtaCheck.js. Until then no article CTA event is
+// accepted, so an unverified slug or destination can never be recorded.
+let articleCtaCheck = null;
+export function setArticleCtaCheck(check) {
+  articleCtaCheck = typeof check === 'function' ? check : null;
+}
 
 const COMMON = ['source', 'language', 'goalType', 'module'];
 const SIGNUP = ['method', 'acquisitionSource', 'referralCode', 'creatorCode', 'campaign'];
@@ -61,15 +65,7 @@ export function validateGrowthEvent(eventName, properties = {}) {
   let valid = (schema.required || []).every((key) => (
     filtered[key] !== undefined && filtered[key] !== null && filtered[key] !== ''
   ));
-  if (eventName === 'article_cta_click' && valid) {
-    const article = getBlogArticle(filtered.articleSlug);
-    const language = getArticleLanguage(article);
-    const destination = article?.cta?.href || `/auth?mode=register${language === 'tr' ? '' : `&lang=${language}`}`;
-    valid = Boolean(article)
-      && article.publishedAt <= new Date().toISOString().slice(0, 10)
-      && filtered.language === language
-      && filtered.destination === destination;
-  }
+  if (eventName === 'article_cta_click' && valid) valid = Boolean(articleCtaCheck?.(filtered));
   if (eventName === 'workout_session_abandoned' || eventName === 'workout_session_save_failed') {
     valid = valid
       && ['none', 'under_25', '25_49', '50_74', '75_99', 'all_sets'].includes(filtered.progressBucket)

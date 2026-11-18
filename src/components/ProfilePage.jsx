@@ -8,7 +8,7 @@ import {
   TrendingUp, Brain, Flower2, Circle, Wrench, Target, BadgeCheck, Globe,
 } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
-import { generatePlan } from '../data/planGenerator';
+import { generatePlan, localizePlan } from '../data/planGenerator';
 import { deleteAllUserData, getProfilePhoto, getProgressPhotos, uploadPhoto, deleteProgressPhoto } from '../lib/dataService';
 import { useToast } from './ToastProvider';
 import UserStoryForm from './UserStoryForm';
@@ -375,7 +375,11 @@ export default function ProfilePage({ plan, user, onLogout, onUpdatePlan, onPlan
       focusAreas: plan.focusAreas || [],
       trainingDaysPerWeek: plan.trainingDaysPerWeek || null,
     };
-    const newPlan = generatePlan(userMetrics, 0);
+    // Build the plan in the member's own language; a bare generatePlan() is Turkish.
+    const newPlan = {
+      ...localizePlan(generatePlan(userMetrics, 0, lang), lang),
+      ...(plan.challenge28 ? { challenge28: plan.challenge28 } : {}),
+    };
     // Reset phase tracking
     localStorage.setItem('shredmatrix_current_phase', '0');
     localStorage.setItem('shredmatrix_plan_created', new Date().toISOString());

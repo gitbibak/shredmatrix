@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Flame, Calendar, Trophy, Share2, Snowflake } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { getReferralSummary, getStreakFreezes, getWorkoutLogs } from '../lib/dataService';
-import { computeFreezeAllowance, computeStreaks, getRestDayIndexes } from '../utils/streaks';
+import { computeFreezeAllowance, computeStreaks, getRestDayIndexes, toDateStr } from '../utils/streaks';
 import { renderShareCard, shareCardImage } from '../lib/shareImage';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import { trackShare } from '../lib/analytics';
@@ -15,9 +15,6 @@ const TOTAL_DAYS = TOTAL_WEEKS * DAYS_IN_WEEK;
 
 // ── Helpers ──────────────────────────────────
 
-function toDateStr(d) {
-  return d.toISOString().slice(0, 10);
-}
 
 function getDayGrid() {
   const today = new Date();

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Crown, Users, ChevronUp, ChevronDown, Flame, TrendingUp, X } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
 import { supabase, isSupabaseReady } from '../lib/supabase';
+import { localDateKey } from '../utils/calendarDate';
 
 /**
  * Leaderboard — Haftalık antrenman sıralaması
@@ -42,7 +43,7 @@ export default function Leaderboard({ plan }) {
       const monday = new Date(now);
       monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
       monday.setHours(0, 0, 0, 0);
-      const weekStart = monday.toISOString().split('T')[0];
+      const weekStart = localDateKey(monday);
 
       // Fetch leaderboard scores for this week
       const { data: scores, error } = await supabase

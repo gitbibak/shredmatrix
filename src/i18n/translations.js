@@ -414,6 +414,7 @@ export const translations = {
 
     // ── Auth ──
     auth: {
+      verifyEmailTitle: 'E-postanı doğrula', verifyEmailDesc: 'Hesabını etkinleştirmek için gelen kutundaki doğrulama bağlantısını aç.',
       title: 'FULL BALANCE',
       backToHome: 'Ana Sayfa',
       subtitle: 'Bedenin, zihnin ve beslenmen — hepsi dengede.',
@@ -1253,6 +1254,7 @@ export const translations = {
 
     // ── Common ──
     common: {
+      back: 'Geri', delete: 'Sil',
       loading: 'Yükleniyor...',
       muscleGoal: 'Kas Gelişimi', fatGoal: 'Yağ Yakımı',
       meditationGoal: 'Meditasyon', yogaGoal: 'Yoga', pilatesGoal: 'Pilates', reformerGoal: 'Reformer',
@@ -1700,6 +1702,7 @@ export const translations = {
       dataPrivacy: 'Your data is encrypted and never shared with third parties.',
     },
     auth: {
+      verifyEmailTitle: 'Verify your email', verifyEmailDesc: 'Open the verification link in your inbox to activate your account.',
       title: 'FULL BALANCE',
       backToHome: 'Home',
       subtitle: 'Your body, mind and nutrition — all in balance.',
@@ -2459,6 +2462,7 @@ export const translations = {
       },
     },
     common: {
+      back: 'Back', delete: 'Delete',
       loading: 'Loading...',
       muscleGoal: 'Muscle Growth', fatGoal: 'Fat Loss',
       meditationGoal: 'Meditation', yogaGoal: 'Yoga', pilatesGoal: 'Pilates', reformerGoal: 'Reformer',
@@ -2906,6 +2910,7 @@ export const translations = {
       dataPrivacy: 'Sus datos están cifrados y nunca se comparten con terceros.',
     },
     auth: {
+      verifyEmailTitle: 'Verifica tu correo', verifyEmailDesc: 'Abre el enlace de verificación de tu bandeja de entrada para activar tu cuenta.',
       title: 'FULL BALANCE',
       backToHome: 'Inicio',
       subtitle: 'Tu cuerpo, mente y nutrición — todo en equilibrio.',
@@ -3665,6 +3670,7 @@ export const translations = {
       },
     },
     common: {
+      back: 'Volver', delete: 'Eliminar',
       loading: 'Cargando...',
       muscleGoal: 'Crecimiento Muscular', fatGoal: 'Pérdida de Grasa',
       meditationGoal: 'Meditación', yogaGoal: 'Yoga', pilatesGoal: 'Pilates', reformerGoal: 'Reformer',

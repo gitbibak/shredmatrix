@@ -1,5 +1,6 @@
 import { supabase, isSupabaseReady } from './supabase';
 import { getAcquisitionContext } from './acquisition';
+import { localDateKey } from '../utils/calendarDate';
 
 // ══════════════════════════════════════════════
 // Full Balance — Data Service Layer
@@ -281,6 +282,9 @@ export async function savePlan(planData, email) {
       .from('plans')
       .upsert({ user_id: userId, plan_data: planData }, { onConflict: 'user_id' });
     if (error) throw error;
+    // Keep a device copy so a failed fetch (no signal at the gym) still opens
+    // the member's plan instead of sending them back to onboarding.
+    if (email) lsSet(`shredmatrix_plan_${email}`, planData);
 
     // Update profile
     await supabase.from('profiles').update({
@@ -308,6 +312,7 @@ export async function loadPlan(email) {
       .eq('user_id', userId)
       .single();
     if (error && error.code !== 'PGRST116') throw error;
+    if (data?.plan_data && email) lsSet(`shredmatrix_plan_${email}`, data.plan_data);
     return data?.plan_data || lsGet(`shredmatrix_plan_${email}`) || null;
   } catch (err) {
     console.warn('[DataService]', err?.message || err);
@@ -1217,7 +1222,7 @@ export async function updateLeaderboardScore() {
     const monday = new Date(now);
     monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
     monday.setHours(0, 0, 0, 0);
-    const weekStart = monday.toISOString().split('T')[0];
+    const weekStart = localDateKey(monday);
     const weekEnd = new Date(monday);
     weekEnd.setDate(weekEnd.getDate() + 7);
 
@@ -1227,7 +1232,7 @@ export async function updateLeaderboardScore() {
       .select('id')
       .eq('user_id', user.id)
       .gte('date', weekStart)
-      .lt('date', weekEnd.toISOString().split('T')[0]);
+      .lt('date', localDateKey(weekEnd));
 
     const workouts = logs?.length || 0;
 
@@ -1256,8 +1261,8 @@ export async function updateLeaderboardScore() {
     let streak = 0;
     if (allLogs?.length) {
       const dates = [...new Set(allLogs.map(l => l.date))].sort().reverse();
-      const today = new Date().toISOString().split('T')[0];
-      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      const today = localDateKey();
+      const yesterday = localDateKey(new Date(Date.now() - 86400000));
 
       if (dates[0] === today || dates[0] === yesterday) {
         streak = 1;

@@ -4,6 +4,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { getSleep, getWaterHistory, getWellbeingCheckins, getWorkoutLogs } from '../lib/dataService';
 import { trackEvent } from '../lib/analytics';
 import { calculateBalanceScore } from '../utils/balanceScore';
+import { isRestDay } from '../utils/streaks';
 
 const CATEGORY_ICONS = {
   activity: Activity,
@@ -14,10 +15,6 @@ const CATEGORY_ICONS = {
   mindfulness: Brain,
 };
 
-function isRestDay(day) {
-  if (day?.isRest) return true;
-  return /dinlenme|rest|descanso|serbest gün/i.test(String(day?.focus || ''));
-}
 
 function getWeeklyTarget(plan) {
   if (!Array.isArray(plan?.workoutSplit)) return 4;

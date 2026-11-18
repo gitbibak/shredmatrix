@@ -7,13 +7,10 @@ import { signUp, signIn, resetPassword, signInWithGoogle } from '../lib/dataServ
 import { trackAuthView, trackEvent, trackLogin, trackLoginStart, trackSignUp, trackSignUpStart } from '../lib/analytics';
 import AnalyticsConsent from './AnalyticsConsent';
 
+import { isStrongPassword } from './PasswordRecoveryPrompt';
+
 // ── Validation ───────────────────────────────────────────
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isStrongPassword = (value) => value.length >= 10
-  && /[a-z]/.test(value)
-  && /[A-Z]/.test(value)
-  && /\d/.test(value)
-  && /[^A-Za-z0-9]/.test(value);
 
 // ── Animation Variants ───────────────────────────────────
 const formVariants = {
@@ -164,7 +161,7 @@ export default function AuthScreen({ onAuth, onBack }) {
     if (!password) {
       newErrors.password = t('auth.errors.passwordRequired');
     } else if (mode !== 'register' && password.length < 6) {
-      newErrors.password = t('auth.errors.passwordMin');
+      newErrors.password = t('auth.errors.passwordShort');
     } else if (mode === 'register' && !isStrongPassword(password)) {
       newErrors.password = lang === 'tr'
         ? 'En az 10 karakter; büyük-küçük harf, rakam ve sembol kullan.'
@@ -228,7 +225,7 @@ export default function AuthScreen({ onAuth, onBack }) {
         trackEvent(mode === 'register' ? 'sign_up_error' : 'login_error', { error_type: 'auth_rejected' });
         const msg = err.message || '';
         if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('already been registered')) {
-          setFormError(t('auth.errors.emailTaken'));
+          setFormError(t('auth.errors.emailExists'));
         } else if (msg.includes('Invalid login') || msg.includes('invalid')) {
           setFormError(t('auth.errors.invalidCredentials'));
         } else {

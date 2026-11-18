@@ -5,6 +5,7 @@ import { Target, Check, Share2, Flame, RefreshCw } from 'lucide-react';
 import { trackChallengeComplete, trackShare } from '../lib/analytics';
 import { buildTrackedShareUrl } from '../lib/shareLinks';
 import confetti from 'canvas-confetti';
+import { localDateKey } from '../utils/calendarDate';
 
 function getChallenges(t) {
   return [
@@ -33,7 +34,7 @@ function getDayIndex() {
 }
 
 function getTodayKey() {
-  return new Date().toISOString().split('T')[0];
+  return localDateKey();
 }
 
 export default function DailyChallenge() {
@@ -67,7 +68,7 @@ export default function DailyChallenge() {
       let s = 0;
       const d = new Date();
       while (true) {
-        const key = d.toISOString().split('T')[0];
+        const key = localDateKey(d);
         if (data[key]) { s++; d.setDate(d.getDate() - 1); } else break;
       }
       setStreak(s);

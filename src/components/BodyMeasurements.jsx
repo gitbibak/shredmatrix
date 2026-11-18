@@ -5,6 +5,7 @@ import { useTranslation } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Ruler, Plus, Trash2 } from 'lucide-react';
 import { useToast } from './ToastProvider';
+import { localDateKey } from '../utils/calendarDate';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -46,7 +47,7 @@ export default function BodyMeasurements() {
   const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ chest:'', waist:'', hip:'', arm:'', leg:'' });
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => localDateKey());
 
   const toast = useToast();
 

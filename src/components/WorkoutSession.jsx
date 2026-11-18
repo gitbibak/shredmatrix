@@ -41,12 +41,15 @@ function beep() {
 }
 
 function NumberStepper({ value, onChange, step, label }) {
-  const shown = value === null || value === undefined ? '' : String(value);
+  // While typing, keep the member's own text: the stored value is a rounded number,
+  // so echoing it back would turn "7." into "7" and "7.5" into 75.
+  const [draft, setDraft] = useState(null);
+  const shown = draft !== null ? draft : value === null || value === undefined ? '' : String(value);
   return (
     <div className="flex min-w-0 items-center rounded-xl border border-slate-700 bg-slate-950">
       <button
         type="button"
-        onClick={() => onChange(Math.max(0, (Number(value) || 0) - step))}
+        onClick={() => { setDraft(null); onChange(Math.max(0, (Number(value) || 0) - step)); }}
         className="flex h-11 w-8 shrink-0 items-center justify-center text-slate-400 hover:text-white"
         aria-label={`${label} -${step}`}
       >
@@ -57,13 +60,18 @@ function NumberStepper({ value, onChange, step, label }) {
         inputMode="decimal"
         value={shown}
         placeholder="0"
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => {
+          const text = event.target.value.replace(/[^0-9.,]/g, '').slice(0, 7);
+          setDraft(text);
+          onChange(text);
+        }}
+        onBlur={() => setDraft(null)}
         aria-label={label}
         className="h-11 w-full min-w-0 bg-transparent text-center text-base font-bold text-white outline-none placeholder:text-slate-600"
       />
       <button
         type="button"
-        onClick={() => onChange((Number(value) || 0) + step)}
+        onClick={() => { setDraft(null); onChange((Number(value) || 0) + step); }}
         className="flex h-11 w-8 shrink-0 items-center justify-center text-slate-400 hover:text-white"
         aria-label={`${label} +${step}`}
       >
@@ -162,22 +170,37 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
     }
   };
 
-  const requestFinish = () => {
-    if (summary.setsDone === 0) {
-      setNotice(s('nothingDone'));
-      return;
-    }
-    if (summary.setsDone < summary.totalSets && !confirmFinish) {
-      setConfirmFinish(true);
-      return;
-    }
+  const finishWith = (finalSession) => {
     setConfirmFinish(false);
     if (finishPendingRef.current) return;
     finishPendingRef.current = true;
-    Promise.resolve().then(() => onFinish?.(session, summarizeSession(session))).then(
+    Promise.resolve().then(() => onFinish?.(finalSession, summarizeSession(finalSession))).then(
       (saved) => { if (saved !== true) finishPendingRef.current = false; },
       () => { finishPendingRef.current = false; },
     );
+  };
+
+  const requestFinish = () => {
+    // Members often do the moves without ticking each set. Ask instead of
+    // refusing, so a finished workout is not lost as "abandoned".
+    if (summary.setsDone === 0 && confirmFinish !== 'none') {
+      setConfirmFinish('none');
+      return;
+    }
+    if (summary.setsDone === 0) {
+      const allDone = {
+        ...session,
+        exercises: session.exercises.map((item) => ({ ...item, sets: item.sets.map((set) => ({ ...set, done: true })) })),
+      };
+      setSession(allDone);
+      finishWith(allDone);
+      return;
+    }
+    if (summary.setsDone < summary.totalSets && !confirmFinish) {
+      setConfirmFinish('partial');
+      return;
+    }
+    finishWith(session);
   };
 
   const setsDoneHere = exercise.sets.filter((set) => set.done).length;
@@ -188,6 +211,7 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[60] flex flex-col bg-slate-950"
+      data-workout-session
       role="dialog"
       aria-modal="true"
       aria-labelledby="workout-session-title"
@@ -409,18 +433,18 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
       <div className="shrink-0 border-t border-slate-800 bg-slate-950 px-4 pt-3" style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
         {confirmFinish ? (
           <div className="mx-auto max-w-xl">
-            <p className="mb-2 text-center text-xs text-slate-300">{s('finishConfirm')}</p>
+            <p className="mb-2 text-center text-xs text-slate-300">{s(confirmFinish === 'none' ? 'finishNoneConfirm' : 'finishConfirm')}</p>
             <div className="grid grid-cols-2 gap-2">
               <button type="button" onClick={() => setConfirmFinish(false)} className="min-h-12 rounded-xl border border-slate-700 text-sm font-bold text-slate-200">
                 {s('finishNo')}
               </button>
               <button type="button" onClick={requestFinish} disabled={saving} className="min-h-12 rounded-xl bg-orange-500 text-sm font-bold text-white disabled:opacity-50">
-                {saving ? s('saving') : s('finishYes')}
+                {saving ? s('saving') : s(confirmFinish === 'none' ? 'finishNoneYes' : 'finishYes')}
               </button>
             </div>
           </div>
         ) : (
-          <div className="mx-auto grid max-w-xl grid-cols-[auto_1fr] gap-2">
+          <div className={`mx-auto grid max-w-xl gap-2 ${!isLast && summary.setsDone > 0 && summary.setsDone < summary.totalSets ? 'grid-cols-[auto_1fr_auto]' : 'grid-cols-[auto_1fr]'}`}>
             <button
               type="button"
               onClick={() => goTo(index - 1)}
@@ -446,6 +470,16 @@ export default function WorkoutSession({ session: initialSession, onFinish, onCl
                 className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-800 text-sm font-bold text-white hover:bg-slate-700"
               >
                 {s('nextExercise')} <ChevronRight size={18} />
+              </button>
+            )}
+            {!isLast && summary.setsDone > 0 && summary.setsDone < summary.totalSets && (
+              <button
+                type="button"
+                onClick={requestFinish}
+                disabled={saving}
+                className="flex min-h-12 items-center gap-1 rounded-xl border border-slate-800 px-3 text-sm font-semibold text-slate-300 disabled:opacity-50"
+              >
+                <Flag size={15} /> {s('finishShort')}
               </button>
             )}
           </div>

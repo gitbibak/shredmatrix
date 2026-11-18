@@ -1,9 +1,9 @@
-import { useState, useEffect, useLayoutEffect, useMemo, Component, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo, Component, lazy, Suspense, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from './i18n/LanguageContext';
 import { PLAN_VERSION } from './data/planVersion';
-import { TURKISH_SEO_SLUGS } from './data/turkishSeoPages';
+import { TURKISH_SEO_SLUGS } from './data/turkishSeoSlugs';
 
 const TURKISH_TEXT = /[çğıöşüÇĞİÖŞÜ]/;
 
@@ -28,6 +28,7 @@ import {
   trackReferral,
 } from './lib/analytics';
 import AnalyticsConsent from './components/AnalyticsConsent';
+import PasswordRecoveryPrompt from './components/PasswordRecoveryPrompt';
 import { captureAcquisitionContext } from './lib/acquisition';
 import { takeCoachReturn } from './lib/coaching';
 
@@ -583,20 +584,35 @@ function AppContent() {
     loadPlanEngine().then(({ generatePlan, localizePlan }) => {
       if (cancelled) return;
       const rawPlan = generatePlan(userMetrics, plan.phase || 0, lang);
-      const newPlan = localizePlan(rawPlan, lang);
+      // A language switch must not wipe the 28-day challenge, adaptation history or plan age.
+      const newPlan = {
+        ...localizePlan(rawPlan, lang),
+        ...(plan.challenge28 ? { challenge28: plan.challenge28 } : {}),
+        ...(plan.adaptationHistory ? { adaptationHistory: plan.adaptationHistory } : {}),
+        ...(plan.createdAt ? { createdAt: plan.createdAt } : {}),
+      };
       setPlan(newPlan);
       savePlan(newPlan, user?.email).catch(() => {});
     }).catch((error) => console.warn('[App]', error?.message || error));
     return () => { cancelled = true; };
   }, [lang]);
 
+  const planBuildRef = useRef(false);
   // Handle loading → dashboard transition
   useEffect(() => {
     if (location.pathname === '/loading' && pendingFormData) {
       const timer = setTimeout(async () => {
-        const { generatePlan, localizePlan } = await loadPlanEngine();
+        // The effect can re-run while the engine loads (a sign-in event replaces
+        // `user`); build and save the plan once.
+        if (planBuildRef.current) return;
+        planBuildRef.current = true;
+        const { generatePlan, localizePlan } = await loadPlanEngine().finally(() => { planBuildRef.current = false; });
         const rawPlan = generatePlan(pendingFormData, 0, lang);
-        const generatedPlan = localizePlan(rawPlan, lang);
+        // Updating an existing plan keeps the member's 28-day challenge progress.
+        const generatedPlan = {
+          ...localizePlan(rawPlan, lang),
+          ...(plan?.challenge28 ? { challenge28: plan.challenge28 } : {}),
+        };
         setPlan(generatedPlan);
 
         // Save plan to Supabase/localStorage
@@ -849,6 +865,8 @@ function AppContent() {
           <SupportResolutionNotice user={user} />
         </Suspense>
       )}
+
+      <PasswordRecoveryPrompt />
 
       <AnalyticsConsent
         active={Boolean(user && plan && location.pathname === '/dashboard' && !showTour)}
